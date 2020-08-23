@@ -21,8 +21,6 @@ also available:
 [omicScaleR](https://github.com/12379Monty/omicScaleR.git)
 
 The analysis report page can be found
-
-A bookdown workflow builds a publishes the report
 [here](https://hcc-5hmc-explore.netlify.app/)
 
 <!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
@@ -46,5 +44,6 @@ Rscript -e "rmarkdown::render('index.Rmd')"
 # nohup Rscript -e "rmarkdown::render('index.Rmd', rmarkdown::md_document())" > index.log  &
 # nohup Rscript -e "rmarkdown::render('index.Rmd')" > index.log  &
 
+### REMEMBER TO `cp index.md ../README.md`
 
 -->

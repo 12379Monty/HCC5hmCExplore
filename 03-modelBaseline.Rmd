@@ -1,8 +1,14 @@
-# Baseline Model
+# Baseline Model {#baseline-model}
 
 In the section we look at the baseline model fit:
 
 * What is the accuracy?  
 * Look at individual points and store some sample scores  
+
+
+
+* Baseline model 
+   - how separable are the data 
+   - individual sample quality 
 
 

@@ -6,7 +6,15 @@ cancer at the earliest stage of development with a non-invasive procedure
 has busied many groups with the task of perfecting techniques to support
 what has become commonly known as a 
 liquid biopsy - the analysis of biomarkers circulating in fluids such as blood,
-saliva or urine.
+saliva or urine.  Epigenetic biomarkers present themselves as good candidates for this application
+(Gai and Sun (2019) [@Gai:2019aa]).  In particular,
+given their prevalence in the human genome, 
+close correlation with gene expression and high chemical stability,
+DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
+are DNA epigenetic marks that provide much promise as
+cancer diagnosis biomarkers that could be profitably analyzed in liquid biopsies
+[@Cai:2019aa; @Li:2017aa; @Song:2017aa; @Collin:2018aa].
+
 
 <!--
 This work has already led to some commercial products.
@@ -15,25 +23,14 @@ tumor cancers. Others in the space include Karius, which focuses on a liquid bio
 infectious disease, and GRAIL Bio, which was launched by Illumina in January 2016. 
 In 2017, Verily Life Sciences, one of Google/Alphabet’s companies, invested in Freenome, 
 another liquid biopsy company.
-
 -->
-
-Epigenetic biomarkers present themselves as good candidates for this application
-as outlined in Gai and Sun (2019) [@Gai:2019aa].  In particular,
-given their prevalence in the human genome, 
-close correlation with gene expression and high chemical stability,
-DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
-are DNA epigenetic marks that provide much promise as
-cancer dignosis biomarkers that could be analyzed in liquid biopsies
-[@Cai:2019aa; @Li:2017aa; @Song:2017aa; @Collin:2018aa].
-
 Li et al. (2017) [@Li:2017aa] used a sensitive and selective chemical labeling technology
 to extract genome-wide 5hmC profiles from circulating cell-free DNA (cfDNA) 
 as well as from genomic DNA (gDNA) 
 collected from a cohort of 260 patients recently diagnosed with colorectal, 
 gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy individuals
 They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
-Similar findings were reported in Song et al. (2017) [@Song:2017aa].  
+Similar small sample size findings were reported in Song et al. (2017) [@Song:2017aa].  
 
 Focusing on hepatocellular carcinoma, Cai et al. (2019) [@Cai:2019aa] assembled a sizable dataset
 to demonstrate the feasibility of using features derived from 
@@ -52,23 +49,17 @@ devtools::install_github("12379Monty/GSE112679")
 
 An important question in the early development of classifiers of the sorts
 that are the basis of any liquid biopsy diagnostic tool is how many samples
-should be collected to make properly informed decisions about the direction
-that development should take such as which diseases or conditions
-should be prioritized and what is the expected performance of the
-targeted tool.  The purpose of this article is to examine this dataset 
-to shed some light on this question.
+should be collected to make properly informed decisions.  In this
+report we will explore the GSE112679 data to shed some light on
+the relationship between sample size and model performance
+in the context classifying samples based on 5hmC data.
 
-Determining an appropriate sample size for a give task is never an easy question to 
-answer.
 
-* Use the gene body coverage from GSE as inputs   
-* Treat these with standard RNA-Seq methods   
-* Preprocessing and light QC  
-   - word on collection of blood samples  
-* Baseline model  
-   - how separable are the data  
-   - individual sample quality  
-   - word on GC content  
-* Model suites to investiagte sample size relation to performance  
-* Conclusions  
+In section \@ref(preproc) we preprocess the data that
+we will use for the classification analysis and perform some light QC analyses.
+In section \@ref(baseline-model) we fit some models to discriminate between
+early stage HCC and control samples and examine their performance.
+In section \@ref(model-suite) we examine the results of fitting a suite of models to
+investigate the effect of sample size on model performance.
+
 

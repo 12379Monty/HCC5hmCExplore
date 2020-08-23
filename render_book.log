@@ -1,14 +1,126 @@
 
 
 processing file: HCC5hmCExplore.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |......................................................................| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
+   inline R code fragments
+
+  |                                                                              |......                                                                |   9%
+label: chunk-options (with options) 
+List of 2
+ $ include: logi FALSE
+ $ eval   : symbol F
+
+  |                                                                              |.........                                                             |  13%
+  ordinary text without R code
+
+  |                                                                              |............                                                          |  17%
+label: libraries (with options) 
+List of 2
+ $ include: logi FALSE
+ $ eval   : symbol T
+
+  |                                                                              |...............                                                       |  22%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  26%
+label: loadData (with options) 
+List of 1
+ $ cache: symbol F
+
+  |                                                                              |.....................                                                 |  30%
+  ordinary text without R code
+
+  |                                                                              |........................                                              |  35%
+label: subsetSamples (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: chr "sampDescA"
+
+  |                                                                              |...........................                                           |  39%
+  ordinary text without R code
+
+  |                                                                              |..............................                                        |  43%
+label: getfeatures (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: language c("featureCountsA")
+
+  |                                                                              |.................................                                     |  48%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  52%
+label: coverage (with options) 
+List of 4
+ $ cache     : symbol T
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample log2 count boxplots"
+
+  |                                                                              |........................................                              |  57%
+  ordinary text without R code
+
+  |                                                                              |...........................................                           |  61%
+label: rlr (with options) 
+List of 7
+ $ cache     : symbol T
+ $ cache.vars: chr "lcpm_mtx"
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample RLR"
+ $ eval      : symbol T
+ $ echo      : symbol T
+
+  |                                                                              |..............................................                        |  65%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  70%
+label: densityLcpm (with options) 
+List of 5
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample $log_2$ CPM densities"
+ $ eval      : symbol T
+ $ echo      : symbol T
+
+  |                                                                              |....................................................                  |  74%
+   inline R code fragments
+
+  |                                                                              |.......................................................               |  78%
+label: removeWeak (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: language c("featureCountsA", "genes_annotA", "lcpm_mtx")
+
+  |                                                                              |..........................................................            |  83%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  87%
+label: densityLcpm2 (with options) 
+List of 5
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample $log_2$ CPM densities after removing weak genes"
+ $ eval      : symbol T
+ $ echo      : symbol T
+
+  |                                                                              |................................................................      |  91%
+  ordinary text without R code
+
+  |                                                                              |...................................................................   |  96%
+label: plotMDS (with options) 
+List of 4
+ $ cache     : symbol T
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "MDS plots of log-CPM values"
+
+  |                                                                              |......................................................................| 100%
    inline R code fragments
 
 
 output file: HCC5hmCExplore.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpzmNlKW/rmarkdown-strcafc734d7fe2.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
-pandoc-citeproc: reference Song:2017 not found
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpuKon3I/rmarkdown-stre857335cc104.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
 
 Output created: docs/intro.html
 [1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/intro.html"

@@ -1,6 +1,6 @@
-# Fitted Model Suite
+# Fitted Model Suite {#model-suite}
 
-We examine the results of fitting the suite of models to
+We examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.
 
 
