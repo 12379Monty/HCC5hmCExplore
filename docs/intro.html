@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Data from Cai et al. (2019) paper are explored" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  
+  <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
+  
+
+<meta name="author" content="Francois Collin" />
+
+
+<meta name="date" content="2020-08-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="preprocessing-and-light-qc.html"/>
+<script src="libs/header-attrs-2.2/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preprocessing-and-light-qc.html"><a href="preprocessing-and-light-qc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing and light QC</a></li>
+<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
+<li class="chapter" data-level="4" data-path="fitted-model-suite.html"><a href="fitted-model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://gut.bmj.com/content/68/12/2195" style="color:red; font:em;" target="blank">Cai et al. (2019)</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">DNA Hydroxymethylation in Hepatocellular Carcinoma</h1>
+<p class="author"><em>Francois Collin</em></p>
+<p class="date"><em>2020-08-22</em></p>
+</div>
+<div id="intro" class="section level1" number="1">
+<h1><span class="header-section-number">Section 1</span> Introduction</h1>
+<p>The goal of detecting
+cancer at the earliest stage of development with a non-invasive procedure
+has busied many groups with the task of perfecting techniques to support
+what has become commonly known as a
+liquid biopsy - the analysis of biomarkers circulating in fluids such as blood,
+saliva or urine.</p>
+<!--
+This work has already led to some commercial products.
+Thrive Earlier Detection Corp.  launched CancerSEEK, a liquid biopsy test to detect multiple cancers early in 2019.  Guardant Health offers a liquid biopsy test, Guardant360, for advanced solid 
+tumor cancers. Others in the space include Karius, which focuses on a liquid biopsy for 
+infectious disease, and GRAIL Bio, which was launched by Illumina in January 2016. 
+In 2017, Verily Life Sciences, one of Google/Alphabet’s companies, invested in Freenome, 
+another liquid biopsy company.
+
+-->
+<p>Epigenetic biomarkers present themselves as good candidates for this application
+as outlined in Gai and Sun (2019) <span class="citation">[<a href="references.html#ref-Gai:2019aa" role="doc-biblioref">1</a>]</span>. In particular,
+given their prevalence in the human genome,
+close correlation with gene expression and high chemical stability,
+DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
+are DNA epigenetic marks that provide much promise as
+cancer dignosis biomarkers that could be analyzed in liquid biopsies
+<span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>–<a href="references.html#ref-Collin:2018aa" role="doc-biblioref">5</a>]</span>.</p>
+<p>Li et al. (2017) <span class="citation">[<a href="references.html#ref-Li:2017aa" role="doc-biblioref">3</a>]</span> used a sensitive and selective chemical labeling technology
+to extract genome-wide 5hmC profiles from circulating cell-free DNA (cfDNA)
+as well as from genomic DNA (gDNA)
+collected from a cohort of 260 patients recently diagnosed with colorectal,
+gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy individuals
+They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
+Similar findings were reported in Song et al. (2017) <span class="citation">[<a href="references.html#ref-Song:2017aa" role="doc-biblioref">4</a>]</span>.</p>
+<p>Using a larger dataset focusing on hepatocellular carcinoma, Cai et al. (2019) <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span>
+demonstrated the feasibility using features derived from
+5-hydroxymethylcytosines marks in circulating cell-free DNA as
+a non-invasive approach for early detection of
+hepatocellular carcinoma. The data that are the basis of that
+report are available on the NCBI GEO web site
+(<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679">Series GSE112679</a>).
+The data have also been bundled in a R data package which can be installed from github:</p>
+<pre><code>if (!requireNamespace(&quot;devtools&quot;, quietly = TRUE))
+    install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;12379Monty/GSE112679&quot;)</code></pre>
+<p>An important question in the early development of classifiers of the sorts
+that are the basis of any liquid biopsy diagnostic tool is how many samples
+should be collected to make properly informed decisions about the direction
+that development should take. The purpose of this article is to examine this dataset
+to try and shed some light on this question.</p>
+<p>Determining an appropriate sample size for a give task is never an easy question to
+answer.</p>
+<ul>
+<li>Use the gene body coverage from GSE as inputs<br />
+</li>
+<li>Treat these with standard RNA-Seq methods<br />
+</li>
+<li>Preprocessing and light QC
+<ul>
+<li>word on collection of blood samples<br />
+</li>
+</ul></li>
+<li>Baseline model
+<ul>
+<li>how separable are the data<br />
+</li>
+<li>individual sample quality<br />
+</li>
+<li>word on GC content<br />
+</li>
+</ul></li>
+<li>Model suites to investiagte sample size relation to performance<br />
+</li>
+<li>Conclusions</li>
+</ul>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="preprocessing-and-light-qc.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["HCC5hmCExplore.pdf", "HCC5hmCExplore.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
