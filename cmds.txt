@@ -1,0 +1,21 @@
+# initiate bookdown - DO ONCE
+# In R
+bookdown:::bookdown_skeleton(getwd())
+
+# at cmd line
+nohup Rscript -e  "bookdown:::bookdown_skeleton(getwd())"    >  bookdown_skeleton.log  &
+
+##############################################
+# build the book
+nohup Rscript -e "bookdown::render_book('index.Rmd')"    > render_book.log &
+
+##############################################
+# Preview a chapter
+nohup Rscript -e "bookdown::render_book(input='index.Rmd', preview=T)" > render_index.log  &
+
+
+##############################################
+# to continuously serve the book
+Rscript -e "bookdown::serve_book()" 
+  ###> serve_book.log  &
+
