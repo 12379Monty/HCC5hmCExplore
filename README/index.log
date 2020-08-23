@@ -1,0 +1,23 @@
+
+
+processing file: index.Rmd
+  |                                                                              |                                                                      |   0%  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: unnamed-chunk-1 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |......................................................................| 100%
+   inline R code fragments
+
+
+output file: index.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS index.utf8.md --to gfm --from markdown+autolink_bare_uris+tex_math_single_backslash --output index.md --standalone --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/default.md --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS index.md --to html4 --from gfm --output index.html --standalone --self-contained --highlight-style pygments --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/preview.html --variable 'github-markdown-css:/Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/github.css' --email-obfuscation none --metadata pagetitle=PREVIEW 
+
+Preview created: index.html
+
+Output created: index.md

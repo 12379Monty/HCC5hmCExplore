@@ -1,0 +1,17 @@
+
+
+processing file: HCC5hmCExplore.Rmd
+  |                                                                              |                                                                      |   0%  |                                                                              |......................................................................| 100%
+   inline R code fragments
+
+
+output file: HCC5hmCExplore.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpzmNlKW/rmarkdown-strcafc734d7fe2.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
+pandoc-citeproc: reference Song:2017 not found
+
+Output created: docs/intro.html
+[1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/intro.html"
+Warning message:
+In split_chapters(output, gitbook_page, number_sections, split_by,  :
+  You have 7 Rmd input file(s) but only 6 first-level heading(s). Did you forget first-level headings in certain Rmd files?

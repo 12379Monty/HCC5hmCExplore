@@ -1,9 +1,6 @@
 DNA Hydroxymethylation in Hepatocellular Carcinoma
 ================
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e2d185e2-485a-4f7a-ab99-1f931694d2dd/deploy-status)](https://app.netlify.com/sites/hcc-5hmc-reanalysis/deploys)
-
-
 <!-- index.md is generated from index.Rmd. Please edit that file -->
 
 ## DNA Hydroxymethylation in Hepatocellular Carcinoma

@@ -1,0 +1,5 @@
+# Preprocessing and light QC
+
+In this section we discuss QC and prepare the data for
+predictive modeling.  Also look at DRA as well as coverage analysis.
+

@@ -2,4 +2,6 @@ book_filename: "HCC5hmCExplore"
 delete_merged_file: true
 language:
   ui:
-    chapter_name: "Chapter "
+    chapter_name: "Section "
+output_dir: docs
+
