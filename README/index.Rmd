@@ -35,8 +35,9 @@ An R package providing tools to reproduce the analyses
 reported here is also available: [omicScaleR](https://github.com/12379Monty/omicScaleR.git)
 
 The analysis report page can be found 
-[here](https://hcc-5hmc-reanalysis.netlify.app/)
 
+A bookdown workflow builds a publishes the report 
+[here](https://hcc-5hmc-analysis.netlify.app/)
 
 <!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
 
