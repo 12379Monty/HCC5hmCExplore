@@ -1,18 +1,15 @@
-DNA Hydroxymethylation in Hepatocellular Carcinoma
+Explore DNA Hydroxymethylation in Hepatocellular Carcinoma
 ================
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e2d185e2-485a-4f7a-ab99-1f931694d2dd/deploy-status)](https://app.netlify.com/sites/hcc-5hmc-reanalysis/deploys)
-
 
 <!-- index.md is generated from index.Rmd. Please edit that file -->
 
 ## DNA Hydroxymethylation in Hepatocellular Carcinoma
 
-This repo contains a report of analyses of data methylation profiles
-collected to investigate genome-wide mapping of 5-hydroxymethylcytosines
-in circulating cell-free DNA as reported in Cai et al. (2019)
-(<https://gut.bmj.com/content/68/12/2195>). The data are available from
-NCBI GEO [Series
+This repo contains a report of exploratory analyses of data methylation
+profiles collected to investigate genome-wide mapping of
+5-hydroxymethylcytosines in circulating cell-free DNA as reported in Cai
+et al. (2019) (<https://gut.bmj.com/content/68/12/2195>). The data are
+available from NCBI GEO [Series
 GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679).
 The data are also available through a an R package -
 [GSE112679](https://12379monty.github.io/GSE112679).
@@ -24,7 +21,9 @@ also available:
 [omicScaleR](https://github.com/12379Monty/omicScaleR.git)
 
 The analysis report page can be found
-[here](https://hcc-5hmc-reanalysis.netlify.app/)
+
+A bookdown workflow builds a publishes the report
+[here](https://hcc-5hmc-explore.netlify.app/)
 
 <!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
 

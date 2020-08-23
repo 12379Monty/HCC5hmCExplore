@@ -63,5 +63,6 @@ Rscript -e "rmarkdown::render('index.Rmd')"
 # nohup Rscript -e "rmarkdown::render('index.Rmd', rmarkdown::md_document())" > index.log  &
 # nohup Rscript -e "rmarkdown::render('index.Rmd')" > index.log  &
 
+### REMEMBER TO `cp index.md ../README.md`
 
 -->
