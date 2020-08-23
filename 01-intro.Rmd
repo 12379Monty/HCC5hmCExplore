@@ -35,10 +35,10 @@ gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy 
 They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
 Similar findings were reported in Song et al. (2017) [@Song:2017aa].  
 
-Using a larger dataset focusing on hepatocellular carcinoma, Cai et al. (2019) [@Cai:2019aa]
-demonstrated the  feasibility using features derived from 
+Focusing on hepatocellular carcinoma, Cai et al. (2019) [@Cai:2019aa] assembled a sizable dataset
+to demonstrate the feasibility of using features derived from 
 5-hydroxymethylcytosines marks in circulating cell-free DNA as 
-a non-invasive approach for early detection of
+a non-invasive approach for the early detection of
 hepatocellular carcinoma.  The data that are the basis of that
 report are available on the NCBI GEO web site 
 ([Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679)).
@@ -53,8 +53,10 @@ devtools::install_github("12379Monty/GSE112679")
 An important question in the early development of classifiers of the sorts
 that are the basis of any liquid biopsy diagnostic tool is how many samples
 should be collected to make properly informed decisions about the direction
-that development should take.  The purpose of this article is to examine this dataset 
-to try and shed some light on this question.
+that development should take such as which diseases or conditions
+should be prioritized and what is the expected performance of the
+targeted tool.  The purpose of this article is to examine this dataset 
+to shed some light on this question.
 
 Determining an appropriate sample size for a give task is never an easy question to 
 answer.
