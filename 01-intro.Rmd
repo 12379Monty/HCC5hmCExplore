@@ -1,4 +1,4 @@
-# Introduction {#intro}
+# Introduction {#index}
 
 
 The goal of detecting

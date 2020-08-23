@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
+<link rel="prev" href="index.html"/>
 <link rel="next" href="baseline-model.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -133,12 +133,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
 <li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#normalize---log_2-cpm"><i class="fa fa-check"></i><b>2.2</b> Normalize - <span class="math inline">\(log_2\)</span> CPM</a></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coerage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coerage variability</a></li>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
 <li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#differential-representation-analysis"><i class="fa fa-check"></i><b>2.4</b> Differential representation analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
@@ -320,7 +320,7 @@ shapes of the distributions.</p>
 <span id="cb9-4"><a href="preproc.html#cb9-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
 <span id="cb9-5"><a href="preproc.html#cb9-5"></a>)</span>
 <span id="cb9-6"><a href="preproc.html#cb9-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="dv">3</span>)</span>
-<span id="cb9-7"><a href="preproc.html#cb9-7"></a><span class="co"># After verifying that there are no outliers can plot a sample</span></span>
+<span id="cb9-7"><a href="preproc.html#cb9-7"></a><span class="co"># After verifying that there are no outliers can plot a random subset </span></span>
 <span id="cb9-8"><a href="preproc.html#cb9-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
 <span id="cb9-9"><a href="preproc.html#cb9-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
 <span id="cb9-10"><a href="preproc.html#cb9-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
@@ -374,7 +374,7 @@ greatest sequencing depth (library size 13.3 million).
 <span id="cb14-4"><a href="preproc.html#cb14-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
 <span id="cb14-5"><a href="preproc.html#cb14-5"></a>)</span>
 <span id="cb14-6"><a href="preproc.html#cb14-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="dv">3</span>)</span>
-<span id="cb14-7"><a href="preproc.html#cb14-7"></a><span class="co"># After verifying that there are no outliers can plot a sample</span></span>
+<span id="cb14-7"><a href="preproc.html#cb14-7"></a><span class="co"># After verifying that there are no outliers can plot random subset</span></span>
 <span id="cb14-8"><a href="preproc.html#cb14-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
 <span id="cb14-9"><a href="preproc.html#cb14-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
 <span id="cb14-10"><a href="preproc.html#cb14-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
@@ -398,7 +398,7 @@ samples.</p>
 <span id="cb15-3"><a href="preproc.html#cb15-3"></a><span class="co"># without loss of generality or sensitivity, sample 300 samples</span></span>
 <span id="cb15-4"><a href="preproc.html#cb15-4"></a><span class="co"># this is simply a matter of convenience and to save computing time</span></span>
 <span id="cb15-5"><a href="preproc.html#cb15-5"></a> <span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb15-6"><a href="preproc.html#cb15-6"></a> samp_ndx &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size=</span><span class="dv">300</span>)</span>
+<span id="cb15-6"><a href="preproc.html#cb15-6"></a> samp_ndx &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size=</span><span class="dv">500</span>)</span>
 <span id="cb15-7"><a href="preproc.html#cb15-7"></a></span>
 <span id="cb15-8"><a href="preproc.html#cb15-8"></a> </span>
 <span id="cb15-9"><a href="preproc.html#cb15-9"></a> <span class="co"># Dim 1, 2</span></span>
@@ -421,8 +421,8 @@ does not indicate strong clustering of samples. The fanning pattern observed in 
 first two dimensions indicates that a few samples are drifting way from the
 core set, but in no particular direction.</p>
 </div>
-<div id="analysis-of-coerage-variability" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Analysis of coerage variability</h2>
+<div id="analysis-of-coverage-variability" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Analysis of coverage variability</h2>
 </div>
 <div id="differential-representation-analysis" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Differential representation analysis</h2>
@@ -437,7 +437,7 @@ core set, but in no particular direction.</p>
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="baseline-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

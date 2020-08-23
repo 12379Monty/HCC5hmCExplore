@@ -296,6 +296,7 @@ core set, but in no particular direction.
 ## Analysis of coverage variability
 
 
+
 ## Differential representation analysis
 
    - word on GC content
