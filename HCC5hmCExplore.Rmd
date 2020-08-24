@@ -33,7 +33,7 @@ description: "Data from Cai et al. (2019) paper are explored"
 <!--chapter:end:index.Rmd-->
 
 
-# Introduction {#intro}
+# Introduction {#index}
 
 Placeholder
 
@@ -88,7 +88,7 @@ with(
 For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
 
-```{r subsetSamples, cache=T, cache.vars='sampDescA'}
+```{r subsetSamples, cache=T, cache.vars=c('sampDescA','groupCol')}
 
 sampDescA <-
   sampDesc %>%
@@ -99,6 +99,10 @@ sampDescA <-
 
 # Recode group
 sampDescA$group <- with(sampDescA, ifelse(group == "BenignHealthy", "Control", group))
+
+# set groupCol for later
+groupCol <- c("#F3C300", "#875692")
+names(groupCol) <- unique(sampDescA$group)
 
 with(sampDescA, table(group, exclude = NULL))
 
@@ -149,9 +153,6 @@ Look at coverage - make sure there isn't too much disparity of coverage
 across samples. 
 
 ```{r coverage, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots'}
-
-groupCol <- c("#F3C300", "#875692")
-names(groupCol) <- unique(sampDescA$group)
 
 par(mar = c(1, 3, 2, 1))
 boxplot(log2(featureCountsA + 1),
@@ -338,6 +339,195 @@ core set, but in no particular direction.
 
 ## Analysis of coverage variability
 
+We will use the methods described in Hart et al. (2013) [@Hart:2013aa] 
+to characterize coverage variability in these data. 
+These methods do not take multiple comparisons into account. 
+Other tools for sample size calculation in RNA-Seq studies include 
+Bi and Liu (2016) [@Bi:2016aa,] 
+Baccarella (2018) [@Baccarella:2018aa], 
+Guo (2014) [@Guo:2014aa], 
+Yu (2017) [@Yu:2017aa], 
+Zhao (2018) [@Zhao:2018ab]. 
+Poplawski (2018) [@Poplawski:2017aa] 
+evaluated RNA-seq sample size tools identified from a systematic search. They found the six evaluated tools provided widely different answers, which were strongly affected by fold change.
+
+
+The references listed above aim at providing guidance for RNA-Seq experimental design.
+There is much discussion and a wide range of opinion on sample size requirements
+for producing reproducible RNA-Seq results.  At one end of the spectrum, 
+Ein-Dor et al. (2006) [@Ein-Dor:2006aa] argue that thousands of samples are needed to 
+generate a robust gene list for predicting outcome in cancer.  At the other end,
+Dobbin et al. (2007, 2008) [@Dobbin:2007aa;@Dobbin:2008aa] claim that sample sizes in 
+the range of 20–30 per class may be adequate for building a good predictor in many cases. 
+Part of the disparity in sample size requirement recomendation comes from 
+differences of opinion in terms of what constitutes `reproducible results`. 
+In the context of sample classification, if we focus on  the predicted probabilities
+for individual samples, we may find good  reproducibility across studies with
+moderate samples sizes.  If on the other hand, we closely inspect the gene
+signatures reported across studies, much greater samples sizes migth be required to
+achieve concordance.  Kim (2009) [@Kim:2009aa], like Ein-Dor et al., also find
+issues in RNA-Seq research in terms of the instability of identified prognostic 
+gene signatures, few overlap between independently developed prognostic gene signatures, and
+poor inter-study applicability of gene signatures.  Fan et al. (2006) [@Fan:2006aa],
+om the other hand, found good concordance among gene-expression–based predictors 
+for breast cancer.  We will return to this question when we examine
+the relationship between classification model results and sample size in this
+dataset later on this paper.  
+
+
+For two groups comparisons, the basic formula for the required number of samples per group is:
+
+$$ n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \sigma^2)}{ln(\Delta^2)} $$
+
+* The parameters $\alpha$ and $\beta$ are size and power of the test.  
+* z the corresponding cut points.  
+* $\Delta$ is the testing target or effect size.   
+
+These three parameters will be fixed across genes or a given study, and are often dictated by
+external requirements. Typical values might be $\Delta = 1.5$ (a.k.a fold change),
+corresponding to detection of a 50% change in gene expression between the two groups.
+$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at $\alpha = 0.05$;
+and $z_{.90}= 1.28$ corresponding to 90% power.
+The other two variables will be gene and experiment dependent: the depth of coverage $\mu$ of the gene,
+and the coefficient of variation $\sigma$ in this gene between biological replicates.
+The technical variation of the comparison is inversely proportional to the number of sequenced reads
+for the gene and therefore decreases with sequencing depth.
+The biological variation is a property of the particular gene/model system/condition under study.
+One would expect it to be smaller for uniform systems such as cell culture and/or products that
+are under tight regulatory control, and larger for less uniform replicates such as human subject samples.
+
+<br/>
+<br/>
+
+Before examining biological variability lets take a look at
+the sequencing rates.
+
+
+
+```{r sumCount, cache=T, cache.vars='DD.cpmSum.frm'}
+
+countSum_frm <- do.call(
+  "rbind",
+  lapply(unique(sampDescA$group), function(GRP) {
+    GRP_featureCountsA <- featureCountsA[, sampDescA$group == GRP]
+    N_GRP <- ncol(GRP_featureCountsA)
+    MeanTotCovM <- mean(colSums(featureCountsA[, sampDescA$group == GRP])) / 1e6
+
+    GRP_countSum_mtx <- do.call("cbind", lapply(
+      1:ncol(GRP_featureCountsA),
+      function(CC) {
+        CC_cpm_vec <- GRP_featureCountsA[, CC]
+        100 * table(cut(CC_cpm_vec, breaks = c(0, .1, 1, 10, 50, 100, 1000, Inf))) / 
+                  length(CC_cpm_vec)
+      }
+    ))
+
+    GRP_countSum_vec <- apply(GRP_countSum_mtx, 1, median)
+
+    GRP_Zeros_vec <- colSums(GRP_featureCountsA == 0)
+    GRP_ZerosPct_vec <- 100 * GRP_Zeros_vec / nrow(GRP_featureCountsA)
+
+    data.frame(
+      Group = GRP, N = N_GRP, MeanTotCovM = round(MeanTotCovM, 1),
+      Zeros = median(GRP_Zeros_vec), ZeroPct = median(GRP_ZerosPct_vec),
+      t(GRP_countSum_vec), check.names = F
+    )
+  })
+)
+
+
+knitr::kable(countSum_frm)
+
+```
+
+
+
+As in Hart et al. (2013) [@Hart:2013aa]
+<!--for each gene with average counts of at least 5-->, we estimate the 
+biological coefficient of variation (CV) in expression across samples in the data set
+using a negative binomial model (edgeR).  
+From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)
+, the biolgical coefficient of variation (BCV), is the square root of the dispersion
+parameter under the negative binomial model. Hence, it is equivalent to estimating the
+dispersion(s) of the negative binomial model.
+
+```{r estBCV, cache=T, cache.vars=c('BCV_mtx','BCV_90perc_vec', 'BCV_50perc_vec'), fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of CV - rug = 90th percentile"}
+
+ #suppressMessages(reqduire(spatstat))
+
+ BCV_mtx <- do.call('cbind', lapply(unique(sampDescA$group), 
+ function(GRP) {
+  GRP_dgel <- edgeR::DGEList(counts=featureCountsA[, sampDescA$group==GRP])
+  GRP_dgel <- edgeR::estimateDisp(GRP_dgel)
+
+  sqrt(GRP_dgel$tagwise.dispersion)
+  }))
+
+ colnames(BCV_mtx) <- unique(sampDescA$group)
+
+
+ # Plot
+ plot(CDF(density(BCV_mtx[,1])), col=groupCol[colnames(BCV_mtx)[1]], lwd=2, ylab='Prob(BCV<x)',
+   xlim=c(0, 0.5))
+ for(JJ in 2:ncol(BCV_mtx))
+ plot(CDF(density(BCV_mtx[,JJ])), col=groupCol[colnames(BCV_mtx)[JJ]], lwd=2, add=T, xlim=c(0, 2.0))
+
+ legend('bottomright', legend=names(groupCol), col=groupCol, lwd=2)
+  
+ BCV_90perc_vec <- apply(BCV_mtx,2,quantile, prob=0.90)
+ BCV_50perc_vec <- apply(BCV_mtx,2,quantile, prob=0.50)
+ for(JJ in 1:length(BCV_90perc_vec)) 
+ rug(BCV_90perc_vec[JJ], lwd=2, col=groupCol[names(BCV_90perc_vec)[JJ]])
+
+
+```
+
+<br/>
+
+<!-- 
+ SampleSize_f <- function(Alpha=.01, Beta=.80, Delta=2, Mu, Disp)
+ {temp <- qnorm(1-Alpha/2) + qnorm(Beta)
+  vtemp <- 1/Mu + Disp
+  2*vtemp*(temp/log(Delta))^2}
+
+ cat("SampleSize_f(Mu=10, Disp=.4^2):\n")
+ SampleSize_f(Mu=10, Disp=.4^2)
+-->
+
+We can now look at sample size estimates to detect 
+various effect sizes.
+
+```{r sampleSizeCurve, cache=T, cache.vars='', fig.height=8, fig.width=11,fig.cap='Sample Size Estimates'}
+
+ par(mfrow=c(2,1), mar=c(3,3,2,1), oma=c(2,2,2,0))
+
+ for(EFFECT in c(1.25, 1.10)){
+  cat("rnapower(depth=10, cv=.4, effect=", EFFECT, "alpha=.01, power=.80):\n")
+  RNASeqPower::rnapower(depth=10, cv=.4, effect=EFFECT, alpha=.01, power=.80)
+ 
+ 
+  plot(x=1:50, y= RNASeqPower::rnapower(depth=1:50, cv=1.2, effect=EFFECT, alpha=.05, power=.80), 
+      type='n', lwd=2, ylim=c(0,ifelse(EFFECT==2, 50, 250)), ylab="", xlab="")
+ 
+  for(GRP in names(BCV_90perc_vec))
+  lines(x=1:50, y= RNASeqPower::rnapower(depth=1:50, cv=BCV_90perc_vec[GRP], effect=EFFECT, alpha=.05, power=.80),
+    lwd=2, col=groupCol[GRP])
+ 
+  title(paste("Effect =", EFFECT, "Alpha=0.05, Beta=0.80"))
+ 
+ }
+
+  legend('topright', legend=paste(names(BCV_90perc_vec), 'CV =', round(BCV_90perc_vec, 2)), 
+   col=groupCol[names(BCV_90perc_vec)],  lwd=2)
+
+ mtext(side=1, outer=T, "Gene Coverage")
+ mtext(side=2, outer=T, "Samples Needed")
+ mtext(side=3, outer=T, cex=1.25, "Negative Binomial 2 Group Sample Size Curves")
+
+ abline(h=5, col='grey')
+
+
+```
 
 ## Differential representation analysis
 
