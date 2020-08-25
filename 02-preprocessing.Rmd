@@ -49,11 +49,13 @@ and healthy or benign samples from the `Train` or `Val-1` subsets.
 sampDescA <-
   sampDesc %>%
   dplyr::filter(sampType == "blood" & (trainValGroup %in% c("Train", "Val-1")) &
-    ((outcome2 == "BenignHealthy") | (outcome2 == "HCC" & stage == "Early"))) %>%
+    ((outcome2 == "BenignHealthy") | 
+     (outcome2 == "HCC" & stage == "Early"))) %>%
   dplyr::rename(group = outcome2) %>%
   dplyr::arrange(group, sampID)
 # Recode group
-sampDescA$group <- with(sampDescA, ifelse(group == "BenignHealthy", "Control", group))
+sampDescA$group <- with(sampDescA, 
+   ifelse(group == "BenignHealthy", "Control", group))
 # set groupCol for later
 groupCol <- c("#F3C300", "#875692")
 names(groupCol) <- unique(sampDescA$group)
@@ -119,11 +121,13 @@ boxplot(log2(featureCountsA + 1),
   las = 2, horizontal = F, xaxt = "n",
   border = groupCol[sampDescA$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol, ncol = 2, bty = "n")
+legend("top", legend = names(groupCol), text.col = groupCol, 
+  ncol = 2, bty = "n")
 # Add reference lines
 SampleMedian <- apply(log2(featureCountsA + 1), 2, median)
 abline(h = median(SampleMedian), col = "grey")
-axis(side = 2, at = round(median(SampleMedian), 1), las = 2, col = "grey", line = -1, tick = F)
+axis(side = 2, at = round(median(SampleMedian), 1), 
+  las = 2, col = "grey", line = -1, tick = F)
 
 ```
 
@@ -149,12 +153,15 @@ boxplot(RLR_mtx,
   las = 2, horizontal = F, xaxt = "n",
   border = groupCol[sampDescA$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol, ncol = 2, bty = "n")
+legend("top", legend = names(groupCol), 
+  text.col = groupCol, ncol = 2, bty = "n")
 # Add group Q1, Q3
 for (GRP in unique(sampDescA$group)) {
   group_ndx <- which(sampDescA$group == GRP)
-  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, quantile, prob = c(.25, .75))
-  abline(h = apply(group_Q1Q3_mtx, 1, median), col = groupCol[GRP], lwd = 2)
+  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
+     quantile, prob = c(.25, .75))
+  abline(h = apply(group_Q1Q3_mtx, 1, median), 
+     col = groupCol[GRP], lwd = 2)
 }
 
 
@@ -180,12 +187,13 @@ plot(density(lcpm_mtx[, 1]),
   lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = ""
 )
 abline(v = 0, col = 3)
-# After verifying that there are no outliers can plot a random subset 
+# After verifying no outliers, can plot a random subset 
 for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
   den <- density(lcpm_mtx[, JJ])
   lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
 } # for(JJ
-legend("topright", legend = names(groupCol), text.col = groupCol, bty = "n")
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
 
 ```
 
@@ -245,12 +253,13 @@ plot(density(lcpm_mtx[, 1]),
   lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = ""
 )
 abline(v = 0, col = 3)
-# After verifying that there are no outliers can plot random subset
+# After verifying no outliers, can plot a random subset 
 for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
   den <- density(lcpm_mtx[, JJ])
   lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
 } # for(JJ
-legend("topright", legend = names(groupCol), text.col = groupCol, bty = "n")
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
 
 ```
 
@@ -268,12 +277,15 @@ samples.
  par(mfcol=c(1,2), mar=c(4,4,2,1), xpd=NA, oma=c(0,0,2,0))
 
 # without loss of generality or sensitivity, sample 300 samples
-# this is simply a matter of convenience and to save computing time
+# this is simply a matter of convenience and to save time
  set.seed(1)
  samp_ndx <- sample(1:ncol(lcpm_mtx), size=500)
- MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], col=groupCol[sampDescA$group[samp_ndx]], pch=1)
- legend("topleft", legend = names(groupCol), text.col = groupCol, bty = "n")
- MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], col=groupCol[sampDescA$group[samp_ndx]], pch=1,
+ MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], 
+  col=groupCol[sampDescA$group[samp_ndx]], pch=1)
+ legend("topleft", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
+ MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], 
+  col=groupCol[sampDescA$group[samp_ndx]], pch=1,
      dim.plot=3:4)
 
 ```
@@ -385,34 +397,38 @@ knitr::kable(countSum_frm)
 As in Hart et al. (2013) [@Hart:2013aa]
 <!--for each gene with average counts of at least 5-->, we estimate the 
 biological coefficient of variation (CV) in expression across samples in the data set
-using a negative binomial model (edgeR).  
+using a negative binomial model.
 <!--
 From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)
 , the biolgical coefficient of variation (BCV), is the square root of the dispersion
 parameter under the negative binomial model. Hence, it is equivalent to estimating the
 dispersion(s) of the negative binomial model.
 -->
-```{r estBCV, cache=T, cache.vars=c('BCV_mtx','BCV_90perc_vec', 'BCV_50perc_vec'), fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of CV - rug = 90th percentile"}
+```{r estBCV, cache=T, cache.vars=c('BCV_mtx','BCV_90perc_vec', 'BCV_50perc_vec'), fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of CV - rug = 90th percentile",message=F}
 
  BCV_mtx <- do.call('cbind', lapply(unique(sampDescA$group), 
  function(GRP) {
-  GRP_dgel <- edgeR::DGEList(counts=featureCountsA[, sampDescA$group==GRP])
-  GRP_dgel <- suppressMessages(edgeR::estimateDisp(GRP_dgel))
+  GRP_dgel <- 
+    edgeR::DGEList(counts=featureCountsA[, sampDescA$group==GRP])
+  GRP_dgel <- edgeR::estimateDisp(GRP_dgel)
 
   sqrt(GRP_dgel$tagwise.dispersion)
   }))
  colnames(BCV_mtx) <- unique(sampDescA$group)
  plot(spatstat::CDF(density(BCV_mtx[,1])), 
-      col=groupCol[colnames(BCV_mtx)[1]], lwd=2, ylab='Prob(BCV<x)',
+   col=groupCol[colnames(BCV_mtx)[1]], 
+   lwd=2, ylab='Prob(BCV<x)',
    xlim=c(0, 0.5))
  for(JJ in 2:ncol(BCV_mtx))
  plot(spatstat::CDF(density(BCV_mtx[,JJ])), 
-      col=groupCol[colnames(BCV_mtx)[JJ]], lwd=2, add=T, xlim=c(0, 2.0))
+   col=groupCol[colnames(BCV_mtx)[JJ]], 
+   lwd=2, add=T, xlim=c(0, 2.0))
  legend('bottomright', legend=names(groupCol), col=groupCol, lwd=2)
- BCV_90perc_vec <- apply(BCV_mtx,2,quantile, prob=0.90)
- BCV_50perc_vec <- apply(BCV_mtx,2,quantile, prob=0.50)
+ BCV_90perc_vec <- round(apply(BCV_mtx,2,quantile, prob=0.90), 2)
+ BCV_50perc_vec <- round(apply(BCV_mtx,2,quantile, prob=0.50), 2)
  for(JJ in 1:length(BCV_90perc_vec)) 
- rug(BCV_90perc_vec[JJ], lwd=2, col=groupCol[names(BCV_90perc_vec)[JJ]])
+ rug(BCV_90perc_vec[JJ], lwd=2, ticksize = 0.05,
+    col=groupCol[names(BCV_90perc_vec)[JJ]])
 
 ```
 
@@ -429,48 +445,38 @@ dispersion(s) of the negative binomial model.
 -->
 
 We can now look at sample size estimates to required to detect 
-various effect sizes.
+various effect sizes.  The effect sizes examined here are selected
+based on the differential representation analysis in Section \@ref(dra) below.
 
-# UP TO HERE
-
-## REDO THIS - just one curve at the 90perc CV.
-## or two curves - one for 90per and one for 50 perc
-## elaborate
 
 ```{r sampleSizeCurve, cache=T, cache.vars='', fig.height=8, fig.width=11,fig.cap='Sample Size Estimates'}
 
 par(mfrow = c(2, 1), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 0))
-for (EFFECT in c(1.25, 1.10)) {
-  RNASeqPower::rnapower(depth = 10, cv = .4, effect = EFFECT, alpha = .01, power = .80)
+for (EFFECT in c(1.10, 1.20)) {
   plot(
-    x = 1:50, y = RNASeqPower::rnapower(depth = 1:50, cv = 1.2, 
-                  effect = EFFECT, alpha = .05, power = .80),
-    type = "n", lwd = 2, ylim = c(0, ifelse(EFFECT == 2, 50, 250)), ylab = "", xlab = ""
+    x = 10:100, 
+    y = RNASeqPower::rnapower(depth = 10:100, cv = max(BCV_90perc_vec), 
+         effect = EFFECT, alpha = .05, power = .80),
+    lwd = 2, ylab = "", xlab = "", type='l'
   )
-  for (GRP in names(BCV_90perc_vec)) {
-    lines(
-      x = 1:50, y = RNASeqPower::rnapower(depth = 1:50, cv = BCV_90perc_vec[GRP], 
-                    effect = EFFECT, alpha = .05, power = .80),
-      lwd = 2, col = groupCol[GRP]
-    )
-  }
-
-  title(paste("Effect =", EFFECT, "Alpha=0.05, Beta=0.80"))
+  title(paste("Effect =", EFFECT, "cv =", 
+     max(BCV_90perc_vec), "Alpha=0.05, Beta=0.80"))
 }
-legend("topright",
-  legend = paste(names(BCV_90perc_vec), "CV =", round(BCV_90perc_vec, 2)),
-  col = groupCol[names(BCV_90perc_vec)], lwd = 2
-)
 mtext(side = 1, outer = T, "Gene Coverage")
 mtext(side = 2, outer = T, "Samples Needed")
-mtext(side = 3, outer = T, cex = 1.25, "Negative Binomial 2 Group Sample Size Curves")
+mtext(side = 3, outer = T, cex = 1.25, 
+    "Negative Binomial 2 Group Sample Size Curves")
+
 ```
 
-Note that moderate sample sizes are adequte to detect genes with an effect size
-of 1.25 ...
+Note that with these data, moderate sample sizes are adequate 
+to detect genes with an effect size of 1.2 (20% fold change).  This is due to the fact
+that the biological variability in gene body 5hmC density is quite low.
+For human samples, RNA-Seq within group biological variability is
+typically in the 0.4-1.0 range [@Hart:2013aa].  
 
 
-## Differential representation analysis
+## Differential representation analysis {#dra}
 
    - word on GC content
 

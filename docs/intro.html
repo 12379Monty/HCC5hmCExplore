@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 1 Introduction | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 1 Introduction | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 1 Introduction | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="baseline-model.html"/>
-<link rel="next" href="conclusions.html"/>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="preproc.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -169,9 +169,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-suite" class="section level1" number="4">
-<h1><span class="header-section-number">Section 4</span> Fitted Model Suite</h1>
-<p>We examine the results of fitting a suite of models to
+<div id="intro" class="section level1" number="1">
+<h1><span class="header-section-number">Section 1</span> Introduction</h1>
+<p>The goal of detecting
+cancer at the earliest stage of development with a non-invasive procedure
+has busied many groups with the task of perfecting techniques to support
+what has become commonly known as a
+liquid biopsy - the analysis of biomarkers circulating in fluids such as blood,
+saliva or urine. Epigenetic biomarkers present themselves as good candidates for this application
+(Gai and Sun (2019) <span class="citation">[<a href="references.html#ref-Gai:2019aa" role="doc-biblioref">1</a>]</span>). In particular,
+given their prevalence in the human genome,
+close correlation with gene expression and high chemical stability,
+DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
+are DNA epigenetic marks that provide much promise as
+cancer diagnosis biomarkers that could be profitably analyzed in liquid biopsies
+<span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>–<a href="references.html#ref-Collin:2018aa" role="doc-biblioref">5</a>]</span>.</p>
+<!--
+This work has already led to some commercial products.
+Thrive Earlier Detection Corp.  launched CancerSEEK, a liquid biopsy test to detect multiple cancers early in 2019.  Guardant Health offers a liquid biopsy test, Guardant360, for advanced solid 
+tumor cancers. Others in the space include Karius, which focuses on a liquid biopsy for 
+infectious disease, and GRAIL Bio, which was launched by Illumina in January 2016. 
+In 2017, Verily Life Sciences, one of Google/Alphabet’s companies, invested in Freenome, 
+another liquid biopsy company.
+-->
+<p>Li et al. (2017) <span class="citation">[<a href="references.html#ref-Li:2017aa" role="doc-biblioref">3</a>]</span> used a sensitive and selective chemical labeling technology
+to extract genome-wide 5hmC profiles from circulating cell-free DNA (cfDNA)
+as well as from genomic DNA (gDNA)
+collected from a cohort of 260 patients recently diagnosed with colorectal,
+gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy individuals
+They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
+Similar small sample size findings were reported in Song et al. (2017) <span class="citation">[<a href="references.html#ref-Song:2017aa" role="doc-biblioref">4</a>]</span>.</p>
+<p>Focusing on hepatocellular carcinoma, Cai et al. (2019) <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span> assembled a sizable dataset
+to demonstrate the feasibility of using features derived from
+5-hydroxymethylcytosines marks in circulating cell-free DNA as
+a non-invasive approach for the early detection of
+hepatocellular carcinoma. The data that are the basis of that
+report are available on the NCBI GEO web site
+(<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679">Series GSE112679</a>).
+The data have also been bundled in a R data package which can be installed from github:</p>
+<pre><code>if (!requireNamespace(&quot;devtools&quot;, quietly = TRUE))
+    install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;12379Monty/GSE112679&quot;)</code></pre>
+<p>An important question in the early development of classifiers of the sorts
+that are the basis of any liquid biopsy diagnostic tool is how many samples
+should be collected to make properly informed decisions. In this
+report we will explore the GSE112679 data to shed some light on
+the relationship between sample size and model performance
+in the context classifying samples based on 5hmC data.</p>
+<p>In Section <a href="preproc.html#preproc">2</a> we preprocess the data that
+we will use for the classification analysis and perform some light QC analyses.
+In Section <a href="baseline-model.html#baseline-model">3</a> we fit some models to discriminate between
+early stage HCC and control samples and examine their performance.
+In Section <a href="model-suite.html#model-suite">4</a> we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.</p>
 
 </div>
@@ -180,8 +229,8 @@ investigate the effect of sample size on model performance.</p>
           </div>
         </div>
       </div>
-<a href="baseline-model.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="conclusions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preproc.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-24" />
+<meta name="date" content="2020-08-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 
-<link rel="next" href="preproc.html"/>
+<link rel="next" href="intro.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -133,23 +133,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preamble</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#normalize---log_2-cpm"><i class="fa fa-check"></i><b>2.2</b> Normalize - <span class="math inline">\(log_2\)</span> CPM</a></li>
+<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#normalized-representation-feature---log_2-cpm"><i class="fa fa-check"></i><b>2.2</b> Normalized representation feature - <span class="math inline">\(log_2\)</span> CPM</a></li>
 <li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
+<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.4</b> Differential representation analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="up-to-here.html"><a href="up-to-here.html"><i class="fa fa-check"></i><b>3</b> UP TO HERE</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="up-to-here.html"><a href="up-to-here.html#redo-this---just-one-curve-at-the-90perc-cv."><i class="fa fa-check"></i><b>3.1</b> REDO THIS - just one curve at the 90perc CV.</a></li>
-<li class="chapter" data-level="3.2" data-path="up-to-here.html"><a href="up-to-here.html#or-two-curves---one-for-90per-and-one-for-50-perc"><i class="fa fa-check"></i><b>3.2</b> or two curves - one for 90per and one for 50 perc</a></li>
-<li class="chapter" data-level="3.3" data-path="up-to-here.html"><a href="up-to-here.html#elaborate"><i class="fa fa-check"></i><b>3.3</b> elaborate</a></li>
-<li class="chapter" data-level="3.4" data-path="up-to-here.html"><a href="up-to-here.html#differential-representation-analysis"><i class="fa fa-check"></i><b>3.4</b> Differential representation analysis</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>4</b> Baseline Model</a></li>
-<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
-<li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
+<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
+<li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
@@ -174,62 +172,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DNA Hydroxymethylation in Hepatocellular Carcinoma</h1>
 <p class="author"><em>Francois Collin</em></p>
-<p class="date"><em>2020-08-24</em></p>
+<p class="date"><em>2020-08-25</em></p>
 </div>
-<div id="index" class="section level1" number="1">
-<h1><span class="header-section-number">Section 1</span> Introduction</h1>
-<p>The goal of detecting
-cancer at the earliest stage of development with a non-invasive procedure
-has busied many groups with the task of perfecting techniques to support
-what has become commonly known as a
-liquid biopsy - the analysis of biomarkers circulating in fluids such as blood,
-saliva or urine. Epigenetic biomarkers present themselves as good candidates for this application
-(Gai and Sun (2019) <span class="citation">[<a href="references.html#ref-Gai:2019aa" role="doc-biblioref">1</a>]</span>). In particular,
-given their prevalence in the human genome,
-close correlation with gene expression and high chemical stability,
-DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
-are DNA epigenetic marks that provide much promise as
-cancer diagnosis biomarkers that could be profitably analyzed in liquid biopsies
-<span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>–<a href="references.html#ref-Collin:2018aa" role="doc-biblioref">5</a>]</span>.</p>
-<!--
-This work has already led to some commercial products.
-Thrive Earlier Detection Corp.  launched CancerSEEK, a liquid biopsy test to detect multiple cancers early in 2019.  Guardant Health offers a liquid biopsy test, Guardant360, for advanced solid 
-tumor cancers. Others in the space include Karius, which focuses on a liquid biopsy for 
-infectious disease, and GRAIL Bio, which was launched by Illumina in January 2016. 
-In 2017, Verily Life Sciences, one of Google/Alphabet’s companies, invested in Freenome, 
-another liquid biopsy company.
--->
-<p>Li et al. (2017) <span class="citation">[<a href="references.html#ref-Li:2017aa" role="doc-biblioref">3</a>]</span> used a sensitive and selective chemical labeling technology
-to extract genome-wide 5hmC profiles from circulating cell-free DNA (cfDNA)
-as well as from genomic DNA (gDNA)
-collected from a cohort of 260 patients recently diagnosed with colorectal,
-gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy individuals
-They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
-Similar small sample size findings were reported in Song et al. (2017) <span class="citation">[<a href="references.html#ref-Song:2017aa" role="doc-biblioref">4</a>]</span>.</p>
-<p>Focusing on hepatocellular carcinoma, Cai et al. (2019) <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span> assembled a sizable dataset
-to demonstrate the feasibility of using features derived from
-5-hydroxymethylcytosines marks in circulating cell-free DNA as
-a non-invasive approach for the early detection of
-hepatocellular carcinoma. The data that are the basis of that
-report are available on the NCBI GEO web site
-(<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679">Series GSE112679</a>).
-The data have also been bundled in a R data package which can be installed from github:</p>
-<pre><code>if (!requireNamespace(&quot;devtools&quot;, quietly = TRUE))
-    install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;12379Monty/GSE112679&quot;)</code></pre>
-<p>An important question in the early development of classifiers of the sorts
-that are the basis of any liquid biopsy diagnostic tool is how many samples
-should be collected to make properly informed decisions. In this
-report we will explore the GSE112679 data to shed some light on
-the relationship between sample size and model performance
-in the context classifying samples based on 5hmC data.</p>
-<p>In section <a href="preproc.html#preproc">2</a> we preprocess the data that
-we will use for the classification analysis and perform some light QC analyses.
-In section <a href="baseline-model.html#baseline-model">4</a> we fit some models to discriminate between
-early stage HCC and control samples and examine their performance.
-In section <a href="model-suite.html#model-suite">5</a> we examine the results of fitting a suite of models to
-investigate the effect of sample size on model performance.</p>
-
+<div id="index" class="section level1 unnumbered" number="">
+<h1>Preamble</h1>
+<p>This vignette offers some exploratory data analyses of data available from
+the <a href="https://www.ncbi.nlm.nih.gov/geo/">NCBI GEO web site</a>.</p>
+<div id="license" class="section level2 unnumbered" number="">
+<h2>License</h2>
+<!-- From https://github.com/santisoler/cc-licenses -->
+<p><img src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></p>
+<p>This work by Francois Collin is licensed under a
+<a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a></p>
+</div>
 </div>
             </section>
 
@@ -237,7 +192,7 @@ investigate the effect of sample size on model performance.</p>
         </div>
       </div>
 
-<a href="preproc.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

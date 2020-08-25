@@ -1,4 +1,23 @@
-# Introduction {#index}
+# Preamble {.unnumbered #index} 
+
+
+This vignette offers some exploratory data analyses of data available from 
+the [NCBI GEO web site](https://www.ncbi.nlm.nih.gov/geo/).  
+
+## License {-}
+
+<!-- From https://github.com/santisoler/cc-licenses -->
+<!-- COMMENT OUT FOR bookdown::pdf_book ????
+![](CC_4_0.png)
+-->
+![](https://i.creativecommons.org/l/by/4.0/88x31.png)
+
+This work by Francois Collin is licensed under a
+[Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)
+
+
+
+# Introduction {#intro}
 
 
 The goal of detecting
@@ -55,11 +74,11 @@ the relationship between sample size and model performance
 in the context classifying samples based on 5hmC data.
 
 
-In section \@ref(preproc) we preprocess the data that
+In Section \@ref(preproc) we preprocess the data that
 we will use for the classification analysis and perform some light QC analyses.
-In section \@ref(baseline-model) we fit some models to discriminate between
+In Section \@ref(baseline-model) we fit some models to discriminate between
 early stage HCC and control samples and examine their performance.
-In section \@ref(model-suite) we examine the results of fitting a suite of models to
+In Section \@ref(model-suite) we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.
 
 

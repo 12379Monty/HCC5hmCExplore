@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 4 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="baseline-model.html"/>
-<link rel="next" href="conclusions.html"/>
+
+<link rel="next" href="index.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -133,17 +133,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preamble</a>
+<li class="chapter" data-level="" data-path="preamble.html"><a href="preamble.html"><i class="fa fa-check"></i>Preamble</a>
 <ul>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+<li class="chapter" data-level="" data-path="preamble.html"><a href="preamble.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
-<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
 <li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#normalized-representation-feature---log_2-cpm"><i class="fa fa-check"></i><b>2.2</b> Normalized representation feature - <span class="math inline">\(log_2\)</span> CPM</a></li>
 <li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.4</b> Differential representation analysis</a></li>
+<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#differential-representation-analysis-dra"><i class="fa fa-check"></i><b>2.4</b> Differential representation analysis {dra}</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
 <li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
@@ -169,19 +169,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-suite" class="section level1" number="4">
-<h1><span class="header-section-number">Section 4</span> Fitted Model Suite</h1>
-<p>We examine the results of fitting a suite of models to
-investigate the effect of sample size on model performance.</p>
-
+<div id="header">
+<h1 class="title">DNA Hydroxymethylation in Hepatocellular Carcinoma</h1>
+<p class="author"><em>Francois Collin</em></p>
+<p class="date"><em>2020-08-25</em></p>
+</div>
+<div id="preamble" class="section level1 unnumbered" number="">
+<h1>Preamble</h1>
+<p>This vignette offers some exploratory data analyses of data available from
+the <a href="https://www.ncbi.nlm.nih.gov/geo/">NCBI GEO web site</a>.</p>
+<div id="license" class="section level2 unnumbered" number="">
+<h2>License</h2>
+<p>Shield: <a href="http://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg" alt="CC BY 4.0" /></a></p>
+<p>This work by Francois Collin is licensed under a
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="baseline-model.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="conclusions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+
+<a href="index.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

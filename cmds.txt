@@ -18,6 +18,10 @@ renv::snapshot()
 # build the book
 nohup Rscript -e "bookdown::render_book('index.Rmd')"    > render_book.log &
 
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"  > render_bookPDF.log &
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook')"  > render_bookGIT.log &
+nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::epub_book')"  > render_bookEPUB.log &
+
 ##############################################
 # Preview a chapter
 nohup Rscript -e "bookdown::render_book(input='index.Rmd', preview=T)" > render_index.log  &
