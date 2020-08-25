@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 6 Conclusions | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 3 UP TO HERE | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 6 Conclusions | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 3 UP TO HERE | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 6 Conclusions | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 3 UP TO HERE | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="model-suite.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="preproc.html"/>
+<link rel="next" href="baseline-model.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -171,19 +171,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="conclusions" class="section level1" number="6">
-<h1><span class="header-section-number">Section 6</span> Conclusions</h1>
-<p>We have found that …</p>
-<p>Other questions …</p>
+<div id="up-to-here" class="section level1" number="3">
+<h1><span class="header-section-number">Section 3</span> UP TO HERE</h1>
+<div id="redo-this---just-one-curve-at-the-90perc-cv." class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> REDO THIS - just one curve at the 90perc CV.</h2>
+</div>
+<div id="or-two-curves---one-for-90per-and-one-for-50-perc" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> or two curves - one for 90per and one for 50 perc</h2>
+</div>
+<div id="elaborate" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> elaborate</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="up-to-here.html#cb17-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb17-2"><a href="up-to-here.html#cb17-2"></a><span class="cf">for</span> (EFFECT <span class="cf">in</span> <span class="kw">c</span>(<span class="fl">1.25</span>, <span class="fl">1.10</span>)) {</span>
+<span id="cb17-3"><a href="up-to-here.html#cb17-3"></a>  RNASeqPower<span class="op">::</span><span class="kw">rnapower</span>(<span class="dt">depth =</span> <span class="dv">10</span>, <span class="dt">cv =</span> <span class="fl">.4</span>, <span class="dt">effect =</span> EFFECT, <span class="dt">alpha =</span> <span class="fl">.01</span>, <span class="dt">power =</span> <span class="fl">.80</span>)</span>
+<span id="cb17-4"><a href="up-to-here.html#cb17-4"></a>  <span class="kw">plot</span>(</span>
+<span id="cb17-5"><a href="up-to-here.html#cb17-5"></a>    <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dt">y =</span> RNASeqPower<span class="op">::</span><span class="kw">rnapower</span>(<span class="dt">depth =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dt">cv =</span> <span class="fl">1.2</span>, </span>
+<span id="cb17-6"><a href="up-to-here.html#cb17-6"></a>                  <span class="dt">effect =</span> EFFECT, <span class="dt">alpha =</span> <span class="fl">.05</span>, <span class="dt">power =</span> <span class="fl">.80</span>),</span>
+<span id="cb17-7"><a href="up-to-here.html#cb17-7"></a>    <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">ifelse</span>(EFFECT <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="dv">50</span>, <span class="dv">250</span>)), <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb17-8"><a href="up-to-here.html#cb17-8"></a>  )</span>
+<span id="cb17-9"><a href="up-to-here.html#cb17-9"></a>  <span class="cf">for</span> (GRP <span class="cf">in</span> <span class="kw">names</span>(BCV_90perc_vec)) {</span>
+<span id="cb17-10"><a href="up-to-here.html#cb17-10"></a>    <span class="kw">lines</span>(</span>
+<span id="cb17-11"><a href="up-to-here.html#cb17-11"></a>      <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dt">y =</span> RNASeqPower<span class="op">::</span><span class="kw">rnapower</span>(<span class="dt">depth =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dt">cv =</span> BCV_90perc_vec[GRP], </span>
+<span id="cb17-12"><a href="up-to-here.html#cb17-12"></a>                    <span class="dt">effect =</span> EFFECT, <span class="dt">alpha =</span> <span class="fl">.05</span>, <span class="dt">power =</span> <span class="fl">.80</span>),</span>
+<span id="cb17-13"><a href="up-to-here.html#cb17-13"></a>      <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> groupCol[GRP]</span>
+<span id="cb17-14"><a href="up-to-here.html#cb17-14"></a>    )</span>
+<span id="cb17-15"><a href="up-to-here.html#cb17-15"></a>  }</span>
+<span id="cb17-16"><a href="up-to-here.html#cb17-16"></a></span>
+<span id="cb17-17"><a href="up-to-here.html#cb17-17"></a>  <span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&quot;Effect =&quot;</span>, EFFECT, <span class="st">&quot;Alpha=0.05, Beta=0.80&quot;</span>))</span>
+<span id="cb17-18"><a href="up-to-here.html#cb17-18"></a>}</span>
+<span id="cb17-19"><a href="up-to-here.html#cb17-19"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb17-20"><a href="up-to-here.html#cb17-20"></a>  <span class="dt">legend =</span> <span class="kw">paste</span>(<span class="kw">names</span>(BCV_90perc_vec), <span class="st">&quot;CV =&quot;</span>, <span class="kw">round</span>(BCV_90perc_vec, <span class="dv">2</span>)),</span>
+<span id="cb17-21"><a href="up-to-here.html#cb17-21"></a>  <span class="dt">col =</span> groupCol[<span class="kw">names</span>(BCV_90perc_vec)], <span class="dt">lwd =</span> <span class="dv">2</span></span>
+<span id="cb17-22"><a href="up-to-here.html#cb17-22"></a>)</span>
+<span id="cb17-23"><a href="up-to-here.html#cb17-23"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Gene Coverage&quot;</span>)</span>
+<span id="cb17-24"><a href="up-to-here.html#cb17-24"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Samples Needed&quot;</span>)</span>
+<span id="cb17-25"><a href="up-to-here.html#cb17-25"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">3</span>, <span class="dt">outer =</span> T, <span class="dt">cex =</span> <span class="fl">1.25</span>, <span class="st">&quot;Negative Binomial 2 Group Sample Size Curves&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:sampleSizeCurve"></span>
+<img src="HCC5hmCExplore_files/figure-html/sampleSizeCurve-1.png" alt="Sample Size Estimates" width="1056" />
+<p class="caption">
+Figure 3.1: Sample Size Estimates
+</p>
+</div>
+<p>Note that moderate sample sizes are adequte to detect genes with an effect size
+of 1.25 …</p>
+</div>
+<div id="differential-representation-analysis" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Differential representation analysis</h2>
+<ul>
+<li>word on GC content</li>
+</ul>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="model-suite.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="preproc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="baseline-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
