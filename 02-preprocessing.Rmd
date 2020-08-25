@@ -102,8 +102,10 @@ there are no apparent systematic effects in the data.
 
 ```
 
-Look at coverage - make sure there isn't too much disparity of coverage 
-across samples. 
+We first look at coverage - make sure there isn't too much disparity of coverage 
+across samples. To detect shared variability, samples can be annotated and ordered
+according to sample features that may be linked to sample batch processing.  Here we 
+the samples have been ordered by group and sample id (an alias of geoAcc).
 
 ```{r coverage, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots'}
 
@@ -126,8 +128,9 @@ axis(side = 2, at = round(median(SampleMedian), 1), las = 2, col = "grey", line 
 ```
 
 
-Look at relative log representation (RLR) (in the context of measuring the density of 
-5hmC marks in genes, we refer to `representation` as opposed to `expression`) -
+We nest look at relative log representation (RLR) (in the context of measuring the density of 
+5hmC marks in genes, we refer to `representation` as opposed to `expression`; the
+two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.
 
 ```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T}
@@ -161,7 +164,7 @@ We note that the HCC samples have slightly more variable coverage distribution.
 A few samples are quite different.
 
 
-## Normalize - $log_2$ CPM
+## Normalized representation feature - $log_2$ CPM
 
 We will use $log_2$ normalized counts per million as our indicator
 of 5hmC gene representation in our downstream analyses.
@@ -320,18 +323,21 @@ For two groups comparisons, the basic formula for the required number of samples
 
 $$ n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \sigma^2)}{ln(\Delta^2)} $$
 
-* The parameters $\alpha$ and $\beta$ are size and power of the test.  
-* z the corresponding cut points.  
-* $\Delta$ is the testing target or effect size.   
+* The parameters $\alpha$ and $\beta$ are **size** and **power** of the test.  
+* $\Delta$ is the targeted **effect size**.   
+* $\mu$ and $\sigma$ are the **mean** and **coefficient of variation** 
+of the distribution of measurement, gene representation indices in this case.
 
 These three parameters will be fixed across genes or a given study, and are often dictated by
-external requirements. Typical values might be $\Delta = 1.5$ (a.k.a fold change),
-corresponding to detection of a 50% change in gene expression between the two groups.
-$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at $\alpha = 0.05$;
+external requirements. Typical values might be an effect size of $\Delta = 1.5$ 
+(a.k.a fold change), corresponding to detection of a 50% change in gene expression 
+between the two groups.
+$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at size $\alpha = 0.05$;
 and $z_{.90}= 1.28$ corresponding to 90% power.
-The other two variables will be gene and experiment dependent: the depth of coverage $\mu$ of the gene,
-and the coefficient of variation $\sigma$ in this gene between biological replicates.
-The technical variation of the comparison is inversely proportional to the number of sequenced reads
+The other two variables will be gene and experiment dependent: the normalized depth 
+of coverage $\mu$ of the gene, and the coefficient of variation $\sigma$ in this 
+gene between biological replicates.  The technical variation of the 
+comparison is inversely proportional to the number of sequenced reads
 for the gene and therefore decreases with sequencing depth.
 The biological variation is a property of the particular gene/model system/condition under study.
 One would expect it to be smaller for uniform systems such as cell culture and/or products that
@@ -339,7 +345,6 @@ are under tight regulatory control, and larger for less uniform replicates such
 as human subject samples.  The dataset under study in this report is the first of its
 kind to give us an idea of variability levels in 5hmC representation.
 
-<br/>
 
 <!-- SKIP THIS
 Before examining biological variability lets take a look at

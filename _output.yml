@@ -6,7 +6,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">DNA Hydroxymethylation in Hepatocellular Carcinoma</a></li>
       after: |
-        <li><a href="LICENSE.md" style="color:red; font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
+        <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
     download: ["pdf", "epub"]
 bookdown::pdf_book:
   includes:
