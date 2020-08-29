@@ -7,10 +7,16 @@ the [NCBI GEO web site](https://www.ncbi.nlm.nih.gov/geo/).
 ## License {-}
 
 <!-- From https://github.com/santisoler/cc-licenses -->
+<!-- THis doesnt work with pdf -->
 <!-- COMMENT OUT FOR bookdown::pdf_book ????
 ![](CC_4_0.png)
--->
 ![](https://i.creativecommons.org/l/by/4.0/88x31.png)
+
+-->
+
+`r knitr::include_graphics(
+  "Static/images/CC_4_0.png",  dpi=100)`
+
 
 This work by Francois Collin is licensed under a
 [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)

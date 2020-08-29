@@ -8,7 +8,9 @@ bookdown::gitbook:
       after: |
         <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
     download: ["pdf", "epub"]
-bookdown::pdf_book:
+#bookdown::pdf_book:
+# See https://rmd4sci.njtierney.com/start.html
+bookdown::pdf_document2:
   includes:
     in_header: preamble.tex
   latex_engine: xelatex

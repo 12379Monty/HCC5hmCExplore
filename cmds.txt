@@ -7,8 +7,8 @@ nohup Rscript -e  "bookdown:::bookdown_skeleton(getwd())"    >  bookdown_skeleto
 
 ######
 # github action - https://www.hvitfeldt.me/blog/bookdown-netlify-github-actions/
-# API ID:  e2d185e2-485a-4f7a-ab99-1f931694d2dd
-# TOKEN: d110a8bcd3bc391158b6a74ad15b723a13427e21fc0654440adcbde1e08d9ead
+# API ID:  XXX
+# TOKEN: XXX
 
 # In R
 usethis::use_github_action("bookdown.yaml")
