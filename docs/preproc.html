@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-29" />
+<meta name="date" content="2020-08-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -214,12 +214,13 @@ For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:201
 <span id="cb5-5"><a href="preproc.html#cb5-5"></a>  devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;12379Monty/GSE112679&quot;</span>)</span>
 <span id="cb5-6"><a href="preproc.html#cb5-6"></a>}</span>
 <span id="cb5-7"><a href="preproc.html#cb5-7"></a><span class="kw">library</span>(GSE112679)</span>
-<span id="cb5-8"><a href="preproc.html#cb5-8"></a>sampDesc<span class="op">$</span>DxStage &lt;-<span class="st"> </span><span class="kw">with</span>(sampDesc, <span class="kw">ifelse</span>(outcome<span class="op">==</span><span class="st">&#39;HCC&#39;</span>, <span class="kw">paste0</span>(outcome,<span class="st">&#39;:&#39;</span>,stage), outcome))</span>
-<span id="cb5-9"><a href="preproc.html#cb5-9"></a></span>
-<span id="cb5-10"><a href="preproc.html#cb5-10"></a><span class="kw">with</span>(</span>
-<span id="cb5-11"><a href="preproc.html#cb5-11"></a>  sampDesc <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span>),</span>
-<span id="cb5-12"><a href="preproc.html#cb5-12"></a>  <span class="kw">table</span>(DxStage, trainValGroup, <span class="dt">exclude =</span> <span class="ot">NULL</span>)</span>
-<span id="cb5-13"><a href="preproc.html#cb5-13"></a>)</span></code></pre></div>
+<span id="cb5-8"><a href="preproc.html#cb5-8"></a>sampDesc<span class="op">$</span>DxStage &lt;-<span class="st"> </span><span class="kw">with</span>(sampDesc, <span class="kw">ifelse</span>(outcome<span class="op">==</span><span class="st">&#39;HCC&#39;</span>, </span>
+<span id="cb5-9"><a href="preproc.html#cb5-9"></a>   <span class="kw">paste0</span>(outcome,<span class="st">&#39;:&#39;</span>,stage), outcome))</span>
+<span id="cb5-10"><a href="preproc.html#cb5-10"></a></span>
+<span id="cb5-11"><a href="preproc.html#cb5-11"></a><span class="kw">with</span>(</span>
+<span id="cb5-12"><a href="preproc.html#cb5-12"></a>  sampDesc <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span>),</span>
+<span id="cb5-13"><a href="preproc.html#cb5-13"></a>  <span class="kw">table</span>(DxStage, trainValGroup, <span class="dt">exclude =</span> <span class="ot">NULL</span>)</span>
+<span id="cb5-14"><a href="preproc.html#cb5-14"></a>)</span></code></pre></div>
 <pre><code>##            trainValGroup
 ## DxStage     Train Val-1 Val-2
 ##   Benign      253   132     3
@@ -234,19 +235,20 @@ and healthy or benign samples from the <code>Train</code> or <code>Val-1</code> 
 The appropriate outcome variable will be renamed or aliased <code>group</code></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a>sampDescA &lt;-</span>
 <span id="cb7-2"><a href="preproc.html#cb7-2"></a><span class="st">  </span>sampDesc <span class="op">%&gt;%</span></span>
-<span id="cb7-3"><a href="preproc.html#cb7-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(trainValGroup <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Train&quot;</span>, <span class="st">&quot;Val-1&quot;</span>)) <span class="op">&amp;</span></span>
-<span id="cb7-4"><a href="preproc.html#cb7-4"></a><span class="st">    </span>((outcome2 <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>) <span class="op">|</span><span class="st"> </span></span>
-<span id="cb7-5"><a href="preproc.html#cb7-5"></a><span class="st">     </span>(outcome2 <span class="op">==</span><span class="st"> &quot;HCC&quot;</span> <span class="op">&amp;</span><span class="st"> </span>stage <span class="op">==</span><span class="st"> &quot;Early&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb7-6"><a href="preproc.html#cb7-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">group =</span> outcome2) <span class="op">%&gt;%</span></span>
-<span id="cb7-7"><a href="preproc.html#cb7-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(group, sampID)</span>
-<span id="cb7-8"><a href="preproc.html#cb7-8"></a><span class="co"># Recode group</span></span>
-<span id="cb7-9"><a href="preproc.html#cb7-9"></a>sampDescA<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescA, </span>
-<span id="cb7-10"><a href="preproc.html#cb7-10"></a>   <span class="kw">ifelse</span>(group <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>, <span class="st">&quot;Control&quot;</span>, group))</span>
-<span id="cb7-11"><a href="preproc.html#cb7-11"></a><span class="co"># set groupCol for later</span></span>
-<span id="cb7-12"><a href="preproc.html#cb7-12"></a>groupCol &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#F3C300&quot;</span>, <span class="st">&quot;#875692&quot;</span>)</span>
-<span id="cb7-13"><a href="preproc.html#cb7-13"></a><span class="kw">names</span>(groupCol) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
-<span id="cb7-14"><a href="preproc.html#cb7-14"></a></span>
-<span id="cb7-15"><a href="preproc.html#cb7-15"></a><span class="kw">with</span>(sampDescA, <span class="kw">table</span>(group, <span class="dt">exclude =</span> <span class="ot">NULL</span>))</span></code></pre></div>
+<span id="cb7-3"><a href="preproc.html#cb7-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span> <span class="op">&amp;</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="preproc.html#cb7-4"></a><span class="st">                </span>(trainValGroup <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Train&quot;</span>, <span class="st">&quot;Val-1&quot;</span>)) <span class="op">&amp;</span></span>
+<span id="cb7-5"><a href="preproc.html#cb7-5"></a><span class="st">    </span>((outcome2 <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>) <span class="op">|</span><span class="st"> </span></span>
+<span id="cb7-6"><a href="preproc.html#cb7-6"></a><span class="st">     </span>(outcome2 <span class="op">==</span><span class="st"> &quot;HCC&quot;</span> <span class="op">&amp;</span><span class="st"> </span>stage <span class="op">==</span><span class="st"> &quot;Early&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb7-7"><a href="preproc.html#cb7-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">group =</span> outcome2) <span class="op">%&gt;%</span></span>
+<span id="cb7-8"><a href="preproc.html#cb7-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(group, sampID)</span>
+<span id="cb7-9"><a href="preproc.html#cb7-9"></a><span class="co"># Recode group</span></span>
+<span id="cb7-10"><a href="preproc.html#cb7-10"></a>sampDescA<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescA, </span>
+<span id="cb7-11"><a href="preproc.html#cb7-11"></a>   <span class="kw">ifelse</span>(group <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>, <span class="st">&quot;Control&quot;</span>, group))</span>
+<span id="cb7-12"><a href="preproc.html#cb7-12"></a><span class="co"># set groupCol for later</span></span>
+<span id="cb7-13"><a href="preproc.html#cb7-13"></a>groupCol &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#F3C300&quot;</span>, <span class="st">&quot;#875692&quot;</span>)</span>
+<span id="cb7-14"><a href="preproc.html#cb7-14"></a><span class="kw">names</span>(groupCol) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
+<span id="cb7-15"><a href="preproc.html#cb7-15"></a></span>
+<span id="cb7-16"><a href="preproc.html#cb7-16"></a><span class="kw">with</span>(sampDescA, <span class="kw">table</span>(group, <span class="dt">exclude =</span> <span class="ot">NULL</span>))</span></code></pre></div>
 <pre><code>## group
 ## Control     HCC 
 ##     778     555</code></pre>
@@ -315,9 +317,10 @@ quantiles.</p>
 <span id="cb11-6"><a href="preproc.html#cb11-6"></a></span>
 <span id="cb11-7"><a href="preproc.html#cb11-7"></a> knitr<span class="op">::</span><span class="kw">kable</span>(featureCountsA_quant2, <span class="dt">digits=</span><span class="dv">1</span>,</span>
 <span id="cb11-8"><a href="preproc.html#cb11-8"></a> <span class="dt">caption=</span><span class="kw">paste</span>(<span class="st">&quot;Coverage Summary - Columns are sample coverage quantiles and total coverage&quot;</span>,</span>
-<span id="cb11-9"><a href="preproc.html#cb11-9"></a> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">nRows are quartiles across samples&quot;</span>))</span></code></pre></div>
+<span id="cb11-9"><a href="preproc.html#cb11-9"></a> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">Rows are quartiles across samples&quot;</span>))</span></code></pre></div>
 <table>
-<caption><span id="tab:quantCounts">Table 2.1: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage are quartiles across samples</caption>
+<caption><span id="tab:quantCounts">Table 2.1: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
+Rows are quartiles across samples</caption>
 <thead>
 <tr class="header">
 <th></th>
@@ -571,7 +574,8 @@ plot that can extremely usful for exploration</p>
 <span id="cb20-10"><a href="preproc.html#cb20-10"></a>           <span class="dt">main=</span><span class="kw">paste</span>( <span class="st">&quot;MDS plot: filtered counts&quot;</span>), <span class="co">####, Excluding outlier samples&quot;),</span></span>
 <span id="cb20-11"><a href="preproc.html#cb20-11"></a>           <span class="dt">path =</span> <span class="st">&#39;.&#39;</span>, <span class="dt">folder =</span> figures_DIR,</span>
 <span id="cb20-12"><a href="preproc.html#cb20-12"></a>           <span class="dt">html =</span> <span class="kw">paste0</span>(<span class="st">&quot;GlMDSplot&quot;</span>), <span class="dt">launch =</span> F)</span></code></pre></div>
-<p><a href="Static/figures//GlMDSplot.html">GlMDSplotlocal</a></p>
+<p>Link to glMDSPlot:
+<a href="Static/figures//GlMDSplot.html">Here</a></p>
 <p>No obvious factor links the samples in the 3 clusters observed on the
 4th MDS dimensions. The percent of variance exaplained by this dimension or
 <span class="math inline">\(\approx\)</span> 4%. The glMDSPlot indicates further segregation along

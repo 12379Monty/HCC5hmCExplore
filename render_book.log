@@ -101,3 +101,108 @@ List of 2
  $ cache     : symbol T
  $ cache.vars: language c("featureCountsA", "genes_annotA", "lcpm_mtx")
 
+  |                                                                              |.........................................                             |  59%
+  ordinary text without R code
+
+  |                                                                              |...........................................                           |  62%
+label: densityLcpm2 (with options) 
+List of 5
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample $log_2$ CPM densities after removing weak genes"
+ $ eval      : symbol T
+ $ echo      : symbol T
+
+  |                                                                              |.............................................                         |  64%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: getDGEL (with options) 
+List of 2
+ $ cache    : symbol T
+ $ cache.var: language c("filteredCountsA_dgel", "filteredCountsA_lcmp_mtx")
+
+  |                                                                              |................................................                      |  69%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  72%
+label: normedLcpmBxp (with options) 
+List of 4
+ $ cache     : symbol T
+ $ fig.height: num 4
+ $ fig.width : num 10
+ $ fig.cap   : chr "Sample log2 count boxplots"
+
+  |                                                                              |....................................................                  |  74%
+  ordinary text without R code
+
+  |                                                                              |......................................................                |  77%
+label: plotMDS (with options) 
+List of 4
+ $ cache     : symbol T
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "MDS plots of log-CPM values"
+
+  |                                                                              |........................................................              |  79%
+  ordinary text without R code
+
+  |                                                                              |.........................................................             |  82%
+label: GlMDSplot (with options) 
+List of 6
+ $ echo      : symbol T
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.height: num 6
+ $ fig.width : num 11
+ $ fig.cap   : chr "MDS plots of log-CPM values"
+
+  |                                                                              |...........................................................           |  85%
+   inline R code fragments
+
+  |                                                                              |.............................................................         |  87%
+label: sumCount (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr "DD.cpmSum.frm"
+ $ eval      : symbol F
+ $ echo      : symbol F
+
+  |                                                                              |...............................................................       |  90%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  92%
+label: estBCV (with options) 
+List of 6
+ $ cache     : symbol T
+ $ cache.vars: language c("BCV_mtx", "BCV_90perc_vec", "BCV_50perc_vec")
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "Cumulative Distribution of CV - rug = 90th percentile"
+ $ message   : symbol F
+
+  |                                                                              |..................................................................    |  95%
+  ordinary text without R code
+
+  |                                                                              |....................................................................  |  97%
+label: sampleSizeCurve (with options) 
+List of 5
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.height: num 8
+ $ fig.width : num 11
+ $ fig.cap   : chr "Sample Size Estimates"
+
+  |                                                                              |......................................................................| 100%
+   inline R code fragments
+
+
+output file: HCC5hmCExplore.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpHrOSWa/rmarkdown-str1a1659294616.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
+
+Output created: docs/index.html
+[1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"
+Warning message:
+In file.remove(main) :
+  cannot remove file 'HCC5hmCExplore.Rmd', reason 'No such file or directory'

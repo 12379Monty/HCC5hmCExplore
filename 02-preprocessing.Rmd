@@ -343,6 +343,9 @@ when running many of the analyses implemented in the edgeR and limma packages.
  filteredCountsA_dgel <- edgeR::calcNormFactors(filteredCountsA_dgel)
  filteredCountsA_lcmp_mtx <- edgeR::cpm(filteredCountsA_dgel, log=T)
 
+ # Save filteredCountsA_dgel to facilitate restarting
+ # remove from final version
+ save(list='filteredCountsA_dgel', file='RData/filteredCountsA_dgel')
 ```
 
 Verify that the counts are properly mormalized.
@@ -400,8 +403,6 @@ core set, but in no particular direction.  There is some structure in the
 plot that can extremely usful for exploration
 
 ```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values"}
- # NOTE - changes made to objects here are not saved.
-
 
  set.seed(1)
  samp_ndx <- sample(1:ncol(filteredCountsA_lcmp_mtx), size=500)
@@ -429,16 +430,15 @@ and provenance.
 Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
 (see Peixoto et al. (2015) [@Peixoto:2015aa]), and many procedures have been proposed
 to reduce the effect of unwanted variation on RNA-Seq analsys results 
-([@Gandolfo:2018aa;@Peixoto:2015aa;Risso:2014aa]).  There are undoubtedly
+([@Gandolfo:2018aa;@Peixoto:2015aa;@Risso:2014aa]).  There are undoubtedly
 some similar sources of systematic variation in the 5hmC data, but it is
-beyond the scope of this work to investigate this in this particular dataset.
+beyond the scope of this work to investigate these in this particular dataset.
 Given that the clustering of samples occurs in MDS dimensions that explain
 a small fraction of variability, and that these is no assocation with the
 factor of interest, HCC vs Control, these sources of variability should not
-interfere too much with our classification analysis.  It would be interesting
-to see if downstream results can be improved by removing this variability.
+interfere too much with our classification analysis.  It would nonetheless be interesting
+to assess whether downstream results can be improved by removing this variability.
 
-## UP TO HERE
 
 ### Create Design Matrix and Contrasts {-}
 
