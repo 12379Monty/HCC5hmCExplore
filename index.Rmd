@@ -36,5 +36,10 @@ description: "Data from Cai et al. (2019) paper are explored"
 <div class="watermark">DRAFT</div>
 -->
 
-
+```{r setup}
+   # file rmarkdown file management options: cache, figures
+ figures_DIR <- file.path('Static', 'figures/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ knitr::opts_chunk$set(fig.path=paste0(figures_DIR))
+```
 

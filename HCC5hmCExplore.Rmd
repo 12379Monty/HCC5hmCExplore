@@ -3,19 +3,8 @@ title: "DNA Hydroxymethylation in Hepatocellular Carcinoma"
 author: "Francois Collin"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
-documentclass: book
-bibliography: [bib/HCC5hmc.bib]
-#biblio-style: apalike
-csl: csl/cell-numeric.csl
-#csl: csl/american-medical-association-alphabetical.csl
-link-citations: yes
-description: "Data from Cai et al. (2019) paper are explored"
----
---- 
-title: "DNA Hydroxymethylation in Hepatocellular Carcinoma"
-author: "Francois Collin"
-date: "`r Sys.Date()`"
-site: bookdown::bookdown_site
+### see https://community.rstudio.com/t/bookdown-pdf-generation/12359
+knit: "bookdown::render_book"  
 documentclass: book
 bibliography: [bib/HCC5hmc.bib]
 #biblio-style: apalike
@@ -30,12 +19,116 @@ description: "Data from Cai et al. (2019) paper are explored"
 <!-- THIS FILE DOESN'T HAVE TO HAVE ANY CONTENT ... -->
  
 
+<style>
+
+.watermark {
+  opacity: 0.2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 500%;
+  color: #00407d;
+}
+
+</style>
+
+<!-- THIS DIDN'T DO ANYTHING
+<div class="watermark">DRAFT</div>
+-->
+
+
+
+
 <!--chapter:end:index.Rmd-->
 
+# Preamble {.unnumbered #index} 
 
-# Introduction {#index}
 
-Placeholder
+This vignette offers some exploratory data analyses of data available from 
+the [NCBI GEO web site](https://www.ncbi.nlm.nih.gov/geo/).  
+
+## License {-}
+
+<!-- From https://github.com/santisoler/cc-licenses -->
+<!-- THis doesnt work with pdf -->
+<!-- COMMENT OUT FOR bookdown::pdf_book ????
+![](CC_4_0.png)
+![](https://i.creativecommons.org/l/by/4.0/88x31.png)
+
+-->
+
+`r knitr::include_graphics(
+  "Static/images/CC_4_0.png",  dpi=100)`
+
+
+This work by Francois Collin is licensed under a
+[Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)
+
+
+
+# Introduction {#intro}
+
+
+The goal of detecting
+cancer at the earliest stage of development with a non-invasive procedure
+has busied many groups with the task of perfecting techniques to support
+what has become commonly known as a 
+liquid biopsy - the analysis of biomarkers circulating in fluids such as blood,
+saliva or urine.  Epigenetic biomarkers present themselves as good candidates for this application
+(Gai and Sun (2019) [@Gai:2019aa]).  In particular,
+given their prevalence in the human genome, 
+close correlation with gene expression and high chemical stability,
+DNA modifications such as 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
+are DNA epigenetic marks that provide much promise as
+cancer diagnosis biomarkers that could be profitably analyzed in liquid biopsies
+[@Cai:2019aa; @Li:2017aa; @Song:2017aa; @Collin:2018aa].
+
+
+<!--
+This work has already led to some commercial products.
+Thrive Earlier Detection Corp.  launched CancerSEEK, a liquid biopsy test to detect multiple cancers early in 2019.  Guardant Health offers a liquid biopsy test, Guardant360, for advanced solid 
+tumor cancers. Others in the space include Karius, which focuses on a liquid biopsy for 
+infectious disease, and GRAIL Bio, which was launched by Illumina in January 2016. 
+In 2017, Verily Life Sciences, one of Google/Alphabet’s companies, invested in Freenome, 
+another liquid biopsy company.
+-->
+Li et al. (2017) [@Li:2017aa] used a sensitive and selective chemical labeling technology
+to extract genome-wide 5hmC profiles from circulating cell-free DNA (cfDNA) 
+as well as from genomic DNA (gDNA) 
+collected from a cohort of 260 patients recently diagnosed with colorectal, 
+gastric, pancreatic, liver or thyroid cancer and normal tissues from 90 healthy individuals
+They found 5hmC-based biomarkers of circulating cfDNA to be highly predictive of some cancer types.
+Similar small sample size findings were reported in Song et al. (2017) [@Song:2017aa].  
+
+Focusing on hepatocellular carcinoma, Cai et al. (2019) [@Cai:2019aa] assembled a sizable dataset
+to demonstrate the feasibility of using features derived from 
+5-hydroxymethylcytosines marks in circulating cell-free DNA as 
+a non-invasive approach for the early detection of
+hepatocellular carcinoma.  The data that are the basis of that
+report are available on the NCBI GEO web site 
+([Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679)).
+The data have also been bundled in a R data package which can be installed from github:
+
+```
+if (!requireNamespace("devtools", quietly = TRUE))
+    install.packages("devtools")
+devtools::install_github("12379Monty/GSE112679")
+```
+
+An important question in the early development of classifiers of the sorts
+that are the basis of any liquid biopsy diagnostic tool is how many samples
+should be collected to make properly informed decisions.  In this
+report we will explore the GSE112679 data to shed some light on
+the relationship between sample size and model performance
+in the context classifying samples based on 5hmC data.
+
+
+In Section \@ref(preproc) we preprocess the data that
+we will use for the classification analysis and perform some light QC analyses.
+In Section \@ref(baseline-model) we fit some models to discriminate between
+early stage HCC and control samples and examine their performance.
+In Section \@ref(model-suite) we examine the results of fitting a suite of models to
+investigate the effect of sample size on model performance.
 
 
 
@@ -43,6 +136,20 @@ Placeholder
 
 # Preprocessing {#preproc}
 
+<!--
+ FN <- 'tmp'
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+-->
 
 ## Load the data
 
@@ -77,29 +184,31 @@ if (!("GSE112679" %in% rownames(installed.packages()))) {
   devtools::install_github("12379Monty/GSE112679")
 }
 library(GSE112679)
+sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC', paste0(outcome,':',stage), outcome))
 
 with(
   sampDesc %>% dplyr::filter(sampType == "blood"),
-  table(outcome, trainValGroup, exclude = NULL)
+  table(DxStage, trainValGroup, exclude = NULL)
 )
 
 ```
 
 For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
+The appropriate outcome variable will be renamed or aliased `group`
 
 ```{r subsetSamples, cache=T, cache.vars=c('sampDescA','groupCol')}
 
 sampDescA <-
   sampDesc %>%
   dplyr::filter(sampType == "blood" & (trainValGroup %in% c("Train", "Val-1")) &
-    ((outcome2 == "BenignHealthy") | (outcome2 == "HCC" & stage == "Early"))) %>%
+    ((outcome2 == "BenignHealthy") | 
+     (outcome2 == "HCC" & stage == "Early"))) %>%
   dplyr::rename(group = outcome2) %>%
   dplyr::arrange(group, sampID)
-
 # Recode group
-sampDescA$group <- with(sampDescA, ifelse(group == "BenignHealthy", "Control", group))
-
+sampDescA$group <- with(sampDescA, 
+   ifelse(group == "BenignHealthy", "Control", group))
 # set groupCol for later
 groupCol <- c("#F3C300", "#875692")
 names(groupCol) <- unique(sampDescA$group)
@@ -139,24 +248,22 @@ there are no apparent systematic effects in the data.
 
 ```{r getfeatures, cache=T, cache.vars=c('featureCountsA')}
 
- # Note that unique sample identifier are stored 
- # in the rownames of the sample description table 
- # and in the column names of the feature count tables.
-
   featureCountsA <- cbind(Train_featureCount, 
                           Val1_featureCount, 
                           Val2_featureCount)[,rownames(sampDescA)]
 
 ```
 
-Look at coverage - make sure there isn't too much disparity of coverage 
-across samples. 
+We first look at coverage - make sure there isn't too much disparity of coverage 
+across samples. To detect shared variability, samples can be annotated and ordered
+according to sample features that may be linked to sample batch processing.  Here we 
+the samples have been ordered by group and sample id (an alias of geoAcc).
 
-```{r coverage, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots'}
+```{r lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots'}
 
 par(mar = c(1, 3, 2, 1))
 boxplot(log2(featureCountsA + 1),
-  ylim = c(3, 11),
+  ylim = c(3, 11), ylab='log2 Count',
   staplewex = 0,       # remove horizontal whisker lines
   staplecol = "white", # just to be totally sure :)
   outline = F,         # remove outlying points
@@ -164,18 +271,42 @@ boxplot(log2(featureCountsA + 1),
   las = 2, horizontal = F, xaxt = "n",
   border = groupCol[sampDescA$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol, ncol = 2, bty = "n")
-
+legend("top", legend = names(groupCol), text.col = groupCol, 
+  ncol = 2, bty = "n")
 # Add reference lines
 SampleMedian <- apply(log2(featureCountsA + 1), 2, median)
 abline(h = median(SampleMedian), col = "grey")
-axis(side = 2, at = round(median(SampleMedian), 1), las = 2, col = "grey", line = -1, tick = F)
+axis(side = 4, at = round(median(SampleMedian), 1), 
+  las = 2, col = "grey", line = -1, tick = F)
 
 ```
 
+Coverage level looks fairly comparable across samples.  It is sometimes helpful to
+keep track of the actual coverage which can be adequetely tracked by distribution
+quantiles.
 
-Look at relative log representation (RLR) (in the context of measuring the density of 
-5hmC marks in genes, we refer to `representation` as opposed to `expression`) -
+```{r quantCounts}
+ featureCountsA_quant <- apply(featureCountsA, 2, function(CC)
+  c(quantile(CC, prob=c(.1,(1:3)/4)), totCovM=sum(CC)/1e6))
+
+ featureCountsA_quant2 <- apply(featureCountsA_quant, 1, function(RR)
+   quantile(RR, prob=(1:3)/4))
+
+ knitr::kable(featureCountsA_quant2, digits=1,
+ caption=paste("Coverage Summary - Columns are sample coverage quantiles and total coverage",
+ "\\nRows are quartiles across samples"))
+
+```
+
+From this table, we see that 25% of the samples have total coverage exceeding
+`r round(featureCountsA_quant2["75%", "totCovM"],1)`, 25% of samples
+have a 10 percentile of coverage lower than
+`r featureCountsA_quant2["25%", "10%"]`, etc.  
+
+
+We next look at relative log representation (RLR) (in the context of measuring the density of 
+5hmC marks in genes, we refer to `representation` as opposed to `expression`; the
+two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.
 
 ```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T}
@@ -186,7 +317,7 @@ RLR_mtx <- sweep(lcpm_mtx, 1, median_vec, "-")
 
 par(mar = c(1, 3, 2, 1))
 boxplot(RLR_mtx,
-  xlab = "", ylim = c(-.6, .6),
+  xlab = "", ylab='Relative Log Representation', ylim = c(-.6, .6),
   staplewex = 0, # remove horizontal whisker lines
   staplecol = "white", # just to be totally sure :)
   outline = F, # remove outlying points
@@ -194,13 +325,15 @@ boxplot(RLR_mtx,
   las = 2, horizontal = F, xaxt = "n",
   border = groupCol[sampDescA$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol, ncol = 2, bty = "n")
-
+legend("top", legend = names(groupCol), 
+  text.col = groupCol, ncol = 2, bty = "n")
 # Add group Q1, Q3
 for (GRP in unique(sampDescA$group)) {
   group_ndx <- which(sampDescA$group == GRP)
-  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, quantile, prob = c(.25, .75))
-  abline(h = apply(group_Q1Q3_mtx, 1, median), col = groupCol[GRP], lwd = 2)
+  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
+     quantile, prob = c(.25, .75))
+  abline(h = apply(group_Q1Q3_mtx, 1, median), 
+     col = groupCol[GRP], lwd = 2)
 }
 
 
@@ -209,99 +342,118 @@ for (GRP in unique(sampDescA$group)) {
 We note that the HCC samples have slightly more variable coverage distribution.
 A few samples are quite different.
 
+## Differential representation analysis {#dra}
 
-## Normalize - $log_2$ CPM
+   - word on GC content
 
-We will use $log_2$ normalized counts per million as our indicator
-of 5hmC gene representation in our downstream analyses.
-We will first remove weakly represented genes, as is typically done when
-analyzing RNA-Seq data [@Law:2018aa].   Before removing genes, let's examine the
-shapes of the distributions.  
+
+In the remainder of this section, we will process the data and
+perform differential expression analysis as outlined in 
+Law et al. (2018) [@Law:2018aa].   The main analysis steps are: 
+
+* remove lowly expressed genes
+* normalize gene expression distributions
+* remove heteroscedascity
+* fit linear models and examine DE results
+
+
+It is good practice to perform this differential expression analysis prior to 
+fitting models to get an idea of how difficult it will be to discriminate 
+between samples belonging to the different subgroups. The pipeline
+outlined in Law et al. (2018) [@Law:2018aa] also provides some
+basic quality assessment opportunities.
+
+
+### Remove lowly expressed genes {-}
+
+Genes that are not expressed at a biologically 
+meaningful level in any condition should be discarded to reduce the 
+subset of genes to those that are of interest, and to reduce the number of tests 
+carried out downstream when looking at differential expression.  Carrying
+un-informative genes may also be a hindrance to classification and other
+downtream analyses.  
+
+To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
 ```{r densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=T}
 
-par(mar = c(1, 3, 2, 1))
+par(mar = c(4, 3, 2, 1))
 plot(density(lcpm_mtx[, 1]),
   col = groupCol[sampDescA$group[1]],
-  lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = ""
+  lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = "log2 CPM"
 )
 abline(v = 0, col = 3)
-# After verifying that there are no outliers can plot a random subset 
+# After verifying no outliers, can plot a random subset 
 for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
   den <- density(lcpm_mtx[, JJ])
   lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
 } # for(JJ
-
-legend("topright", legend = names(groupCol), text.col = groupCol, bty = "n")
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
 
 ```
 
-We notice many weakly represented genes as is the case with RNA-Seq data.
-Law et al. (2018) [@Law:2018aa] point out that genes that are not expressed at a biologically 
-meaningful level in any condition should be discarded to reduce the 
-subset of genes to those that are of interest, and to reduce the number of tests 
-carried out downstream when looking at differential expression.  
-
-<!--
-This multiple testing problem may be less of a problem when the primary interest is in
-building a classifier, but carrying weakly expressed (or represented, in this case)
-is still a problem as it makes removing the association between expression level
-and variability difficult.
--->
-
-
 `r  LibSizeSum <- summary( colSums(featureCountsA) / 1e6 )`
-`r CPM_THR <- 10; SAMP_THR <- 10` 
+`r CPM_THR <- 3; SAMP_THR <- 25` 
 
-Using a nominal CPM value of `r CPM_THR`,  genes are deeemed to be `represented` 
-if their expression is above this threshold, and not represented otherwise. 
-Genes must be `represented` in at least `r SAMP_THR` samples across the entire 
-dataset to be retained for downstream analysis. Here, a CPM value of `r CPM_THR` 
-means that a gene is represented if it has at least `r round(CPM_THR*LibSizeSum['Min.'])`
-reads in the sample with the lowest sequencing depth 
-(library size `r round(LibSizeSum['Min.'],1)` million).  Note that the thresholds
-used here are arbitrary as there are no hard and fast rules to set thes by.
+As is typically the case with RNA-Seq data, we notice many weakly represented genes 
+in this dataset.  A cpm value of 1 appears to adequatly separate 
+the expressed from the un-expressed genes, but we will be slightly more strict here
+and require a CPM threshold of `r CPM_THR` .  Using a nominal CPM value of 
+`r CPM_THR`, genes are deeemed to be `represented` if their expression is 
+above this threshold, and not represented otherwise. 
+For this analysis we will require that genes be `represented` in at least 
+`r SAMP_THR` samples across the entire dataset to be retained for downstream analysis.
+Here, a CPM value of `r CPM_THR` means that a gene is represented if it 
+has at least `r round(CPM_THR*LibSizeSum['Min.'])` reads in the sample with the 
+lowest sequencing depth (library size `r round(LibSizeSum['Min.'],1)` million).
+Note that the thresholds used here are arbitrary as there are no hard and fast 
+rules to set these by.
+The voom-plot, which is part of analyses done to remove heteroscedasticity,
+can be examined to verify that the filtering performed is adequate.
+
 
 <!-- or at least 
 `r round(CPM_THR*LibSizeSum['Max.'])` counts in the sample with the 
 greatest sequencing depth (library size `r round(LibSizeSum['Max.'],1)` million).
 -->
 
-Remove weakly represented genes.
+Remove weakly represented genes and replot densities.
+
+`r weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR `
+Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
 
 ```{r removeWeak, cache=T, cache.vars=c('featureCountsA', 'genes_annotA', 'lcpm_mtx')}
 
-weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR
-
-cat("Removing", paste0(round(100 * mean(weak_flg), 1), "%"), "of genes...\n")
 featureCountsA <- featureCountsA[!weak_flg, ]
 genes_annotA <- genes_annot[rownames(featureCountsA), ]
 lcpm_mtx <- edgeR::cpm(featureCountsA, log = T)
-
 dim(lcpm_mtx)
 
 ```
 
-Replot densities.
-
 
 ```{r densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=T}
 
-par(mar = c(1, 3, 2, 1))
+par(mar = c(4, 3, 2, 1))
 plot(density(lcpm_mtx[, 1]),
   col = groupCol[sampDescA$group[1]],
-  lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = ""
+  lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = "log2 CPM"
 )
-abline(v = 0, col = 3)
-# After verifying that there are no outliers can plot random subset
+#abline(v = 0, col = 3)
+# After verifying no outliers, can plot a random subset 
 for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
   den <- density(lcpm_mtx[, JJ])
   lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
 } # for(JJ
-
-legend("topright", legend = names(groupCol), text.col = groupCol, bty = "n")
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
 
 ```
+
+<!--
+Note that the $log_2(CMP)$ distribution is not quite symmetric.
+-->
 
 As another sanity check, we will look at a 
 multidimensional scaling plot of distances between gene expression
@@ -310,24 +462,65 @@ which plots samples on a two-dimensional scatterplot so that distances on
 the plot approximate the typical log2 fold changes between the
 samples.   
 
+Before producing the MDS plot we will normalize the distributions.
+We will store the data into s `DGEList` object as this is convenient
+when running many of the analyses implemented in the edgeR and limma packages.
+
+
+```{r getDGEL, cache=T, cache.var=c('filteredCountsA_dgel', 'filteredCountsA_lcmp_mtx')}
+
+ filteredCountsA_dgel <- edgeR::DGEList(
+  counts  = featureCountsA,
+  genes   = genes_annotA,
+  samples = sampDescA,
+  group   = sampDescA$group)
+ filteredCountsA_dgel <- edgeR::calcNormFactors(filteredCountsA_dgel)
+ filteredCountsA_lcmp_mtx <- edgeR::cpm(filteredCountsA_dgel, log=T)
+
+```
+
+Verify that the counts are properly mormalized.
+
+
+```{r normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots'}
+
+par(mar = c(1, 3, 2, 1))
+boxplot(filteredCountsA_lcmp_mtx,
+  ylim = c(1, 8), ylab='Normalized Log CPM',
+  staplewex = 0,       # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure :)
+  outline = F,         # remove outlying points
+  whisklty = 0,        # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = groupCol[sampDescA$group]
+)
+legend("top", legend = names(groupCol), text.col = groupCol,
+  ncol = 2, bty = "n")
+# Add reference lines
+SampleMedian <- apply(filteredCountsA_lcmp_mtx, 2, median)
+abline(h = median(SampleMedian), col = "grey")
+axis(side = 4, at = round(median(SampleMedian), 1),
+  las = 2, col = "grey", line = -1, tick = F)
+
+```
+
+Proceed wit MDS plot.
+
 ```{r plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values'}
 
  par(mfcol=c(1,2), mar=c(4,4,2,1), xpd=NA, oma=c(0,0,2,0))
 
-# without loss of generality or sensitivity, sample 300 samples
-# this is simply a matter of convenience and to save computing time
+# without loss of generality or sensitivity, sample 500 samples
+# this is simply a matter of convenience and to save time
  set.seed(1)
- samp_ndx <- sample(1:ncol(lcpm_mtx), size=500)
+ samp_ndx <- sample(1:ncol(filteredCountsA_lcmp_mtx), size=500)
+ MDS.out <- limma::plotMDS(filteredCountsA_lcmp_mtx[,samp_ndx], 
+  col=groupCol[sampDescA$group[samp_ndx]], pch=1)
+ legend("topleft", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
 
- 
- # Dim 1, 2
- MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], col=groupCol[sampDescA$group[samp_ndx]], pch=1)
-
- legend("topright", legend = names(groupCol), text.col = groupCol, bty = "n")
-
-
- # Dim 3, 4
- MDS.out <- limma::plotMDS(lcpm_mtx[,samp_ndx], col=groupCol[sampDescA$group[samp_ndx]], pch=1,
+ MDS.out <- limma::plotMDS(filteredCountsA_lcmp_mtx[,samp_ndx], 
+  col=groupCol[sampDescA$group[samp_ndx]], pch=1,
      dim.plot=3:4)
 
 ```
@@ -335,7 +528,59 @@ samples.
 The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
 does not indicate strong clustering of samples.  The fanning pattern observed in the
 first two dimensions indicates that a few samples are drifting way from the
-core set, but in no particular direction.  
+core set, but in no particular direction.  There is some structure in the
+3rd and 4th dimension plot which should be investigated.  
+`glMDSPlot` from package `Glimma` provides an interactive MDS 
+plot that can extremely usful for exploration
+
+```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values"}
+ # NOTE - changes made to objects here are not saved.
+
+
+ set.seed(1)
+ samp_ndx <- sample(1:ncol(filteredCountsA_lcmp_mtx), size=500)
+
+ Glimma::glMDSPlot(filteredCountsA_dgel[, samp_ndx],
+           groups=filteredCountsA_dgel$samples[samp_ndx, 
+              c("group", "trainValGroup", "sampType", "tissue","title", "stage")],
+           main=paste( "MDS plot: filtered counts"), ####, Excluding outlier samples"),
+           path = '.', folder = figures_DIR,
+           html = paste0("GlMDSplot"), launch = F)
+
+```
+
+[GlMDSplotlocal](`r file.path(figures_DIR, paste0("GlMDSplot.html"))`)  
+
+No obvious factor links the samples in the 3 clusters observed on the
+4th MDS dimensions. The percent of variance exaplained by this dimension or 
+$\approx$ 4%.   The glMDSPlot indicates further segregation along
+the 6th dimension.  The percent of variance exaplained by this dimension or 
+$\approx$ 2%.  Tracking down this source of variability may be quite challenging,
+especially without having the complete information about the sample attributes 
+and provenance.  
+
+Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
+(see Peixoto et al. (2015) [@Peixoto:2015aa]), and many procedures have been proposed
+to reduce the effect of unwanted variation on RNA-Seq analsys results 
+([@Gandolfo:2018aa;@Peixoto:2015aa;Risso:2014aa]).  There are undoubtedly
+some similar sources of systematic variation in the 5hmC data, but it is
+beyond the scope of this work to investigate this in this particular dataset.
+Given that the clustering of samples occurs in MDS dimensions that explain
+a small fraction of variability, and that these is no assocation with the
+factor of interest, HCC vs Control, these sources of variability should not
+interfere too much with our classification analysis.  It would be interesting
+to see if downstream results can be improved by removing this variability.
+
+## UP TO HERE
+
+### Create Design Matrix and Contrasts {-}
+
+###  Removing heteroscedascity from count data {-}
+
+### Fitting linear models for comparisons of interest {-}
+
+### Examining the DE genes {-}
+
 
 ## Analysis of coverage variability
 
@@ -343,10 +588,8 @@ We will use the methods described in Hart et al. (2013) [@Hart:2013aa]
 to characterize coverage variability in these data. 
 These methods do not take multiple comparisons into account. 
 Other tools for sample size calculation in RNA-Seq studies include 
-Bi and Liu (2016) [@Bi:2016aa,] 
-Baccarella (2018) [@Baccarella:2018aa], 
-Guo (2014) [@Guo:2014aa], 
-Yu (2017) [@Yu:2017aa], 
+Bi and Liu (2016) [@Bi:2016aa,], Baccarella (2018) [@Baccarella:2018aa], 
+Guo (2014) [@Guo:2014aa], Yu (2017) [@Yu:2017aa], and 
 Zhao (2018) [@Zhao:2018ab]. 
 Poplawski (2018) [@Poplawski:2017aa] 
 evaluated RNA-seq sample size tools identified from a systematic search. They found the six evaluated tools provided widely different answers, which were strongly affected by fold change.
@@ -354,7 +597,7 @@ evaluated RNA-seq sample size tools identified from a systematic search. They fo
 
 The references listed above aim at providing guidance for RNA-Seq experimental design.
 There is much discussion and a wide range of opinion on sample size requirements
-for producing reproducible RNA-Seq results.  At one end of the spectrum, 
+to ensure reproducibility in RNA-Seq results.  At one end of the spectrum, 
 Ein-Dor et al. (2006) [@Ein-Dor:2006aa] argue that thousands of samples are needed to 
 generate a robust gene list for predicting outcome in cancer.  At the other end,
 Dobbin et al. (2007, 2008) [@Dobbin:2007aa;@Dobbin:2008aa] claim that sample sizes in 
@@ -363,13 +606,13 @@ Part of the disparity in sample size requirement recomendation comes from
 differences of opinion in terms of what constitutes `reproducible results`. 
 In the context of sample classification, if we focus on  the predicted probabilities
 for individual samples, we may find good  reproducibility across studies with
-moderate samples sizes.  If on the other hand, we closely inspect the gene
-signatures reported across studies, much greater samples sizes migth be required to
+moderate samples sizes.  If, on the other hand, we closely inspect the gene
+signatures reported across studies, much greater sample sizes may be required to
 achieve concordance.  Kim (2009) [@Kim:2009aa], like Ein-Dor et al., also find
 issues in RNA-Seq research in terms of the instability of identified prognostic 
 gene signatures, few overlap between independently developed prognostic gene signatures, and
 poor inter-study applicability of gene signatures.  Fan et al. (2006) [@Fan:2006aa],
-om the other hand, found good concordance among gene-expression–based predictors 
+on the other hand, found good concordance among gene-expression–based predictors 
 for breast cancer.  We will return to this question when we examine
 the relationship between classification model results and sample size in this
 dataset later on this paper.  
@@ -379,32 +622,35 @@ For two groups comparisons, the basic formula for the required number of samples
 
 $$ n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \sigma^2)}{ln(\Delta^2)} $$
 
-* The parameters $\alpha$ and $\beta$ are size and power of the test.  
-* z the corresponding cut points.  
-* $\Delta$ is the testing target or effect size.   
+* The parameters $\alpha$ and $\beta$ are **size** and **power** of the test.  
+* $\Delta$ is the targeted **effect size**.   
+* $\mu$ and $\sigma$ are the **mean** and **coefficient of variation** 
+of the distribution of measurement, gene representation indices in this case.
 
 These three parameters will be fixed across genes or a given study, and are often dictated by
-external requirements. Typical values might be $\Delta = 1.5$ (a.k.a fold change),
-corresponding to detection of a 50% change in gene expression between the two groups.
-$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at $\alpha = 0.05$;
+external requirements. Typical values might be an effect size of $\Delta = 1.5$ 
+(a.k.a fold change), corresponding to detection of a 50% change in gene expression 
+between the two groups.
+$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at size $\alpha = 0.05$;
 and $z_{.90}= 1.28$ corresponding to 90% power.
-The other two variables will be gene and experiment dependent: the depth of coverage $\mu$ of the gene,
-and the coefficient of variation $\sigma$ in this gene between biological replicates.
-The technical variation of the comparison is inversely proportional to the number of sequenced reads
+The other two variables will be gene and experiment dependent: the normalized depth 
+of coverage $\mu$ of the gene, and the coefficient of variation $\sigma$ in this 
+gene between biological replicates.  The technical variation of the 
+comparison is inversely proportional to the number of sequenced reads
 for the gene and therefore decreases with sequencing depth.
 The biological variation is a property of the particular gene/model system/condition under study.
 One would expect it to be smaller for uniform systems such as cell culture and/or products that
-are under tight regulatory control, and larger for less uniform replicates such as human subject samples.
+are under tight regulatory control, and larger for less uniform replicates such 
+as human subject samples.  The dataset under study in this report is the first of its
+kind to give us an idea of variability levels in 5hmC representation.
 
-<br/>
-<br/>
 
+<!-- SKIP THIS
 Before examining biological variability lets take a look at
 the sequencing rates.
 
-
-
-```{r sumCount, cache=T, cache.vars='DD.cpmSum.frm'}
+-->
+```{r sumCount, cache=T, cache.vars='DD.cpmSum.frm', eval=F, echo=F}
 
 countSum_frm <- do.call(
   "rbind",
@@ -412,7 +658,6 @@ countSum_frm <- do.call(
     GRP_featureCountsA <- featureCountsA[, sampDescA$group == GRP]
     N_GRP <- ncol(GRP_featureCountsA)
     MeanTotCovM <- mean(colSums(featureCountsA[, sampDescA$group == GRP])) / 1e6
-
     GRP_countSum_mtx <- do.call("cbind", lapply(
       1:ncol(GRP_featureCountsA),
       function(CC) {
@@ -421,12 +666,9 @@ countSum_frm <- do.call(
                   length(CC_cpm_vec)
       }
     ))
-
     GRP_countSum_vec <- apply(GRP_countSum_mtx, 1, median)
-
     GRP_Zeros_vec <- colSums(GRP_featureCountsA == 0)
     GRP_ZerosPct_vec <- 100 * GRP_Zeros_vec / nrow(GRP_featureCountsA)
-
     data.frame(
       Group = GRP, N = N_GRP, MeanTotCovM = round(MeanTotCovM, 1),
       Zeros = median(GRP_Zeros_vec), ZeroPct = median(GRP_ZerosPct_vec),
@@ -434,51 +676,46 @@ countSum_frm <- do.call(
     )
   })
 )
-
-
 knitr::kable(countSum_frm)
 
 ```
 
 
-
 As in Hart et al. (2013) [@Hart:2013aa]
 <!--for each gene with average counts of at least 5-->, we estimate the 
 biological coefficient of variation (CV) in expression across samples in the data set
-using a negative binomial model (edgeR).  
+using a negative binomial model.
+<!--
 From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)
 , the biolgical coefficient of variation (BCV), is the square root of the dispersion
 parameter under the negative binomial model. Hence, it is equivalent to estimating the
 dispersion(s) of the negative binomial model.
-
-```{r estBCV, cache=T, cache.vars=c('BCV_mtx','BCV_90perc_vec', 'BCV_50perc_vec'), fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of CV - rug = 90th percentile"}
-
- #suppressMessages(reqduire(spatstat))
+-->
+```{r estBCV, cache=T, cache.vars=c('BCV_mtx','BCV_90perc_vec', 'BCV_50perc_vec'), fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of CV - rug = 90th percentile",message=F}
 
  BCV_mtx <- do.call('cbind', lapply(unique(sampDescA$group), 
  function(GRP) {
-  GRP_dgel <- edgeR::DGEList(counts=featureCountsA[, sampDescA$group==GRP])
+  GRP_dgel <- 
+    edgeR::DGEList(counts=featureCountsA[, sampDescA$group==GRP])
   GRP_dgel <- edgeR::estimateDisp(GRP_dgel)
 
   sqrt(GRP_dgel$tagwise.dispersion)
   }))
-
  colnames(BCV_mtx) <- unique(sampDescA$group)
-
-
- # Plot
- plot(CDF(density(BCV_mtx[,1])), col=groupCol[colnames(BCV_mtx)[1]], lwd=2, ylab='Prob(BCV<x)',
+ plot(spatstat::CDF(density(BCV_mtx[,1])), 
+   col=groupCol[colnames(BCV_mtx)[1]], 
+   lwd=2, ylab='Prob(BCV<x)',
    xlim=c(0, 0.5))
  for(JJ in 2:ncol(BCV_mtx))
- plot(CDF(density(BCV_mtx[,JJ])), col=groupCol[colnames(BCV_mtx)[JJ]], lwd=2, add=T, xlim=c(0, 2.0))
-
+ plot(spatstat::CDF(density(BCV_mtx[,JJ])), 
+   col=groupCol[colnames(BCV_mtx)[JJ]], 
+   lwd=2, add=T, xlim=c(0, 2.0))
  legend('bottomright', legend=names(groupCol), col=groupCol, lwd=2)
-  
- BCV_90perc_vec <- apply(BCV_mtx,2,quantile, prob=0.90)
- BCV_50perc_vec <- apply(BCV_mtx,2,quantile, prob=0.50)
+ BCV_90perc_vec <- round(apply(BCV_mtx,2,quantile, prob=0.90), 2)
+ BCV_50perc_vec <- round(apply(BCV_mtx,2,quantile, prob=0.50), 2)
  for(JJ in 1:length(BCV_90perc_vec)) 
- rug(BCV_90perc_vec[JJ], lwd=2, col=groupCol[names(BCV_90perc_vec)[JJ]])
-
+ rug(BCV_90perc_vec[JJ], lwd=2, ticksize = 0.05,
+    col=groupCol[names(BCV_90perc_vec)[JJ]])
 
 ```
 
@@ -494,45 +731,36 @@ dispersion(s) of the negative binomial model.
  SampleSize_f(Mu=10, Disp=.4^2)
 -->
 
-We can now look at sample size estimates to detect 
-various effect sizes.
+We can now look at sample size estimates to required to detect 
+various effect sizes.  The effect sizes examined here are selected
+based on the differential representation analysis in Section \@ref(dra) below.
+
 
 ```{r sampleSizeCurve, cache=T, cache.vars='', fig.height=8, fig.width=11,fig.cap='Sample Size Estimates'}
 
- par(mfrow=c(2,1), mar=c(3,3,2,1), oma=c(2,2,2,0))
-
- for(EFFECT in c(1.25, 1.10)){
-  cat("rnapower(depth=10, cv=.4, effect=", EFFECT, "alpha=.01, power=.80):\n")
-  RNASeqPower::rnapower(depth=10, cv=.4, effect=EFFECT, alpha=.01, power=.80)
- 
- 
-  plot(x=1:50, y= RNASeqPower::rnapower(depth=1:50, cv=1.2, effect=EFFECT, alpha=.05, power=.80), 
-      type='n', lwd=2, ylim=c(0,ifelse(EFFECT==2, 50, 250)), ylab="", xlab="")
- 
-  for(GRP in names(BCV_90perc_vec))
-  lines(x=1:50, y= RNASeqPower::rnapower(depth=1:50, cv=BCV_90perc_vec[GRP], effect=EFFECT, alpha=.05, power=.80),
-    lwd=2, col=groupCol[GRP])
- 
-  title(paste("Effect =", EFFECT, "Alpha=0.05, Beta=0.80"))
- 
- }
-
-  legend('topright', legend=paste(names(BCV_90perc_vec), 'CV =', round(BCV_90perc_vec, 2)), 
-   col=groupCol[names(BCV_90perc_vec)],  lwd=2)
-
- mtext(side=1, outer=T, "Gene Coverage")
- mtext(side=2, outer=T, "Samples Needed")
- mtext(side=3, outer=T, cex=1.25, "Negative Binomial 2 Group Sample Size Curves")
-
- abline(h=5, col='grey')
-
+par(mfrow = c(2, 1), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 0))
+for (EFFECT in c(1.10, 1.20)) {
+  plot(
+    x = 10:100, 
+    y = RNASeqPower::rnapower(depth = 10:100, cv = max(BCV_90perc_vec), 
+         effect = EFFECT, alpha = .05, power = .80),
+    lwd = 2, ylab = "", xlab = "", type='l'
+  )
+  title(paste("Effect =", EFFECT, "cv =", 
+     max(BCV_90perc_vec), "Alpha=0.05, Beta=0.80"))
+}
+mtext(side = 1, outer = T, "Gene Coverage")
+mtext(side = 2, outer = T, "Samples Needed")
+mtext(side = 3, outer = T, cex = 1.25, 
+    "Negative Binomial 2 Group Sample Size Curves")
 
 ```
 
-## Differential representation analysis
-
-   - word on GC content
-
+Note that with these data, moderate sample sizes are adequate 
+to detect genes with an effect size of 1.2 (20% fold change).  This is due to the fact
+that the biological variability in gene body 5hmC density is quite low.
+For human samples, RNA-Seq within group biological variability is
+typically in the 0.4-1.0 range [@Hart:2013aa].  
 
 
 

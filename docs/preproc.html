@@ -141,9 +141,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#normalized-representation-feature---log_2-cpm"><i class="fa fa-check"></i><b>2.2</b> Normalized representation feature - <span class="math inline">\(log_2\)</span> CPM</a></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.4</b> Differential representation analysis</a></li>
+<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#up-to-here"><i class="fa fa-check"></i><b>2.3</b> UP TO HERE</a>
+<ul>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#create-design-matrix-and-contrasts"><i class="fa fa-check"></i>Create Design Matrix and Contrasts</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#removing-heteroscedascity-from-count-data"><i class="fa fa-check"></i>Removing heteroscedascity from count data</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#fitting-linear-models-for-comparisons-of-interest"><i class="fa fa-check"></i>Fitting linear models for comparisons of interest</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#examining-the-de-genes"><i class="fa fa-check"></i>Examining the DE genes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.4</b> Analysis of coverage variability</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
 <li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
@@ -171,6 +180,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="preproc" class="section level1" number="2">
 <h1><span class="header-section-number">Section 2</span> Preprocessing</h1>
+<!--
+ FN <- 'tmp'
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+-->
 <div id="load-the-data" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Load the data</h2>
 <!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
@@ -184,41 +207,46 @@ available as well as a gene annotation table and a sample description table.
 See <a href="https://12379monty.github.io/GSE112679/">GSE112679 R Data Package page</a>.
 For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span> model fitting and analysis, samples were separated into
 <code>Train</code> and <code>Val-1</code> subsets. <code>Val-2</code> was an external validation set.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="preproc.html#cb2-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;GSE112679&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>()))) {</span>
-<span id="cb2-2"><a href="preproc.html#cb2-2"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;devtools&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
-<span id="cb2-3"><a href="preproc.html#cb2-3"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
-<span id="cb2-4"><a href="preproc.html#cb2-4"></a>  }</span>
-<span id="cb2-5"><a href="preproc.html#cb2-5"></a>  devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;12379Monty/GSE112679&quot;</span>)</span>
-<span id="cb2-6"><a href="preproc.html#cb2-6"></a>}</span>
-<span id="cb2-7"><a href="preproc.html#cb2-7"></a><span class="kw">library</span>(GSE112679)</span>
-<span id="cb2-8"><a href="preproc.html#cb2-8"></a><span class="kw">with</span>(</span>
-<span id="cb2-9"><a href="preproc.html#cb2-9"></a>  sampDesc <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span>),</span>
-<span id="cb2-10"><a href="preproc.html#cb2-10"></a>  <span class="kw">table</span>(outcome, trainValGroup, <span class="dt">exclude =</span> <span class="ot">NULL</span>)</span>
-<span id="cb2-11"><a href="preproc.html#cb2-11"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="preproc.html#cb5-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;GSE112679&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>()))) {</span>
+<span id="cb5-2"><a href="preproc.html#cb5-2"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;devtools&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
+<span id="cb5-3"><a href="preproc.html#cb5-3"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb5-4"><a href="preproc.html#cb5-4"></a>  }</span>
+<span id="cb5-5"><a href="preproc.html#cb5-5"></a>  devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;12379Monty/GSE112679&quot;</span>)</span>
+<span id="cb5-6"><a href="preproc.html#cb5-6"></a>}</span>
+<span id="cb5-7"><a href="preproc.html#cb5-7"></a><span class="kw">library</span>(GSE112679)</span>
+<span id="cb5-8"><a href="preproc.html#cb5-8"></a>sampDesc<span class="op">$</span>DxStage &lt;-<span class="st"> </span><span class="kw">with</span>(sampDesc, <span class="kw">ifelse</span>(outcome<span class="op">==</span><span class="st">&#39;HCC&#39;</span>, <span class="kw">paste0</span>(outcome,<span class="st">&#39;:&#39;</span>,stage), outcome))</span>
+<span id="cb5-9"><a href="preproc.html#cb5-9"></a></span>
+<span id="cb5-10"><a href="preproc.html#cb5-10"></a><span class="kw">with</span>(</span>
+<span id="cb5-11"><a href="preproc.html#cb5-11"></a>  sampDesc <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span>),</span>
+<span id="cb5-12"><a href="preproc.html#cb5-12"></a>  <span class="kw">table</span>(DxStage, trainValGroup, <span class="dt">exclude =</span> <span class="ot">NULL</span>)</span>
+<span id="cb5-13"><a href="preproc.html#cb5-13"></a>)</span></code></pre></div>
 <pre><code>##            trainValGroup
-## outcome     Train Val-1 Val-2
+## DxStage     Train Val-1 Val-2
 ##   Benign      253   132     3
 ##   CHB         190    96     0
 ##   Cirrhosis    73    33     0
-##   HCC         335   809    60
+##   HCC:Early   335   220    24
+##   HCC:Late      0   442    13
+##   HCC:NA        0   147    23
 ##   Healthy     269   124   177</code></pre>
 <p>For this analysis, we will consider early stage cancer samples
-and healthy or benign samples from the <code>Train</code> or <code>Val-1</code> subsets.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="preproc.html#cb4-1"></a>sampDescA &lt;-</span>
-<span id="cb4-2"><a href="preproc.html#cb4-2"></a><span class="st">  </span>sampDesc <span class="op">%&gt;%</span></span>
-<span id="cb4-3"><a href="preproc.html#cb4-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(trainValGroup <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Train&quot;</span>, <span class="st">&quot;Val-1&quot;</span>)) <span class="op">&amp;</span></span>
-<span id="cb4-4"><a href="preproc.html#cb4-4"></a><span class="st">    </span>((outcome2 <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>) <span class="op">|</span><span class="st"> </span></span>
-<span id="cb4-5"><a href="preproc.html#cb4-5"></a><span class="st">     </span>(outcome2 <span class="op">==</span><span class="st"> &quot;HCC&quot;</span> <span class="op">&amp;</span><span class="st"> </span>stage <span class="op">==</span><span class="st"> &quot;Early&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb4-6"><a href="preproc.html#cb4-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">group =</span> outcome2) <span class="op">%&gt;%</span></span>
-<span id="cb4-7"><a href="preproc.html#cb4-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(group, sampID)</span>
-<span id="cb4-8"><a href="preproc.html#cb4-8"></a><span class="co"># Recode group</span></span>
-<span id="cb4-9"><a href="preproc.html#cb4-9"></a>sampDescA<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescA, </span>
-<span id="cb4-10"><a href="preproc.html#cb4-10"></a>   <span class="kw">ifelse</span>(group <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>, <span class="st">&quot;Control&quot;</span>, group))</span>
-<span id="cb4-11"><a href="preproc.html#cb4-11"></a><span class="co"># set groupCol for later</span></span>
-<span id="cb4-12"><a href="preproc.html#cb4-12"></a>groupCol &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#F3C300&quot;</span>, <span class="st">&quot;#875692&quot;</span>)</span>
-<span id="cb4-13"><a href="preproc.html#cb4-13"></a><span class="kw">names</span>(groupCol) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
-<span id="cb4-14"><a href="preproc.html#cb4-14"></a></span>
-<span id="cb4-15"><a href="preproc.html#cb4-15"></a><span class="kw">with</span>(sampDescA, <span class="kw">table</span>(group, <span class="dt">exclude =</span> <span class="ot">NULL</span>))</span></code></pre></div>
+and healthy or benign samples from the <code>Train</code> or <code>Val-1</code> subsets.
+The appropriate outcome variable will be renamed or aliased <code>group</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a>sampDescA &lt;-</span>
+<span id="cb7-2"><a href="preproc.html#cb7-2"></a><span class="st">  </span>sampDesc <span class="op">%&gt;%</span></span>
+<span id="cb7-3"><a href="preproc.html#cb7-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span> <span class="op">&amp;</span><span class="st"> </span>(trainValGroup <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Train&quot;</span>, <span class="st">&quot;Val-1&quot;</span>)) <span class="op">&amp;</span></span>
+<span id="cb7-4"><a href="preproc.html#cb7-4"></a><span class="st">    </span>((outcome2 <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>) <span class="op">|</span><span class="st"> </span></span>
+<span id="cb7-5"><a href="preproc.html#cb7-5"></a><span class="st">     </span>(outcome2 <span class="op">==</span><span class="st"> &quot;HCC&quot;</span> <span class="op">&amp;</span><span class="st"> </span>stage <span class="op">==</span><span class="st"> &quot;Early&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb7-6"><a href="preproc.html#cb7-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">group =</span> outcome2) <span class="op">%&gt;%</span></span>
+<span id="cb7-7"><a href="preproc.html#cb7-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(group, sampID)</span>
+<span id="cb7-8"><a href="preproc.html#cb7-8"></a><span class="co"># Recode group</span></span>
+<span id="cb7-9"><a href="preproc.html#cb7-9"></a>sampDescA<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescA, </span>
+<span id="cb7-10"><a href="preproc.html#cb7-10"></a>   <span class="kw">ifelse</span>(group <span class="op">==</span><span class="st"> &quot;BenignHealthy&quot;</span>, <span class="st">&quot;Control&quot;</span>, group))</span>
+<span id="cb7-11"><a href="preproc.html#cb7-11"></a><span class="co"># set groupCol for later</span></span>
+<span id="cb7-12"><a href="preproc.html#cb7-12"></a>groupCol &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#F3C300&quot;</span>, <span class="st">&quot;#875692&quot;</span>)</span>
+<span id="cb7-13"><a href="preproc.html#cb7-13"></a><span class="kw">names</span>(groupCol) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
+<span id="cb7-14"><a href="preproc.html#cb7-14"></a></span>
+<span id="cb7-15"><a href="preproc.html#cb7-15"></a><span class="kw">with</span>(sampDescA, <span class="kw">table</span>(group, <span class="dt">exclude =</span> <span class="ot">NULL</span>))</span></code></pre></div>
 <pre><code>## group
 ## Control     HCC 
 ##     778     555</code></pre>
@@ -246,69 +274,121 @@ an all too common occurence.</p>
 data collection and processing, such a task cannot be untertaken here.
 We will simply run a <em>minimal set of QC sanity checks</em> to make sure that
 there are no apparent systematic effects in the data.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="preproc.html#cb6-1"></a> <span class="co"># Note that unique sample identifier are stored </span></span>
-<span id="cb6-2"><a href="preproc.html#cb6-2"></a> <span class="co"># in the rownames of the sample description table </span></span>
-<span id="cb6-3"><a href="preproc.html#cb6-3"></a> <span class="co"># and in the column names of the feature count tables.</span></span>
-<span id="cb6-4"><a href="preproc.html#cb6-4"></a>  featureCountsA &lt;-<span class="st"> </span><span class="kw">cbind</span>(Train_featureCount, </span>
-<span id="cb6-5"><a href="preproc.html#cb6-5"></a>                          Val1_featureCount, </span>
-<span id="cb6-6"><a href="preproc.html#cb6-6"></a>                          Val2_featureCount)[,<span class="kw">rownames</span>(sampDescA)]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="preproc.html#cb9-1"></a>  featureCountsA &lt;-<span class="st"> </span><span class="kw">cbind</span>(Train_featureCount, </span>
+<span id="cb9-2"><a href="preproc.html#cb9-2"></a>                          Val1_featureCount, </span>
+<span id="cb9-3"><a href="preproc.html#cb9-3"></a>                          Val2_featureCount)[,<span class="kw">rownames</span>(sampDescA)]</span></code></pre></div>
 <p>We first look at coverage - make sure there isn’t too much disparity of coverage
 across samples. To detect shared variability, samples can be annotated and ordered
 according to sample features that may be linked to sample batch processing. Here we
 the samples have been ordered by group and sample id (an alias of geoAcc).</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb7-2"><a href="preproc.html#cb7-2"></a><span class="kw">boxplot</span>(<span class="kw">log2</span>(featureCountsA <span class="op">+</span><span class="st"> </span><span class="dv">1</span>),</span>
-<span id="cb7-3"><a href="preproc.html#cb7-3"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">11</span>),</span>
-<span id="cb7-4"><a href="preproc.html#cb7-4"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>,       <span class="co"># remove horizontal whisker lines</span></span>
-<span id="cb7-5"><a href="preproc.html#cb7-5"></a>  <span class="dt">staplecol =</span> <span class="st">&quot;white&quot;</span>, <span class="co"># just to be totally sure :)</span></span>
-<span id="cb7-6"><a href="preproc.html#cb7-6"></a>  <span class="dt">outline =</span> F,         <span class="co"># remove outlying points</span></span>
-<span id="cb7-7"><a href="preproc.html#cb7-7"></a>  <span class="dt">whisklty =</span> <span class="dv">0</span>,        <span class="co"># remove vertical whisker lines</span></span>
-<span id="cb7-8"><a href="preproc.html#cb7-8"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">horizontal =</span> F, <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
-<span id="cb7-9"><a href="preproc.html#cb7-9"></a>  <span class="dt">border =</span> groupCol[sampDescA<span class="op">$</span>group]</span>
-<span id="cb7-10"><a href="preproc.html#cb7-10"></a>)</span>
-<span id="cb7-11"><a href="preproc.html#cb7-11"></a><span class="kw">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), <span class="dt">text.col =</span> groupCol, </span>
-<span id="cb7-12"><a href="preproc.html#cb7-12"></a>  <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
-<span id="cb7-13"><a href="preproc.html#cb7-13"></a><span class="co"># Add reference lines</span></span>
-<span id="cb7-14"><a href="preproc.html#cb7-14"></a>SampleMedian &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">log2</span>(featureCountsA <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, median)</span>
-<span id="cb7-15"><a href="preproc.html#cb7-15"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">median</span>(SampleMedian), <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
-<span id="cb7-16"><a href="preproc.html#cb7-16"></a><span class="kw">axis</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">at =</span> <span class="kw">round</span>(<span class="kw">median</span>(SampleMedian), <span class="dv">1</span>), </span>
-<span id="cb7-17"><a href="preproc.html#cb7-17"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">tick =</span> F)</span></code></pre></div>
-<div class="figure"><span id="fig:coverage"></span>
-<img src="HCC5hmCExplore_files/figure-html/coverage-1.png" alt="Sample log2 count boxplots" width="960" />
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="preproc.html#cb10-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb10-2"><a href="preproc.html#cb10-2"></a><span class="kw">boxplot</span>(<span class="kw">log2</span>(featureCountsA <span class="op">+</span><span class="st"> </span><span class="dv">1</span>),</span>
+<span id="cb10-3"><a href="preproc.html#cb10-3"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">11</span>), <span class="dt">ylab=</span><span class="st">&#39;log2 Count&#39;</span>,</span>
+<span id="cb10-4"><a href="preproc.html#cb10-4"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>,       <span class="co"># remove horizontal whisker lines</span></span>
+<span id="cb10-5"><a href="preproc.html#cb10-5"></a>  <span class="dt">staplecol =</span> <span class="st">&quot;white&quot;</span>, <span class="co"># just to be totally sure :)</span></span>
+<span id="cb10-6"><a href="preproc.html#cb10-6"></a>  <span class="dt">outline =</span> F,         <span class="co"># remove outlying points</span></span>
+<span id="cb10-7"><a href="preproc.html#cb10-7"></a>  <span class="dt">whisklty =</span> <span class="dv">0</span>,        <span class="co"># remove vertical whisker lines</span></span>
+<span id="cb10-8"><a href="preproc.html#cb10-8"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">horizontal =</span> F, <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb10-9"><a href="preproc.html#cb10-9"></a>  <span class="dt">border =</span> groupCol[sampDescA<span class="op">$</span>group]</span>
+<span id="cb10-10"><a href="preproc.html#cb10-10"></a>)</span>
+<span id="cb10-11"><a href="preproc.html#cb10-11"></a><span class="kw">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), <span class="dt">text.col =</span> groupCol, </span>
+<span id="cb10-12"><a href="preproc.html#cb10-12"></a>  <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
+<span id="cb10-13"><a href="preproc.html#cb10-13"></a><span class="co"># Add reference lines</span></span>
+<span id="cb10-14"><a href="preproc.html#cb10-14"></a>SampleMedian &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">log2</span>(featureCountsA <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dv">2</span>, median)</span>
+<span id="cb10-15"><a href="preproc.html#cb10-15"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">median</span>(SampleMedian), <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb10-16"><a href="preproc.html#cb10-16"></a><span class="kw">axis</span>(<span class="dt">side =</span> <span class="dv">4</span>, <span class="dt">at =</span> <span class="kw">round</span>(<span class="kw">median</span>(SampleMedian), <span class="dv">1</span>), </span>
+<span id="cb10-17"><a href="preproc.html#cb10-17"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">tick =</span> F)</span></code></pre></div>
+<div class="figure"><span id="fig:lcpmBxp"></span>
+<img src="Static/figures/lcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
 <p class="caption">
 Figure 2.1: Sample log2 count boxplots
 </p>
 </div>
-<p>We nest look at relative log representation (RLR) (in the context of measuring the density of
+<p>Coverage level looks fairly comparable across samples. It is sometimes helpful to
+keep track of the actual coverage which can be adequetely tracked by distribution
+quantiles.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="preproc.html#cb11-1"></a> featureCountsA_quant &lt;-<span class="st"> </span><span class="kw">apply</span>(featureCountsA, <span class="dv">2</span>, <span class="cf">function</span>(CC)</span>
+<span id="cb11-2"><a href="preproc.html#cb11-2"></a>  <span class="kw">c</span>(<span class="kw">quantile</span>(CC, <span class="dt">prob=</span><span class="kw">c</span>(.<span class="dv">1</span>,(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)<span class="op">/</span><span class="dv">4</span>)), <span class="dt">totCovM=</span><span class="kw">sum</span>(CC)<span class="op">/</span><span class="fl">1e6</span>))</span>
+<span id="cb11-3"><a href="preproc.html#cb11-3"></a></span>
+<span id="cb11-4"><a href="preproc.html#cb11-4"></a> featureCountsA_quant2 &lt;-<span class="st"> </span><span class="kw">apply</span>(featureCountsA_quant, <span class="dv">1</span>, <span class="cf">function</span>(RR)</span>
+<span id="cb11-5"><a href="preproc.html#cb11-5"></a>   <span class="kw">quantile</span>(RR, <span class="dt">prob=</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)<span class="op">/</span><span class="dv">4</span>))</span>
+<span id="cb11-6"><a href="preproc.html#cb11-6"></a></span>
+<span id="cb11-7"><a href="preproc.html#cb11-7"></a> knitr<span class="op">::</span><span class="kw">kable</span>(featureCountsA_quant2, <span class="dt">digits=</span><span class="dv">1</span>,</span>
+<span id="cb11-8"><a href="preproc.html#cb11-8"></a> <span class="dt">caption=</span><span class="kw">paste</span>(<span class="st">&quot;Coverage Summary - Columns are sample coverage quantiles and total coverage&quot;</span>,</span>
+<span id="cb11-9"><a href="preproc.html#cb11-9"></a> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">nRows are quartiles across samples&quot;</span>))</span></code></pre></div>
+<table>
+<caption><span id="tab:quantCounts">Table 2.1: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage are quartiles across samples</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">10%</th>
+<th align="right">25%</th>
+<th align="right">50%</th>
+<th align="right">75%</th>
+<th align="right">totCovM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>25%</td>
+<td align="right">0</td>
+<td align="right">24</td>
+<td align="right">111</td>
+<td align="right">321</td>
+<td align="right">5.5</td>
+</tr>
+<tr class="even">
+<td>50%</td>
+<td align="right">0</td>
+<td align="right">30</td>
+<td align="right">135</td>
+<td align="right">391</td>
+<td align="right">6.7</td>
+</tr>
+<tr class="odd">
+<td>75%</td>
+<td align="right">0</td>
+<td align="right">35</td>
+<td align="right">162</td>
+<td align="right">468</td>
+<td align="right">8.0</td>
+</tr>
+</tbody>
+</table>
+<p>From this table, we see that 25% of the samples have total coverage exceeding
+8, 25% of samples
+have a 10 percentile of coverage lower than
+0, etc.</p>
+<p>We next look at relative log representation (RLR) (in the context of measuring the density of
 5hmC marks in genes, we refer to <code>representation</code> as opposed to <code>expression</code>; the
 two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="preproc.html#cb8-1"></a>lcpm_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(featureCountsA, <span class="dt">log =</span> T)</span>
-<span id="cb8-2"><a href="preproc.html#cb8-2"></a>median_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(lcpm_mtx, <span class="dv">1</span>, median)</span>
-<span id="cb8-3"><a href="preproc.html#cb8-3"></a>RLR_mtx &lt;-<span class="st"> </span><span class="kw">sweep</span>(lcpm_mtx, <span class="dv">1</span>, median_vec, <span class="st">&quot;-&quot;</span>)</span>
-<span id="cb8-4"><a href="preproc.html#cb8-4"></a></span>
-<span id="cb8-5"><a href="preproc.html#cb8-5"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb8-6"><a href="preproc.html#cb8-6"></a><span class="kw">boxplot</span>(RLR_mtx,</span>
-<span id="cb8-7"><a href="preproc.html#cb8-7"></a>  <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">6</span>, <span class="fl">.6</span>),</span>
-<span id="cb8-8"><a href="preproc.html#cb8-8"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>, <span class="co"># remove horizontal whisker lines</span></span>
-<span id="cb8-9"><a href="preproc.html#cb8-9"></a>  <span class="dt">staplecol =</span> <span class="st">&quot;white&quot;</span>, <span class="co"># just to be totally sure :)</span></span>
-<span id="cb8-10"><a href="preproc.html#cb8-10"></a>  <span class="dt">outline =</span> F, <span class="co"># remove outlying points</span></span>
-<span id="cb8-11"><a href="preproc.html#cb8-11"></a>  <span class="dt">whisklty =</span> <span class="dv">0</span>, <span class="co"># remove vertical whisker lines</span></span>
-<span id="cb8-12"><a href="preproc.html#cb8-12"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">horizontal =</span> F, <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
-<span id="cb8-13"><a href="preproc.html#cb8-13"></a>  <span class="dt">border =</span> groupCol[sampDescA<span class="op">$</span>group]</span>
-<span id="cb8-14"><a href="preproc.html#cb8-14"></a>)</span>
-<span id="cb8-15"><a href="preproc.html#cb8-15"></a><span class="kw">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
-<span id="cb8-16"><a href="preproc.html#cb8-16"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
-<span id="cb8-17"><a href="preproc.html#cb8-17"></a><span class="co"># Add group Q1, Q3</span></span>
-<span id="cb8-18"><a href="preproc.html#cb8-18"></a><span class="cf">for</span> (GRP <span class="cf">in</span> <span class="kw">unique</span>(sampDescA<span class="op">$</span>group)) {</span>
-<span id="cb8-19"><a href="preproc.html#cb8-19"></a>  group_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(sampDescA<span class="op">$</span>group <span class="op">==</span><span class="st"> </span>GRP)</span>
-<span id="cb8-20"><a href="preproc.html#cb8-20"></a>  group_Q1Q3_mtx &lt;-<span class="st"> </span><span class="kw">apply</span>(RLR_mtx[, group_ndx], <span class="dv">2</span>, </span>
-<span id="cb8-21"><a href="preproc.html#cb8-21"></a>     quantile, <span class="dt">prob =</span> <span class="kw">c</span>(.<span class="dv">25</span>, <span class="fl">.75</span>))</span>
-<span id="cb8-22"><a href="preproc.html#cb8-22"></a>  <span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">apply</span>(group_Q1Q3_mtx, <span class="dv">1</span>, median), </span>
-<span id="cb8-23"><a href="preproc.html#cb8-23"></a>     <span class="dt">col =</span> groupCol[GRP], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb8-24"><a href="preproc.html#cb8-24"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="preproc.html#cb12-1"></a>lcpm_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(featureCountsA, <span class="dt">log =</span> T)</span>
+<span id="cb12-2"><a href="preproc.html#cb12-2"></a>median_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(lcpm_mtx, <span class="dv">1</span>, median)</span>
+<span id="cb12-3"><a href="preproc.html#cb12-3"></a>RLR_mtx &lt;-<span class="st"> </span><span class="kw">sweep</span>(lcpm_mtx, <span class="dv">1</span>, median_vec, <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb12-4"><a href="preproc.html#cb12-4"></a></span>
+<span id="cb12-5"><a href="preproc.html#cb12-5"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb12-6"><a href="preproc.html#cb12-6"></a><span class="kw">boxplot</span>(RLR_mtx,</span>
+<span id="cb12-7"><a href="preproc.html#cb12-7"></a>  <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab=</span><span class="st">&#39;Relative Log Representation&#39;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">6</span>, <span class="fl">.6</span>),</span>
+<span id="cb12-8"><a href="preproc.html#cb12-8"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>, <span class="co"># remove horizontal whisker lines</span></span>
+<span id="cb12-9"><a href="preproc.html#cb12-9"></a>  <span class="dt">staplecol =</span> <span class="st">&quot;white&quot;</span>, <span class="co"># just to be totally sure :)</span></span>
+<span id="cb12-10"><a href="preproc.html#cb12-10"></a>  <span class="dt">outline =</span> F, <span class="co"># remove outlying points</span></span>
+<span id="cb12-11"><a href="preproc.html#cb12-11"></a>  <span class="dt">whisklty =</span> <span class="dv">0</span>, <span class="co"># remove vertical whisker lines</span></span>
+<span id="cb12-12"><a href="preproc.html#cb12-12"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">horizontal =</span> F, <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb12-13"><a href="preproc.html#cb12-13"></a>  <span class="dt">border =</span> groupCol[sampDescA<span class="op">$</span>group]</span>
+<span id="cb12-14"><a href="preproc.html#cb12-14"></a>)</span>
+<span id="cb12-15"><a href="preproc.html#cb12-15"></a><span class="kw">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
+<span id="cb12-16"><a href="preproc.html#cb12-16"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
+<span id="cb12-17"><a href="preproc.html#cb12-17"></a><span class="co"># Add group Q1, Q3</span></span>
+<span id="cb12-18"><a href="preproc.html#cb12-18"></a><span class="cf">for</span> (GRP <span class="cf">in</span> <span class="kw">unique</span>(sampDescA<span class="op">$</span>group)) {</span>
+<span id="cb12-19"><a href="preproc.html#cb12-19"></a>  group_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(sampDescA<span class="op">$</span>group <span class="op">==</span><span class="st"> </span>GRP)</span>
+<span id="cb12-20"><a href="preproc.html#cb12-20"></a>  group_Q1Q3_mtx &lt;-<span class="st"> </span><span class="kw">apply</span>(RLR_mtx[, group_ndx], <span class="dv">2</span>, </span>
+<span id="cb12-21"><a href="preproc.html#cb12-21"></a>     quantile, <span class="dt">prob =</span> <span class="kw">c</span>(.<span class="dv">25</span>, <span class="fl">.75</span>))</span>
+<span id="cb12-22"><a href="preproc.html#cb12-22"></a>  <span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">apply</span>(group_Q1Q3_mtx, <span class="dv">1</span>, median), </span>
+<span id="cb12-23"><a href="preproc.html#cb12-23"></a>     <span class="dt">col =</span> groupCol[GRP], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-24"><a href="preproc.html#cb12-24"></a>}</span></code></pre></div>
 <div class="figure"><span id="fig:rlr"></span>
-<img src="HCC5hmCExplore_files/figure-html/rlr-1.png" alt="Sample RLR" width="960" />
+<img src="Static/figures/rlr-1.png" alt="Sample RLR" width="960" />
 <p class="caption">
 Figure 2.2: Sample RLR
 </p>
@@ -316,130 +396,234 @@ Figure 2.2: Sample RLR
 <p>We note that the HCC samples have slightly more variable coverage distribution.
 A few samples are quite different.</p>
 </div>
-<div id="normalized-representation-feature---log_2-cpm" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Normalized representation feature - <span class="math inline">\(log_2\)</span> CPM</h2>
-<p>We will use <span class="math inline">\(log_2\)</span> normalized counts per million as our indicator
-of 5hmC gene representation in our downstream analyses.
-We will first remove weakly represented genes, as is typically done when
-analyzing RNA-Seq data <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span>. Before removing genes, let’s examine the
-shapes of the distributions.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="preproc.html#cb9-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb9-2"><a href="preproc.html#cb9-2"></a><span class="kw">plot</span>(<span class="kw">density</span>(lcpm_mtx[, <span class="dv">1</span>]),</span>
-<span id="cb9-3"><a href="preproc.html#cb9-3"></a>  <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[<span class="dv">1</span>]],</span>
-<span id="cb9-4"><a href="preproc.html#cb9-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb9-5"><a href="preproc.html#cb9-5"></a>)</span>
-<span id="cb9-6"><a href="preproc.html#cb9-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="dv">3</span>)</span>
-<span id="cb9-7"><a href="preproc.html#cb9-7"></a><span class="co"># After verifying no outliers, can plot a random subset </span></span>
-<span id="cb9-8"><a href="preproc.html#cb9-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
-<span id="cb9-9"><a href="preproc.html#cb9-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
-<span id="cb9-10"><a href="preproc.html#cb9-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb9-11"><a href="preproc.html#cb9-11"></a>} <span class="co"># for(JJ</span></span>
-<span id="cb9-12"><a href="preproc.html#cb9-12"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
-<span id="cb9-13"><a href="preproc.html#cb9-13"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<div id="dra" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Differential representation analysis</h2>
+<ul>
+<li>word on GC content</li>
+</ul>
+<p>In the remainder of this section, we will process the data and
+perform differential expression analysis as outlined in
+Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span>. The main analysis steps are:</p>
+<ul>
+<li>remove lowly expressed genes</li>
+<li>normalize gene expression distributions</li>
+<li>remove heteroscedascity</li>
+<li>fit linear models and examine DE results</li>
+</ul>
+<p>It is good practice to perform this differential expression analysis prior to
+fitting models to get an idea of how difficult it will be to discriminate
+between samples belonging to the different subgroups. The pipeline
+outlined in Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span> also provides some
+basic quality assessment opportunities.</p>
+<div id="remove-lowly-expressed-genes" class="section level3 unnumbered" number="">
+<h3>Remove lowly expressed genes</h3>
+<p>Genes that are not expressed at a biologically
+meaningful level in any condition should be discarded to reduce the
+subset of genes to those that are of interest, and to reduce the number of tests
+carried out downstream when looking at differential expression. Carrying
+un-informative genes may also be a hindrance to classification and other
+downtream analyses.</p>
+<p>To determine a sensible threshold we can begin by examining the shapes of the distributions.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="preproc.html#cb13-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb13-2"><a href="preproc.html#cb13-2"></a><span class="kw">plot</span>(<span class="kw">density</span>(lcpm_mtx[, <span class="dv">1</span>]),</span>
+<span id="cb13-3"><a href="preproc.html#cb13-3"></a>  <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[<span class="dv">1</span>]],</span>
+<span id="cb13-4"><a href="preproc.html#cb13-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;log2 CPM&quot;</span></span>
+<span id="cb13-5"><a href="preproc.html#cb13-5"></a>)</span>
+<span id="cb13-6"><a href="preproc.html#cb13-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="dv">3</span>)</span>
+<span id="cb13-7"><a href="preproc.html#cb13-7"></a><span class="co"># After verifying no outliers, can plot a random subset </span></span>
+<span id="cb13-8"><a href="preproc.html#cb13-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
+<span id="cb13-9"><a href="preproc.html#cb13-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
+<span id="cb13-10"><a href="preproc.html#cb13-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb13-11"><a href="preproc.html#cb13-11"></a>} <span class="co"># for(JJ</span></span>
+<span id="cb13-12"><a href="preproc.html#cb13-12"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
+<span id="cb13-13"><a href="preproc.html#cb13-13"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:densityLcpm"></span>
-<img src="HCC5hmCExplore_files/figure-html/densityLcpm-1.png" alt="Sample $log_2$ CPM densities" width="960" />
+<img src="Static/figures/densityLcpm-1.png" alt="Sample $log_2$ CPM densities" width="960" />
 <p class="caption">
 Figure 2.3: Sample <span class="math inline">\(log_2\)</span> CPM densities
 </p>
 </div>
-<p>We notice many weakly represented genes as is the case with RNA-Seq data.
-Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span> point out that genes that are not expressed at a biologically
-meaningful level in any condition should be discarded to reduce the
-subset of genes to those that are of interest, and to reduce the number of tests
-carried out downstream when looking at differential expression.</p>
-<!--
-This multiple testing problem may be less of a problem when the primary interest is in
-building a classifier, but carrying weakly expressed (or represented, in this case)
-is still a problem as it makes removing the association between expression level
-and variability difficult.
--->
-<p>Using a nominal CPM value of 10, genes are deeemed to be <code>represented</code>
-if their expression is above this threshold, and not represented otherwise.
-Genes must be <code>represented</code> in at least 10 samples across the entire
-dataset to be retained for downstream analysis. Here, a CPM value of 10
-means that a gene is represented if it has at least 29
-reads in the sample with the lowest sequencing depth
-(library size 2.9 million). Note that the thresholds
-used here are arbitrary as there are no hard and fast rules to set thes by.</p>
+<p>As is typically the case with RNA-Seq data, we notice many weakly represented genes
+in this dataset. A cpm value of 1 appears to adequatly separate
+the expressed from the un-expressed genes, but we will be slightly more strict here
+and require a CPM threshold of 3 . Using a nominal CPM value of
+3, genes are deeemed to be <code>represented</code> if their expression is
+above this threshold, and not represented otherwise.
+For this analysis we will require that genes be <code>represented</code> in at least
+25 samples across the entire dataset to be retained for downstream analysis.
+Here, a CPM value of 3 means that a gene is represented if it
+has at least 9 reads in the sample with the
+lowest sequencing depth (library size 2.9 million).
+Note that the thresholds used here are arbitrary as there are no hard and fast
+rules to set these by.
+The voom-plot, which is part of analyses done to remove heteroscedasticity,
+can be examined to verify that the filtering performed is adequate.</p>
 <!-- or at least 
-133 counts in the sample with the 
+40 counts in the sample with the 
 greatest sequencing depth (library size 13.3 million).
 -->
-<p>Remove weakly represented genes.</p>
-<p>Removing 28.1% of genes…</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="preproc.html#cb10-1"></a>featureCountsA &lt;-<span class="st"> </span>featureCountsA[<span class="op">!</span>weak_flg, ]</span>
-<span id="cb10-2"><a href="preproc.html#cb10-2"></a>genes_annotA &lt;-<span class="st"> </span>genes_annot[<span class="kw">rownames</span>(featureCountsA), ]</span>
-<span id="cb10-3"><a href="preproc.html#cb10-3"></a>lcpm_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(featureCountsA, <span class="dt">log =</span> T)</span>
-<span id="cb10-4"><a href="preproc.html#cb10-4"></a><span class="kw">dim</span>(lcpm_mtx)</span></code></pre></div>
-<pre><code>## [1] 13725  1333</code></pre>
-<p>Replot densities after removing weak genes.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="preproc.html#cb12-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb12-2"><a href="preproc.html#cb12-2"></a><span class="kw">plot</span>(<span class="kw">density</span>(lcpm_mtx[, <span class="dv">1</span>]),</span>
-<span id="cb12-3"><a href="preproc.html#cb12-3"></a>  <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[<span class="dv">1</span>]],</span>
-<span id="cb12-4"><a href="preproc.html#cb12-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb12-5"><a href="preproc.html#cb12-5"></a>)</span>
-<span id="cb12-6"><a href="preproc.html#cb12-6"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="dv">3</span>)</span>
-<span id="cb12-7"><a href="preproc.html#cb12-7"></a><span class="co"># After verifying no outliers, can plot a random subset </span></span>
-<span id="cb12-8"><a href="preproc.html#cb12-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
-<span id="cb12-9"><a href="preproc.html#cb12-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
-<span id="cb12-10"><a href="preproc.html#cb12-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb12-11"><a href="preproc.html#cb12-11"></a>} <span class="co"># for(JJ</span></span>
-<span id="cb12-12"><a href="preproc.html#cb12-12"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
-<span id="cb12-13"><a href="preproc.html#cb12-13"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p>Remove weakly represented genes and replot densities.</p>
+<p>Removing 17.5% of genes…</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="preproc.html#cb14-1"></a>featureCountsA &lt;-<span class="st"> </span>featureCountsA[<span class="op">!</span>weak_flg, ]</span>
+<span id="cb14-2"><a href="preproc.html#cb14-2"></a>genes_annotA &lt;-<span class="st"> </span>genes_annot[<span class="kw">rownames</span>(featureCountsA), ]</span>
+<span id="cb14-3"><a href="preproc.html#cb14-3"></a>lcpm_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(featureCountsA, <span class="dt">log =</span> T)</span>
+<span id="cb14-4"><a href="preproc.html#cb14-4"></a><span class="kw">dim</span>(lcpm_mtx)</span></code></pre></div>
+<pre><code>## [1] 15752  1333</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="preproc.html#cb16-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb16-2"><a href="preproc.html#cb16-2"></a><span class="kw">plot</span>(<span class="kw">density</span>(lcpm_mtx[, <span class="dv">1</span>]),</span>
+<span id="cb16-3"><a href="preproc.html#cb16-3"></a>  <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[<span class="dv">1</span>]],</span>
+<span id="cb16-4"><a href="preproc.html#cb16-4"></a>  <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.25</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;log2 CPM&quot;</span></span>
+<span id="cb16-5"><a href="preproc.html#cb16-5"></a>)</span>
+<span id="cb16-6"><a href="preproc.html#cb16-6"></a><span class="co">#abline(v = 0, col = 3)</span></span>
+<span id="cb16-7"><a href="preproc.html#cb16-7"></a><span class="co"># After verifying no outliers, can plot a random subset </span></span>
+<span id="cb16-8"><a href="preproc.html#cb16-8"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="kw">sample</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size =</span> <span class="dv">100</span>)) {</span>
+<span id="cb16-9"><a href="preproc.html#cb16-9"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(lcpm_mtx[, JJ])</span>
+<span id="cb16-10"><a href="preproc.html#cb16-10"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y, <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[JJ]], <span class="dt">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-11"><a href="preproc.html#cb16-11"></a>} <span class="co"># for(JJ</span></span>
+<span id="cb16-12"><a href="preproc.html#cb16-12"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
+<span id="cb16-13"><a href="preproc.html#cb16-13"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:densityLcpm2"></span>
-<img src="HCC5hmCExplore_files/figure-html/densityLcpm2-1.png" alt="Sample $log_2$ CPM densities after removing weak genes" width="960" />
+<img src="Static/figures/densityLcpm2-1.png" alt="Sample $log_2$ CPM densities after removing weak genes" width="960" />
 <p class="caption">
 Figure 2.4: Sample <span class="math inline">\(log_2\)</span> CPM densities after removing weak genes
 </p>
 </div>
-<p>Note that the <span class="math inline">\(log_2(CMP)\)</span> distribution is not quite symmetric.</p>
+<!--
+Note that the $log_2(CMP)$ distribution is not quite symmetric.
+-->
 <p>As another sanity check, we will look at a
 multidimensional scaling plot of distances between gene expression
 profiles. We use <code>plotMDS</code> in limma package <span class="citation">[<a href="references.html#ref-Ritchie:2015aa" role="doc-biblioref">9</a>]</span>),
 which plots samples on a two-dimensional scatterplot so that distances on
 the plot approximate the typical log2 fold changes between the
 samples.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="preproc.html#cb13-1"></a> <span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">xpd=</span><span class="ot">NA</span>, <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
-<span id="cb13-2"><a href="preproc.html#cb13-2"></a></span>
-<span id="cb13-3"><a href="preproc.html#cb13-3"></a><span class="co"># without loss of generality or sensitivity, sample 300 samples</span></span>
-<span id="cb13-4"><a href="preproc.html#cb13-4"></a><span class="co"># this is simply a matter of convenience and to save time</span></span>
-<span id="cb13-5"><a href="preproc.html#cb13-5"></a> <span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb13-6"><a href="preproc.html#cb13-6"></a> samp_ndx &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(lcpm_mtx), <span class="dt">size=</span><span class="dv">500</span>)</span>
-<span id="cb13-7"><a href="preproc.html#cb13-7"></a> MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(lcpm_mtx[,samp_ndx], </span>
-<span id="cb13-8"><a href="preproc.html#cb13-8"></a>  <span class="dt">col=</span>groupCol[sampDescA<span class="op">$</span>group[samp_ndx]], <span class="dt">pch=</span><span class="dv">1</span>)</span>
-<span id="cb13-9"><a href="preproc.html#cb13-9"></a> <span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
-<span id="cb13-10"><a href="preproc.html#cb13-10"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
-<span id="cb13-11"><a href="preproc.html#cb13-11"></a> MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(lcpm_mtx[,samp_ndx], </span>
-<span id="cb13-12"><a href="preproc.html#cb13-12"></a>  <span class="dt">col=</span>groupCol[sampDescA<span class="op">$</span>group[samp_ndx]], <span class="dt">pch=</span><span class="dv">1</span>,</span>
-<span id="cb13-13"><a href="preproc.html#cb13-13"></a>     <span class="dt">dim.plot=</span><span class="dv">3</span><span class="op">:</span><span class="dv">4</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:plotMDS"></span>
-<img src="HCC5hmCExplore_files/figure-html/plotMDS-1.png" alt="MDS plots of log-CPM values" width="960" />
+<p>Before producing the MDS plot we will normalize the distributions.
+We will store the data into s <code>DGEList</code> object as this is convenient
+when running many of the analyses implemented in the edgeR and limma packages.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="preproc.html#cb17-1"></a> filteredCountsA_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(</span>
+<span id="cb17-2"><a href="preproc.html#cb17-2"></a>  <span class="dt">counts  =</span> featureCountsA,</span>
+<span id="cb17-3"><a href="preproc.html#cb17-3"></a>  <span class="dt">genes   =</span> genes_annotA,</span>
+<span id="cb17-4"><a href="preproc.html#cb17-4"></a>  <span class="dt">samples =</span> sampDescA,</span>
+<span id="cb17-5"><a href="preproc.html#cb17-5"></a>  <span class="dt">group   =</span> sampDescA<span class="op">$</span>group)</span>
+<span id="cb17-6"><a href="preproc.html#cb17-6"></a> filteredCountsA_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">calcNormFactors</span>(filteredCountsA_dgel)</span>
+<span id="cb17-7"><a href="preproc.html#cb17-7"></a> filteredCountsA_lcmp_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(filteredCountsA_dgel, <span class="dt">log=</span>T)</span></code></pre></div>
+<p>Verify that the counts are properly mormalized.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="preproc.html#cb18-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb18-2"><a href="preproc.html#cb18-2"></a><span class="kw">boxplot</span>(filteredCountsA_lcmp_mtx,</span>
+<span id="cb18-3"><a href="preproc.html#cb18-3"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">8</span>), <span class="dt">ylab=</span><span class="st">&#39;Normalized Log CPM&#39;</span>,</span>
+<span id="cb18-4"><a href="preproc.html#cb18-4"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>,       <span class="co"># remove horizontal whisker lines</span></span>
+<span id="cb18-5"><a href="preproc.html#cb18-5"></a>  <span class="dt">staplecol =</span> <span class="st">&quot;white&quot;</span>, <span class="co"># just to be totally sure :)</span></span>
+<span id="cb18-6"><a href="preproc.html#cb18-6"></a>  <span class="dt">outline =</span> F,         <span class="co"># remove outlying points</span></span>
+<span id="cb18-7"><a href="preproc.html#cb18-7"></a>  <span class="dt">whisklty =</span> <span class="dv">0</span>,        <span class="co"># remove vertical whisker lines</span></span>
+<span id="cb18-8"><a href="preproc.html#cb18-8"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">horizontal =</span> F, <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb18-9"><a href="preproc.html#cb18-9"></a>  <span class="dt">border =</span> groupCol[sampDescA<span class="op">$</span>group]</span>
+<span id="cb18-10"><a href="preproc.html#cb18-10"></a>)</span>
+<span id="cb18-11"><a href="preproc.html#cb18-11"></a><span class="kw">legend</span>(<span class="st">&quot;top&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), <span class="dt">text.col =</span> groupCol,</span>
+<span id="cb18-12"><a href="preproc.html#cb18-12"></a>  <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
+<span id="cb18-13"><a href="preproc.html#cb18-13"></a><span class="co"># Add reference lines</span></span>
+<span id="cb18-14"><a href="preproc.html#cb18-14"></a>SampleMedian &lt;-<span class="st"> </span><span class="kw">apply</span>(filteredCountsA_lcmp_mtx, <span class="dv">2</span>, median)</span>
+<span id="cb18-15"><a href="preproc.html#cb18-15"></a><span class="kw">abline</span>(<span class="dt">h =</span> <span class="kw">median</span>(SampleMedian), <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb18-16"><a href="preproc.html#cb18-16"></a><span class="kw">axis</span>(<span class="dt">side =</span> <span class="dv">4</span>, <span class="dt">at =</span> <span class="kw">round</span>(<span class="kw">median</span>(SampleMedian), <span class="dv">1</span>),</span>
+<span id="cb18-17"><a href="preproc.html#cb18-17"></a>  <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">tick =</span> F)</span></code></pre></div>
+<div class="figure"><span id="fig:normedLcpmBxp"></span>
+<img src="Static/figures/normedLcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
 <p class="caption">
-Figure 2.5: MDS plots of log-CPM values
+Figure 2.5: Sample log2 count boxplots
+</p>
+</div>
+<p>Proceed wit MDS plot.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="preproc.html#cb19-1"></a> <span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">xpd=</span><span class="ot">NA</span>, <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb19-2"><a href="preproc.html#cb19-2"></a></span>
+<span id="cb19-3"><a href="preproc.html#cb19-3"></a><span class="co"># without loss of generality or sensitivity, sample 500 samples</span></span>
+<span id="cb19-4"><a href="preproc.html#cb19-4"></a><span class="co"># this is simply a matter of convenience and to save time</span></span>
+<span id="cb19-5"><a href="preproc.html#cb19-5"></a> <span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb19-6"><a href="preproc.html#cb19-6"></a> samp_ndx &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(filteredCountsA_lcmp_mtx), <span class="dt">size=</span><span class="dv">500</span>)</span>
+<span id="cb19-7"><a href="preproc.html#cb19-7"></a> MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(filteredCountsA_lcmp_mtx[,samp_ndx], </span>
+<span id="cb19-8"><a href="preproc.html#cb19-8"></a>  <span class="dt">col=</span>groupCol[sampDescA<span class="op">$</span>group[samp_ndx]], <span class="dt">pch=</span><span class="dv">1</span>)</span>
+<span id="cb19-9"><a href="preproc.html#cb19-9"></a> <span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="dt">legend =</span> <span class="kw">names</span>(groupCol), </span>
+<span id="cb19-10"><a href="preproc.html#cb19-10"></a>  <span class="dt">text.col =</span> groupCol, <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
+<span id="cb19-11"><a href="preproc.html#cb19-11"></a></span>
+<span id="cb19-12"><a href="preproc.html#cb19-12"></a> MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(filteredCountsA_lcmp_mtx[,samp_ndx], </span>
+<span id="cb19-13"><a href="preproc.html#cb19-13"></a>  <span class="dt">col=</span>groupCol[sampDescA<span class="op">$</span>group[samp_ndx]], <span class="dt">pch=</span><span class="dv">1</span>,</span>
+<span id="cb19-14"><a href="preproc.html#cb19-14"></a>     <span class="dt">dim.plot=</span><span class="dv">3</span><span class="op">:</span><span class="dv">4</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:plotMDS"></span>
+<img src="Static/figures/plotMDS-1.png" alt="MDS plots of log-CPM values" width="960" />
+<p class="caption">
+Figure 2.6: MDS plots of log-CPM values
 </p>
 </div>
 <p>The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
 does not indicate strong clustering of samples. The fanning pattern observed in the
 first two dimensions indicates that a few samples are drifting way from the
-core set, but in no particular direction.</p>
+core set, but in no particular direction. There is some structure in the
+3rd and 4th dimension plot which should be investigated.<br />
+<code>glMDSPlot</code> from package <code>Glimma</code> provides an interactive MDS
+plot that can extremely usful for exploration</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="preproc.html#cb20-1"></a> <span class="co"># </span><span class="al">NOTE</span><span class="co"> - changes made to objects here are not saved.</span></span>
+<span id="cb20-2"><a href="preproc.html#cb20-2"></a></span>
+<span id="cb20-3"><a href="preproc.html#cb20-3"></a></span>
+<span id="cb20-4"><a href="preproc.html#cb20-4"></a> <span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb20-5"><a href="preproc.html#cb20-5"></a> samp_ndx &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(filteredCountsA_lcmp_mtx), <span class="dt">size=</span><span class="dv">500</span>)</span>
+<span id="cb20-6"><a href="preproc.html#cb20-6"></a></span>
+<span id="cb20-7"><a href="preproc.html#cb20-7"></a> Glimma<span class="op">::</span><span class="kw">glMDSPlot</span>(filteredCountsA_dgel[, samp_ndx],</span>
+<span id="cb20-8"><a href="preproc.html#cb20-8"></a>           <span class="dt">groups=</span>filteredCountsA_dgel<span class="op">$</span>samples[samp_ndx, </span>
+<span id="cb20-9"><a href="preproc.html#cb20-9"></a>              <span class="kw">c</span>(<span class="st">&quot;group&quot;</span>, <span class="st">&quot;trainValGroup&quot;</span>, <span class="st">&quot;sampType&quot;</span>, <span class="st">&quot;tissue&quot;</span>,<span class="st">&quot;title&quot;</span>, <span class="st">&quot;stage&quot;</span>)],</span>
+<span id="cb20-10"><a href="preproc.html#cb20-10"></a>           <span class="dt">main=</span><span class="kw">paste</span>( <span class="st">&quot;MDS plot: filtered counts&quot;</span>), <span class="co">####, Excluding outlier samples&quot;),</span></span>
+<span id="cb20-11"><a href="preproc.html#cb20-11"></a>           <span class="dt">path =</span> <span class="st">&#39;.&#39;</span>, <span class="dt">folder =</span> figures_DIR,</span>
+<span id="cb20-12"><a href="preproc.html#cb20-12"></a>           <span class="dt">html =</span> <span class="kw">paste0</span>(<span class="st">&quot;GlMDSplot&quot;</span>), <span class="dt">launch =</span> F)</span></code></pre></div>
+<p><a href="Static/figures//GlMDSplot.html">GlMDSplotlocal</a></p>
+<p>No obvious factor links the samples in the 3 clusters observed on the
+4th MDS dimensions. The percent of variance exaplained by this dimension or
+<span class="math inline">\(\approx\)</span> 4%. The glMDSPlot indicates further segregation along
+the 6th dimension. The percent of variance exaplained by this dimension or
+<span class="math inline">\(\approx\)</span> 2%. Tracking down this source of variability may be quite challenging,
+especially without having the complete information about the sample attributes
+and provenance.</p>
+<p>Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
+(see Peixoto et al. (2015) <span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">10</a>]</span>), and many procedures have been proposed
+to reduce the effect of unwanted variation on RNA-Seq analsys results
+([<span class="citation">[<a href="references.html#ref-Gandolfo:2018aa" role="doc-biblioref">11</a>]</span>;<span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">10</a>]</span>;Risso:2014aa]). There are undoubtedly
+some similar sources of systematic variation in the 5hmC data, but it is
+beyond the scope of this work to investigate this in this particular dataset.
+Given that the clustering of samples occurs in MDS dimensions that explain
+a small fraction of variability, and that these is no assocation with the
+factor of interest, HCC vs Control, these sources of variability should not
+interfere too much with our classification analysis. It would be interesting
+to see if downstream results can be improved by removing this variability.</p>
 </div>
-<div id="analysis-of-coverage-variability" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Analysis of coverage variability</h2>
-<p>We will use the methods described in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">10</a>]</span>
+</div>
+<div id="up-to-here" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> UP TO HERE</h2>
+<div id="create-design-matrix-and-contrasts" class="section level3 unnumbered" number="">
+<h3>Create Design Matrix and Contrasts</h3>
+</div>
+<div id="removing-heteroscedascity-from-count-data" class="section level3 unnumbered" number="">
+<h3>Removing heteroscedascity from count data</h3>
+</div>
+<div id="fitting-linear-models-for-comparisons-of-interest" class="section level3 unnumbered" number="">
+<h3>Fitting linear models for comparisons of interest</h3>
+</div>
+<div id="examining-the-de-genes" class="section level3 unnumbered" number="">
+<h3>Examining the DE genes</h3>
+</div>
+</div>
+<div id="analysis-of-coverage-variability" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Analysis of coverage variability</h2>
+<p>We will use the methods described in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">12</a>]</span>
 to characterize coverage variability in these data.
 These methods do not take multiple comparisons into account.
 Other tools for sample size calculation in RNA-Seq studies include
-Bi and Liu (2016) <span class="citation">[<a href="references.html#ref-Bi:2016aa" role="doc-biblioref">11</a>]</span>, Baccarella (2018) <span class="citation">[<a href="references.html#ref-Baccarella:2018aa" role="doc-biblioref">12</a>]</span>,
-Guo (2014) <span class="citation">[<a href="references.html#ref-Guo:2014aa" role="doc-biblioref">13</a>]</span>, Yu (2017) <span class="citation">[<a href="references.html#ref-Yu:2017aa" role="doc-biblioref">14</a>]</span>, and
-Zhao (2018) <span class="citation">[<a href="references.html#ref-Zhao:2018ab" role="doc-biblioref">15</a>]</span>.
-Poplawski (2018) <span class="citation">[<a href="references.html#ref-Poplawski:2017aa" role="doc-biblioref">16</a>]</span>
+Bi and Liu (2016) <span class="citation">[<a href="references.html#ref-Bi:2016aa" role="doc-biblioref">13</a>]</span>, Baccarella (2018) <span class="citation">[<a href="references.html#ref-Baccarella:2018aa" role="doc-biblioref">14</a>]</span>,
+Guo (2014) <span class="citation">[<a href="references.html#ref-Guo:2014aa" role="doc-biblioref">15</a>]</span>, Yu (2017) <span class="citation">[<a href="references.html#ref-Yu:2017aa" role="doc-biblioref">16</a>]</span>, and
+Zhao (2018) <span class="citation">[<a href="references.html#ref-Zhao:2018ab" role="doc-biblioref">17</a>]</span>.
+Poplawski (2018) <span class="citation">[<a href="references.html#ref-Poplawski:2017aa" role="doc-biblioref">18</a>]</span>
 evaluated RNA-seq sample size tools identified from a systematic search. They found the six evaluated tools provided widely different answers, which were strongly affected by fold change.</p>
 <p>The references listed above aim at providing guidance for RNA-Seq experimental design.
 There is much discussion and a wide range of opinion on sample size requirements
 to ensure reproducibility in RNA-Seq results. At one end of the spectrum,
-Ein-Dor et al. (2006) <span class="citation">[<a href="references.html#ref-Ein-Dor:2006aa" role="doc-biblioref">17</a>]</span> argue that thousands of samples are needed to
+Ein-Dor et al. (2006) <span class="citation">[<a href="references.html#ref-Ein-Dor:2006aa" role="doc-biblioref">19</a>]</span> argue that thousands of samples are needed to
 generate a robust gene list for predicting outcome in cancer. At the other end,
-Dobbin et al. (2007, 2008) <span class="citation">[<a href="references.html#ref-Dobbin:2007aa" role="doc-biblioref">18</a>,<a href="references.html#ref-Dobbin:2008aa" role="doc-biblioref">19</a>]</span> claim that sample sizes in
+Dobbin et al. (2007, 2008) <span class="citation">[<a href="references.html#ref-Dobbin:2007aa" role="doc-biblioref">20</a>,<a href="references.html#ref-Dobbin:2008aa" role="doc-biblioref">21</a>]</span> claim that sample sizes in
 the range of 20–30 per class may be adequate for building a good predictor in many cases.
 Part of the disparity in sample size requirement recomendation comes from
 differences of opinion in terms of what constitutes <code>reproducible results</code>.
@@ -447,10 +631,10 @@ In the context of sample classification, if we focus on the predicted probabilit
 for individual samples, we may find good reproducibility across studies with
 moderate samples sizes. If, on the other hand, we closely inspect the gene
 signatures reported across studies, much greater sample sizes may be required to
-achieve concordance. Kim (2009) <span class="citation">[<a href="references.html#ref-Kim:2009aa" role="doc-biblioref">20</a>]</span>, like Ein-Dor et al., also find
+achieve concordance. Kim (2009) <span class="citation">[<a href="references.html#ref-Kim:2009aa" role="doc-biblioref">22</a>]</span>, like Ein-Dor et al., also find
 issues in RNA-Seq research in terms of the instability of identified prognostic
 gene signatures, few overlap between independently developed prognostic gene signatures, and
-poor inter-study applicability of gene signatures. Fan et al. (2006) <span class="citation">[<a href="references.html#ref-Fan:2006aa" role="doc-biblioref">21</a>]</span>,
+poor inter-study applicability of gene signatures. Fan et al. (2006) <span class="citation">[<a href="references.html#ref-Fan:2006aa" role="doc-biblioref">23</a>]</span>,
 on the other hand, found good concordance among gene-expression–based predictors
 for breast cancer. We will return to this question when we examine
 the relationship between classification model results and sample size in this
@@ -486,7 +670,7 @@ Before examining biological variability lets take a look at
 the sequencing rates.
 
 -->
-<p>As in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">10</a>]</span>
+<p>As in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">12</a>]</span>
 <!--for each gene with average counts of at least 5-->, we estimate the
 biological coefficient of variation (CV) in expression across samples in the data set
 using a negative binomial model.
@@ -496,35 +680,35 @@ From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vig
 parameter under the negative binomial model. Hence, it is equivalent to estimating the
 dispersion(s) of the negative binomial model.
 --></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="preproc.html#cb14-1"></a> BCV_mtx &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">unique</span>(sampDescA<span class="op">$</span>group), </span>
-<span id="cb14-2"><a href="preproc.html#cb14-2"></a> <span class="cf">function</span>(GRP) {</span>
-<span id="cb14-3"><a href="preproc.html#cb14-3"></a>  GRP_dgel &lt;-<span class="st"> </span></span>
-<span id="cb14-4"><a href="preproc.html#cb14-4"></a><span class="st">    </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(<span class="dt">counts=</span>featureCountsA[, sampDescA<span class="op">$</span>group<span class="op">==</span>GRP])</span>
-<span id="cb14-5"><a href="preproc.html#cb14-5"></a>  GRP_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">estimateDisp</span>(GRP_dgel)</span>
-<span id="cb14-6"><a href="preproc.html#cb14-6"></a></span>
-<span id="cb14-7"><a href="preproc.html#cb14-7"></a>  <span class="kw">sqrt</span>(GRP_dgel<span class="op">$</span>tagwise.dispersion)</span>
-<span id="cb14-8"><a href="preproc.html#cb14-8"></a>  }))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="preproc.html#cb21-1"></a> BCV_mtx &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">unique</span>(sampDescA<span class="op">$</span>group), </span>
+<span id="cb21-2"><a href="preproc.html#cb21-2"></a> <span class="cf">function</span>(GRP) {</span>
+<span id="cb21-3"><a href="preproc.html#cb21-3"></a>  GRP_dgel &lt;-<span class="st"> </span></span>
+<span id="cb21-4"><a href="preproc.html#cb21-4"></a><span class="st">    </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(<span class="dt">counts=</span>featureCountsA[, sampDescA<span class="op">$</span>group<span class="op">==</span>GRP])</span>
+<span id="cb21-5"><a href="preproc.html#cb21-5"></a>  GRP_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">estimateDisp</span>(GRP_dgel)</span>
+<span id="cb21-6"><a href="preproc.html#cb21-6"></a></span>
+<span id="cb21-7"><a href="preproc.html#cb21-7"></a>  <span class="kw">sqrt</span>(GRP_dgel<span class="op">$</span>tagwise.dispersion)</span>
+<span id="cb21-8"><a href="preproc.html#cb21-8"></a>  }))</span></code></pre></div>
 <pre><code>## Design matrix not provided. Switch to the classic mode.
 ## Design matrix not provided. Switch to the classic mode.</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="preproc.html#cb16-1"></a> <span class="kw">colnames</span>(BCV_mtx) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
-<span id="cb16-2"><a href="preproc.html#cb16-2"></a> <span class="kw">plot</span>(spatstat<span class="op">::</span><span class="kw">CDF</span>(<span class="kw">density</span>(BCV_mtx[,<span class="dv">1</span>])), </span>
-<span id="cb16-3"><a href="preproc.html#cb16-3"></a>   <span class="dt">col=</span>groupCol[<span class="kw">colnames</span>(BCV_mtx)[<span class="dv">1</span>]], </span>
-<span id="cb16-4"><a href="preproc.html#cb16-4"></a>   <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">ylab=</span><span class="st">&#39;Prob(BCV&lt;x)&#39;</span>,</span>
-<span id="cb16-5"><a href="preproc.html#cb16-5"></a>   <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>))</span>
-<span id="cb16-6"><a href="preproc.html#cb16-6"></a> <span class="cf">for</span>(JJ <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(BCV_mtx))</span>
-<span id="cb16-7"><a href="preproc.html#cb16-7"></a> <span class="kw">plot</span>(spatstat<span class="op">::</span><span class="kw">CDF</span>(<span class="kw">density</span>(BCV_mtx[,JJ])), </span>
-<span id="cb16-8"><a href="preproc.html#cb16-8"></a>   <span class="dt">col=</span>groupCol[<span class="kw">colnames</span>(BCV_mtx)[JJ]], </span>
-<span id="cb16-9"><a href="preproc.html#cb16-9"></a>   <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">add=</span>T, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">2.0</span>))</span>
-<span id="cb16-10"><a href="preproc.html#cb16-10"></a> <span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">legend=</span><span class="kw">names</span>(groupCol), <span class="dt">col=</span>groupCol, <span class="dt">lwd=</span><span class="dv">2</span>)</span>
-<span id="cb16-11"><a href="preproc.html#cb16-11"></a> BCV_90perc_vec &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">apply</span>(BCV_mtx,<span class="dv">2</span>,quantile, <span class="dt">prob=</span><span class="fl">0.90</span>), <span class="dv">2</span>)</span>
-<span id="cb16-12"><a href="preproc.html#cb16-12"></a> BCV_50perc_vec &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">apply</span>(BCV_mtx,<span class="dv">2</span>,quantile, <span class="dt">prob=</span><span class="fl">0.50</span>), <span class="dv">2</span>)</span>
-<span id="cb16-13"><a href="preproc.html#cb16-13"></a> <span class="cf">for</span>(JJ <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(BCV_90perc_vec)) </span>
-<span id="cb16-14"><a href="preproc.html#cb16-14"></a> <span class="kw">rug</span>(BCV_90perc_vec[JJ], <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">ticksize =</span> <span class="fl">0.05</span>,</span>
-<span id="cb16-15"><a href="preproc.html#cb16-15"></a>    <span class="dt">col=</span>groupCol[<span class="kw">names</span>(BCV_90perc_vec)[JJ]])</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="preproc.html#cb23-1"></a> <span class="kw">colnames</span>(BCV_mtx) &lt;-<span class="st"> </span><span class="kw">unique</span>(sampDescA<span class="op">$</span>group)</span>
+<span id="cb23-2"><a href="preproc.html#cb23-2"></a> <span class="kw">plot</span>(spatstat<span class="op">::</span><span class="kw">CDF</span>(<span class="kw">density</span>(BCV_mtx[,<span class="dv">1</span>])), </span>
+<span id="cb23-3"><a href="preproc.html#cb23-3"></a>   <span class="dt">col=</span>groupCol[<span class="kw">colnames</span>(BCV_mtx)[<span class="dv">1</span>]], </span>
+<span id="cb23-4"><a href="preproc.html#cb23-4"></a>   <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">ylab=</span><span class="st">&#39;Prob(BCV&lt;x)&#39;</span>,</span>
+<span id="cb23-5"><a href="preproc.html#cb23-5"></a>   <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>))</span>
+<span id="cb23-6"><a href="preproc.html#cb23-6"></a> <span class="cf">for</span>(JJ <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(BCV_mtx))</span>
+<span id="cb23-7"><a href="preproc.html#cb23-7"></a> <span class="kw">plot</span>(spatstat<span class="op">::</span><span class="kw">CDF</span>(<span class="kw">density</span>(BCV_mtx[,JJ])), </span>
+<span id="cb23-8"><a href="preproc.html#cb23-8"></a>   <span class="dt">col=</span>groupCol[<span class="kw">colnames</span>(BCV_mtx)[JJ]], </span>
+<span id="cb23-9"><a href="preproc.html#cb23-9"></a>   <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">add=</span>T, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">2.0</span>))</span>
+<span id="cb23-10"><a href="preproc.html#cb23-10"></a> <span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">legend=</span><span class="kw">names</span>(groupCol), <span class="dt">col=</span>groupCol, <span class="dt">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb23-11"><a href="preproc.html#cb23-11"></a> BCV_90perc_vec &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">apply</span>(BCV_mtx,<span class="dv">2</span>,quantile, <span class="dt">prob=</span><span class="fl">0.90</span>), <span class="dv">2</span>)</span>
+<span id="cb23-12"><a href="preproc.html#cb23-12"></a> BCV_50perc_vec &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">apply</span>(BCV_mtx,<span class="dv">2</span>,quantile, <span class="dt">prob=</span><span class="fl">0.50</span>), <span class="dv">2</span>)</span>
+<span id="cb23-13"><a href="preproc.html#cb23-13"></a> <span class="cf">for</span>(JJ <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(BCV_90perc_vec)) </span>
+<span id="cb23-14"><a href="preproc.html#cb23-14"></a> <span class="kw">rug</span>(BCV_90perc_vec[JJ], <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">ticksize =</span> <span class="fl">0.05</span>,</span>
+<span id="cb23-15"><a href="preproc.html#cb23-15"></a>    <span class="dt">col=</span>groupCol[<span class="kw">names</span>(BCV_90perc_vec)[JJ]])</span></code></pre></div>
 <div class="figure"><span id="fig:estBCV"></span>
-<img src="HCC5hmCExplore_files/figure-html/estBCV-1.png" alt="Cumulative Distribution of CV - rug = 90th percentile" width="960" />
+<img src="Static/figures/estBCV-1.png" alt="Cumulative Distribution of CV - rug = 90th percentile" width="960" />
 <p class="caption">
-Figure 2.6: Cumulative Distribution of CV - rug = 90th percentile
+Figure 2.7: Cumulative Distribution of CV - rug = 90th percentile
 </p>
 </div>
 <p><br/></p>
@@ -539,39 +723,33 @@ Figure 2.6: Cumulative Distribution of CV - rug = 90th percentile
 -->
 <p>We can now look at sample size estimates to required to detect
 various effect sizes. The effect sizes examined here are selected
-based on the differential representation analysis in Section <a href="preproc.html#dra">2.4</a> below.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="preproc.html#cb17-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
-<span id="cb17-2"><a href="preproc.html#cb17-2"></a><span class="cf">for</span> (EFFECT <span class="cf">in</span> <span class="kw">c</span>(<span class="fl">1.10</span>, <span class="fl">1.20</span>)) {</span>
-<span id="cb17-3"><a href="preproc.html#cb17-3"></a>  <span class="kw">plot</span>(</span>
-<span id="cb17-4"><a href="preproc.html#cb17-4"></a>    <span class="dt">x =</span> <span class="dv">10</span><span class="op">:</span><span class="dv">100</span>, </span>
-<span id="cb17-5"><a href="preproc.html#cb17-5"></a>    <span class="dt">y =</span> RNASeqPower<span class="op">::</span><span class="kw">rnapower</span>(<span class="dt">depth =</span> <span class="dv">10</span><span class="op">:</span><span class="dv">100</span>, <span class="dt">cv =</span> <span class="kw">max</span>(BCV_90perc_vec), </span>
-<span id="cb17-6"><a href="preproc.html#cb17-6"></a>         <span class="dt">effect =</span> EFFECT, <span class="dt">alpha =</span> <span class="fl">.05</span>, <span class="dt">power =</span> <span class="fl">.80</span>),</span>
-<span id="cb17-7"><a href="preproc.html#cb17-7"></a>    <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">type=</span><span class="st">&#39;l&#39;</span></span>
-<span id="cb17-8"><a href="preproc.html#cb17-8"></a>  )</span>
-<span id="cb17-9"><a href="preproc.html#cb17-9"></a>  <span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&quot;Effect =&quot;</span>, EFFECT, <span class="st">&quot;cv =&quot;</span>, </span>
-<span id="cb17-10"><a href="preproc.html#cb17-10"></a>     <span class="kw">max</span>(BCV_90perc_vec), <span class="st">&quot;Alpha=0.05, Beta=0.80&quot;</span>))</span>
-<span id="cb17-11"><a href="preproc.html#cb17-11"></a>}</span>
-<span id="cb17-12"><a href="preproc.html#cb17-12"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Gene Coverage&quot;</span>)</span>
-<span id="cb17-13"><a href="preproc.html#cb17-13"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Samples Needed&quot;</span>)</span>
-<span id="cb17-14"><a href="preproc.html#cb17-14"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">3</span>, <span class="dt">outer =</span> T, <span class="dt">cex =</span> <span class="fl">1.25</span>, </span>
-<span id="cb17-15"><a href="preproc.html#cb17-15"></a>    <span class="st">&quot;Negative Binomial 2 Group Sample Size Curves&quot;</span>)</span></code></pre></div>
+based on the differential representation analysis in Section <a href="preproc.html#dra">2.2</a> below.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="preproc.html#cb24-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb24-2"><a href="preproc.html#cb24-2"></a><span class="cf">for</span> (EFFECT <span class="cf">in</span> <span class="kw">c</span>(<span class="fl">1.10</span>, <span class="fl">1.20</span>)) {</span>
+<span id="cb24-3"><a href="preproc.html#cb24-3"></a>  <span class="kw">plot</span>(</span>
+<span id="cb24-4"><a href="preproc.html#cb24-4"></a>    <span class="dt">x =</span> <span class="dv">10</span><span class="op">:</span><span class="dv">100</span>, </span>
+<span id="cb24-5"><a href="preproc.html#cb24-5"></a>    <span class="dt">y =</span> RNASeqPower<span class="op">::</span><span class="kw">rnapower</span>(<span class="dt">depth =</span> <span class="dv">10</span><span class="op">:</span><span class="dv">100</span>, <span class="dt">cv =</span> <span class="kw">max</span>(BCV_90perc_vec), </span>
+<span id="cb24-6"><a href="preproc.html#cb24-6"></a>         <span class="dt">effect =</span> EFFECT, <span class="dt">alpha =</span> <span class="fl">.05</span>, <span class="dt">power =</span> <span class="fl">.80</span>),</span>
+<span id="cb24-7"><a href="preproc.html#cb24-7"></a>    <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">type=</span><span class="st">&#39;l&#39;</span></span>
+<span id="cb24-8"><a href="preproc.html#cb24-8"></a>  )</span>
+<span id="cb24-9"><a href="preproc.html#cb24-9"></a>  <span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&quot;Effect =&quot;</span>, EFFECT, <span class="st">&quot;cv =&quot;</span>, </span>
+<span id="cb24-10"><a href="preproc.html#cb24-10"></a>     <span class="kw">max</span>(BCV_90perc_vec), <span class="st">&quot;Alpha=0.05, Beta=0.80&quot;</span>))</span>
+<span id="cb24-11"><a href="preproc.html#cb24-11"></a>}</span>
+<span id="cb24-12"><a href="preproc.html#cb24-12"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Gene Coverage&quot;</span>)</span>
+<span id="cb24-13"><a href="preproc.html#cb24-13"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;Samples Needed&quot;</span>)</span>
+<span id="cb24-14"><a href="preproc.html#cb24-14"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">3</span>, <span class="dt">outer =</span> T, <span class="dt">cex =</span> <span class="fl">1.25</span>, </span>
+<span id="cb24-15"><a href="preproc.html#cb24-15"></a>    <span class="st">&quot;Negative Binomial 2 Group Sample Size Curves&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:sampleSizeCurve"></span>
-<img src="HCC5hmCExplore_files/figure-html/sampleSizeCurve-1.png" alt="Sample Size Estimates" width="1056" />
+<img src="Static/figures/sampleSizeCurve-1.png" alt="Sample Size Estimates" width="1056" />
 <p class="caption">
-Figure 2.7: Sample Size Estimates
+Figure 2.8: Sample Size Estimates
 </p>
 </div>
 <p>Note that with these data, moderate sample sizes are adequate
 to detect genes with an effect size of 1.2 (20% fold change). This is due to the fact
 that the biological variability in gene body 5hmC density is quite low.
 For human samples, RNA-Seq within group biological variability is
-typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">10</a>]</span>.</p>
-</div>
-<div id="dra" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Differential representation analysis</h2>
-<ul>
-<li>word on GC content</li>
-</ul>
+typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">12</a>]</span>.</p>
 
 </div>
 </div>
