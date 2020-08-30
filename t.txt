@@ -43,7 +43,8 @@ if (!("GSE112679" %in% rownames(installed.packages()))) {
   devtools::install_github("12379Monty/GSE112679")
 }
 library(GSE112679)
-sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC', paste0(outcome,':',stage), outcome))
+sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC', 
+   paste0(outcome,':',stage), outcome))
 
 with(
   sampDesc %>% dplyr::filter(sampType == "blood"),
@@ -65,19 +66,23 @@ with(
 
 For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
+The appropriate outcome variable will be renamed or aliased `group`
 
 
 ```r
 sampDescA <-
   sampDesc %>%
-  dplyr::filter(sampType == "blood" & (trainValGroup %in% c("Train", "Val-1")) &
-    ((outcome2 == "BenignHealthy") | 
-     (outcome2 == "HCC" & stage == "Early"))) %>%
+  dplyr::filter(sampType == "blood" &
+    (trainValGroup %in% c("Train", "Val-1")) &
+    ((outcome2 == "BenignHealthy") |
+      (outcome2 == "HCC" & stage == "Early"))) %>%
   dplyr::rename(group = outcome2) %>%
   dplyr::arrange(group, sampID)
 # Recode group
-sampDescA$group <- with(sampDescA, 
-   ifelse(group == "BenignHealthy", "Control", group))
+sampDescA$group <- with(
+  sampDescA,
+  ifelse(group == "BenignHealthy", "Control", group)
+)
 # set groupCol for later
 groupCol <- c("#F3C300", "#875692")
 names(groupCol) <- unique(sampDescA$group)
@@ -122,9 +127,11 @@ there are no apparent systematic effects in the data.
 
 
 ```r
-  featureCountsA <- cbind(Train_featureCount, 
-                          Val1_featureCount, 
-                          Val2_featureCount)[,rownames(sampDescA)]
+featureCountsA <- cbind(
+  Train_featureCount,
+  Val1_featureCount,
+  Val2_featureCount
+)[, rownames(sampDescA)]
 ```
 
 We first look at coverage - make sure there isn't too much disparity of coverage 
@@ -149,7 +156,7 @@ legend("top", legend = names(groupCol), text.col = groupCol,
 # Add reference lines
 SampleMedian <- apply(log2(featureCountsA + 1), 2, median)
 abline(h = median(SampleMedian), col = "grey")
-axis(side = 2, at = round(median(SampleMedian), 1), 
+axis(side = 4, at = round(median(SampleMedian), 1), 
   las = 2, col = "grey", line = -1, tick = F)
 ```
 
@@ -161,15 +168,21 @@ quantiles.
 
 
 ```r
- featureCountsA_quant <- apply(featureCountsA, 2, function(CC)
-  c(quantile(CC, prob=c(.1,(1:3)/4)), totCovM=sum(CC)/1e6))
+featureCountsA_quant <- apply(featureCountsA, 2, function(CC) {
+  c(quantile(CC, prob = c(.1, (1:3) / 4)), totCovM = sum(CC) / 1e6)
+})
 
- featureCountsA_quant2 <- apply(featureCountsA_quant, 1, function(RR)
-   quantile(RR, prob=(1:3)/4))
+featureCountsA_quant2 <- apply(featureCountsA_quant, 1, function(RR) {
+  quantile(RR, prob = (1:3) / 4)
+})
 
- knitr::kable(featureCountsA_quant2, digits=1,
- caption=paste("Coverage Summary - Columns are sample coverage quantiles and total coverage",
- "\\nRows are quartiles across samples"))
+knitr::kable(featureCountsA_quant2,
+  digits = 1,
+  caption = paste(
+    "Coverage Summary - Columns are sample coverage quantiles and total coverage",
+    "\nRows are quartiles across samples"
+  )
+)
 ```
 
 
@@ -309,7 +322,11 @@ Removing 17.5%  of genes...
 
 ```r
 featureCountsA <- featureCountsA[!weak_flg, ]
-genes_annotA <- genes_annot[rownames(featureCountsA), ]
+
+genes.ndx <- match(rownames(featureCountsA), genes_annot$Symbol)
+if(sum(is.na(genes.ndx))) stop("featureCountsA/genes_annot mismatch")
+genes_annotA <- genes_annot[genes.ndx,]
+
 lcpm_mtx <- edgeR::cpm(featureCountsA, log = T)
 dim(lcpm_mtx)
 ```
@@ -348,4 +365,111 @@ profiles.  We use `plotMDS` in limma package [@Ritchie:2015aa]),
 which plots samples on a two-dimensional scatterplot so that distances on
 the plot approximate the typical log2 fold changes between the
 samples.   
+
+Before producing the MDS plot we will normalize the distributions.
+We will store the data into s `DGEList` object as this is convenient
+when running many of the analyses implemented in the edgeR and limma packages.
+
+
+
+```r
+filteredCountsA_dgel <- edgeR::DGEList(
+  counts = featureCountsA,
+  genes = genes_annotA,
+  samples = sampDescA,
+  group = sampDescA$group
+)
+filteredCountsA_dgel <- edgeR::calcNormFactors(filteredCountsA_dgel)
+filteredCountsA_lcmp_mtx <- edgeR::cpm(filteredCountsA_dgel, log = T)
+
+# Save filteredCountsA_dgel to facilitate restarting
+# remove from final version
+save(list = "filteredCountsA_dgel", file = "RData/filteredCountsA_dgel")
+```
+
+Verify that the counts are properly mormalized.
+
+
+
+```r
+par(mar = c(1, 3, 2, 1))
+boxplot(filteredCountsA_lcmp_mtx,
+  ylim = c(1, 8), ylab='Normalized Log CPM',
+  staplewex = 0,       # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure :)
+  outline = F,         # remove outlying points
+  whisklty = 0,        # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = groupCol[sampDescA$group]
+)
+legend("top", legend = names(groupCol), text.col = groupCol,
+  ncol = 2, bty = "n")
+# Add reference lines
+SampleMedian <- apply(filteredCountsA_lcmp_mtx, 2, median)
+abline(h = median(SampleMedian), col = "grey")
+axis(side = 4, at = round(median(SampleMedian), 1),
+  las = 2, col = "grey", line = -1, tick = F)
+```
+
+![Sample log2 count boxplots](figure/normedLcpmBxp-1.png)
+
+Proceed wit MDS plot.
+
+
+```r
+par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
+
+# wo loss of generality, sample 500 samples
+# simply a matter of convenience to save time
+# remove from final version
+set.seed(1)
+samp_ndx <- sample(1:ncol(filteredCountsA_lcmp_mtx), size = 500)
+MDS.out <- limma::plotMDS(filteredCountsA_lcmp_mtx[, samp_ndx],
+  col = groupCol[sampDescA$group[samp_ndx]], pch = 1
+)
+legend("topleft",
+  legend = names(groupCol),
+  text.col = groupCol, bty = "n"
+)
+
+MDS.out <- limma::plotMDS(filteredCountsA_lcmp_mtx[, samp_ndx],
+  col = groupCol[sampDescA$group[samp_ndx]], pch = 1,
+  dim.plot = 3:4
+)
+```
+
+![MDS plots of log-CPM values](figure/plotMDS-1.png)
+
+The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
+does not indicate strong clustering of samples.  The fanning pattern observed in the
+first two dimensions indicates that a few samples are drifting way from the
+core set, but in no particular direction.  There is some structure in the
+3rd and 4th dimension plot which should be investigated.  
+`glMDSPlot` from package `Glimma` provides an interactive MDS 
+plot that can extremely usful for exploration
+
+
+```r
+Glimma::glMDSPlot(filteredCountsA_dgel[, samp_ndx],
+  groups = filteredCountsA_dgel$samples[
+    samp_ndx,
+    c("group", "trainValGroup", "sampType", "tissue", "title", "stage")
+  ],
+  main = paste("MDS plot: filtered counts"), #### , Excluding outlier samples"),
+  path = ".", folder = figures_DIR,
+  html = paste0("GlMDSplot"), launch = F
+)
+```
+
+```
+## Error in sanitisePath(folder): object 'figures_DIR' not found
+```
+
+
+
+
+
+
+
+
 

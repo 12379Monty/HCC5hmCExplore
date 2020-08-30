@@ -1,13 +1,21 @@
 
 
 processing file: HCC5hmCExplore.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |..                                                                    |   3%
+  |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   2%
    inline R code fragments
 
-  |                                                                              |....                                                                  |   5%
+  |                                                                              |..                                                                    |   3%
 label: setup
-  |                                                                              |.....                                                                 |   8%
+  |                                                                              |....                                                                  |   5%
    inline R code fragments
+
+  |                                                                              |.....                                                                 |   7%
+label: setup-preproc (with options) 
+List of 1
+ $ include: symbol F
+
+  |                                                                              |......                                                                |   8%
+  ordinary text without R code
 
   |                                                                              |.......                                                               |  10%
 label: chunk-options (with options) 
@@ -15,139 +23,150 @@ List of 2
  $ include: logi FALSE
  $ eval   : symbol F
 
-  |                                                                              |.........                                                             |  13%
+  |                                                                              |........                                                              |  12%
   ordinary text without R code
 
-  |                                                                              |...........                                                           |  15%
+  |                                                                              |.........                                                             |  14%
 label: libraries (with options) 
 List of 2
  $ include: logi FALSE
  $ eval   : symbol T
 
-  |                                                                              |.............                                                         |  18%
+  |                                                                              |...........                                                           |  15%
   ordinary text without R code
 
-  |                                                                              |..............                                                        |  21%
+  |                                                                              |............                                                          |  17%
 label: loadData (with options) 
 List of 1
  $ cache: symbol F
 
-  |                                                                              |................                                                      |  23%
+  |                                                                              |.............                                                         |  19%
   ordinary text without R code
 
-  |                                                                              |..................                                                    |  26%
+  |                                                                              |..............                                                        |  20%
 label: subsetSamples (with options) 
-List of 2
+List of 3
  $ cache     : symbol T
  $ cache.vars: language c("sampDescA", "groupCol")
+ $ echo      : symbol F
 
-  |                                                                              |....................                                                  |  28%
+  |                                                                              |...............                                                       |  22%
   ordinary text without R code
 
-  |                                                                              |......................                                                |  31%
+  |                                                                              |.................                                                     |  24%
 label: getfeatures (with options) 
-List of 2
+List of 3
  $ cache     : symbol T
  $ cache.vars: language c("featureCountsA")
+ $ echo      : symbol F
 
-  |                                                                              |.......................                                               |  33%
+  |                                                                              |..................                                                    |  25%
   ordinary text without R code
 
-  |                                                                              |.........................                                             |  36%
+  |                                                                              |...................                                                   |  27%
 label: lcpmBxp (with options) 
-List of 4
+List of 5
  $ cache     : symbol T
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
+ $ echo      : symbol F
 
-  |                                                                              |...........................                                           |  38%
+  |                                                                              |....................                                                  |  29%
   ordinary text without R code
 
-  |                                                                              |.............................                                         |  41%
-label: quantCounts
-  |                                                                              |...............................                                       |  44%
+  |                                                                              |.....................                                                 |  31%
+label: quantCountsA (with options) 
+List of 1
+ $ echo: symbol F
+
+  |                                                                              |.......................                                               |  32%
    inline R code fragments
 
-  |                                                                              |................................                                      |  46%
+  |                                                                              |........................                                              |  34%
 label: rlr (with options) 
-List of 7
+List of 8
  $ cache     : symbol T
  $ cache.vars: chr "lcpm_mtx"
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample RLR"
  $ eval      : symbol T
- $ echo      : symbol T
+ $ echo      : symbol F
+ $ include   : symbol F
 
-  |                                                                              |..................................                                    |  49%
+  |                                                                              |.........................                                             |  36%
   ordinary text without R code
 
-  |                                                                              |....................................                                  |  51%
+  |                                                                              |..........................                                            |  37%
 label: densityLcpm (with options) 
 List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample $log_2$ CPM densities"
  $ eval      : symbol T
- $ echo      : symbol T
+ $ echo      : symbol F
 
-  |                                                                              |......................................                                |  54%
+  |                                                                              |...........................                                           |  39%
    inline R code fragments
 
-  |                                                                              |.......................................                               |  56%
+  |                                                                              |............................                                          |  41%
 label: removeWeak (with options) 
-List of 2
+List of 4
  $ cache     : symbol T
- $ cache.vars: language c("featureCountsA", "genes_annotA", "lcpm_mtx")
+ $ cache.vars: language c("featureCountsAF", "genes_annotAF", "lcpm_mtx")
+ $ echo      : symbol F
+ $ include   : symbol F
 
-  |                                                                              |.........................................                             |  59%
+  |                                                                              |..............................                                        |  42%
   ordinary text without R code
 
-  |                                                                              |...........................................                           |  62%
+  |                                                                              |...............................                                       |  44%
 label: densityLcpm2 (with options) 
 List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample $log_2$ CPM densities after removing weak genes"
  $ eval      : symbol T
- $ echo      : symbol T
+ $ echo      : symbol F
 
-  |                                                                              |.............................................                         |  64%
+  |                                                                              |................................                                      |  46%
   ordinary text without R code
 
-  |                                                                              |...............................................                       |  67%
+  |                                                                              |.................................                                     |  47%
 label: getDGEL (with options) 
 List of 2
  $ cache    : symbol T
- $ cache.var: language c("filteredCountsA_dgel", "filteredCountsA_lcmp_mtx")
+ $ cache.var: language c("filteredCountsAF_dgel", "filteredCountsAF_lcmp_mtx")
 
-  |                                                                              |................................................                      |  69%
+  |                                                                              |..................................                                    |  49%
   ordinary text without R code
 
-  |                                                                              |..................................................                    |  72%
+  |                                                                              |....................................                                  |  51%
 label: normedLcpmBxp (with options) 
-List of 4
+List of 5
  $ cache     : symbol T
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
+ $ echo      : symbol F
 
-  |                                                                              |....................................................                  |  74%
+  |                                                                              |.....................................                                 |  53%
   ordinary text without R code
 
-  |                                                                              |......................................................                |  77%
+  |                                                                              |......................................                                |  54%
 label: plotMDS (with options) 
-List of 4
+List of 5
  $ cache     : symbol T
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "MDS plots of log-CPM values"
+ $ echo      : symbol F
 
-  |                                                                              |........................................................              |  79%
+  |                                                                              |.......................................                               |  56%
   ordinary text without R code
 
-  |                                                                              |.........................................................             |  82%
+  |                                                                              |........................................                              |  58%
 label: GlMDSplot (with options) 
 List of 6
  $ echo      : symbol T
@@ -157,49 +176,64 @@ List of 6
  $ fig.width : num 11
  $ fig.cap   : chr "MDS plots of log-CPM values"
 
-  |                                                                              |...........................................................           |  85%
+  |                                                                              |..........................................                            |  59%
    inline R code fragments
 
-  |                                                                              |.............................................................         |  87%
-label: sumCount (with options) 
-List of 4
- $ cache     : symbol T
- $ cache.vars: chr "DD.cpmSum.frm"
- $ eval      : symbol F
- $ echo      : symbol F
+  |                                                                              |...........................................                           |  61%
+label: DEADesign (with options) 
+List of 3
+ $ cache  : symbol F
+ $ include: symbol T
+ $ echo   : symbol F
 
-  |                                                                              |...............................................................       |  90%
+  |                                                                              |............................................                          |  63%
   ordinary text without R code
 
-  |                                                                              |.................................................................     |  92%
-label: estBCV (with options) 
+  |                                                                              |.............................................                         |  64%
+label: printDesign (with options) 
+List of 2
+ $ echo   : symbol F
+ $ include: symbol F
+
+  |                                                                              |..............................................                        |  66%
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  68%
+label: Voom1 (with options) 
 List of 6
  $ cache     : symbol T
- $ cache.vars: language c("BCV_mtx", "BCV_90perc_vec", "BCV_50perc_vec")
- $ fig.height: num 5
- $ fig.width : num 10
- $ fig.cap   : chr "Cumulative Distribution of CV - rug = 90th percentile"
- $ message   : symbol F
+ $ cache.vars: language c("filteredCountsAF_voom")
+ $ fig.height: num 6
+ $ fig.width : num 11
+ $ fig.cap   : chr "Removing heteroscedascity"
+ $ echo      : symbol T
 
-  |                                                                              |..................................................................    |  95%
+  |                                                                              |.................................................                     |  69%
   ordinary text without R code
 
-  |                                                                              |....................................................................  |  97%
-label: sampleSizeCurve (with options) 
-List of 5
+  |                                                                              |..................................................                    |  71%
+label: lmFit (with options) 
+List of 3
+ $ cache     : symbol T
+ $ echo      : symbol T
+ $ cache.vars: language c("filteredCountsAF_voom_efit", "filteredCountsAF_voom_efit_dt")
+
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: mdPlotEfit (with options) 
+List of 6
  $ cache     : symbol T
  $ cache.vars: chr ""
- $ fig.height: num 8
+ $ fig.height: num 5
  $ fig.width : num 11
- $ fig.cap   : chr "Sample Size Estimates"
+ $ fig.cap   : chr "HCC vs Control - Identified Genes at FDR = 0,05"
+ $ echo      : symbol F
 
-  |                                                                              |......................................................................| 100%
-   inline R code fragments
+Quitting from lines 720-781 (HCC5hmCExplore.Rmd) 
+Error in match(rownames(filteredCountsAF_voom_efit), genes_annotAF$Symbol) : 
+  cannot open file '/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/HCC5hmCExplore_cache/epub3/removeWeak_8378af883387c8595f81f05717cca004.rdb': No such file or directory
+Calls: <Anonymous> ... withCallingHandlers -> withVisible -> eval -> eval -> match
 
-
-output file: HCC5hmCExplore.knit.md
-
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to epub3 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.epub --number-sections --filter /usr/local/bin/pandoc-citeproc 
-
-Output created: docs/HCC5hmCExplore.epub
-[1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/HCC5hmCExplore.epub"
+Execution halted

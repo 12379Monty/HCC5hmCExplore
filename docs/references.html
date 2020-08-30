@@ -144,15 +144,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#removing-heteroscedasticity-from-the-count-data"><i class="fa fa-check"></i>Removing heteroscedasticity from the count data</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#fit-linear-models-and-examine-the-results"><i class="fa fa-check"></i>Fit linear models and examine the results</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
+<li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#up-to-here"><i class="fa fa-check"></i><b>2.3</b> UP TO HERE</a>
-<ul>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#create-design-matrix-and-contrasts"><i class="fa fa-check"></i>Create Design Matrix and Contrasts</a></li>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#removing-heteroscedascity-from-count-data"><i class="fa fa-check"></i>Removing heteroscedascity from count data</a></li>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#fitting-linear-models-for-comparisons-of-interest"><i class="fa fa-check"></i>Fitting linear models for comparisons of interest</a></li>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#examining-the-de-genes"><i class="fa fa-check"></i>Examining the DE genes</a></li>
-</ul></li>
-<li class="chapter" data-level="2.4" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.4</b> Analysis of coverage variability</a></li>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a></li>
 <li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
@@ -215,41 +213,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-Gandolfo:2018aa">
 <p>11. Gandolfo, L.C., and Speed, T.P. RLE plots: Visualizing unwanted variation in high dimensional data. PloS one <em>13</em>, e0191629–e0191629. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29401521">https://pubmed.ncbi.nlm.nih.gov/29401521</a>.</p>
 </div>
+<div id="ref-Risso:2014aa">
+<p>12. Risso, D., Ngai, J., Speed, T.P., and Dudoit, S. (2014). Normalization of rna-seq data using factor analysis of control genes or samples. Nature Biotechnology <em>32</em>, 896–902. Available at: <a href="https://doi.org/10.1038/nbt.2931">https://doi.org/10.1038/nbt.2931</a>.</p>
+</div>
+<div id="ref-McCarthy:2009aa">
+<p>13. McCarthy, D.J., and Smyth, G.K. Testing significance relative to a fold-change threshold is a treat. Bioinformatics <em>25</em>, 765–771. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/</a>.</p>
+</div>
 <div id="ref-Hart:2013aa">
-<p>12. Hart, S.N., Therneau, T.M., Zhang, Y., Poland, G.A., and Kocher, J.-P. Calculating sample size estimates for rna sequencing data. Journal of Computational Biology <em>20</em>, 970–978. Available at: <a href="https://doi.org/10.1089/cmb.2012.0283">https://doi.org/10.1089/cmb.2012.0283</a>.</p>
+<p>14. Hart, S.N., Therneau, T.M., Zhang, Y., Poland, G.A., and Kocher, J.-P. Calculating sample size estimates for rna sequencing data. Journal of Computational Biology <em>20</em>, 970–978. Available at: <a href="https://doi.org/10.1089/cmb.2012.0283">https://doi.org/10.1089/cmb.2012.0283</a>.</p>
 </div>
 <div id="ref-Bi:2016aa">
-<p>13. Bi, R., and Liu, P. Sample size calculation while controlling false discovery rate for differential expression analysis with rna-sequencing experiments. BMC bioinformatics <em>17</em>, 146–146. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/27029470">https://www.ncbi.nlm.nih.gov/pubmed/27029470</a>.</p>
+<p>15. Bi, R., and Liu, P. Sample size calculation while controlling false discovery rate for differential expression analysis with rna-sequencing experiments. BMC bioinformatics <em>17</em>, 146–146. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/27029470">https://www.ncbi.nlm.nih.gov/pubmed/27029470</a>.</p>
 </div>
 <div id="ref-Baccarella:2018aa">
-<p>14. Baccarella, A., Williams, C.R., Parrish, J.Z., and Kim, C.C. Empirical assessment of the impact of sample number and read depth on rna-seq analysis workflow performance. BMC bioinformatics <em>19</em>, 423–423. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/30428853">https://www.ncbi.nlm.nih.gov/pubmed/30428853</a>.</p>
+<p>16. Baccarella, A., Williams, C.R., Parrish, J.Z., and Kim, C.C. Empirical assessment of the impact of sample number and read depth on rna-seq analysis workflow performance. BMC bioinformatics <em>19</em>, 423–423. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/30428853">https://www.ncbi.nlm.nih.gov/pubmed/30428853</a>.</p>
 </div>
 <div id="ref-Guo:2014aa">
-<p>15. Guo, Y., Zhao, S., Li, C.-I., Sheng, Q., and Shyr, Y. RNAseqPS: A web tool for estimating sample size and power for rnaseq experiment. Cancer informatics <em>13</em>, 1–5. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/25374457">https://www.ncbi.nlm.nih.gov/pubmed/25374457</a>.</p>
+<p>17. Guo, Y., Zhao, S., Li, C.-I., Sheng, Q., and Shyr, Y. RNAseqPS: A web tool for estimating sample size and power for rnaseq experiment. Cancer informatics <em>13</em>, 1–5. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/25374457">https://www.ncbi.nlm.nih.gov/pubmed/25374457</a>.</p>
 </div>
 <div id="ref-Yu:2017aa">
-<p>16. Yu, L., Fernandez, S., and Brock, G. (2017). Power analysis for rna-seq differential expression studies. BMC Bioinformatics <em>18</em>, 234. Available at: <a href="https://doi.org/10.1186/s12859-017-1648-2">https://doi.org/10.1186/s12859-017-1648-2</a>.</p>
+<p>18. Yu, L., Fernandez, S., and Brock, G. (2017). Power analysis for rna-seq differential expression studies. BMC Bioinformatics <em>18</em>, 234. Available at: <a href="https://doi.org/10.1186/s12859-017-1648-2">https://doi.org/10.1186/s12859-017-1648-2</a>.</p>
 </div>
 <div id="ref-Zhao:2018ab">
-<p>17. Zhao, S., Li, C.-I., Guo, Y., Sheng, Q., and Shyr, Y. RnaSeqSampleSize: Real data based sample size estimation for rna sequencing. BMC bioinformatics <em>19</em>, 191–191. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/29843589">https://www.ncbi.nlm.nih.gov/pubmed/29843589</a>.</p>
+<p>19. Zhao, S., Li, C.-I., Guo, Y., Sheng, Q., and Shyr, Y. RnaSeqSampleSize: Real data based sample size estimation for rna sequencing. BMC bioinformatics <em>19</em>, 191–191. Available at: <a href="https://www.ncbi.nlm.nih.gov/pubmed/29843589">https://www.ncbi.nlm.nih.gov/pubmed/29843589</a>.</p>
 </div>
 <div id="ref-Poplawski:2017aa">
-<p>18. Poplawski, A., and Binder, H. (2017). Feasibility of sample size calculation for rna-seq studies. Briefings in Bioinformatics <em>19</em>, 713–720. Available at: <a href="https://doi.org/10.1093/bib/bbw144">https://doi.org/10.1093/bib/bbw144</a>.</p>
+<p>20. Poplawski, A., and Binder, H. (2017). Feasibility of sample size calculation for rna-seq studies. Briefings in Bioinformatics <em>19</em>, 713–720. Available at: <a href="https://doi.org/10.1093/bib/bbw144">https://doi.org/10.1093/bib/bbw144</a>.</p>
 </div>
 <div id="ref-Ein-Dor:2006aa">
-<p>19. Ein-Dor, L., Zuk, O., and Domany, E. Thousands of samples are needed to generate a robust gene list for predicting outcome in cancer. Proceedings of the National Academy of Sciences of the United States of America <em>103</em>, 5923–5928. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/16585533">https://pubmed.ncbi.nlm.nih.gov/16585533</a>.</p>
+<p>21. Ein-Dor, L., Zuk, O., and Domany, E. Thousands of samples are needed to generate a robust gene list for predicting outcome in cancer. Proceedings of the National Academy of Sciences of the United States of America <em>103</em>, 5923–5928. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/16585533">https://pubmed.ncbi.nlm.nih.gov/16585533</a>.</p>
 </div>
 <div id="ref-Dobbin:2007aa">
-<p>20. Dobbin, K.K., and Simon, R.M. (2007). Sample size planning for developing classifiers using high-dimensional dna microarray data. Biostatistics <em>8</em>, 101–117. Available at: <a href="https://doi.org/10.1093/biostatistics/kxj036">https://doi.org/10.1093/biostatistics/kxj036</a>.</p>
+<p>22. Dobbin, K.K., and Simon, R.M. (2007). Sample size planning for developing classifiers using high-dimensional dna microarray data. Biostatistics <em>8</em>, 101–117. Available at: <a href="https://doi.org/10.1093/biostatistics/kxj036">https://doi.org/10.1093/biostatistics/kxj036</a>.</p>
 </div>
 <div id="ref-Dobbin:2008aa">
-<p>21. Dobbin, K.K., Zhao, Y., and Simon, R.M. How large a training set is needed to develop a classifier for microarray data? Clin Cancer Res <em>14</em>, 108–114.</p>
+<p>23. Dobbin, K.K., Zhao, Y., and Simon, R.M. How large a training set is needed to develop a classifier for microarray data? Clin Cancer Res <em>14</em>, 108–114.</p>
 </div>
 <div id="ref-Kim:2009aa">
-<p>22. Kim, S.-Y. Effects of sample size on robustness and prediction accuracy of a prognostic gene signature. BMC bioinformatics <em>10</em>, 147–147. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/19445687">https://pubmed.ncbi.nlm.nih.gov/19445687</a>.</p>
+<p>24. Kim, S.-Y. Effects of sample size on robustness and prediction accuracy of a prognostic gene signature. BMC bioinformatics <em>10</em>, 147–147. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/19445687">https://pubmed.ncbi.nlm.nih.gov/19445687</a>.</p>
 </div>
 <div id="ref-Fan:2006aa">
-<p>23. Fan, C., Oh, D.S., Wessels, L., Weigelt, B., Nuyten, D.S.A., Nobel, A.B., Veer, L.J. van’t, and Perou, C.M. Concordance among gene-expression–based predictors for breast cancer. New England Journal of Medicine <em>355</em>, 560–569. Available at: <a href="https://doi.org/10.1056/NEJMoa052933">https://doi.org/10.1056/NEJMoa052933</a>.</p>
+<p>25. Fan, C., Oh, D.S., Wessels, L., Weigelt, B., Nuyten, D.S.A., Nobel, A.B., Veer, L.J. van’t, and Perou, C.M. Concordance among gene-expression–based predictors for breast cancer. New England Journal of Medicine <em>355</em>, 560–569. Available at: <a href="https://doi.org/10.1056/NEJMoa052933">https://doi.org/10.1056/NEJMoa052933</a>.</p>
 </div>
 </div>
 </div>
