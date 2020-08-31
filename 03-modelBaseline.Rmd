@@ -1,14 +1,52 @@
 # Baseline Model {#baseline-model}
 
-In the section we look at the baseline model fit:
+Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
+background.
 
-* What is the accuracy?  
-* Look at individual points and store some sample scores  
 
+In the section we look at  some models fitted to discriminate between
+early stage HCC and control samples comprising of healthy and benign samples 
+from the GSE112679 data set.  
 
 
 * Baseline model 
-   - how separable are the data 
-   - individual sample quality 
+   - how separable are the data: what accuracy do we expect 
+   - individual sample quality scores: which samples are hard to classify?
 
+
+## Review glmnet
+
+Glmnet is a package that fits a generalized linear model via penalized maximum likelihood. The regularization path is computed for the lasso or elasticnet penalty at a grid of 
+values for the regularization parameter lambda 
+([@Friedman:2010aa;@Tibshirani:2012aa;@Simon:2011aa;@Simon:2013aa]). 
+
+`glmnet` solves the following problem:
+
+$$\min_{\beta_0,\beta} \frac{1}{N} \sum_{i=1}^{N} w_i l(y_i,\beta_0+\beta^T x_i) + \lambda\left[(1-\alpha)||\beta||_2^2/2 + \alpha ||\beta||_1\right],$$
+
+over a grid of values of $\lambda$.
+Here $l(y,\eta)$ is the negative log-likelihood contribution for observation i; 
+e.g. for the Gaussian case it is $\frac{1}{2}(y-\eta)^2$.
+
+
+### $\alpha {-}
+
+The elastic-net penalty is controlled by $\alpha$, and bridges the gap between 
+lasso ($\alpha$=1, the default) and ridge ($\alpha$=0). 
+The tuning parameter $\lambda$ controls the overall strength of the penalty. 
+
+It is known that the ridge penalty shrinks the coefficients of correlated predictors 
+towards each other while the lasso tends to pick one of them and discard the others. 
+The elastic-net penalty mixes these two; if predictors are correlated in groups, 
+an $\alpha$=0.5 tends to select the groups in or out together. 
+This is a higher level parameter, and users might pick a value upfront, 
+else experiment with a few different values. One use of $\alpha$ is for numerical stability; 
+for example, the elastic net with $\alpha = 1 - \epsilon$ for some small $\epsilon$>0 
+performs much like the lasso, but removes any degeneracies and wild behavior caused 
+by extreme correlations.
+
+With balanced samples (N1 $\approx$ N2), Kappa or accuracy will yield
+similar hyper-parameter choices.
+
+### Rules for discarding predictors
 
