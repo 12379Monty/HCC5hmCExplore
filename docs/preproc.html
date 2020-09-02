@@ -174,6 +174,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="explore-glmnet.html"><a href="explore-glmnet.html#lasso"><i class="fa fa-check"></i><b>4.1</b> lasso</a></li>
 <li class="chapter" data-level="4.2" data-path="explore-glmnet.html"><a href="explore-glmnet.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
 <li class="chapter" data-level="4.3" data-path="explore-glmnet.html"><a href="explore-glmnet.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
+<li class="chapter" data-level="4.4" data-path="explore-glmnet.html"><a href="explore-glmnet.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
+<li class="chapter" data-level="4.5" data-path="explore-glmnet.html"><a href="explore-glmnet.html#mid-point-between-ridge-and-lasso"><i class="fa fa-check"></i><b>4.5</b> Mid-point between ridge and lasso</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
 <li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
@@ -549,19 +551,20 @@ the plot approximate the typical log2 fold changes between the
 samples.</p>
 <p>Before producing the MDS plot we will normalize the distributions.
 We will store the data into s <code>DGEList</code> object as this is convenient
-when running many of the analyses implemented in the edgeR and limma packages.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(</span>
+when running many of the analyses implemented in the edgeR and limma packages.
+Call the set ‘AF’, for set ‘A’, ‘Filtered’.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a>AF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(</span>
 <span id="cb7-2"><a href="preproc.html#cb7-2"></a>  <span class="dt">counts =</span> featureCountsAF,</span>
 <span id="cb7-3"><a href="preproc.html#cb7-3"></a>  <span class="dt">genes =</span> genes_annotAF,</span>
 <span id="cb7-4"><a href="preproc.html#cb7-4"></a>  <span class="dt">samples =</span> sampDescA,</span>
 <span id="cb7-5"><a href="preproc.html#cb7-5"></a>  <span class="dt">group =</span> sampDescA<span class="op">$</span>group</span>
 <span id="cb7-6"><a href="preproc.html#cb7-6"></a>)</span>
-<span id="cb7-7"><a href="preproc.html#cb7-7"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">calcNormFactors</span>(filteredCountsAF_dgel)</span>
-<span id="cb7-8"><a href="preproc.html#cb7-8"></a>filteredCountsAF_lcmp_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(filteredCountsAF_dgel, <span class="dt">log =</span> T)</span>
+<span id="cb7-7"><a href="preproc.html#cb7-7"></a>AF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">calcNormFactors</span>(AF_dgel)</span>
+<span id="cb7-8"><a href="preproc.html#cb7-8"></a>AF_lcmp_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(AF_dgel, <span class="dt">log =</span> T)</span>
 <span id="cb7-9"><a href="preproc.html#cb7-9"></a></span>
-<span id="cb7-10"><a href="preproc.html#cb7-10"></a><span class="co"># Save filteredCountsAF_dgel to facilitate restarting</span></span>
+<span id="cb7-10"><a href="preproc.html#cb7-10"></a><span class="co"># Save AF_dgel to facilitate restarting</span></span>
 <span id="cb7-11"><a href="preproc.html#cb7-11"></a><span class="co"># remove from final version</span></span>
-<span id="cb7-12"><a href="preproc.html#cb7-12"></a><span class="kw">save</span>(<span class="dt">list =</span> <span class="st">&quot;filteredCountsAF_dgel&quot;</span>, <span class="dt">file =</span> <span class="st">&quot;RData/filteredCountsAF_dgel&quot;</span>)</span></code></pre></div>
+<span id="cb7-12"><a href="preproc.html#cb7-12"></a><span class="kw">save</span>(<span class="dt">list =</span> <span class="st">&quot;AF_dgel&quot;</span>, <span class="dt">file =</span> <span class="st">&quot;RData/AF_dgel&quot;</span>)</span></code></pre></div>
 <p>Verify that the counts are properly normalized.</p>
 <div class="figure"><span id="fig:normedLcpmBxp"></span>
 <img src="Static/figures/normedLcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
@@ -626,7 +629,7 @@ linear modeling is carried out on the log-CPM values which are assumed to be
 normally distributed and the mean-variance relationship is accommodated using precision
 weights calculated by the voom function. We apply this transformation next.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="preproc.html#cb12-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb12-2"><a href="preproc.html#cb12-2"></a>filteredCountsAF_voom &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">voom</span>(filteredCountsAF_dgel, Design_mtx, <span class="dt">plot=</span>T)</span></code></pre></div>
+<span id="cb12-2"><a href="preproc.html#cb12-2"></a>filteredCountsAF_voom &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">voom</span>(AF_dgel, Design_mtx, <span class="dt">plot=</span>T)</span></code></pre></div>
 <div class="figure"><span id="fig:Voom1"></span>
 <img src="Static/figures/Voom1-1.png" alt="Removing heteroscedascity" width="1056" />
 <p class="caption">
@@ -995,7 +998,7 @@ typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#
 <div id="another-look-at-bcv" class="section level3 unnumbered" number="">
 <h3>Another look at BCV</h3>
 <p>Alternatively, we can extract sigma and signal from the fit objects.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="preproc.html#cb15-1"></a>lib.size &lt;-<span class="st"> </span><span class="kw">colSums</span>(filteredCountsAF_dgel<span class="op">$</span>counts)</span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="preproc.html#cb15-1"></a>lib.size &lt;-<span class="st"> </span><span class="kw">colSums</span>(AF_dgel<span class="op">$</span>counts)</span>
 <span id="cb15-2"><a href="preproc.html#cb15-2"></a></span>
 <span id="cb15-3"><a href="preproc.html#cb15-3"></a>fit &lt;-<span class="st"> </span>filteredCountsAF_voom_efit</span>
 <span id="cb15-4"><a href="preproc.html#cb15-4"></a>sx &lt;-<span class="st"> </span>fit<span class="op">$</span>Amean <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">log2</span>(lib.size <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">-</span><span class="st"> </span><span class="kw">log2</span>(<span class="fl">1e+06</span>)</span>

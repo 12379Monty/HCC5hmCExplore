@@ -369,22 +369,22 @@ samples.
 Before producing the MDS plot we will normalize the distributions.
 We will store the data into s `DGEList` object as this is convenient
 when running many of the analyses implemented in the edgeR and limma packages.
+Call the set 'AF', for set 'A', 'Filtered'.
 
+```{r getDGEL, cache=T, cache.var=c('AF_dgel', 'AF_lcmp_mtx')}
 
-```{r getDGEL, cache=T, cache.var=c('filteredCountsAF_dgel', 'filteredCountsAF_lcmp_mtx')}
-
-filteredCountsAF_dgel <- edgeR::DGEList(
+AF_dgel <- edgeR::DGEList(
   counts = featureCountsAF,
   genes = genes_annotAF,
   samples = sampDescA,
   group = sampDescA$group
 )
-filteredCountsAF_dgel <- edgeR::calcNormFactors(filteredCountsAF_dgel)
-filteredCountsAF_lcmp_mtx <- edgeR::cpm(filteredCountsAF_dgel, log = T)
+AF_dgel <- edgeR::calcNormFactors(AF_dgel)
+AF_lcmp_mtx <- edgeR::cpm(AF_dgel, log = T)
 
-# Save filteredCountsAF_dgel to facilitate restarting
+# Save AF_dgel to facilitate restarting
 # remove from final version
-save(list = "filteredCountsAF_dgel", file = "RData/filteredCountsAF_dgel")
+save(list = "AF_dgel", file = "RData/AF_dgel")
 ```
 
 Verify that the counts are properly normalized.
@@ -393,7 +393,7 @@ Verify that the counts are properly normalized.
 ```{r normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=F}
 
 par(mar = c(1, 3, 2, 1))
-boxplot(filteredCountsAF_lcmp_mtx,
+boxplot(AF_lcmp_mtx,
   ylim = c(1, 8), ylab='Normalized Log CPM',
   staplewex = 0,       # remove horizontal whisker lines
   staplecol = "white", # just to be totally sure :)
@@ -405,7 +405,7 @@ boxplot(filteredCountsAF_lcmp_mtx,
 legend("top", legend = names(groupCol), text.col = groupCol,
   ncol = 2, bty = "n")
 # Add reference lines
-SampleMedian <- apply(filteredCountsAF_lcmp_mtx, 2, median)
+SampleMedian <- apply(AF_lcmp_mtx, 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 1),
   las = 2, col = "grey", line = -1, tick = F)
@@ -422,8 +422,8 @@ par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 # simply a matter of convenience to save time
 # remove from final version
 set.seed(1)
-samp_ndx <- sample(1:ncol(filteredCountsAF_lcmp_mtx), size = 500)
-MDS.out <- limma::plotMDS(filteredCountsAF_lcmp_mtx[, samp_ndx],
+samp_ndx <- sample(1:ncol(AF_lcmp_mtx), size = 500)
+MDS.out <- limma::plotMDS(AF_lcmp_mtx[, samp_ndx],
   col = groupCol[sampDescA$group[samp_ndx]], pch = 1
 )
 legend("topleft",
@@ -431,7 +431,7 @@ legend("topleft",
   text.col = groupCol, bty = "n"
 )
 
-MDS.out <- limma::plotMDS(filteredCountsAF_lcmp_mtx[, samp_ndx],
+MDS.out <- limma::plotMDS(AF_lcmp_mtx[, samp_ndx],
   col = groupCol[sampDescA$group[samp_ndx]], pch = 1,
   dim.plot = 3:4
 )
@@ -447,8 +447,8 @@ plot that can extremely usful for exploration
 
 ```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=F}
 
-Glimma::glMDSPlot(filteredCountsAF_dgel[, samp_ndx],
-  groups = filteredCountsAF_dgel$samples[
+Glimma::glMDSPlot(AF_dgel[, samp_ndx],
+  groups = AF_dgel$samples[
     samp_ndx,
     c("group", "trainValGroup", "sampType", "tissue", "title", "stage")
   ],
@@ -491,7 +491,7 @@ model design matrix.
 
 ```{r DEADesign, cache=F, include=T, echo=F, include=T}
 
-Design_mtx <- model.matrix( ~  -1 + group, data=filteredCountsAF_dgel$samples)
+Design_mtx <- model.matrix( ~  -1 + group, data=AF_dgel$samples)
 colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
 
 cat("colSums(Design_mtx):\n")
@@ -525,7 +525,7 @@ weights calculated by the voom function.  We apply this transformation next.
 ```{r Voom1, cache=T, cache.vars=c('filteredCountsAF_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=T}
 
 par(mfrow=c(1,1))
-filteredCountsAF_voom <- limma::voom(filteredCountsAF_dgel, Design_mtx, plot=T)
+filteredCountsAF_voom <- limma::voom(AF_dgel, Design_mtx, plot=T)
 
 ```
 
@@ -977,7 +977,7 @@ typically in the 0.4-1.0 range [@Hart:2013aa].
 Alternatively, we can extract sigma and signal from the fit objects.
 
 ```{r altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
-lib.size <- colSums(filteredCountsAF_dgel$counts)
+lib.size <- colSums(AF_dgel$counts)
 
 fit <- filteredCountsAF_voom_efit
 sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)

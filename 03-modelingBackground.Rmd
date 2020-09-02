@@ -163,6 +163,30 @@ it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, an
 
 $$\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)$$
 
+* shrunken relaxed lasso
+
+Suppose the **glmnet** fitted linear predictor at $\lambda$ is $\hat{\eta}_\lambda(x)$
+and the relaxed version is $\tilde{\eta}_\lambda(x)$, then the shrunken relaxed lasso fit is
+
+$$\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)$$
+
+$\gamma \in [0,\, 1]$ is an additional tuning parameter which can be selected by cross validation.
+
+The debiasing will potentially improve prediction performance, and CV will typically select a model 
+with a smaller number of variables. This procedure is very competitive with forward-stepwise and 
+best-subset regression, and has a considerable speed advantage when the number of variables is large. 
+This is especially true for best-subset, but even so for forward stepwise. 
+The latter has to plod through the variables one-at-a-time,
+while glmnet will just plunge in and find a good active set.
+
+Further details may be found in 
+Friedman, Hastie, and Tibshirani (2010),
+Tibshirani et al. (2012),
+Simon et al. (2011),
+Simon, Friedman, and Hastie (2013) and 
+Hastie, Tibshirani, and Tibshirani (2017)
+([@Friedman:2010aa;@Tibshirani:2012aa;@Simon:2011aa;@Simon:2013aa;@Hastie:2017aa]). 
+
 
 * SNR  
     - $y_0=f(x_0) + \epsilon_0$

@@ -4,15 +4,56 @@ We explore some glmnet fits.
 
 * All fits must be assessed by cv and test set  
 
+```{r getTrainVal, cache=T, cache.vars=c('sampID_train_vec', 'sampID_val_vec','group_train_vec','group_test_vec','train_lcpm_mtx','test_lcpm_mtx')}
+
+set.seed(1)
+sampID_train_vec <- with(AF_dgel$samples,
+AF_dgel$samples$sampID[caret::createDataPartition(y=group, p=0.8, list=F)]
+)
+
+sampID_test_vec <- with(AF_dgel$samples,
+setdiff(sampID, sampID_train_vec)
+)
+
+group_train_vec <- AF_dgel$samples[sampID_train_vec, 'group']
+group_test_vec <- AF_dgel$samples[sampID_test_vec, 'group']
+
+knitr::kable(table(group_train_vec),
+  caption="Train set") %>%
+   kableExtra::kable_styling(full_width = F)
+
+knitr::kable(table(group_test_vec),
+  caption="Test set") %>%
+   kableExtra::kable_styling(full_width = F)
+
+train_lcpm_mtx <- t(lcpm_mtx[,sampID_train_vec])
+test_lcpm_mtx <- t(lcpm_mtx[,sampID_test_vec])
+
+```
+
+
 ## lasso 
+
+```{r lassoFit, cache=T, cache.vars='AF_lasso_cvfit', fig.height=5, fig.width=6, fig.cap="lasso fit the train set with cv"}
+
+AF_lasso_cvfit <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=group_train_vec,
+ family='binomial', alpha=1,
+ type.measure = "class")
+
+plot(AF_lasso_cvfit)
+
+```
+
 
 ## Relaxed lasso 
 
 ## Shrunken relaxed lasso
 
-* ridge
+## ridge
 
-* Mid-point between ridge and lasso
+## Mid-point between ridge and lasso
 
 
 

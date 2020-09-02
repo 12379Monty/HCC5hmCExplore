@@ -174,6 +174,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="explore-glmnet.html"><a href="explore-glmnet.html#lasso"><i class="fa fa-check"></i><b>4.1</b> lasso</a></li>
 <li class="chapter" data-level="4.2" data-path="explore-glmnet.html"><a href="explore-glmnet.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
 <li class="chapter" data-level="4.3" data-path="explore-glmnet.html"><a href="explore-glmnet.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
+<li class="chapter" data-level="4.4" data-path="explore-glmnet.html"><a href="explore-glmnet.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
+<li class="chapter" data-level="4.5" data-path="explore-glmnet.html"><a href="explore-glmnet.html#mid-point-between-ridge-and-lasso"><i class="fa fa-check"></i><b>4.5</b> Mid-point between ridge and lasso</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
 <li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
@@ -353,6 +355,26 @@ it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, an
 <li>relaxed lasso</li>
 </ul>
 <p><span class="math display">\[\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)\]</span></p>
+<ul>
+<li>shrunken relaxed lasso</li>
+</ul>
+<p>Suppose the <strong>glmnet</strong> fitted linear predictor at <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(\hat{\eta}_\lambda(x)\)</span>
+and the relaxed version is <span class="math inline">\(\tilde{\eta}_\lambda(x)\)</span>, then the shrunken relaxed lasso fit is</p>
+<p><span class="math display">\[\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)\]</span></p>
+<p><span class="math inline">\(\gamma \in [0,\, 1]\)</span> is an additional tuning parameter which can be selected by cross validation.</p>
+<p>The debiasing will potentially improve prediction performance, and CV will typically select a model
+with a smaller number of variables. This procedure is very competitive with forward-stepwise and
+best-subset regression, and has a considerable speed advantage when the number of variables is large.
+This is especially true for best-subset, but even so for forward stepwise.
+The latter has to plod through the variables one-at-a-time,
+while glmnet will just plunge in and find a good active set.</p>
+<p>Further details may be found in
+Friedman, Hastie, and Tibshirani (2010),
+Tibshirani et al. (2012),
+Simon et al. (2011),
+Simon, Friedman, and Hastie (2013) and
+Hastie, Tibshirani, and Tibshirani (2017)
+(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">29</a>,<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">31</a>]</span>).</p>
 <ul>
 <li>SNR
 <ul>
