@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-30" />
+<meta name="date" content="2020-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="intro.html"/>
-<link rel="next" href="baseline-model.html"/>
+<link rel="next" href="modeling-background.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -150,18 +152,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
 <li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="baseline-model.html"><a href="baseline-model.html#review-glmnet"><i class="fa fa-check"></i><b>3.1</b> Review glmnet</a>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="baseline-model.html"><a href="baseline-model.html#section"><i class="fa fa-check"></i><b>3.1.1</b> $</a></li>
-<li class="chapter" data-level="3.1.2" data-path="baseline-model.html"><a href="baseline-model.html#rules-for-discarding-predictors"><i class="fa fa-check"></i><b>3.1.2</b> Rules for discarding predictors</a></li>
+<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
+<ul>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
-<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
+<li class="chapter" data-level="4" data-path="model-baseline-lasso.html"><a href="model-baseline-lasso.html"><i class="fa fa-check"></i><b>4</b> Explore lasso models</a></li>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
@@ -225,8 +234,12 @@ For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:201
 <span id="cb5-11"><a href="preproc.html#cb5-11"></a><span class="kw">with</span>(</span>
 <span id="cb5-12"><a href="preproc.html#cb5-12"></a>  sampDesc <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(sampType <span class="op">==</span><span class="st"> &quot;blood&quot;</span>),</span>
 <span id="cb5-13"><a href="preproc.html#cb5-13"></a>  knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(DxStage, trainValGroup, <span class="dt">exclude =</span> <span class="ot">NULL</span>),</span>
-<span id="cb5-14"><a href="preproc.html#cb5-14"></a>   <span class="dt">caption=</span><span class="st">&quot;GSE112679 Samples by Dx Group and Subset&quot;</span>)</span>
-<span id="cb5-15"><a href="preproc.html#cb5-15"></a>)</span></code></pre></div>
+<span id="cb5-14"><a href="preproc.html#cb5-14"></a>   <span class="dt">caption=</span><span class="st">&quot;GSE112679 Samples by Dx Group and Subset&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-15"><a href="preproc.html#cb5-15"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span>
+<span id="cb5-16"><a href="preproc.html#cb5-16"></a>)</span></code></pre></div>
+<pre><code>## Warning in kableExtra::kable_styling(., full_width = F): Please specify format
+## in kable. kableExtra can customize either HTML or LaTeX outputs. See https://
+## haozhu233.github.io/kableExtra/ for details.</code></pre>
 <table>
 <caption><span id="tab:loadData">Table 2.1: </span>GSE112679 Samples by Dx Group and Subset</caption>
 <thead>
@@ -285,22 +298,36 @@ For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:201
 <p>For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the <code>Train</code> or <code>Val-1</code> subsets.
 The appropriate outcome variable will be renamed or aliased <code>group</code></p>
-<table>
-<caption><span id="tab:subsetSamples">Table 2.2: </span>Samples used in this analysis</caption>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:subsetSamples">Table 2.2: </span>Samples used in this analysis
+</caption>
 <thead>
-<tr class="header">
-<th align="left">group</th>
-<th align="right">Freq</th>
+<tr>
+<th style="text-align:left;">
+group
+</th>
+<th style="text-align:right;">
+Freq
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Control</td>
-<td align="right">778</td>
+<tr>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:right;">
+778
+</td>
 </tr>
-<tr class="even">
-<td align="left">HCC</td>
-<td align="right">555</td>
+<tr>
+<td style="text-align:left;">
+HCC
+</td>
+<td style="text-align:right;">
+555
+</td>
 </tr>
 </tbody>
 </table>
@@ -343,43 +370,92 @@ Coverage level looks fairly comparable across samples.  It is sometimes helpful 
 keep track of the actual coverage which can be adequetely tracked by distribution
 quantiles.
 -->
-<table>
-<caption><span id="tab:quantCountsA">Table 2.3: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
-Rows are quartiles across samples</caption>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:quantCountsA">Table 2.3: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
+Rows are quartiles across samples
+</caption>
 <thead>
-<tr class="header">
-<th></th>
-<th align="right">15%</th>
-<th align="right">25%</th>
-<th align="right">50%</th>
-<th align="right">75%</th>
-<th align="right">totCovM</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+15%
+</th>
+<th style="text-align:right;">
+25%
+</th>
+<th style="text-align:right;">
+50%
+</th>
+<th style="text-align:right;">
+75%
+</th>
+<th style="text-align:right;">
+totCovM
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>25%</td>
-<td align="right">4</td>
-<td align="right">24</td>
-<td align="right">111</td>
-<td align="right">321</td>
-<td align="right">5.5</td>
+<tr>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+111
+</td>
+<td style="text-align:right;">
+321
+</td>
+<td style="text-align:right;">
+5.5
+</td>
 </tr>
-<tr class="even">
-<td>50%</td>
-<td align="right">5</td>
-<td align="right">30</td>
-<td align="right">135</td>
-<td align="right">391</td>
-<td align="right">6.7</td>
+<tr>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+135
+</td>
+<td style="text-align:right;">
+391
+</td>
+<td style="text-align:right;">
+6.7
+</td>
 </tr>
-<tr class="odd">
-<td>75%</td>
-<td align="right">6</td>
-<td align="right">35</td>
-<td align="right">162</td>
-<td align="right">468</td>
-<td align="right">8.0</td>
+<tr>
+<td style="text-align:left;">
+75%
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+162
+</td>
+<td style="text-align:right;">
+468
+</td>
+<td style="text-align:right;">
+8.0
+</td>
 </tr>
 </tbody>
 </table>
@@ -468,18 +544,18 @@ samples.</p>
 <p>Before producing the MDS plot we will normalize the distributions.
 We will store the data into s <code>DGEList</code> object as this is convenient
 when running many of the analyses implemented in the edgeR and limma packages.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="preproc.html#cb6-1"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(</span>
-<span id="cb6-2"><a href="preproc.html#cb6-2"></a>  <span class="dt">counts =</span> featureCountsAF,</span>
-<span id="cb6-3"><a href="preproc.html#cb6-3"></a>  <span class="dt">genes =</span> genes_annotAF,</span>
-<span id="cb6-4"><a href="preproc.html#cb6-4"></a>  <span class="dt">samples =</span> sampDescA,</span>
-<span id="cb6-5"><a href="preproc.html#cb6-5"></a>  <span class="dt">group =</span> sampDescA<span class="op">$</span>group</span>
-<span id="cb6-6"><a href="preproc.html#cb6-6"></a>)</span>
-<span id="cb6-7"><a href="preproc.html#cb6-7"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">calcNormFactors</span>(filteredCountsAF_dgel)</span>
-<span id="cb6-8"><a href="preproc.html#cb6-8"></a>filteredCountsAF_lcmp_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(filteredCountsAF_dgel, <span class="dt">log =</span> T)</span>
-<span id="cb6-9"><a href="preproc.html#cb6-9"></a></span>
-<span id="cb6-10"><a href="preproc.html#cb6-10"></a><span class="co"># Save filteredCountsAF_dgel to facilitate restarting</span></span>
-<span id="cb6-11"><a href="preproc.html#cb6-11"></a><span class="co"># remove from final version</span></span>
-<span id="cb6-12"><a href="preproc.html#cb6-12"></a><span class="kw">save</span>(<span class="dt">list =</span> <span class="st">&quot;filteredCountsAF_dgel&quot;</span>, <span class="dt">file =</span> <span class="st">&quot;RData/filteredCountsAF_dgel&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preproc.html#cb7-1"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">DGEList</span>(</span>
+<span id="cb7-2"><a href="preproc.html#cb7-2"></a>  <span class="dt">counts =</span> featureCountsAF,</span>
+<span id="cb7-3"><a href="preproc.html#cb7-3"></a>  <span class="dt">genes =</span> genes_annotAF,</span>
+<span id="cb7-4"><a href="preproc.html#cb7-4"></a>  <span class="dt">samples =</span> sampDescA,</span>
+<span id="cb7-5"><a href="preproc.html#cb7-5"></a>  <span class="dt">group =</span> sampDescA<span class="op">$</span>group</span>
+<span id="cb7-6"><a href="preproc.html#cb7-6"></a>)</span>
+<span id="cb7-7"><a href="preproc.html#cb7-7"></a>filteredCountsAF_dgel &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">calcNormFactors</span>(filteredCountsAF_dgel)</span>
+<span id="cb7-8"><a href="preproc.html#cb7-8"></a>filteredCountsAF_lcmp_mtx &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw">cpm</span>(filteredCountsAF_dgel, <span class="dt">log =</span> T)</span>
+<span id="cb7-9"><a href="preproc.html#cb7-9"></a></span>
+<span id="cb7-10"><a href="preproc.html#cb7-10"></a><span class="co"># Save filteredCountsAF_dgel to facilitate restarting</span></span>
+<span id="cb7-11"><a href="preproc.html#cb7-11"></a><span class="co"># remove from final version</span></span>
+<span id="cb7-12"><a href="preproc.html#cb7-12"></a><span class="kw">save</span>(<span class="dt">list =</span> <span class="st">&quot;filteredCountsAF_dgel&quot;</span>, <span class="dt">file =</span> <span class="st">&quot;RData/filteredCountsAF_dgel&quot;</span>)</span></code></pre></div>
 <p>Verify that the counts are properly normalized.</p>
 <div class="figure"><span id="fig:normedLcpmBxp"></span>
 <img src="Static/figures/normedLcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
@@ -543,8 +619,8 @@ In <code>limma</code>, the R package we are using for our analyses,
 linear modeling is carried out on the log-CPM values which are assumed to be
 normally distributed and the mean-variance relationship is accommodated using precision
 weights calculated by the voom function. We apply this transformation next.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="preproc.html#cb11-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb11-2"><a href="preproc.html#cb11-2"></a>filteredCountsAF_voom &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">voom</span>(filteredCountsAF_dgel, Design_mtx, <span class="dt">plot=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="preproc.html#cb12-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb12-2"><a href="preproc.html#cb12-2"></a>filteredCountsAF_voom &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">voom</span>(filteredCountsAF_dgel, Design_mtx, <span class="dt">plot=</span>T)</span></code></pre></div>
 <div class="figure"><span id="fig:Voom1"></span>
 <img src="Static/figures/Voom1-1.png" alt="Removing heteroscedascity" width="1056" />
 <p class="caption">
@@ -558,6 +634,13 @@ expression scale due to very small counts.</p>
 <!--
 Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to log-CPM transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean log-CPM values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
 -->
+<!--
+To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
+
+![](Static/images/Law-fig4.gif)<!-- -->
+<p>We observe that the variability in the 5hmC data is quite a bit lower. Statistical summaries would give
+a better idea.</p>
+<p>–&gt;</p>
 </div>
 <div id="fit-linear-models-and-examine-the-results" class="section level3 unnumbered" number="">
 <h3>Fit linear models and examine the results</h3>
@@ -566,26 +649,43 @@ the linear models can be fitted to each gene and the results
 examined to assess differential expression between the two groups
 of interest, in our case HCC vs Control.</p>
 <p>Table <a href="preproc.html#tab:lmFit">2.4</a> displays the counts of genes in each DE category:</p>
-<table>
-<caption><span id="tab:lmFit">Table 2.4: </span>DE Results ad FDR = 0.05</caption>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:lmFit">Table 2.4: </span>DE Results at FDR = 0.05
+</caption>
 <thead>
-<tr class="header">
-<th></th>
-<th align="right">HCCvsControl</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+HCCvsControl
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Down</td>
-<td align="right">5214</td>
+<tr>
+<td style="text-align:left;">
+Down
+</td>
+<td style="text-align:right;">
+5214
+</td>
 </tr>
-<tr class="even">
-<td>NotSig</td>
-<td align="right">5280</td>
+<tr>
+<td style="text-align:left;">
+NotSig
+</td>
+<td style="text-align:right;">
+5280
+</td>
 </tr>
-<tr class="odd">
-<td>Up</td>
-<td align="right">5258</td>
+<tr>
+<td style="text-align:left;">
+Up
+</td>
+<td style="text-align:right;">
+5258
+</td>
 </tr>
 </tbody>
 </table>
@@ -605,34 +705,67 @@ of interest.</p>
 Figure 2.7: HCC vs Control - Identified Genes at FDR = 0,05
 </p>
 </div>
-<table>
-<caption><span id="tab:quantlogFC">Table 2.5: </span>log FC quartiles by gene identification</caption>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:quantlogFC">Table 2.5: </span>log FC quartiles by gene identification
+</caption>
 <thead>
-<tr class="header">
-<th></th>
-<th align="right">down</th>
-<th align="right">notDE</th>
-<th align="right">up</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+down
+</th>
+<th style="text-align:right;">
+notDE
+</th>
+<th style="text-align:right;">
+up
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>25%</td>
-<td align="right">-0.07</td>
-<td align="right">-0.01</td>
-<td align="right">0.04</td>
+<tr>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:right;">
+-0.07
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
+0.04
+</td>
 </tr>
-<tr class="even">
-<td>50%</td>
-<td align="right">-0.05</td>
-<td align="right">0.00</td>
-<td align="right">0.06</td>
+<tr>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:right;">
+-0.05
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.06
+</td>
 </tr>
-<tr class="odd">
-<td>75%</td>
-<td align="right">-0.03</td>
-<td align="right">0.01</td>
-<td align="right">0.09</td>
+<tr>
+<td style="text-align:left;">
+75%
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.09
+</td>
 </tr>
 </tbody>
 </table>
@@ -740,6 +873,14 @@ Figure 2.9: Cumulative Distribution of CV - rug = 90th percentile
 </p>
 </div>
 <p><br/></p>
+<p>BCV values are quite low:</p>
+<div class="figure"><span id="fig:bspBCV"></span>
+<img src="Static/figures/bspBCV-1.png" alt="BCV distributions" width="960" />
+<p class="caption">
+Figure 2.10: BCV distributions
+</p>
+</div>
+<p><br/></p>
 <!-- 
  SampleSize_f <- function(Alpha=.01, Beta=.80, Delta=2, Mu, Disp)
  {temp <- qnorm(1-Alpha/2) + qnorm(Beta)
@@ -755,43 +896,84 @@ based on the differential representation analysis in Section <a href="preproc.ht
 <div class="figure"><span id="fig:sampleSizeCurve"></span>
 <img src="Static/figures/sampleSizeCurve-1.png" alt="Sample Size Estimates" width="1056" />
 <p class="caption">
-Figure 2.10: Sample Size Estimates
+Figure 2.11: Sample Size Estimates
 </p>
 </div>
-<p>For the filtered reads, coverage looks liek this:</p>
-<table>
-<caption><span id="tab:quantCountsAF">Table 2.6: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
-Rows are quartiles across samples</caption>
+<p>For the filtered reads, coverage looks like this:</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:quantCountsAF">Table 2.6: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
+Rows are quartiles across samples
+</caption>
 <thead>
-<tr class="header">
-<th></th>
-<th align="right">15%</th>
-<th align="right">25%</th>
-<th align="right">50%</th>
-<th align="right">75%</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+15%
+</th>
+<th style="text-align:right;">
+25%
+</th>
+<th style="text-align:right;">
+50%
+</th>
+<th style="text-align:right;">
+75%
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>25%</td>
-<td align="right">37</td>
-<td align="right">63</td>
-<td align="right">163</td>
-<td align="right">396</td>
+<tr>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:right;">
+163
+</td>
+<td style="text-align:right;">
+396
+</td>
 </tr>
-<tr class="even">
-<td>50%</td>
-<td align="right">45</td>
-<td align="right">76</td>
-<td align="right">198</td>
-<td align="right">483</td>
+<tr>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+198
+</td>
+<td style="text-align:right;">
+483
+</td>
 </tr>
-<tr class="odd">
-<td>75%</td>
-<td align="right">54</td>
-<td align="right">91</td>
-<td align="right">237</td>
-<td align="right">577</td>
+<tr>
+<td style="text-align:left;">
+75%
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+237
+</td>
+<td style="text-align:right;">
+577
+</td>
 </tr>
 </tbody>
 </table>
@@ -804,7 +986,88 @@ to detect genes with effect sizes as small as 1.05 (5% fold change). This is due
 that the biological variability in gene body 5hmC density is quite low.
 For human samples, RNA-Seq within group biological variability is
 typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">14</a>]</span>.</p>
+<div id="another-look-at-bcv" class="section level3 unnumbered" number="">
+<h3>Another look at BCV</h3>
+<p>Alternatively, we can extract sigma and signal from the fit objects.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="preproc.html#cb15-1"></a>lib.size &lt;-<span class="st"> </span><span class="kw">colSums</span>(filteredCountsAF_dgel<span class="op">$</span>counts)</span>
+<span id="cb15-2"><a href="preproc.html#cb15-2"></a></span>
+<span id="cb15-3"><a href="preproc.html#cb15-3"></a>fit &lt;-<span class="st"> </span>filteredCountsAF_voom_efit</span>
+<span id="cb15-4"><a href="preproc.html#cb15-4"></a>sx &lt;-<span class="st"> </span>fit<span class="op">$</span>Amean <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">log2</span>(lib.size <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">-</span><span class="st"> </span><span class="kw">log2</span>(<span class="fl">1e+06</span>)</span>
+<span id="cb15-5"><a href="preproc.html#cb15-5"></a>sy &lt;-<span class="st"> </span><span class="kw">sqrt</span>(fit<span class="op">$</span>sigma)</span>
+<span id="cb15-6"><a href="preproc.html#cb15-6"></a></span>
+<span id="cb15-7"><a href="preproc.html#cb15-7"></a>CV &lt;-<span class="st"> </span>sy<span class="op">/</span>sx    </span>
+<span id="cb15-8"><a href="preproc.html#cb15-8"></a></span>
+<span id="cb15-9"><a href="preproc.html#cb15-9"></a><span class="kw">cor</span>(<span class="kw">cbind</span>(BCV_mtx, CV)) </span></code></pre></div>
+<pre><code>##           Control       HCC        CV
+## Control 1.0000000 0.9591234 0.7597385
+## HCC     0.9591234 1.0000000 0.7687380
+## CV      0.7597385 0.7687380 1.0000000</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="preproc.html#cb17-1"></a><span class="kw">boxplot</span>(<span class="kw">cbind</span>(BCV_mtx, CV), <span class="dt">outline=</span>F) </span></code></pre></div>
+<div class="figure"><span id="fig:altCV"></span>
+<img src="Static/figures/altCV-1.png" alt="Alternative CV Calculation" width="576" />
+<p class="caption">
+Figure 2.12: Alternative CV Calculation
+</p>
+</div>
+<p>CV computed frm sigma and coverage extracted from the fit are slighly higher.
+For purposes of gene identification, we really want to look at effect size in relation to residual
+standard deviation.</p>
+<div class="figure"><span id="fig:plotSNR"></span>
+<img src="Static/figures/plotSNR-1.png" alt="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile" width="960" />
+<p class="caption">
+Figure 2.13: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile
+</p>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:plotSNR">Table 2.7: </span>SNR Summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+x
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+25%
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+50%
+</td>
+<td style="text-align:right;">
+0.036
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+75%
+</td>
+<td style="text-align:right;">
+0.060
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+90%
+</td>
+<td style="text-align:right;">
+0.082
+</td>
+</tr>
+</tbody>
+</table>
 
+</div>
 </div>
 </div>
             </section>
@@ -813,7 +1076,7 @@ typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#
         </div>
       </div>
 <a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="baseline-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="modeling-background.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

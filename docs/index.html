@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-30" />
+<meta name="date" content="2020-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -150,18 +152,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
 <li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="baseline-model.html"><a href="baseline-model.html#review-glmnet"><i class="fa fa-check"></i><b>3.1</b> Review glmnet</a>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="baseline-model.html"><a href="baseline-model.html#section"><i class="fa fa-check"></i><b>3.1.1</b> $</a></li>
-<li class="chapter" data-level="3.1.2" data-path="baseline-model.html"><a href="baseline-model.html#rules-for-discarding-predictors"><i class="fa fa-check"></i><b>3.1.2</b> Rules for discarding predictors</a></li>
+<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
+<ul>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
-<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
+<li class="chapter" data-level="4" data-path="model-baseline-lasso.html"><a href="model-baseline-lasso.html"><i class="fa fa-check"></i><b>4</b> Explore lasso models</a></li>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
@@ -186,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DNA Hydroxymethylation in Hepatocellular Carcinoma</h1>
 <p class="author"><em>Francois Collin</em></p>
-<p class="date"><em>2020-08-30</em></p>
+<p class="date"><em>2020-09-01</em></p>
 </div>
 <div id="index" class="section level1 unnumbered" number="">
 <h1>Preamble</h1>

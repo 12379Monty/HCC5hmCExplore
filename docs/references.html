@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-30" />
+<meta name="date" content="2020-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -150,18 +152,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
 <li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="baseline-model.html"><a href="baseline-model.html#review-glmnet"><i class="fa fa-check"></i><b>3.1</b> Review glmnet</a>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="baseline-model.html"><a href="baseline-model.html#section"><i class="fa fa-check"></i><b>3.1.1</b> $</a></li>
-<li class="chapter" data-level="3.1.2" data-path="baseline-model.html"><a href="baseline-model.html#rules-for-discarding-predictors"><i class="fa fa-check"></i><b>3.1.2</b> Rules for discarding predictors</a></li>
+<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
+<ul>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
-<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
+<li class="chapter" data-level="4" data-path="model-baseline-lasso.html"><a href="model-baseline-lasso.html"><i class="fa fa-check"></i><b>4</b> Explore lasso models</a></li>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
@@ -273,6 +282,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="ref-Simon:2013aa">
 <p>29. Simon, N., Friedman, J., and Hastie, T. (2013). A blockwise descent algorithm for group-penalized multiresponse and multinomial regression. arXiv preprint arXiv:1311.6529.</p>
+</div>
+<div id="ref-Bertsimas:2016aa">
+<p>30. Bertsimas, D., King, A., and Mazumder, R. (2016). Best subset selection via a modern optimization lens. Ann. Statist. <em>44</em>, 813–852. Available at: <a href="https://projecteuclid.org:443/euclid.aos/1458245736">https://projecteuclid.org:443/euclid.aos/1458245736</a>.</p>
+</div>
+<div id="ref-Hastie:2017aa">
+<p>31. Hastie, T., and Tibshirani, R. (2017). Extended comparisons of best subset selection, forward stepwise selection, and the lasso. arXiv: Methodology.</p>
+</div>
+<div id="ref-Xiang:2020aa">
+<p>32. Xiang, G., Keller, C.A., Giardine, B., An, L., Li, Q., Zhang, Y., and Hardison, R.C. (2020). S3norm: Simultaneous normalization of sequencing depth and signal-to-noise ratio in epigenomic data. Nucleic Acids Research <em>48</em>, e43–e43. Available at: <a href="https://doi.org/10.1093/nar/gkaa105">https://doi.org/10.1093/nar/gkaa105</a>.</p>
+</div>
+<div id="ref-Lozoya:2018aa">
+<p>33. Lozoya, O.A., Santos, J.H., and Woychik, R.P. A leveraged signal-to-noise ratio (lstnr) method to extract differentially expressed genes and multivariate patterns of expression from noisy and low-replication rnaseq data. Frontiers in genetics <em>9</em>, 176–176. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29868123">https://pubmed.ncbi.nlm.nih.gov/29868123</a>.</p>
+</div>
+<div id="ref-Simonsen:2018aa">
+<p>34. Simonsen, A.T., Hansen, M.C., Kjeldsen, E., Møller, P.L., Hindkjær, J.J., Hokland, P., and Aggerholm, A. (2018). Systematic evaluation of signal-to-noise ratio in variant detection from single cell genome multiple displacement amplification and exome sequencing. BMC Genomics <em>19</em>, 681. Available at: <a href="https://doi.org/10.1186/s12864-018-5063-5">https://doi.org/10.1186/s12864-018-5063-5</a>.</p>
+</div>
+<div id="ref-Rapaport:2013aa">
+<p>35. Rapaport, F., Khanin, R., Liang, Y., Pirun, M., Krek, A., Zumbo, P., Mason, C.E., Socci, N.D., and Betel, D. (2013). Comprehensive evaluation of differential gene expression analysis methods for rna-seq data. Genome biology <em>14</em>, R95–R95. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/24020486">https://pubmed.ncbi.nlm.nih.gov/24020486</a>.</p>
 </div>
 </div>
 </div>

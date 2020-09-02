@@ -63,7 +63,8 @@ sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC',
 with(
   sampDesc %>% dplyr::filter(sampType == "blood"),
   knitr::kable(table(DxStage, trainValGroup, exclude = NULL),
-   caption="GSE112679 Samples by Dx Group and Subset")
+   caption="GSE112679 Samples by Dx Group and Subset") %>% 
+  kableExtra::kable_styling(full_width = F)
 )
 
 ```
@@ -92,8 +93,11 @@ sampDescA$group <- with(
 groupCol <- c("#F3C300", "#875692")
 names(groupCol) <- unique(sampDescA$group)
 
-with(sampDescA, knitr::kable(table(group, exclude = NULL),
- caption="Samples used in this analysis"))
+with(sampDescA, 
+ knitr::kable(table(group, exclude = NULL),
+  caption="Samples used in this analysis") %>%
+  kableExtra::kable_styling(full_width = F)
+)
 
 ```
 
@@ -185,7 +189,7 @@ knitr::kable(featureCountsA_quant2,
     "Coverage Summary - Columns are sample coverage quantiles and total coverage",
     "\nRows are quartiles across samples"
   )
-)
+) %>% kableExtra::kable_styling(full_width = F)
 
 ```
 
@@ -503,7 +507,8 @@ Contrasts_mtx
 ```
 
 ```{r printDesign, echo=F, include=F}
- knitr::kable(head(Design_mtx), caption='Design Matrix')
+ knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
+  kableExtra::kable_styling(full_width = F)
 ```
 
 
@@ -533,6 +538,16 @@ expression scale due to very small counts.
 Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to log-CPM transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean log-CPM values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
 -->
 
+<!--
+To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
+
+`r knitr::include_graphics(
+  "Static/images/Law-fig4.gif",  dpi=100)`
+
+We observe that the variability in the 5hmC data is quite a bit lower.  Statistical summaries would give
+a better idea.  
+
+-->
 
 
 ### Fit linear models and examine the results {-}
@@ -560,7 +575,8 @@ Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
  limma::decideTests(filteredCountsAF_voom_efit,adjust.method = "BH", p.value = 0.05)
  
  knitr::kable(summary(filteredCountsAF_voom_efit_dt),
-  caption="DE Results ad FDR = 0.05")
+  caption="DE Results at FDR = 0.05") %>% 
+  kableExtra::kable_styling(full_width = F)
 
 ```
 
@@ -657,7 +673,8 @@ colnames(featureCountsAF_logFC_sum) <- as.character(factor(
 
 knitr::kable(featureCountsAF_logFC_sum,
   digits = 2,
-  caption = "log FC quartiles by gene identification")
+  caption = "log FC quartiles by gene identification") %>%
+  kableExtra::kable_styling(full_width = F)
 
 ```
 
@@ -815,7 +832,8 @@ countSum_frm <- do.call(
     )
   })
 )
-knitr::kable(countSum_frm)
+knitr::kable(countSum_frm) %>%
+  kableExtra::kable_styling(full_width = F)
 
 ```
 
@@ -869,6 +887,16 @@ for (JJ in 1:length(BCV_90perc_vec)) {
     col = groupCol[names(BCV_90perc_vec)[JJ]]
   )
 }
+
+```
+<br/>
+
+BCV values are quite low:
+
+```{r bspBCV,  fig.height=5, fig.width=10, fig.cap="BCV distributions",message=F, echo=F,include=T}
+
+ boxplot(BCV_mtx, outline=F, ylab='BCV')
+
 ```
 
 <br/>
@@ -908,7 +936,7 @@ mtext(side = 3, outer = T, cex = 1.25,
 
 ```
 
-For the filtered reads, coverage looks liek this:
+For the filtered reads, coverage looks like this:
 
 ```{r quantCountsAF, echo=F}
 
@@ -926,7 +954,8 @@ knitr::kable(featureCountsAF_quant2,
     "Coverage Summary - Columns are sample coverage quantiles and total coverage",
     "\nRows are quartiles across samples"
   )
-)
+) %>%
+  kableExtra::kable_styling(full_width = F)
 
 ```
 
@@ -942,5 +971,54 @@ to detect genes with effect sizes as small as 1.05 (5% fold change).  This is du
 that the biological variability in gene body 5hmC density is quite low.
 For human samples, RNA-Seq within group biological variability is
 typically in the 0.4-1.0 range [@Hart:2013aa].  
+
+### Another look at BCV {-}
+
+Alternatively, we can extract sigma and signal from the fit objects.
+
+```{r altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
+lib.size <- colSums(filteredCountsAF_dgel$counts)
+
+fit <- filteredCountsAF_voom_efit
+sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
+sy <- sqrt(fit$sigma)
+
+CV <- sy/sx    
+
+cor(cbind(BCV_mtx, CV)) 
+boxplot(cbind(BCV_mtx, CV), outline=F) 
+
+```
+
+CV computed frm sigma and coverage extracted from the fit are slighly higher.
+For purposes of gene identification, we really want to look at effect size in relation to residual 
+standard deviation.  
+
+
+```{r plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=F,include=T}
+
+Effect <- abs(filteredCountsAF_voom_efit$coefficients[,'HCCvsControl'])
+Noise <- filteredCountsAF_voom_efit$sigma
+SNR <- Effect/Noise
+
+plot(spatstat::CDF(density(SNR)),
+  col = 1, lwd = 2, ylab = "Prob(SNR<x)",
+  xlim = c(0, 0.2)
+)
+
+SNR_quant <- quantile(SNR, prob=c((1:3)/4,.9))
+rug(SNR_quant,
+    lwd = 2, ticksize = 0.05, col = 1
+  )
+
+
+knitr::kable(SNR_quant,
+  digits = 3,
+  caption = paste(
+    "SNR Summary") 
+) %>% kableExtra::kable_styling(full_width = F)
+
+
+```
 
 

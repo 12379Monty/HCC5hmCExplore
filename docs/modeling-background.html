@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 3 Baseline Model | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 3 Baseline Model | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 3 Baseline Model | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-08-30" />
+<meta name="date" content="2020-09-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="preproc.html"/>
-<link rel="next" href="model-suite.html"/>
+<link rel="next" href="model-baseline-lasso.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -150,18 +152,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
 <li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="baseline-model.html"><a href="baseline-model.html"><i class="fa fa-check"></i><b>3</b> Baseline Model</a>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="baseline-model.html"><a href="baseline-model.html#review-glmnet"><i class="fa fa-check"></i><b>3.1</b> Review glmnet</a>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="baseline-model.html"><a href="baseline-model.html#section"><i class="fa fa-check"></i><b>3.1.1</b> $</a></li>
-<li class="chapter" data-level="3.1.2" data-path="baseline-model.html"><a href="baseline-model.html#rules-for-discarding-predictors"><i class="fa fa-check"></i><b>3.1.2</b> Rules for discarding predictors</a></li>
+<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
+<ul>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>4</b> Fitted Model Suite</a></li>
-<li class="chapter" data-level="5" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>5</b> Conclusions</a></li>
+<li class="chapter" data-level="4" data-path="model-baseline-lasso.html"><a href="model-baseline-lasso.html"><i class="fa fa-check"></i><b>4</b> Explore lasso models</a></li>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
+<li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
@@ -183,8 +192,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="baseline-model" class="section level1" number="3">
-<h1><span class="header-section-number">Section 3</span> Baseline Model</h1>
+<div id="modeling-background" class="section level1" number="3">
+<h1><span class="header-section-number">Section 3</span> Modeling - Background</h1>
 <p>Refer to <a href="https://hcc-5hmc-analysis.netlify.app/">first pass study</a> for
 background.</p>
 <p>In the section we look at some models fitted to discriminate between
@@ -197,18 +206,105 @@ from the GSE112679 data set.</p>
 <li>individual sample quality scores: which samples are hard to classify?</li>
 </ul></li>
 </ul>
-<div id="review-glmnet" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Review glmnet</h2>
-<p>Glmnet is a package that fits a generalized linear model via penalized maximum likelihood. The regularization path is computed for the lasso or elasticnet penalty at a grid of
-values for the regularization parameter lambda
+<div id="predictive-modeling-for-genomic-data" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Predictive modeling for genomic data</h2>
+<p>The main problem in calibrating predictive models to genomic data is that
+there are way more features than there are example cases to fit to. As
+we have too many variables, fitting methods tend to overfit. This problem
+requires that we remove variables, regularize or both. See the
+Trevor Hastie talk:
+<a href="https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf">Statistical Learning with Big Data - Trevor Hastie</a>.</p>
+<div id="caret-for-model-evaluation" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> caret for model evaluation</h3>
+<p><a href="https://topepo.github.io/caret/index.html">The <code>caret</code> Package</a>
+provide a set of functions that streamline the process for fitting and
+evalluating a large numbet of predictive models in parallel. The package contains tools for:</p>
+<ul>
+<li>data splitting<br />
+</li>
+<li>pre-processing<br />
+</li>
+<li>feature selection<br />
+</li>
+<li>model tuning using resampling<br />
+</li>
+<li>variable importance estimation</li>
+</ul>
+<p>The tools facilitate the process of automating randomly spliting data sets into training,
+testing and evaluating so that predictive models can be evaluated on a comparable and
+exhaustive basis. Especially useful is the functionality that is provided to
+repeatedly randomly stratify samples into train and test set so that any
+sample selection bias is removed.</p>
+<p>Some of the models which can be evaluated with caret include:
+(only some of these can be used with multinomial responses)</p>
+<ul>
+<li>FDA - Flexible Discriminant Analysis<br />
+</li>
+<li>stepLDA - Linear Discriminant Analysis with Stepwise Feature Selection<br />
+</li>
+<li>stepQDA - Quadratic Discriminant Analysis with Stepwise Feature Selection<br />
+</li>
+<li>knn - k nearest neighbors<br />
+</li>
+<li>pam - Nearest shrunken centroids<br />
+</li>
+<li>rf - Random forests<br />
+</li>
+<li>svmRadial - Support vector machines (RBF kernel)<br />
+</li>
+<li>gbm - Boosted trees<br />
+</li>
+<li>xgbLinear - eXtreme Gradient Boosting<br />
+</li>
+<li>xgbTree - eXtreme Gradient Boosting<br />
+</li>
+<li>neuralnet - neural network</li>
+</ul>
+<p>Many more models can be implemented and evaluated with <code>caret</code>,
+including some <code>deep learning</code> methods.</p>
+<p><code>Simulated Annealing Feature Selection</code> and <code>Genetic Algorithms</code>.
+Many methods found <a href="https://topepo.github.io/caret/available-models.html">here</a>
+are also worth investigating.</p>
+</div>
+</div>
+<div id="glmnet" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> glmnet</h2>
+<p>In this investigation we will focus on models that can be
+analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>]</span>. Several
+factors favor this choice:</p>
+<ul>
+<li><p>the glmnet package is a well supported package providing
+extensive functionality for regularized regression and classification models</p></li>
+<li><p>the hyper-parameters of the elastic net enable us to explore
+the relationship between model size, or sparsity, and predictive accuracy.
+ie. we can investigate the “bet on sparsity” principle:
+<em>Use a procedure that does well in sparse problems, since no procedure
+does well in dense problems</em>.</p></li>
+<li><p>in our experience building classifiers from genomic scale data, regularized
+classification models using the elastic net penalty do as well as any other,
+and are more economical in terms of computing time, espacially in comparison to
+the more exotic boosting algorithms.</p></li>
+<li><p>the <code>relaxed lasso</code>, introduced in version 3.0 of <code>glmnet</code>, has been shown
+to be near optimal over a wide range of signal-to-noise regiments.</p></li>
+</ul>
+<p>One question that is of keen interest is where on the bias-variance,
+or signal-to-noise (SNR) spectrum does the classification of blood samples
+by means of 5hmc profiles lie?</p>
+<hr />
+<p>Much of the following comes from the
+<a href="https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html">Glmnet Vignette</a>.</p>
+<p>Glmnet is a package that fits a generalized linear model via penalized maximum likelihood.
+The regularization path is computed for the lasso or elasticnet penalty at a
+grid of values for the regularization parameter lambda
 (<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">29</a>]</span>).</p>
 <p><code>glmnet</code> solves the following problem:</p>
 <p><span class="math display">\[\min_{\beta_0,\beta} \frac{1}{N} \sum_{i=1}^{N} w_i l(y_i,\beta_0+\beta^T x_i) + \lambda\left[(1-\alpha)||\beta||_2^2/2 + \alpha ||\beta||_1\right],\]</span></p>
 <p>over a grid of values of <span class="math inline">\(\lambda\)</span>.
 Here <span class="math inline">\(l(y,\eta)\)</span> is the negative log-likelihood contribution for observation i;
 e.g. for the Gaussian case it is <span class="math inline">\(\frac{1}{2}(y-\eta)^2\)</span>.</p>
-<div id="section" class="section level3" number="3.1.1">
-<h3><span class="header-section-number">3.1.1</span> $</h3>
+<ul>
+<li><strong>alpha</strong> hyper-parameter {-}</li>
+</ul>
 <p>The elastic-net penalty is controlled by <span class="math inline">\(\alpha\)</span>, and bridges the gap between
 lasso (<span class="math inline">\(\alpha\)</span>=1, the default) and ridge (<span class="math inline">\(\alpha\)</span>=0).
 The tuning parameter <span class="math inline">\(\lambda\)</span> controls the overall strength of the penalty.</p>
@@ -218,14 +314,58 @@ The elastic-net penalty mixes these two; if predictors are correlated in groups,
 an <span class="math inline">\(\alpha\)</span>=0.5 tends to select the groups in or out together.
 This is a higher level parameter, and users might pick a value upfront,
 else experiment with a few different values. One use of <span class="math inline">\(\alpha\)</span> is for numerical stability;
-for example, the elastic net with <span class="math inline">\(\alpha = 1 - \epsilon\)</span> for some small <span class="math inline">\(\epsilon\)</span>&gt;0
+for example, the <em>elastic net with <span class="math inline">\(\alpha = 1 - \epsilon\)</span> for some small <span class="math inline">\(\epsilon\)</span>&gt;0
 performs much like the lasso, but removes any degeneracies and wild behavior caused
-by extreme correlations.</p>
-<p>With balanced samples (N1 <span class="math inline">\(\approx\)</span> N2), Kappa or accuracy will yield
-similar hyper-parameter choices.</p>
-</div>
-<div id="rules-for-discarding-predictors" class="section level3" number="3.1.2">
-<h3><span class="header-section-number">3.1.2</span> Rules for discarding predictors</h3>
+by extreme correlations</em>.</p>
+<div id="lasso-vs-best-subset" class="section level3 unnumbered" number="">
+<h3>Lasso vs Best Subset</h3>
+<ul>
+<li>Best subset selection</li>
+</ul>
+<p><span class="math display">\[\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k\]</span></p>
+<ul>
+<li>lasso</li>
+</ul>
+<p><span class="math display">\[\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t\]</span></p>
+<ul>
+<li>Bertsimas et al. (2016) <span class="citation">[<a href="references.html#ref-Bertsimas:2016aa" role="doc-biblioref">30</a>]</span>
+<ul>
+<li>presented a mixed integer optimization (MIO) formulation for the best subset selection problem<br />
+</li>
+<li>Using these MIO solvers, can solve problems with p in the hundreds and even thousands</li>
+<li>demonstrated that best subset selection generally gives superior prediction accuracy compared to forward stepwise selection and the lasso, over a variety of problem setups.</li>
+</ul></li>
+<li>Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">31</a>]</span>
+<ul>
+<li>neither best subset selection nor the lasso uniformly dominate the other, with best subset selection generally performing better in high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes;</li>
+<li>best subset selection and forward stepwise perform quite similarly throughout;</li>
+<li>the relaxed lasso is the overall winner, performing just about as well as the lasso in low SNR scenarios,
+and as well as best subset selection in high SNR scenarios. We conclude that it is
+able to use its auxiliary shrinkage parameter (γ) to get the “best of both worlds”:
+it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.</li>
+</ul></li>
+<li>relaxed lasso</li>
+</ul>
+<p><span class="math display">\[\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)\]</span></p>
+<ul>
+<li>SNR
+<ul>
+<li><span class="math inline">\(y_0=f(x_0) + \epsilon_0\)</span></li>
+<li><span class="math inline">\(SNR=\frac{var(f(x_0))}{var(\epsilon_0)}\)</span></li>
+<li><span class="math inline">\(PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}\)</span></li>
+<li><span class="math inline">\(PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}\)</span></li>
+<li><span class="math inline">\(SNR = \frac{PVE}{1-PVE}\)</span></li>
+<li><span class="math inline">\(c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}\)</span>
+<ul>
+<li>a PVE of 0.5 is rare for noisy observational data, and 0.2 may be more typical</li>
+<li>A PVE of 0.86, corresponding to an SNR of 6, is unheard of!</li>
+<li>For small SNR, SNR <span class="math inline">\(\approx\)</span> PVE</li>
+<li>See Xiang et al. (2020) <span class="citation">[<a href="references.html#ref-Xiang:2020aa" role="doc-biblioref">32</a>]</span>, Lozoya et al. (2018) <span class="citation">[<a href="references.html#ref-Lozoya:2018aa" role="doc-biblioref">33</a>]</span>,
+Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">34</a>]</span> and
+Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">35</a>]</span> for SNR in RNA-Seq</li>
+</ul></li>
+</ul></li>
+</ul>
 
 </div>
 </div>
@@ -236,7 +376,7 @@ similar hyper-parameter choices.</p>
         </div>
       </div>
 <a href="preproc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-suite.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-baseline-lasso.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

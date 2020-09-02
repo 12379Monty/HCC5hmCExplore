@@ -1,0 +1,18 @@
+# Explore glmnet fits {#explore-glmnet}
+
+We explore some glmnet fits.
+
+* All fits must be assessed by cv and test set  
+
+## lasso 
+
+## Relaxed lasso 
+
+## Shrunken relaxed lasso
+
+* ridge
+
+* Mid-point between ridge and lasso
+
+
+

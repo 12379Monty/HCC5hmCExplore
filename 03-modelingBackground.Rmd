@@ -1,0 +1,179 @@
+# Modeling - Background {#modeling-background}
+
+Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
+background.
+
+
+In the section we look at  some models fitted to discriminate between
+early stage HCC and control samples comprising of healthy and benign samples 
+from the GSE112679 data set.  
+
+
+* Baseline model 
+   - how separable are the data: what accuracy do we expect 
+   - individual sample quality scores: which samples are hard to classify?
+
+## Predictive modeling for genomic data
+
+The main problem in calibrating predictive models to genomic data is that
+there are way more features than there are example cases to fit to.  As
+we have too many variables, fitting methods tend to overfit.  This problem
+requires that we remove variables, regularize or both.  See the
+Trevor Hastie talk: 
+[Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf).
+
+
+
+
+### caret for model evaluation
+
+[The `caret` Package](https://topepo.github.io/caret/index.html)
+provide a set of functions that streamline the process for fitting and
+evalluating a large numbet of predictive models in parallel. The package contains tools for:
+
+* data splitting  
+* pre-processing  
+* feature selection  
+* model tuning using resampling  
+* variable importance estimation  
+
+The tools facilitate the process of automating randomly spliting data sets into training, 
+testing and evaluating so that predictive models can be evaluated on a comparable and
+exhaustive basis.  Especially useful is the functionality that is provided to
+repeatedly randomly stratify samples into train and test set so that any
+sample selection bias is removed.  
+
+
+Some of the models which can be evaluated with caret include: 
+(only some of these can be used with multinomial responses)
+
+* FDA - Flexible Discriminant Analysis  
+* stepLDA - Linear Discriminant Analysis with Stepwise Feature Selection  
+* stepQDA - Quadratic Discriminant Analysis with Stepwise Feature Selection  
+* knn - k nearest neighbors  
+* pam - Nearest shrunken centroids  
+* rf - Random forests  
+* svmRadial - Support vector machines (RBF kernel)  
+* gbm - Boosted trees  
+* xgbLinear - eXtreme Gradient Boosting  
+* xgbTree - eXtreme Gradient Boosting  
+* neuralnet - neural network  
+
+Many more models can be implemented and evaluated with `caret`, 
+including some `deep learning` methods.
+
+`Simulated Annealing Feature Selection` and `Genetic Algorithms`.
+Many methods found [here](https://topepo.github.io/caret/available-models.html)
+are also worth investigating.
+
+
+## glmnet
+
+In this investigation we will focus on models that can be
+analyzed with the the `glmnet` R  package [@Friedman:2010aa].  Several
+factors favor this choice:  
+
+* the glmnet package is a well supported package providing
+extensive functionality for regularized regression and classification models  
+
+* the hyper-parameters of the elastic net enable us to explore
+the relationship between model size, or sparsity, and predictive accuracy.
+ie. we can investigate the "bet on sparsity" principle:
+*Use a procedure that does well in sparse problems, since no procedure
+does well in dense problems*.
+
+* in our experience building classifiers from genomic scale data, regularized
+classification models using the elastic net penalty do as well as any other,
+and are more economical in terms of computing time, espacially in comparison to
+the more exotic boosting algorithms.
+
+* the `relaxed lasso`, introduced in version 3.0 of `glmnet`, has been shown
+to be near optimal over a wide range of signal-to-noise regiments.
+
+One question that is of keen interest is where on the bias-variance,
+or signal-to-noise (SNR) spectrum does the classification of blood samples
+by means of 5hmc profiles lie?
+
+***
+
+
+Much of the following comes from the 
+[Glmnet Vignette](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html).
+
+
+Glmnet is a package that fits a generalized linear model via penalized maximum likelihood. 
+The regularization path is computed for the lasso or elasticnet penalty at a 
+grid of values for the regularization parameter lambda 
+([@Friedman:2010aa;@Tibshirani:2012aa;@Simon:2011aa;@Simon:2013aa]). 
+
+`glmnet` solves the following problem:
+
+$$\min_{\beta_0,\beta} \frac{1}{N} \sum_{i=1}^{N} w_i l(y_i,\beta_0+\beta^T x_i) + \lambda\left[(1-\alpha)||\beta||_2^2/2 + \alpha ||\beta||_1\right],$$
+
+over a grid of values of $\lambda$.
+Here $l(y,\eta)$ is the negative log-likelihood contribution for observation i; 
+e.g. for the Gaussian case it is $\frac{1}{2}(y-\eta)^2$.
+
+
+###  **alpha** hyper-parameter {-}
+
+The elastic-net penalty is controlled by $\alpha$, and bridges the gap between 
+lasso ($\alpha$=1, the default) and ridge ($\alpha$=0). 
+The tuning parameter $\lambda$ controls the overall strength of the penalty. 
+
+It is known that the ridge penalty shrinks the coefficients of correlated predictors 
+towards each other while the lasso tends to pick one of them and discard the others. 
+The elastic-net penalty mixes these two; if predictors are correlated in groups, 
+an $\alpha$=0.5 tends to select the groups in or out together. 
+This is a higher level parameter, and users might pick a value upfront, 
+else experiment with a few different values. One use of $\alpha$ is for numerical stability; 
+for example, the *elastic net with $\alpha = 1 - \epsilon$ for some small $\epsilon$>0 
+performs much like the lasso, but removes any degeneracies and wild behavior caused 
+by extreme correlations*.
+
+
+
+### Lasso vs Best Subset  {-}
+
+* Best subset selection 
+
+ $$\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k$$
+
+
+* lasso 
+
+ $$\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t$$
+
+
+* Bertsimas et al. (2016) [@Bertsimas:2016aa]
+    - presented a mixed integer optimization (MIO) formulation for the best subset selection problem   
+    - Using these MIO solvers, can solve problems with p in the hundreds and even thousands
+    - demonstrated that best subset selection generally gives superior prediction accuracy compared to forward stepwise selection and the lasso, over a variety of problem setups. 
+
+* Hastie et al. (2017) [@Hastie:2017aa]
+    - neither best subset selection nor the lasso uniformly dominate the other, with best subset selection generally performing better in high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes;
+    - best subset selection and forward stepwise perform quite similarly throughout;
+    - the relaxed lasso is the overall winner, performing just about as well as the lasso in low SNR scenarios, 
+and as well as best subset selection in high SNR scenarios. We conclude that it is 
+able to use its auxiliary shrinkage parameter (γ) to get the “best of both worlds”: 
+it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.
+   
+
+* relaxed lasso
+
+$$\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)$$
+
+
+* SNR  
+    - $y_0=f(x_0) + \epsilon_0$
+    - $SNR=\frac{var(f(x_0))}{var(\epsilon_0)}$
+    - $PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}$
+    - $PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}$
+    - $SNR = \frac{PVE}{1-PVE}$
+    - $c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}$
+        - a PVE of 0.5 is rare for noisy observational data, and 0.2 may be more typical
+        - A PVE of 0.86, corresponding to an SNR of 6, is unheard of!
+        - For small SNR, SNR $\approx$ PVE
+        - See Xiang et al. (2020) [@Xiang:2020aa], Lozoya et al. (2018) [@Lozoya:2018aa], 
+Simonson et al. (2018) [@Simonsen:2018aa] and
+Rapaport et al. (2013) [@Rapaport:2013aa] for SNR in RNA-Seq
