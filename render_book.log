@@ -298,3 +298,87 @@ List of 5
  $ fig.width : num 6
  $ fig.cap   : chr "lasso fit the train set with cv"
 
+  |                                                                              |..........................................................            |  83%
+   inline R code fragments
+
+  |                                                                              |...........................................................           |  84%
+label: sumCount (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr "DD.cpmSum.frm"
+ $ eval      : symbol F
+ $ echo      : symbol F
+
+  |                                                                              |............................................................          |  86%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  87%
+label: estBCV (with options) 
+List of 5
+ $ cache     : symbol T
+ $ cache.vars: language c("BCV_mtx", "BCV_90perc_vec", "BCV_50perc_vec")
+ $ message   : symbol F
+ $ echo      : symbol F
+ $ include   : symbol F
+
+  |                                                                              |..............................................................        |  88%
+  ordinary text without R code
+
+  |                                                                              |...............................................................       |  90%
+label: plotBCV (with options) 
+List of 6
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "Cumulative Distribution of CV - rug = 90th percentile"
+ $ message   : symbol F
+ $ echo      : symbol F
+ $ include   : symbol T
+
+  |                                                                              |................................................................      |  91%
+  ordinary text without R code
+
+  |                                                                              |.................................................................     |  93%
+label: bspBCV (with options) 
+List of 6
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "BCV distributions"
+ $ message   : symbol F
+ $ echo      : symbol F
+ $ include   : symbol T
+
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |...................................................................   |  96%
+label: sampleSizeCurve (with options) 
+List of 6
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.height: num 8
+ $ fig.width : num 11
+ $ fig.cap   : chr "Sample Size Estimates"
+ $ echo      : symbol F
+
+  |                                                                              |....................................................................  |  97%
+  ordinary text without R code
+
+  |                                                                              |..................................................................... |  99%
+label: quantCountsAF (with options) 
+List of 1
+ $ echo: symbol F
+
+  |                                                                              |......................................................................| 100%
+   inline R code fragments
+
+
+output file: HCC5hmCExplore.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpxnV6dB/rmarkdown-str91fc5652aa2b.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
+
+Output created: docs/index.html
+[1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"
+Warning messages:
+1: In split_chapters(output, gitbook_page, number_sections, split_by,  :
+  You have 9 Rmd input file(s) but only 8 first-level heading(s). Did you forget first-level headings in certain Rmd files?
+2: The label(s) explore-sparsity-fits not found 

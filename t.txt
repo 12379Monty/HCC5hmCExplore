@@ -1,755 +1,264 @@
-# Preprocessing {#preproc}
+# The bet on sparsity {#explore-sparsity}
 
-<!--
- FN <- 'tmp'
- # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
- kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
-       output=paste(FN,".html", sep=''))
-
- rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
-       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
-
- bb <- function(n='') browseURL(paste(FN,".html", sep=''))
-
- # The usual shotcuts
- zz <- function(n='') source(paste("t", n, sep=''))
--->
-
-
-
-
-
-## Load the data
-
-<!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
-<!-- TO TURN ON, SET eval=T                            -->
-
-
-<!-- Add base libraries -->
-
-
-
-The data that are available from NCBI GEO
-[Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679)
-can be conveniently accessed through an R data package.
-Attaching the GSE112679 package makes the count data tables 
-available as well as a gene annotation table and a sample description table.
-See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/).
-For the Cai et al. [@Cai:2019aa] model fitting and analysis, samples were separated into
-`Train` and `Val-1` subsets.  `Val-2` was an external validation set.
+## CV analysis setup {-}
 
 
 ```r
-if (!("GSE112679" %in% rownames(installed.packages()))) {
-  if (!requireNamespace("devtools", quietly = TRUE)) {
-    install.packages("devtools")
-  }
-  devtools::install_github("12379Monty/GSE112679")
-}
-library(GSE112679)
-sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC', 
-   paste0(outcome,':',stage), outcome))
+K_FOLD <- 10
+trainP <- 0.8
+EPS <- 0.02    # Have no idea what "small" epsilon means
+```
 
-with(
-  sampDesc %>% dplyr::filter(sampType == "blood"),
-  knitr::kable(table(DxStage, trainValGroup, exclude = NULL),
-   caption="GSE112679 Samples by Dx Group and Subset") %>% 
-  kableExtra::kable_styling(full_width = F)
+First we divide the analysis dataset into `train` and `test` in a 4:1 ratio.  
+
+
+```r
+set.seed(1)
+train_sampID_vec <- with(AF_dgel$samples,
+AF_dgel$samples$sampID[caret::createDataPartition(y=group, p=trainP, list=F)]
 )
+
+test_sampID_vec <- with(AF_dgel$samples,
+setdiff(sampID, train_sampID_vec)
+)
+
+train_group_vec <- AF_dgel$samples[train_sampID_vec, 'group']
+test_group_vec <- AF_dgel$samples[test_sampID_vec, 'group']
+
+knitr::kable(table(train_group_vec),
+  caption="Train set") %>%
+   kableExtra::kable_styling(full_width = F)
 ```
-
-```
-## Warning in kableExtra::kable_styling(., full_width = F): Please specify format
-## in kable. kableExtra can customize either HTML or LaTeX outputs. See https://
-## haozhu233.github.io/kableExtra/ for details.
-```
-
-
-
-|          | Train| Val-1| Val-2|
-|:---------|-----:|-----:|-----:|
-|Benign    |   253|   132|     3|
-|CHB       |   190|    96|     0|
-|Cirrhosis |    73|    33|     0|
-|HCC:Early |   335|   220|    24|
-|HCC:Late  |     0|   442|    13|
-|HCC:NA    |     0|   147|    23|
-|Healthy   |   269|   124|   177|
-
-For this analysis, we will consider early stage cancer samples
-and healthy or benign samples from the `Train` or `Val-1` subsets.
-The appropriate outcome variable will be renamed or aliased `group`
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Samples used in this analysis</caption>
+<caption>Train set</caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> group </th>
+   <th style="text-align:left;"> train_group_vec </th>
    <th style="text-align:right;"> Freq </th>
   </tr>
  </thead>
 <tbody>
   <tr>
    <td style="text-align:left;"> Control </td>
-   <td style="text-align:right;"> 778 </td>
+   <td style="text-align:right;"> 623 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> HCC </td>
-   <td style="text-align:right;"> 555 </td>
+   <td style="text-align:right;"> 444 </td>
   </tr>
 </tbody>
 </table>
 
-
-The features are counts of reads captured by chemical labeling, and indicate
-the level of 5-hydroxymethylcytosines within each gene body.  Cai et al. (2019),
-Li et al. (2017) and Song et al. (2017) [@Cai:2019aa;@Li:2017aa;@Song:2017aa]
-all analyze 5hmC gene body counts using standard RNA-Seq methodologies, and we will
-do the same here.  
-
-Note that before conducting any substantive analyses, the data would normally
-be very carefully examined for any sign of quality variation between groups
-of samples.  This analysis would integrate sample meta data - where and when were
-the blood samples collected - as well as library preparation and sequencing metrics
-in order to detect any sign of processing artifacts that may be present in the dataset.
-This is particularly important when dealing with blood samples as variable
-DNA quality degradation is a well known challenge that is encountered when dealing with
-such samples [@Huang:2017aa].  Although blood specimen handling protocols can be 
-put in place to minimize quality variation [@Permenter:2015aa], variability
-can never be completely eradicated, especially in the context of blood samples
-collected by different groups, working in different environments.  The problem
-of variable DNA quality becomes paricularly pernicuous when it is compounded
-with a confounding factor that sneaks in when the control sample collection
-events are separated in time and space from the cancer sample collection events;
-an all too common occurence.  
-
-As proper data QC requires an intimate familiarity with the details of
-data collection and processing, such a task cannot be untertaken here.
-We will simply run a *minimal set of QC sanity checks* to make sure that
-there are no apparent systematic effects in the data.
-
-
-
-
-We first look at coverage - make sure there isn't too much disparity of coverage 
-across samples. To detect shared variability, samples can be annotated and ordered
-according to sample features that may be linked to sample batch processing.  Here we 
-the samples have been ordered by group and sample id (an alias of geoAcc).
-
-![Sample log2 count boxplots](Static/figures/lcpmBxp-1.png)
-
-<!--
-Coverage level looks fairly comparable across samples.  It is sometimes helpful to
-keep track of the actual coverage which can be adequetely tracked by distribution
-quantiles.
--->
+```r
+knitr::kable(table(test_group_vec),
+  caption="Test set") %>%
+   kableExtra::kable_styling(full_width = F)
+```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Coverage Summary - Columns are sample coverage quantiles and total coverage 
-Rows are quartiles across samples</caption>
+<caption>Test set</caption>
  <thead>
   <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 15% </th>
-   <th style="text-align:right;"> 25% </th>
-   <th style="text-align:right;"> 50% </th>
-   <th style="text-align:right;"> 75% </th>
-   <th style="text-align:right;"> totCovM </th>
+   <th style="text-align:left;"> test_group_vec </th>
+   <th style="text-align:right;"> Freq </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 25% </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 155 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
    <td style="text-align:right;"> 111 </td>
-   <td style="text-align:right;"> 321 </td>
-   <td style="text-align:right;"> 5.5 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 50% </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 30 </td>
-   <td style="text-align:right;"> 135 </td>
-   <td style="text-align:right;"> 391 </td>
-   <td style="text-align:right;"> 6.7 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 75% </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 35 </td>
-   <td style="text-align:right;"> 162 </td>
-   <td style="text-align:right;"> 468 </td>
-   <td style="text-align:right;"> 8.0 </td>
   </tr>
 </tbody>
 </table>
 
-
-From this table, we see that 25% of the samples have total coverage exceeding
-8M reads, 25% of samples
-have a 15 percentile of coverage lower than
-4, etc.  
-
-
-<!-- SKIP
-We next look at relative log representation (RLR) (in the context of measuring the density of 
-5hmC marks in genes, we refer to `representation` as opposed to `expression`; the
-two can be used interchangibly) -
-make sure the shapes of the distributions are not widely different.
--->
-
-
-<!-- SKIPPED
-We note that the HCC samples have slightly more variable coverage distribution.
-A few samples are quite different.
--->
-
-## Differential representation analysis {#dra}
-
-
-In the remainder of this section, we will process the data and
-perform differential expression analysis as outlined in 
-Law et al. (2018) [@Law:2018aa].   The main analysis steps are: 
-
-* remove lowly expressed genes
-* normalize gene expression distributions
-* remove heteroscedascity
-* fit linear models and examine DE results
-
-
-It is good practice to perform this differential expression analysis prior to 
-fitting models to get an idea of how difficult it will be to discriminate 
-between samples belonging to the different subgroups. The pipeline
-outlined in Law et al. (2018) [@Law:2018aa] also provides some
-basic quality assessment opportunities.
-
-
-### Remove lowly expressed genes {-}
-
-Genes that are not expressed at a biologically 
-meaningful level in any condition should be discarded to reduce the 
-subset of genes to those that are of interest, and to reduce the number of tests 
-carried out downstream when looking at differential expression.  Carrying
-un-informative genes may also be a hindrance to classification and other
-downtream analyses.  
-
-To determine a sensible threshold we can begin by examining the shapes of the distributions.
-
-![Sample $log_2$ CPM densities](Static/figures/densityLcpm-1.png)
-
-
- 
-
-As is typically the case with RNA-Seq data, we notice many weakly represented genes 
-in this dataset.  A cpm value of 1 appears to adequatly separate 
-the expressed from the un-expressed genes, but we will be slightly more strict here
-and require a CPM threshold of 3 .  Using a nominal CPM value of 
-3, genes are deeemed to be `represented` if their expression is 
-above this threshold, and not represented otherwise. 
-For this analysis we will require that genes be `represented` in at least 
-25 samples across the entire dataset to be retained for downstream analysis.
-Here, a CPM value of 3 means that a gene is represented if it 
-has at least 9 reads in the sample with the 
-lowest sequencing depth (library size 2.9 million).
-Note that the thresholds used here are arbitrary as there are no hard and fast 
-rules to set these by.
-The voom-plot, which is part of analyses done to remove heteroscedasticity,
-can be examined to verify that the filtering performed is adequate.
-
-
-<!-- or at least 
-40 counts in the sample with the 
-greatest sequencing depth (library size 13.3 million).
--->
-
-Remove weakly represented genes and replot densities.
-
-
-Removing 17.5%  of genes...
-
-
-
-
-![Sample $log_2$ CPM densities after removing weak genes](Static/figures/densityLcpm2-1.png)
-
-<!--
-Note that the $log_2(CMP)$ distribution is not quite symmetric.
--->
-
-As another sanity check, we will look at a 
-multidimensional scaling plot of distances between gene expression
-profiles.  We use `plotMDS` in limma package [@Ritchie:2015aa]),
-which plots samples on a two-dimensional scatterplot so that distances on
-the plot approximate the typical log2 fold changes between the
-samples.   
-
-Before producing the MDS plot we will normalize the distributions.
-We will store the data into s `DGEList` object as this is convenient
-when running many of the analyses implemented in the edgeR and limma packages.
-Call the set 'AF', for set 'A', 'Filtered'.
-
-
 ```r
-AF_dgel <- edgeR::DGEList(
-  counts = featureCountsAF,
-  genes = genes_annotAF,
-  samples = sampDescA,
-  group = sampDescA$group
-)
-AF_dgel <- edgeR::calcNormFactors(AF_dgel)
-AF_lcmp_mtx <- edgeR::cpm(AF_dgel, log = T)
-
-# Save AF_dgel to facilitate restarting
-# remove from final version
-save(list = "AF_dgel", file = "RData/AF_dgel")
+train_lcpm_mtx <- t(lcpm_mtx[,train_sampID_vec])
+test_lcpm_mtx <- t(lcpm_mtx[,test_sampID_vec])
 ```
 
-Verify that the counts are properly normalized.
+We explore some glmnet fits and the "bet on sparsity"    
+  
+* Consider models:  
+    - lasso: $\alpha = 1.0$ - sparse model  
+    - ridge $\alpha = 0$ - shrunken coefficients model
+    - elastic net:  $\alpha = 0.5$  - semi sparse model
+    - lassoC: $\alpha = 1-\epsilon =$ 0.98 - lasso for correlated predictors  
+* Does the relaxed lasso improve performance?    
+* Does the shrunken relaxed lasso improve performance  
+* How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?    
+* Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?  
+
+In this analysis, we will only evaluate models in terms of 
+model size, stability and performance.  We leave the question
+of significance testing of hypotheses about model parameters
+completely out.  See Lockhart et al. (2014) [@Lockhart:2014aa]
+and Wassermam (2014) [@Wasserman:2014aa] for a discussion of this topic.
 
 
-![Sample log2 count boxplots](Static/figures/normedLcpmBxp-1.png)
-
-Proceed with MDS plots.
-
-![MDS plots of log-CPM values](Static/figures/plotMDS-1.png)
-
-The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
-does not indicate strong clustering of samples.  The fanning pattern observed in the
-first two dimensions indicates that a few samples are drifting way from the
-core set, but in no particular direction.  There is some structure in the
-3rd and 4th dimension plot which should be investigated.  
-`glMDSPlot` from package `Glimma` provides an interactive MDS 
-plot that can extremely usful for exploration
-
-
-
-Link to glMDSPlot: 
-[Here](Static/figures//GlMDSplot.html)  
-
-No obvious factor links the samples in the 3 clusters observed on the
-4th MDS dimensions. The percent of variance exaplained by this dimension or 
-$\approx$ 4%.   The glMDSPlot indicates further segregation along
-the 6th dimension.  The percent of variance exaplained by this dimension or 
-$\approx$ 2%.  Tracking down this source of variability may be quite challenging,
-especially without having the complete information about the sample attributes 
-and provenance.  
-
-Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
-(see Peixoto et al. (2015) [@Peixoto:2015aa]), and many procedures have been proposed
-to reduce the effect of unwanted variation on RNA-Seq analsys results 
-([@Gandolfo:2018aa;@Peixoto:2015aa;@Risso:2014aa]).  There are undoubtedly
-some similar sources of systematic variation in the 5hmC data, but it is
-beyond the scope of this work to investigate these in this particular dataset.
-Given that the clustering of samples occurs in MDS dimensions that explain
-a small fraction of variability, and that these is no assocation with the
-factor of interest, HCC vs Control, these sources of variability should not
-interfere too much with our classification analysis.  It would nonetheless be interesting
-to assess whether downstream results can be improved by removing this variability.
-
-
-
-### Creating a design matrix and contrasts  {-}
-
-Before proceeding with the statistical modeling used for the 
-differential expression analysis, we need to set up a
-model design matrix.
-
-
-```
-## colSums(Design_mtx):
-```
-
-```
-## Control     HCC 
-##     778     555
-```
-
-```
-## Contrasts:
-```
-
-```
-##          Contrasts
-## Levels    HCCvsControl
-##   Control           -1
-##   HCC                1
-```
-
-
-
-
-### Removing heteroscedasticity from the count data {-}
-
-
-As for RNA-Seq data, for 5hmC count data the variance is not independent of the mean.
-In `limma`, the R package we are using for our analyses, 
-linear modeling is carried out on the log-CPM values which are assumed to be 
-normally distributed and the mean-variance relationship is accommodated using precision 
-weights calculated by the voom function.  We apply this transformation next.
+Next we create folds for 10-fold cross-validation of models fitted to
+training data.  We'll use caret::createFolds to assign samples
+to folds while keeping the outcome ratios constant across folds.
 
 
 
 ```r
-par(mfrow=c(1,1))
-filteredCountsAF_voom <- limma::voom(AF_dgel, Design_mtx, plot=T)
+# This is too variable, both in terms of fold size And composition
+#foldid_vec <- sample(1:10, size=length(train_group_vec), replace=T)
+
+set.seed(1)
+train_foldid_vec <- caret::createFolds(
+ factor(train_group_vec), 
+ k=K_FOLD,
+ list=F)
+
+knitr::kable(sapply(split(train_group_vec, train_folds_vec), 
+  table), caption="training samples fold composition") %>%
+   kableExtra::kable_styling(full_width = F)
 ```
 
-![Removing heteroscedascity](Static/figures/Voom1-1.png)
-
-Note that the voom-plot provides a visual check on the level of filtering performed upstream.
-If filtering of lowly-expressed genes is insufficient, 
-a drop in variance levels can be observed at the low end of the 
-expression scale due to very small counts. 
-
-<!--
-Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to log-CPM transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean log-CPM values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
--->
-
-<!--
-To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
-
-![](Static/images/Law-fig4.gif)
-
-We observe that the variability in the 5hmC data is quite a bit lower.  Statistical summaries would give
-a better idea.  
-
--->
-
-
-### Fit linear models and examine the results {-}
-
-Having properly filtered and  normalized the data,
-the linear models can be fitted to each gene and the results
-examined to assess differential expression between the two groups
-of interest, in our case HCC vs Control.
-
-Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
-
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>DE Results at FDR = 0.05</caption>
+<caption>training samples fold composition</caption>
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> HCCvsControl </th>
+   <th style="text-align:right;"> 1 </th>
+   <th style="text-align:right;"> 2 </th>
+   <th style="text-align:right;"> 3 </th>
+   <th style="text-align:right;"> 4 </th>
+   <th style="text-align:right;"> 5 </th>
+   <th style="text-align:right;"> 6 </th>
+   <th style="text-align:right;"> 7 </th>
+   <th style="text-align:right;"> 8 </th>
+   <th style="text-align:right;"> 9 </th>
+   <th style="text-align:right;"> 10 </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Down </td>
-   <td style="text-align:right;"> 5214 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NotSig </td>
-   <td style="text-align:right;"> 5280 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Up </td>
-   <td style="text-align:right;"> 5258 </td>
-  </tr>
-</tbody>
-</table>
-
-### Graphical representations of DE results: MD Plots {-}
-
-To summarise results for all genes visually, mean-difference plots
-(aka MA plot), which display log-FCs from the linear model fit against 
-the average log-CPM values can be generated using the plotMD function,
-with the differentially expressed genes highlighted.
-
-We may also be interested in whether certain gene features are 
-related to gene identification.  Gene GC content, for example, might be
-of interest.
-
-![HCC vs Control - Identified Genes at FDR = 0,05](Static/figures/mdPlotEfit-1.png)
-
-
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>log FC quartiles by gene identification</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> down </th>
-   <th style="text-align:right;"> notDE </th>
-   <th style="text-align:right;"> up </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 25% </td>
-   <td style="text-align:right;"> -0.07 </td>
-   <td style="text-align:right;"> -0.01 </td>
-   <td style="text-align:right;"> 0.04 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 50% </td>
-   <td style="text-align:right;"> -0.05 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.06 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 75% </td>
-   <td style="text-align:right;"> -0.03 </td>
-   <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;"> 0.09 </td>
-  </tr>
-</tbody>
-</table>
-
-
-We see that while many genes are identified, the effect sizes are quite small.
-The GC content of down regulated genes tends to be slightly lower than the
-rest of the genes.
-
-
-
-### DE genes at 10% fold change {-}
-
-For a stricter definition on significance, one may require log-fold-changes 
-(log-FCs) to be above a minimum value. The treat method 
-(McCarthy and Smyth 2009 [@McCarthy:2009aa]) can be used to calculate p-values 
-from empirical Bayes moderated t-statistics with a minimum log-FC requirement. 
-The number of differentially expressed genes are greatly reduced if we 
-impose a minimal fold-change requirement of 10%.
-
-
-```
-## 10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:
-```
-
-```
-##        HCCvsControl
-## Down              3
-## NotSig        15550
-## Up              199
-```
-
-![HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%](Static/figures/mdPlotTfit-1.png)
-
-
-## Analysis of coverage variability
-
-We will use the methods described in Hart et al. (2013) [@Hart:2013aa] 
-to characterize coverage variability in these data. 
-These methods do not take multiple comparisons into account. 
-Other tools for sample size calculation in RNA-Seq studies include 
-Bi and Liu (2016) [@Bi:2016aa,], Baccarella (2018) [@Baccarella:2018aa], 
-Guo (2014) [@Guo:2014aa], Yu (2017) [@Yu:2017aa], and 
-Zhao (2018) [@Zhao:2018ab]. 
-Poplawski (2018) [@Poplawski:2017aa] 
-evaluated RNA-seq sample size tools identified from a systematic search. They found the six evaluated tools provided widely different answers, which were strongly affected by fold change.
-
-
-The references listed above aim at providing guidance for RNA-Seq experimental design.
-There is much discussion and a wide range of opinion on sample size requirements
-to ensure reproducibility in RNA-Seq results.  At one end of the spectrum, 
-Ein-Dor et al. (2006) [@Ein-Dor:2006aa] argue that thousands of samples are needed to 
-generate a robust gene list for predicting outcome in cancer.  At the other end,
-Dobbin et al. (2007, 2008) [@Dobbin:2007aa;@Dobbin:2008aa] claim that sample sizes in 
-the range of 20–30 per class may be adequate for building a good predictor in many cases. 
-Part of the disparity in sample size requirement recomendation comes from 
-differences of opinion in terms of what constitutes `reproducible results`. 
-In the context of sample classification, if we focus on  the predicted probabilities
-for individual samples, we may find good  reproducibility across studies with
-moderate samples sizes.  If, on the other hand, we closely inspect the gene
-signatures reported across studies, much greater sample sizes may be required to
-achieve concordance.  Kim (2009) [@Kim:2009aa], like Ein-Dor et al., also find
-issues in RNA-Seq research in terms of the instability of identified prognostic 
-gene signatures, few overlap between independently developed prognostic gene signatures, and
-poor inter-study applicability of gene signatures.  Fan et al. (2006) [@Fan:2006aa],
-on the other hand, found good concordance among gene-expression–based predictors 
-for breast cancer.  We will return to this question when we examine
-the relationship between classification model results and sample size in this
-dataset later on this paper.  
-
-
-For two groups comparisons, the basic formula for the required number of samples per group is:
-
-$$ n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \sigma^2)}{ln(\Delta^2)} $$
-
-* The parameters $\alpha$ and $\beta$ are **size** and **power** of the test.  
-* $\Delta$ is the targeted **effect size**.   
-* $\mu$ and $\sigma$ are the **mean** and **coefficient of variation** 
-of the distribution of measurement, gene representation indices in this case.
-
-These three parameters will be fixed across genes or a given study, and are often dictated by
-external requirements. Typical values might be an effect size of $\Delta = 1.5$ 
-(a.k.a fold change), corresponding to detection of a 50% change in gene expression 
-between the two groups.
-$z_{1 - .05/2} = 1.96$, corresponding to a two sided test at size $\alpha = 0.05$;
-and $z_{.90}= 1.28$ corresponding to 90% power.
-The other two variables will be gene and experiment dependent: the normalized depth 
-of coverage $\mu$ of the gene, and the coefficient of variation $\sigma$ in this 
-gene between biological replicates.  The technical variation of the 
-comparison is inversely proportional to the number of sequenced reads
-for the gene and therefore decreases with sequencing depth.
-The biological variation is a property of the particular gene/model system/condition under study.
-One would expect it to be smaller for uniform systems such as cell culture and/or products that
-are under tight regulatory control, and larger for less uniform replicates such 
-as human subject samples.  The dataset under study in this report is the first of its
-kind to give us an idea of variability levels in 5hmC representation.
-
-
-<!-- SKIP THIS
-Before examining biological variability lets take a look at
-the sequencing rates.
-
--->
-
-
-
-As in Hart et al. (2013) [@Hart:2013aa] we estimate the 
-biological coefficient of variation (CV) in expression across samples in the data set
-using a negative binomial model.
-
-<!--
-From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)
-, the biolgical coefficient of variation (BCV), is the square root of the dispersion
-parameter under the negative binomial model. Hence, it is equivalent to estimating the
-dispersion(s) of the negative binomial model.
--->
-
-
-
-![Cumulative Distribution of CV - rug = 90th percentile](Static/figures/plotBCV-1.png)
-<br/>
-
-BCV values are quite low:
-
-![BCV distributions](Static/figures/bspBCV-1.png)
-
-<br/>
-
-<!-- 
- SampleSize_f <- function(Alpha=.01, Beta=.80, Delta=2, Mu, Disp)
- {temp <- qnorm(1-Alpha/2) + qnorm(Beta)
-  vtemp <- 1/Mu + Disp
-  2*vtemp*(temp/log(Delta))^2}
-
- cat("SampleSize_f(Mu=10, Disp=.4^2):\n")
- SampleSize_f(Mu=10, Disp=.4^2)
--->
-
-We can now look at sample size estimates to required to detect 
-various effect sizes.  The effect sizes examined here are selected
-based on the differential representation analysis in Section \@ref(dra) below.
-
-
-![Sample Size Estimates](Static/figures/sampleSizeCurve-1.png)
-
-For the filtered reads, coverage looks like this:
-
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Coverage Summary - Columns are sample coverage quantiles and total coverage 
-Rows are quartiles across samples</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 15% </th>
-   <th style="text-align:right;"> 25% </th>
-   <th style="text-align:right;"> 50% </th>
-   <th style="text-align:right;"> 75% </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 25% </td>
-   <td style="text-align:right;"> 37 </td>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
    <td style="text-align:right;"> 63 </td>
-   <td style="text-align:right;"> 163 </td>
-   <td style="text-align:right;"> 396 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 62 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:left;"> HCC </td>
    <td style="text-align:right;"> 45 </td>
-   <td style="text-align:right;"> 76 </td>
-   <td style="text-align:right;"> 198 </td>
-   <td style="text-align:right;"> 483 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 75% </td>
-   <td style="text-align:right;"> 54 </td>
-   <td style="text-align:right;"> 91 </td>
-   <td style="text-align:right;"> 237 </td>
-   <td style="text-align:right;"> 577 </td>
-  </tr>
-</tbody>
-</table>
-
-
-From this table, we see that 25% of the samples have an upper quartile of gene coverage
-exceeding 577 reads, 25% of samples
-have a 15 percentile of coverage lower than
-37, etc.
-
-
-Note that with these data, moderate sample sizes are adequate 
-to detect genes with effect sizes as small as 1.05 (5% fold change).  This is due to the fact
-that the biological variability in gene body 5hmC density is quite low.
-For human samples, RNA-Seq within group biological variability is
-typically in the 0.4-1.0 range [@Hart:2013aa].  
-
-### Another look at BCV {-}
-
-Alternatively, we can extract sigma and signal from the fit objects.
-
-
-```r
-lib.size <- colSums(AF_dgel$counts)
-
-fit <- filteredCountsAF_voom_efit
-sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
-sy <- sqrt(fit$sigma)
-
-CV <- sy/sx    
-
-cor(cbind(BCV_mtx, CV)) 
-```
-
-```
-##           Control       HCC        CV
-## Control 1.0000000 0.9591234 0.7597385
-## HCC     0.9591234 1.0000000 0.7687380
-## CV      0.7597385 0.7687380 1.0000000
-```
-
-```r
-boxplot(cbind(BCV_mtx, CV), outline=F) 
-```
-
-![Alternative CV Calculation](Static/figures/altCV-1.png)
-
-CV computed frm sigma and coverage extracted from the fit are slighly higher.
-For purposes of gene identification, we really want to look at effect size in relation to residual 
-standard deviation.  
-
-
-![Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile](Static/figures/plotSNR-1.png)<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>SNR Summary</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> x </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 25% </td>
-   <td style="text-align:right;"> 0.018 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 50% </td>
-   <td style="text-align:right;"> 0.036 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 75% </td>
-   <td style="text-align:right;"> 0.060 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 90% </td>
-   <td style="text-align:right;"> 0.082 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 44 </td>
   </tr>
 </tbody>
 </table>
+
+Note that the folds identify samples that are left-out of the training
+data for each fold fit.
+
+
+## Fit and compare models {-}
+
+
+* cross-validated accuracy
+* test set accuracy  
+* sparsity
+    - for lasso, enet and lassoC, examine number of selected variables
+
+Although “the one standard error rule” can produce a model with fewer predictors, it usually results in increased MSE and more biased parameter estimates
+(see Engebretsen et al. (2019) [@Engebretsen:2019aa] for example).
+We will look at both the minimum cv error and the one standard error rule model 
+preformance.
+
+
+```r
+require(doMC)
+registerDoMC(cores=14)
+
+start_time <-  proc.time()
+
+cv_lasso <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=1,
+ family='binomial', 
+ type.measure = "class")
+
+message("lasso time: ", round((proc.time() - start_time)[3],2),"s")
+```
+
+```
+## lasso time: 23.19s
+```
+
+```r
+start_time <-  proc.time()
+
+cv_ridge <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=0,
+ family='binomial', 
+ type.measure = "class")
+
+message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
+```
+
+```
+## ridge time: 267.22s
+```
+
+```r
+start_time <-  proc.time()
+
+cv_enet <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=0.5,
+ family='binomial',
+ type.measure = "class")
+
+message("enet time: ", round((proc.time() - start_time)[3],2),"s")
+```
+
+```
+## enet time: 23.09s
+```
+
+```r
+start_time <-  proc.time()
+
+cv_lassoC <-  glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=1-EPS,
+ family='binomial',
+ type.measure = "class")
+
+message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
+```
+
+```
+## lassoC time: 23.17s
+```
 
 
