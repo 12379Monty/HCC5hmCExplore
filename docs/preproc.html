@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-01" />
+<meta name="date" content="2020-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -149,13 +149,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#removing-heteroscedasticity-from-the-count-data"><i class="fa fa-check"></i>Removing heteroscedasticity from the count data</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#fit-linear-models-and-examine-the-results"><i class="fa fa-check"></i>Fit linear models and examine the results</a></li>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
-<li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
-<ul>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
-</ul></li>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#look-at-signal-to-noise-ratio"><i class="fa fa-check"></i><b>2.3</b> Look at signal-to-noise ratio</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
@@ -169,17 +166,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="explore-glmnet.html"><a href="explore-glmnet.html"><i class="fa fa-check"></i><b>4</b> Explore glmnet fits</a>
+<li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="explore-glmnet.html"><a href="explore-glmnet.html#lasso"><i class="fa fa-check"></i><b>4.1</b> lasso</a></li>
-<li class="chapter" data-level="4.2" data-path="explore-glmnet.html"><a href="explore-glmnet.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
-<li class="chapter" data-level="4.3" data-path="explore-glmnet.html"><a href="explore-glmnet.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
-<li class="chapter" data-level="4.4" data-path="explore-glmnet.html"><a href="explore-glmnet.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
-<li class="chapter" data-level="4.5" data-path="explore-glmnet.html"><a href="explore-glmnet.html#mid-point-between-ridge-and-lasso"><i class="fa fa-check"></i><b>4.5</b> Mid-point between ridge and lasso</a></li>
+<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#baseline-lasso-fit"><i class="fa fa-check"></i><b>4.1</b> Baseline lasso fit</a></li>
+<li class="chapter" data-level="4.2" data-path="explore-sparsity.html"><a href="explore-sparsity.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
+<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
+<li class="chapter" data-level="4.4" data-path="explore-sparsity.html"><a href="explore-sparsity.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
+<li class="chapter" data-level="4.5" data-path="explore-sparsity.html"><a href="explore-sparsity.html#ridge-lasso"><i class="fa fa-check"></i><b>4.5</b> ridge-lasso</a></li>
+<li class="chapter" data-level="4.6" data-path="explore-sparsity.html"><a href="explore-sparsity.html#sparsity-stability"><i class="fa fa-check"></i><b>4.6</b> Sparsity stability</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
 <li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="references.html"><a href="references.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>6.1</b> Analysis of coverage variability</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
 
@@ -699,8 +700,8 @@ Up
 </tbody>
 </table>
 </div>
-<div id="graphical-representations-of-differential-expression-results-md-plots" class="section level3 unnumbered" number="">
-<h3>Graphical representations of differential expression results: MD Plots</h3>
+<div id="graphical-representations-of-de-results-md-plots" class="section level3 unnumbered" number="">
+<h3>Graphical representations of DE results: MD Plots</h3>
 <p>To summarise results for all genes visually, mean-difference plots
 (aka MA plot), which display log-FCs from the linear model fit against
 the average log-CPM values can be generated using the plotMD function,
@@ -782,8 +783,8 @@ up
 The GC content of down regulated genes tends to be slightly lower than the
 rest of the genes.</p>
 </div>
-<div id="number-of-de-genes-at-10-fold-change" class="section level3" number="2.2.1">
-<h3><span class="header-section-number">2.2.1</span> Number of DE genes at 10% fold change</h3>
+<div id="de-genes-at-10-fold-change" class="section level3 unnumbered" number="">
+<h3>DE genes at 10% fold change</h3>
 <p>For a stricter definition on significance, one may require log-fold-changes
 (log-FCs) to be above a minimum value. The treat method
 (McCarthy and Smyth 2009 <span class="citation">[<a href="references.html#ref-McCarthy:2009aa" role="doc-biblioref">13</a>]</span>) can be used to calculate p-values
@@ -803,271 +804,56 @@ Figure 2.8: HCC vs Control - Identified Genes at FDR = 0,05 and logFC &gt; 10%
 </div>
 </div>
 </div>
-<div id="analysis-of-coverage-variability" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Analysis of coverage variability</h2>
-<p>We will use the methods described in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">14</a>]</span>
-to characterize coverage variability in these data.
-These methods do not take multiple comparisons into account.
-Other tools for sample size calculation in RNA-Seq studies include
-Bi and Liu (2016) <span class="citation">[<a href="references.html#ref-Bi:2016aa" role="doc-biblioref">15</a>]</span>, Baccarella (2018) <span class="citation">[<a href="references.html#ref-Baccarella:2018aa" role="doc-biblioref">16</a>]</span>,
-Guo (2014) <span class="citation">[<a href="references.html#ref-Guo:2014aa" role="doc-biblioref">17</a>]</span>, Yu (2017) <span class="citation">[<a href="references.html#ref-Yu:2017aa" role="doc-biblioref">18</a>]</span>, and
-Zhao (2018) <span class="citation">[<a href="references.html#ref-Zhao:2018ab" role="doc-biblioref">19</a>]</span>.
-Poplawski (2018) <span class="citation">[<a href="references.html#ref-Poplawski:2017aa" role="doc-biblioref">20</a>]</span>
-evaluated RNA-seq sample size tools identified from a systematic search. They found the six evaluated tools provided widely different answers, which were strongly affected by fold change.</p>
-<p>The references listed above aim at providing guidance for RNA-Seq experimental design.
-There is much discussion and a wide range of opinion on sample size requirements
-to ensure reproducibility in RNA-Seq results. At one end of the spectrum,
-Ein-Dor et al. (2006) <span class="citation">[<a href="references.html#ref-Ein-Dor:2006aa" role="doc-biblioref">21</a>]</span> argue that thousands of samples are needed to
-generate a robust gene list for predicting outcome in cancer. At the other end,
-Dobbin et al. (2007, 2008) <span class="citation">[<a href="references.html#ref-Dobbin:2007aa" role="doc-biblioref">22</a>,<a href="references.html#ref-Dobbin:2008aa" role="doc-biblioref">23</a>]</span> claim that sample sizes in
-the range of 20–30 per class may be adequate for building a good predictor in many cases.
-Part of the disparity in sample size requirement recomendation comes from
-differences of opinion in terms of what constitutes <code>reproducible results</code>.
-In the context of sample classification, if we focus on the predicted probabilities
-for individual samples, we may find good reproducibility across studies with
-moderate samples sizes. If, on the other hand, we closely inspect the gene
-signatures reported across studies, much greater sample sizes may be required to
-achieve concordance. Kim (2009) <span class="citation">[<a href="references.html#ref-Kim:2009aa" role="doc-biblioref">24</a>]</span>, like Ein-Dor et al., also find
-issues in RNA-Seq research in terms of the instability of identified prognostic
-gene signatures, few overlap between independently developed prognostic gene signatures, and
-poor inter-study applicability of gene signatures. Fan et al. (2006) <span class="citation">[<a href="references.html#ref-Fan:2006aa" role="doc-biblioref">25</a>]</span>,
-on the other hand, found good concordance among gene-expression–based predictors
-for breast cancer. We will return to this question when we examine
-the relationship between classification model results and sample size in this
-dataset later on this paper.</p>
-<p>For two groups comparisons, the basic formula for the required number of samples per group is:</p>
-<p><span class="math display">\[ n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \sigma^2)}{ln(\Delta^2)} \]</span></p>
-<ul>
-<li>The parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are <strong>size</strong> and <strong>power</strong> of the test.<br />
-</li>
-<li><span class="math inline">\(\Delta\)</span> is the targeted <strong>effect size</strong>.<br />
-</li>
-<li><span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> are the <strong>mean</strong> and <strong>coefficient of variation</strong>
-of the distribution of measurement, gene representation indices in this case.</li>
-</ul>
-<p>These three parameters will be fixed across genes or a given study, and are often dictated by
-external requirements. Typical values might be an effect size of <span class="math inline">\(\Delta = 1.5\)</span>
-(a.k.a fold change), corresponding to detection of a 50% change in gene expression
-between the two groups.
-<span class="math inline">\(z_{1 - .05/2} = 1.96\)</span>, corresponding to a two sided test at size <span class="math inline">\(\alpha = 0.05\)</span>;
-and <span class="math inline">\(z_{.90}= 1.28\)</span> corresponding to 90% power.
-The other two variables will be gene and experiment dependent: the normalized depth
-of coverage <span class="math inline">\(\mu\)</span> of the gene, and the coefficient of variation <span class="math inline">\(\sigma\)</span> in this
-gene between biological replicates. The technical variation of the
-comparison is inversely proportional to the number of sequenced reads
-for the gene and therefore decreases with sequencing depth.
-The biological variation is a property of the particular gene/model system/condition under study.
-One would expect it to be smaller for uniform systems such as cell culture and/or products that
-are under tight regulatory control, and larger for less uniform replicates such
-as human subject samples. The dataset under study in this report is the first of its
-kind to give us an idea of variability levels in 5hmC representation.</p>
-<!-- SKIP THIS
-Before examining biological variability lets take a look at
-the sequencing rates.
-
--->
-<p>As in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">14</a>]</span> we estimate the
-biological coefficient of variation (CV) in expression across samples in the data set
-using a negative binomial model.</p>
-<!--
-From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)
-, the biolgical coefficient of variation (BCV), is the square root of the dispersion
-parameter under the negative binomial model. Hence, it is equivalent to estimating the
-dispersion(s) of the negative binomial model.
--->
-<div class="figure"><span id="fig:plotBCV"></span>
-<img src="Static/figures/plotBCV-1.png" alt="Cumulative Distribution of CV - rug = 90th percentile" width="960" />
-<p class="caption">
-Figure 2.9: Cumulative Distribution of CV - rug = 90th percentile
-</p>
-</div>
-<p><br/></p>
-<p>BCV values are quite low:</p>
-<div class="figure"><span id="fig:bspBCV"></span>
-<img src="Static/figures/bspBCV-1.png" alt="BCV distributions" width="960" />
-<p class="caption">
-Figure 2.10: BCV distributions
-</p>
-</div>
-<p><br/></p>
-<!-- 
- SampleSize_f <- function(Alpha=.01, Beta=.80, Delta=2, Mu, Disp)
- {temp <- qnorm(1-Alpha/2) + qnorm(Beta)
-  vtemp <- 1/Mu + Disp
-  2*vtemp*(temp/log(Delta))^2}
-
- cat("SampleSize_f(Mu=10, Disp=.4^2):\n")
- SampleSize_f(Mu=10, Disp=.4^2)
--->
-<p>We can now look at sample size estimates to required to detect
-various effect sizes. The effect sizes examined here are selected
-based on the differential representation analysis in Section <a href="preproc.html#dra">2.2</a> below.</p>
-<div class="figure"><span id="fig:sampleSizeCurve"></span>
-<img src="Static/figures/sampleSizeCurve-1.png" alt="Sample Size Estimates" width="1056" />
-<p class="caption">
-Figure 2.11: Sample Size Estimates
-</p>
-</div>
-<p>For the filtered reads, coverage looks like this:</p>
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>
-<span id="tab:quantCountsAF">Table 2.6: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
-Rows are quartiles across samples
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-15%
-</th>
-<th style="text-align:right;">
-25%
-</th>
-<th style="text-align:right;">
-50%
-</th>
-<th style="text-align:right;">
-75%
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-25%
-</td>
-<td style="text-align:right;">
-37
-</td>
-<td style="text-align:right;">
-63
-</td>
-<td style="text-align:right;">
-163
-</td>
-<td style="text-align:right;">
-396
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-50%
-</td>
-<td style="text-align:right;">
-45
-</td>
-<td style="text-align:right;">
-76
-</td>
-<td style="text-align:right;">
-198
-</td>
-<td style="text-align:right;">
-483
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-75%
-</td>
-<td style="text-align:right;">
-54
-</td>
-<td style="text-align:right;">
-91
-</td>
-<td style="text-align:right;">
-237
-</td>
-<td style="text-align:right;">
-577
-</td>
-</tr>
-</tbody>
-</table>
-<p>From this table, we see that 25% of the samples have an upper quartile of gene coverage
-exceeding 577 reads, 25% of samples
-have a 15 percentile of coverage lower than
-37, etc.</p>
-<p>Note that with these data, moderate sample sizes are adequate
-to detect genes with effect sizes as small as 1.05 (5% fold change). This is due to the fact
-that the biological variability in gene body 5hmC density is quite low.
-For human samples, RNA-Seq within group biological variability is
-typically in the 0.4-1.0 range <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">14</a>]</span>.</p>
-<div id="another-look-at-bcv" class="section level3 unnumbered" number="">
-<h3>Another look at BCV</h3>
-<p>Alternatively, we can extract sigma and signal from the fit objects.</p>
+<div id="look-at-signal-to-noise-ratio" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Look at signal-to-noise ratio</h2>
+<p>We can extract sigma and signal from the fit objects to get SNR values for each gene.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="preproc.html#cb15-1"></a>lib.size &lt;-<span class="st"> </span><span class="kw">colSums</span>(AF_dgel<span class="op">$</span>counts)</span>
 <span id="cb15-2"><a href="preproc.html#cb15-2"></a></span>
 <span id="cb15-3"><a href="preproc.html#cb15-3"></a>fit &lt;-<span class="st"> </span>filteredCountsAF_voom_efit</span>
 <span id="cb15-4"><a href="preproc.html#cb15-4"></a>sx &lt;-<span class="st"> </span>fit<span class="op">$</span>Amean <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">log2</span>(lib.size <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">-</span><span class="st"> </span><span class="kw">log2</span>(<span class="fl">1e+06</span>)</span>
 <span id="cb15-5"><a href="preproc.html#cb15-5"></a>sy &lt;-<span class="st"> </span><span class="kw">sqrt</span>(fit<span class="op">$</span>sigma)</span>
 <span id="cb15-6"><a href="preproc.html#cb15-6"></a></span>
-<span id="cb15-7"><a href="preproc.html#cb15-7"></a>CV &lt;-<span class="st"> </span>sy<span class="op">/</span>sx    </span>
-<span id="cb15-8"><a href="preproc.html#cb15-8"></a></span>
-<span id="cb15-9"><a href="preproc.html#cb15-9"></a><span class="kw">cor</span>(<span class="kw">cbind</span>(BCV_mtx, CV)) </span></code></pre></div>
-<pre><code>##           Control       HCC        CV
-## Control 1.0000000 0.9591234 0.7597385
-## HCC     0.9591234 1.0000000 0.7687380
-## CV      0.7597385 0.7687380 1.0000000</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="preproc.html#cb17-1"></a><span class="kw">boxplot</span>(<span class="kw">cbind</span>(BCV_mtx, CV), <span class="dt">outline=</span>F) </span></code></pre></div>
-<div class="figure"><span id="fig:altCV"></span>
-<img src="Static/figures/altCV-1.png" alt="Alternative CV Calculation" width="576" />
-<p class="caption">
-Figure 2.12: Alternative CV Calculation
-</p>
-</div>
-<p>CV computed frm sigma and coverage extracted from the fit are slighly higher.
-For purposes of gene identification, we really want to look at effect size in relation to residual
-standard deviation.</p>
+<span id="cb15-7"><a href="preproc.html#cb15-7"></a>CV &lt;-<span class="st"> </span>sy<span class="op">/</span>sx    </span></code></pre></div>
+<!-- DEBUG BCV from Section \@ref(analysis-of-coverage-variability) vs CV
+pairs(cbind(BCV_mtx, CV)) 
+boxplot(cbind(BCV_mtx, CV), outline=F) 
+-->
 <div class="figure"><span id="fig:plotSNR"></span>
 <img src="Static/figures/plotSNR-1.png" alt="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile" width="960" />
 <p class="caption">
-Figure 2.13: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile
+Figure 2.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile
 </p>
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:plotSNR">Table 2.7: </span>SNR Summary
+<span id="tab:plotSNR">Table 2.6: </span>SNR Quantiles
 </caption>
 <thead>
 <tr>
-<th style="text-align:left;">
+<th style="text-align:right;">
+25%
 </th>
 <th style="text-align:right;">
-x
+50%
+</th>
+<th style="text-align:right;">
+75%
+</th>
+<th style="text-align:right;">
+90%
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-25%
-</td>
 <td style="text-align:right;">
 0.018
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-50%
 </td>
 <td style="text-align:right;">
 0.036
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-75%
-</td>
 <td style="text-align:right;">
-0.060
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-90%
+0.06
 </td>
 <td style="text-align:right;">
 0.082
@@ -1075,8 +861,9 @@ x
 </tr>
 </tbody>
 </table>
+<p>These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
+best subset and forard selection fits (see Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>).</p>
 
-</div>
 </div>
 </div>
             </section>

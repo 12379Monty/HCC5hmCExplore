@@ -1,9 +1,15 @@
-# Explore glmnet fits {#explore-glmnet}
+# The bet on sparsity {#explore-sparsity}
 
-We explore some glmnet fits.
+We explore some glmnet fits and the "bet on sparsity"  
 
-* All fits must be assessed by cv and test set  
+* All fits must be assessed by cv and test set    
+* Do sparse models produced by lasso ($\alpha = 1.0$) perform better than ridge ($\alpha = 0$) or ridge-lasso ($\alpha = 0.5$)?  
+* Does the relaxed lasso improve performance?  
+* How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?  
+* Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?
 
+First we divide the analysis dataset into `train` and `test` in a 4:1 ratio.  Here `test` will
+play the role of the external test set used to provide an independent assessment data set.
 ```{r getTrainVal, cache=T, cache.vars=c('sampID_train_vec', 'sampID_val_vec','group_train_vec','group_test_vec','train_lcpm_mtx','test_lcpm_mtx')}
 
 set.seed(1)
@@ -32,9 +38,16 @@ test_lcpm_mtx <- t(lcpm_mtx[,sampID_test_vec])
 ```
 
 
-## lasso 
+## Baseline lasso fit
+
+* Cross-validated accuracy
+* sparsity
+* test set accuracy  
 
 ```{r lassoFit, cache=T, cache.vars='AF_lasso_cvfit', fig.height=5, fig.width=6, fig.cap="lasso fit the train set with cv"}
+require(doMC)
+registerDoMC(cores=14)
+
 
 AF_lasso_cvfit <- glmnet::cv.glmnet(
  x=train_lcpm_mtx,
@@ -42,7 +55,14 @@ AF_lasso_cvfit <- glmnet::cv.glmnet(
  family='binomial', alpha=1,
  type.measure = "class")
 
-plot(AF_lasso_cvfit)
+ lambda.1se <- AF_lasso_cvfit$lambda.1se
+ lambda.1se_p <- sum(abs(coef(AF_lasso_cvfit, s = AF_lasso_cvfit$lambda.1se))>0)
+
+plot(
+ AF_lasso_cvfit, 
+ sub=paste("cv lambda.1se =", round(lambda.1se, 2), "; p =", lambda.1se_p)
+)
+
 
 ```
 
@@ -53,7 +73,8 @@ plot(AF_lasso_cvfit)
 
 ## ridge
 
-## Mid-point between ridge and lasso
+## ridge-lasso
 
+## Sparsity stability
 
 

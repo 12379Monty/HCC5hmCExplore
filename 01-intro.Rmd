@@ -84,7 +84,7 @@ In Section \@ref(preproc) we preprocess the data that
 we will use for the classification analysis and perform some light QC analyses.
 In Section \@ref(modeling-background) we provide some background to our
 modeling approach.
-In Section \@ref(explore-glmnet-fits) we explore some glmnet fits
+In Section \@ref(explore-sparsity-fits) we explore some glmnet fits
 that discriminate between early stage HCC and control samples.
 In Section \@ref(model-suite) we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.

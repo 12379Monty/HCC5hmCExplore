@@ -1,3 +1,7 @@
+from http://stackoverflow.com/questions/9776020/recursive-search-and-replace-in-text-files-on-mac-and-linux
+
+find . -type f -name '*.Rmd' -exec sed -i '' s%explore-glmnet%explore-sparsity% {} +
+
 # initiate bookdown - DO ONCE
 # In R
 bookdown:::bookdown_skeleton(getwd())

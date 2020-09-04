@@ -53,8 +53,15 @@ sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC',
 with(
   sampDesc %>% dplyr::filter(sampType == "blood"),
   knitr::kable(table(DxStage, trainValGroup, exclude = NULL),
-   caption="GSE112679 Samples by Dx Group and Subset")
+   caption="GSE112679 Samples by Dx Group and Subset") %>% 
+  kableExtra::kable_styling(full_width = F)
 )
+```
+
+```
+## Warning in kableExtra::kable_styling(., full_width = F): Please specify format
+## in kable. kableExtra can customize either HTML or LaTeX outputs. See https://
+## haozhu233.github.io/kableExtra/ for details.
 ```
 
 
@@ -73,11 +80,25 @@ For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
 The appropriate outcome variable will be renamed or aliased `group`
 
-
-|group   | Freq|
-|:-------|----:|
-|Control |  778|
-|HCC     |  555|
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Samples used in this analysis</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> group </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 778 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 555 </td>
+  </tr>
+</tbody>
+</table>
 
 
 The features are counts of reads captured by chemical labeling, and indicate
@@ -123,12 +144,46 @@ keep track of the actual coverage which can be adequetely tracked by distributio
 quantiles.
 -->
 
-
-|    | 15%| 25%| 50%| 75%| totCovM|
-|:---|---:|---:|---:|---:|-------:|
-|25% |   4|  24| 111| 321|     5.5|
-|50% |   5|  30| 135| 391|     6.7|
-|75% |   6|  35| 162| 468|     8.0|
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Coverage Summary - Columns are sample coverage quantiles and total coverage 
+Rows are quartiles across samples</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 15% </th>
+   <th style="text-align:right;"> 25% </th>
+   <th style="text-align:right;"> 50% </th>
+   <th style="text-align:right;"> 75% </th>
+   <th style="text-align:right;"> totCovM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 111 </td>
+   <td style="text-align:right;"> 321 </td>
+   <td style="text-align:right;"> 5.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 135 </td>
+   <td style="text-align:right;"> 391 </td>
+   <td style="text-align:right;"> 6.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 35 </td>
+   <td style="text-align:right;"> 162 </td>
+   <td style="text-align:right;"> 468 </td>
+   <td style="text-align:right;"> 8.0 </td>
+  </tr>
+</tbody>
+</table>
 
 
 From this table, we see that 25% of the samples have total coverage exceeding
@@ -232,22 +287,22 @@ samples.
 Before producing the MDS plot we will normalize the distributions.
 We will store the data into s `DGEList` object as this is convenient
 when running many of the analyses implemented in the edgeR and limma packages.
-
+Call the set 'AF', for set 'A', 'Filtered'.
 
 
 ```r
-filteredCountsAF_dgel <- edgeR::DGEList(
+AF_dgel <- edgeR::DGEList(
   counts = featureCountsAF,
   genes = genes_annotAF,
   samples = sampDescA,
   group = sampDescA$group
 )
-filteredCountsAF_dgel <- edgeR::calcNormFactors(filteredCountsAF_dgel)
-filteredCountsAF_lcmp_mtx <- edgeR::cpm(filteredCountsAF_dgel, log = T)
+AF_dgel <- edgeR::calcNormFactors(AF_dgel)
+AF_lcmp_mtx <- edgeR::cpm(AF_dgel, log = T)
 
-# Save filteredCountsAF_dgel to facilitate restarting
+# Save AF_dgel to facilitate restarting
 # remove from final version
-save(list = "filteredCountsAF_dgel", file = "RData/filteredCountsAF_dgel")
+save(list = "AF_dgel", file = "RData/AF_dgel")
 ```
 
 Verify that the counts are properly normalized.
@@ -337,7 +392,7 @@ weights calculated by the voom function.  We apply this transformation next.
 
 ```r
 par(mfrow=c(1,1))
-filteredCountsAF_voom <- limma::voom(filteredCountsAF_dgel, Design_mtx, plot=T)
+filteredCountsAF_voom <- limma::voom(AF_dgel, Design_mtx, plot=T)
 ```
 
 ![Removing heteroscedascity](Static/figures/Voom1-1.png)
@@ -351,6 +406,15 @@ expression scale due to very small counts.
 Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to log-CPM transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean log-CPM values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
 -->
 
+<!--
+To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
+
+![](Static/images/Law-fig4.gif)
+
+We observe that the variability in the 5hmC data is quite a bit lower.  Statistical summaries would give
+a better idea.  
+
+-->
 
 
 ### Fit linear models and examine the results {-}
@@ -362,14 +426,31 @@ of interest, in our case HCC vs Control.
 
 Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>DE Results at FDR = 0.05</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> HCCvsControl </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Down </td>
+   <td style="text-align:right;"> 5214 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> NotSig </td>
+   <td style="text-align:right;"> 5280 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Up </td>
+   <td style="text-align:right;"> 5258 </td>
+  </tr>
+</tbody>
+</table>
 
-|       | HCCvsControl|
-|:------|------------:|
-|Down   |         5214|
-|NotSig |         5280|
-|Up     |         5258|
-
-### Graphical representations of differential expression results: MD Plots {-}
+### Graphical representations of DE results: MD Plots {-}
 
 To summarise results for all genes visually, mean-difference plots
 (aka MA plot), which display log-FCs from the linear model fit against 
@@ -383,12 +464,37 @@ of interest.
 ![HCC vs Control - Identified Genes at FDR = 0,05](Static/figures/mdPlotEfit-1.png)
 
 
-
-|    |  down| notDE|   up|
-|:---|-----:|-----:|----:|
-|25% | -0.07| -0.01| 0.04|
-|50% | -0.05|  0.00| 0.06|
-|75% | -0.03|  0.01| 0.09|
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>log FC quartiles by gene identification</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> down </th>
+   <th style="text-align:right;"> notDE </th>
+   <th style="text-align:right;"> up </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> -0.07 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> -0.05 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.06 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+</tbody>
+</table>
 
 
 We see that while many genes are identified, the effect sizes are quite small.
@@ -397,7 +503,7 @@ rest of the genes.
 
 
 
-### Number of DE genes at 10% fold change
+### DE genes at 10% fold change {-}
 
 For a stricter definition on significance, one may require log-fold-changes 
 (log-FCs) to be above a minimum value. The treat method 
@@ -502,4 +608,148 @@ From [edgeR User's Guide](https://www.bioconductor.org/packages/release/bioc/vig
 parameter under the negative binomial model. Hence, it is equivalent to estimating the
 dispersion(s) of the negative binomial model.
 -->
+
+
+
+![Cumulative Distribution of CV - rug = 90th percentile](Static/figures/plotBCV-1.png)
+<br/>
+
+BCV values are quite low:
+
+![BCV distributions](Static/figures/bspBCV-1.png)
+
+<br/>
+
+<!-- 
+ SampleSize_f <- function(Alpha=.01, Beta=.80, Delta=2, Mu, Disp)
+ {temp <- qnorm(1-Alpha/2) + qnorm(Beta)
+  vtemp <- 1/Mu + Disp
+  2*vtemp*(temp/log(Delta))^2}
+
+ cat("SampleSize_f(Mu=10, Disp=.4^2):\n")
+ SampleSize_f(Mu=10, Disp=.4^2)
+-->
+
+We can now look at sample size estimates to required to detect 
+various effect sizes.  The effect sizes examined here are selected
+based on the differential representation analysis in Section \@ref(dra) below.
+
+
+![Sample Size Estimates](Static/figures/sampleSizeCurve-1.png)
+
+For the filtered reads, coverage looks like this:
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Coverage Summary - Columns are sample coverage quantiles and total coverage 
+Rows are quartiles across samples</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 15% </th>
+   <th style="text-align:right;"> 25% </th>
+   <th style="text-align:right;"> 50% </th>
+   <th style="text-align:right;"> 75% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> 37 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 163 </td>
+   <td style="text-align:right;"> 396 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 76 </td>
+   <td style="text-align:right;"> 198 </td>
+   <td style="text-align:right;"> 483 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> 54 </td>
+   <td style="text-align:right;"> 91 </td>
+   <td style="text-align:right;"> 237 </td>
+   <td style="text-align:right;"> 577 </td>
+  </tr>
+</tbody>
+</table>
+
+
+From this table, we see that 25% of the samples have an upper quartile of gene coverage
+exceeding 577 reads, 25% of samples
+have a 15 percentile of coverage lower than
+37, etc.
+
+
+Note that with these data, moderate sample sizes are adequate 
+to detect genes with effect sizes as small as 1.05 (5% fold change).  This is due to the fact
+that the biological variability in gene body 5hmC density is quite low.
+For human samples, RNA-Seq within group biological variability is
+typically in the 0.4-1.0 range [@Hart:2013aa].  
+
+### Another look at BCV {-}
+
+Alternatively, we can extract sigma and signal from the fit objects.
+
+
+```r
+lib.size <- colSums(AF_dgel$counts)
+
+fit <- filteredCountsAF_voom_efit
+sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
+sy <- sqrt(fit$sigma)
+
+CV <- sy/sx    
+
+cor(cbind(BCV_mtx, CV)) 
+```
+
+```
+##           Control       HCC        CV
+## Control 1.0000000 0.9591234 0.7597385
+## HCC     0.9591234 1.0000000 0.7687380
+## CV      0.7597385 0.7687380 1.0000000
+```
+
+```r
+boxplot(cbind(BCV_mtx, CV), outline=F) 
+```
+
+![Alternative CV Calculation](Static/figures/altCV-1.png)
+
+CV computed frm sigma and coverage extracted from the fit are slighly higher.
+For purposes of gene identification, we really want to look at effect size in relation to residual 
+standard deviation.  
+
+
+![Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile](Static/figures/plotSNR-1.png)<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>SNR Summary</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> x </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> 0.018 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> 0.036 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> 0.060 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 90% </td>
+   <td style="text-align:right;"> 0.082 </td>
+  </tr>
+</tbody>
+</table>
+
 

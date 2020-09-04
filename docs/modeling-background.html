@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-01" />
+<meta name="date" content="2020-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="preproc.html"/>
-<link rel="next" href="explore-glmnet.html"/>
+<link rel="next" href="explore-sparsity.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -149,13 +149,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#removing-heteroscedasticity-from-the-count-data"><i class="fa fa-check"></i>Removing heteroscedasticity from the count data</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#fit-linear-models-and-examine-the-results"><i class="fa fa-check"></i>Fit linear models and examine the results</a></li>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-differential-expression-results-md-plots"><i class="fa fa-check"></i>Graphical representations of differential expression results: MD Plots</a></li>
-<li class="chapter" data-level="2.2.1" data-path="preproc.html"><a href="preproc.html#number-of-de-genes-at-10-fold-change"><i class="fa fa-check"></i><b>2.2.1</b> Number of DE genes at 10% fold change</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
+<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>2.3</b> Analysis of coverage variability</a>
-<ul>
-<li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#another-look-at-bcv"><i class="fa fa-check"></i>Another look at BCV</a></li>
-</ul></li>
+<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#look-at-signal-to-noise-ratio"><i class="fa fa-check"></i><b>2.3</b> Look at signal-to-noise ratio</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
 <ul>
@@ -169,17 +166,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="explore-glmnet.html"><a href="explore-glmnet.html"><i class="fa fa-check"></i><b>4</b> Explore glmnet fits</a>
+<li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="explore-glmnet.html"><a href="explore-glmnet.html#lasso"><i class="fa fa-check"></i><b>4.1</b> lasso</a></li>
-<li class="chapter" data-level="4.2" data-path="explore-glmnet.html"><a href="explore-glmnet.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
-<li class="chapter" data-level="4.3" data-path="explore-glmnet.html"><a href="explore-glmnet.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
-<li class="chapter" data-level="4.4" data-path="explore-glmnet.html"><a href="explore-glmnet.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
-<li class="chapter" data-level="4.5" data-path="explore-glmnet.html"><a href="explore-glmnet.html#mid-point-between-ridge-and-lasso"><i class="fa fa-check"></i><b>4.5</b> Mid-point between ridge and lasso</a></li>
+<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#baseline-lasso-fit"><i class="fa fa-check"></i><b>4.1</b> Baseline lasso fit</a></li>
+<li class="chapter" data-level="4.2" data-path="explore-sparsity.html"><a href="explore-sparsity.html#relaxed-lasso"><i class="fa fa-check"></i><b>4.2</b> Relaxed lasso</a></li>
+<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#shrunken-relaxed-lasso"><i class="fa fa-check"></i><b>4.3</b> Shrunken relaxed lasso</a></li>
+<li class="chapter" data-level="4.4" data-path="explore-sparsity.html"><a href="explore-sparsity.html#ridge"><i class="fa fa-check"></i><b>4.4</b> ridge</a></li>
+<li class="chapter" data-level="4.5" data-path="explore-sparsity.html"><a href="explore-sparsity.html#ridge-lasso"><i class="fa fa-check"></i><b>4.5</b> ridge-lasso</a></li>
+<li class="chapter" data-level="4.6" data-path="explore-sparsity.html"><a href="explore-sparsity.html#sparsity-stability"><i class="fa fa-check"></i><b>4.6</b> Sparsity stability</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a></li>
 <li class="chapter" data-level="6" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>6</b> Conclusions</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="references.html"><a href="references.html#analysis-of-coverage-variability"><i class="fa fa-check"></i><b>6.1</b> Analysis of coverage variability</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="LICENSE.md" style="font:em;" target="blank">Copyright (c) 2020 Francois Collin</a></li>
 
@@ -278,7 +279,7 @@ are also worth investigating.</p>
 <div id="glmnet" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> glmnet</h2>
 <p>In this investigation we will focus on models that can be
-analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>]</span>. Several
+analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">15</a>]</span>. Several
 factors favor this choice:</p>
 <ul>
 <li><p>the glmnet package is a well supported package providing
@@ -304,7 +305,7 @@ by means of 5hmc profiles lie?</p>
 <p>Glmnet is a package that fits a generalized linear model via penalized maximum likelihood.
 The regularization path is computed for the lasso or elasticnet penalty at a
 grid of values for the regularization parameter lambda
-(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">29</a>]</span>).</p>
+(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">15</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">18</a>]</span>).</p>
 <p><code>glmnet</code> solves the following problem:</p>
 <p><span class="math display">\[\min_{\beta_0,\beta} \frac{1}{N} \sum_{i=1}^{N} w_i l(y_i,\beta_0+\beta^T x_i) + \lambda\left[(1-\alpha)||\beta||_2^2/2 + \alpha ||\beta||_1\right],\]</span></p>
 <p>over a grid of values of <span class="math inline">\(\lambda\)</span>.
@@ -336,14 +337,14 @@ by extreme correlations</em>.</p>
 </ul>
 <p><span class="math display">\[\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t\]</span></p>
 <ul>
-<li>Bertsimas et al. (2016) <span class="citation">[<a href="references.html#ref-Bertsimas:2016aa" role="doc-biblioref">30</a>]</span>
+<li>Bertsimas et al. (2016) <span class="citation">[<a href="references.html#ref-Bertsimas:2016aa" role="doc-biblioref">19</a>]</span>
 <ul>
 <li>presented a mixed integer optimization (MIO) formulation for the best subset selection problem<br />
 </li>
 <li>Using these MIO solvers, can solve problems with p in the hundreds and even thousands</li>
 <li>demonstrated that best subset selection generally gives superior prediction accuracy compared to forward stepwise selection and the lasso, over a variety of problem setups.</li>
 </ul></li>
-<li>Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">31</a>]</span>
+<li>Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>
 <ul>
 <li>neither best subset selection nor the lasso uniformly dominate the other, with best subset selection generally performing better in high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes;</li>
 <li>best subset selection and forward stepwise perform quite similarly throughout;</li>
@@ -374,7 +375,7 @@ Tibshirani et al. (2012),
 Simon et al. (2011),
 Simon, Friedman, and Hastie (2013) and
 Hastie, Tibshirani, and Tibshirani (2017)
-(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">26</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">29</a>,<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">31</a>]</span>).</p>
+(<span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">18</a>]</span>).</p>
 <ul>
 <li>SNR
 <ul>
@@ -388,9 +389,9 @@ Hastie, Tibshirani, and Tibshirani (2017)
 <li>a PVE of 0.5 is rare for noisy observational data, and 0.2 may be more typical</li>
 <li>A PVE of 0.86, corresponding to an SNR of 6, is unheard of!</li>
 <li>For small SNR, SNR <span class="math inline">\(\approx\)</span> PVE</li>
-<li>See Xiang et al. (2020) <span class="citation">[<a href="references.html#ref-Xiang:2020aa" role="doc-biblioref">32</a>]</span>, Lozoya et al. (2018) <span class="citation">[<a href="references.html#ref-Lozoya:2018aa" role="doc-biblioref">33</a>]</span>,
-Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">34</a>]</span> and
-Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">35</a>]</span> for SNR in RNA-Seq</li>
+<li>See Xiang et al. (2020) <span class="citation">[<a href="references.html#ref-Xiang:2020aa" role="doc-biblioref">20</a>]</span>, Lozoya et al. (2018) <span class="citation">[<a href="references.html#ref-Lozoya:2018aa" role="doc-biblioref">21</a>]</span>,
+Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">22</a>]</span> and
+Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">23</a>]</span> for SNR in RNA-Seq</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -404,7 +405,7 @@ Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rap
         </div>
       </div>
 <a href="preproc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="explore-glmnet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="explore-sparsity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

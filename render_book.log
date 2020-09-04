@@ -256,76 +256,6 @@ List of 6
   ordinary text without R code
 
   |                                                                              |...................................................                   |  72%
-label: sumCount (with options) 
-List of 4
- $ cache     : symbol T
- $ cache.vars: chr "DD.cpmSum.frm"
- $ eval      : symbol F
- $ echo      : symbol F
-
-  |                                                                              |....................................................                  |  74%
-  ordinary text without R code
-
-  |                                                                              |.....................................................                 |  75%
-label: estBCV (with options) 
-List of 5
- $ cache     : symbol T
- $ cache.vars: language c("BCV_mtx", "BCV_90perc_vec", "BCV_50perc_vec")
- $ message   : symbol F
- $ echo      : symbol F
- $ include   : symbol F
-
-  |                                                                              |......................................................                |  77%
-  ordinary text without R code
-
-  |                                                                              |.......................................................               |  78%
-label: plotBCV (with options) 
-List of 6
- $ fig.height: num 5
- $ fig.width : num 10
- $ fig.cap   : chr "Cumulative Distribution of CV - rug = 90th percentile"
- $ message   : symbol F
- $ echo      : symbol F
- $ include   : symbol T
-
-  |                                                                              |........................................................              |  80%
-  ordinary text without R code
-
-  |                                                                              |.........................................................             |  81%
-label: bspBCV (with options) 
-List of 6
- $ fig.height: num 5
- $ fig.width : num 10
- $ fig.cap   : chr "BCV distributions"
- $ message   : symbol F
- $ echo      : symbol F
- $ include   : symbol T
-
-  |                                                                              |..........................................................            |  83%
-  ordinary text without R code
-
-  |                                                                              |...........................................................           |  84%
-label: sampleSizeCurve (with options) 
-List of 6
- $ cache     : symbol T
- $ cache.vars: chr ""
- $ fig.height: num 8
- $ fig.width : num 11
- $ fig.cap   : chr "Sample Size Estimates"
- $ echo      : symbol F
-
-  |                                                                              |............................................................          |  86%
-  ordinary text without R code
-
-  |                                                                              |.............................................................         |  87%
-label: quantCountsAF (with options) 
-List of 1
- $ echo: symbol F
-
-  |                                                                              |..............................................................        |  88%
-   inline R code fragments
-
-  |                                                                              |...............................................................       |  90%
 label: altCV (with options) 
 List of 5
  $ cache     : symbol T
@@ -334,10 +264,10 @@ List of 5
  $ fig.width : num 6
  $ fig.cap   : chr "Alternative CV Calculation"
 
-  |                                                                              |................................................................      |  91%
+  |                                                                              |....................................................                  |  74%
   ordinary text without R code
 
-  |                                                                              |.................................................................     |  93%
+  |                                                                              |.....................................................                 |  75%
 label: plotSNR (with options) 
 List of 6
  $ fig.height: num 5
@@ -347,19 +277,19 @@ List of 6
  $ echo      : symbol F
  $ include   : symbol T
 
-  |                                                                              |..................................................................    |  94%
+  |                                                                              |......................................................                |  77%
   ordinary text without R code
 
-  |                                                                              |...................................................................   |  96%
+  |                                                                              |.......................................................               |  78%
 label: getTrainVal (with options) 
 List of 2
  $ cache     : symbol T
  $ cache.vars: language c("sampID_train_vec", "sampID_val_vec", "group_train_vec", "group_test_vec",      "train_lcpm_mtx", "test_lcpm_mtx")
 
-  |                                                                              |....................................................................  |  97%
+  |                                                                              |........................................................              |  80%
   ordinary text without R code
 
-  |                                                                              |..................................................................... |  99%
+  |                                                                              |.........................................................             |  81%
 label: lassoFit (with options) 
 List of 5
  $ cache     : symbol T
@@ -368,15 +298,3 @@ List of 5
  $ fig.width : num 6
  $ fig.cap   : chr "lasso fit the train set with cv"
 
-  |                                                                              |......................................................................| 100%
-   inline R code fragments
-
-
-output file: HCC5hmCExplore.knit.md
-
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpiognXR/rmarkdown-str4fe31dfd5f30.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
-
-Output created: docs/index.html
-[1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"
-Warning message:
-The label(s) explore-glmnet-fits not found 
