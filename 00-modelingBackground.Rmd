@@ -1,27 +1,29 @@
 # Modeling - Background {#modeling-background}
 
 Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
-background.
+relevant exploratory data  analyis results.
 
 
 In the section we look at  some models fitted to discriminate between
-early stage HCC and control samples comprising of healthy and benign samples 
+early stage HCC and healthy and benign samples (grouped as Controls here)
 from the GSE112679 data set.  
 
 
-* Baseline model 
+* Some questions to addredd with the baseline model 
    - how separable are the data: what accuracy do we expect 
-   - individual sample quality scores: which samples are hard to classify?
+   - individual sample quality scores: which samples are hard to classify?  Compute a score
+in [0, 1], where 1 is perfectly good classification and 0 is poerfectly bad.
 
 ## Predictive modeling for genomic data
 
-The main problem in calibrating predictive models to genomic data is that
-there are way more features than there are example cases to fit to.  As
-we have too many variables, fitting methods tend to overfit.  This problem
-requires that we remove variables, regularize or both.  See the
-Trevor Hastie talk: 
-[Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf).
-
+The main challenge in calibrating predictive models to genomic data is that
+there are many more features than there are example cases to fit to;
+the  now classic $n << p$ problem.  
+In this scenario, fitting methods tend to overfit.  The problem
+can be addressed by selecting variables, regularizng the fit or both.
+See the Trevor Hastie talk: 
+[Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf)
+for a good discussion of this problem and potential solutions.
 
 
 
@@ -43,6 +45,12 @@ exhaustive basis.  Especially useful is the functionality that is provided to
 repeatedly randomly stratify samples into train and test set so that any
 sample selection bias is removed.  
 
+
+What makes the `caret` package extremely useful is that a common interface is
+provided to an exhaustive collection of fitting procedures.  Without
+this common interface, one has to learn the programming interfaces that
+are used in all fitting procedures to be included in a comparative analysis,
+which can be quite burdenful.  
 
 Some of the models which can be evaluated with caret include: 
 (only some of these can be used with multinomial responses)
@@ -66,6 +74,12 @@ including some `deep learning` methods.
 Many methods found [here](https://topepo.github.io/caret/available-models.html)
 are also worth investigating.
 
+We only mention `caret` here because it is an exteremely useful tool for 
+anyone interested in comparing many predictive models.  We have done that
+in the past and have found that regularized regression models perform
+as welll as any in the context of classifiction based on genomic scale data.
+
+
 
 ## glmnet
 
@@ -74,7 +88,7 @@ analyzed with the the `glmnet` R  package [@Friedman:2010aa].  Several
 factors favor this choice:  
 
 * the glmnet package is a well supported package providing
-extensive functionality for regularized regression and classification models  
+extensive functionality for regularized regression and classification models.
 
 * the hyper-parameters of the elastic net enable us to explore
 the relationship between model size, or sparsity, and predictive accuracy.
@@ -87,12 +101,9 @@ classification models using the elastic net penalty do as well as any other,
 and are more economical in terms of computing time, espacially in comparison to
 the more exotic boosting algorithms.
 
-* the `relaxed lasso`, introduced in version 3.0 of `glmnet`, has been shown
-to be near optimal over a wide range of signal-to-noise regiments.
+* the `lasso` has been shown to be near optimal for the $n<<p$ problem
+over a wide range of signal-to-noise regiments. 
 
-One question that is of keen interest is where on the bias-variance,
-or signal-to-noise (SNR) spectrum does the classification of blood samples
-by means of 5hmc profiles lie?
 
 ***
 
@@ -155,7 +166,7 @@ by extreme correlations*.
     - best subset selection and forward stepwise perform quite similarly throughout;
     - the relaxed lasso is the overall winner, performing just about as well as the lasso in low SNR scenarios, 
 and as well as best subset selection in high SNR scenarios. We conclude that it is 
-able to use its auxiliary shrinkage parameter (γ) to get the “best of both worlds”: 
+able to use its auxiliary shrinkage parameter ($\gamma$) to get the “best of both worlds”: 
 it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.
    
 
@@ -163,7 +174,7 @@ it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, an
 
 $$\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)$$
 
-* shrunken relaxed lasso
+* shrunken relaxed lasso (aka the blended fit)
 
 Suppose the **glmnet** fitted linear predictor at $\lambda$ is $\hat{\eta}_\lambda(x)$
 and the relaxed version is $\tilde{\eta}_\lambda(x)$, then the shrunken relaxed lasso fit is

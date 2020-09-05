@@ -1,0 +1,209 @@
+## Refit with "auc" as optimization
+
+```{r fitModels2, cache=T, cache.vars=c('cv_lasso2', 'cv_ridge2', 'cv_enet2', 'cv_lassoC2')}
+
+require(doMC)
+registerDoMC(cores=14)
+
+start_time <-  proc.time()
+
+cv_lasso2 <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=1,
+ family='binomial', 
+ type.measure = "auc")
+
+message("lasso time: ", round((proc.time() - start_time)[3],2),"s")
+
+start_time <-  proc.time()
+
+cv_ridge2 <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=0,
+ family='binomial', 
+ type.measure = "auc")
+
+message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
+
+start_time <-  proc.time()
+
+cv_enet2 <- glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=0.5,
+ family='binomial',
+ type.measure = "auc")
+
+message("enet time: ", round((proc.time() - start_time)[3],2),"s")
+
+start_time <-  proc.time()
+
+cv_lassoC2 <-  glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=1-EPS,
+ family='binomial',
+ type.measure = "class")
+
+message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
+
+```
+
+The ridge regression model takes over 10 times longer to compute.
+
+
+
+Examine model performance.
+
+```{r lookFits2, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=F}
+ par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
+ plot_cv_f(cv_lasso2, ylim=c(0,.5))
+ title('lasso')
+
+ plot_cv_f(cv_ridge2, Nzero=F, ylim=c(0,.5))
+ title('ridge')
+
+ plot_cv_f(cv_enet2, ylim=c(0,.5))
+ title('enet')
+
+ mtext(side=1, outer=T, cex=1.25, 'log(Lambda)')
+ mtext(side=2, outer=T, cex=1.25, cv_lasso$name)
+
+```
+
+All models produce cv assessments of `r cv_lasso$name` that are substnatially lower than
+the test set assessments.  `lasso` performs comparably to `enet` and
+better than the `ridge` model.
+
+## Relaxed lasso and blended mix
+
+```{r fitLassoR2, cache=T, cache.vars=c('cv_lassoR2'), include=F}
+
+require(doMC)
+registerDoMC(cores=14)
+
+
+start_time <-  proc.time()
+
+cv_lassoR <-  glmnet::cv.glmnet(
+ x=train_lcpm_mtx,
+ y=train_group_vec,
+ foldid=train_foldid_vec,
+ alpha=1,
+ relax=T,
+ family='binomial',
+ type.measure = "auc")
+
+message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
+
+```
+
+<!--
+The relaxed fit takes quite a bit longer.  
+-->
+
+```{r lookLassoR2, cache=T, cache.vars='', fig.height=5, fig.width=5, fig.cap="lassoR fit"}
+ library(glmnet)
+
+ cv_lassoR2_sum <- print(cv_lassoR2)
+
+ plot(cv_lassoR2)
+
+test_pred_1se_vec <- predict(
+  cv_lassoR2, 
+  newx=test_lcpm_mtx, 
+  s="lambda.1se",
+  type="class"
+)
+test_pred_1se_error <- mean(test_pred_1se_vec!=test_group_vec)
+ 
+test_pred_min_vec <- predict(
+  cv_lassoR2, 
+  newx=test_lcpm_mtx, 
+  s="lambda.min",
+  type="class"
+)
+test_pred_min_error <- mean(test_pred_min_vec!=test_group_vec)
+  
+cv_lassoR2_1se_error <- cv_lassoR2_sum['1se','Measure']
+cv_lassoR2_min_error <- cv_lassoR2_sum['min','Measure']
+
+knitr::kable(rbind(
+ onese=c(cv_error=cv_lassoR2_1se_error, test_error=test_pred_1se_error)*100,
+ min=c(cv_error=cv_lassoR2_min_error, test_error=test_pred_min_error)*100
+),
+ caption="CV vs test Errors", digits=1
+) %>%
+  kableExtra::kable_styling(full_width = F)
+
+
+```
+
+Look at confusion matrices
+
+```{r confMtxTrainLasso2, cache=T, cache.vars='', fig.cap="Train set confusion", echo=F}
+
+cv_lasso_cnf <- glmnet::confusion.glmnet(
+ cv_lasso2, 
+ newx=train_lcpm_mtx,
+ newy=train_group_vec
+)
+
+knitr::kable(cv_lasso_cnf, caption="cv lasso confusion matrix: train set") %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+```{r confMtxTrainLassoR2, cache=T, cache.vars='', fig.cap="Train set confusion", echo=F}
+cv_lassoR_cnf <- glmnet::confusion.glmnet(
+ cv_lassoR2, 
+ newx=train_lcpm_mtx,
+ newy=train_group_vec
+)
+
+knitr::kable(cv_lassoR2_cnf, caption="cv lassoR2 confusion matrix: train set")  %>%
+  kableExtra::kable_styling(full_width = F)
+
+
+```
+
+
+```{r confMtxTestLasso2, cache=T, cache.vars='', fig.cap="Test set confusion", echo=F}
+
+cv_lasso_cnf <- glmnet::confusion.glmnet(
+ cv_lasso2, 
+ newx=test_lcpm_mtx,
+ newy=test_group_vec
+)
+
+knitr::kable(cv_lasso_cnf, caption="cv lasso confusion matrix: test set") %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+```{r confMtxTestlassoR2, cache=T, cache.vars='', fig.cap="Test set confusion", echo=F}
+
+cv_lassoR_cnf <- glmnet::confusion.glmnet(
+ cv_lassoR2, 
+ newx=test_lcpm_mtx,
+ newy=test_group_vec
+)
+
+knitr::kable(cv_lassoR2_cnf, caption="cv lassoR2 confusion matrix: test set")  %>%
+  kableExtra::kable_styling(full_width = F)
+
+
+```
+
+
+In all models the sensitivity weak compared to the sensitivity.  Let's examine the 
+ROC curves to see where the trade-off is.
+
+
+

@@ -530,19 +530,19 @@ filteredCountsAF_voom <- limma::voom(AF_dgel, Design_mtx, plot=T)
 ```
 
 Note that the voom-plot provides a visual check on the level of filtering performed upstream.
-If filtering of lowly-expressed genes is insufficient, 
-a drop in variance levels can be observed at the low end of the 
-expression scale due to very small counts. 
+If filtering of lowly-expressed genes is insufficient, a drop in variance levels can be 
+observed at the low end of the expression scale due to very small counts. 
 
 <!--
 Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to log-CPM transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean log-CPM values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
 -->
 
 <!--
+
 To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
 
-`r knitr::include_graphics(
-  "Static/images/Law-fig4.gif",  dpi=100)`
+TICKr knitr::include_graphics(
+  "Static/images/Law-fig4.gif",  dpi=100)TICK
 
 We observe that the variability in the 5hmC data is quite a bit lower.  Statistical summaries would give
 a better idea.  
@@ -574,7 +574,7 @@ Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
  filteredCountsAF_voom_efit_dt <-
  limma::decideTests(filteredCountsAF_voom_efit,adjust.method = "BH", p.value = 0.05)
  
- knitr::kable(summary(filteredCountsAF_voom_efit_dt),
+ knitr::kable(t(summary(filteredCountsAF_voom_efit_dt)),
   caption="DE Results at FDR = 0.05") %>% 
   kableExtra::kable_styling(full_width = F)
 
@@ -591,13 +591,13 @@ We may also be interested in whether certain gene features are
 related to gene identification.  Gene GC content, for example, might be
 of interest.
 
-```{r mdPlotEfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05", echo=F}
+```{r mdPlotEfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=F}
 
-par(mfrow=c(1,3), mar=c(4,4,2,1),oma=c(0,0,2,0))
+par(mfrow=c(1,3), mar=c(4.5,4.5,2,1),oma=c(1,1,2,0))
 
 # log-fold-change vs ave-expr
 limma::plotMD(filteredCountsAF_voom_efit,
- ylim = c(-0.5, 0.5),
+ ylim = c(-0.4, 0.4),
  column='HCCvsControl',
  status=filteredCountsAF_voom_efit_dt[,'HCCvsControl'],
  hl.pch = 16, hl.col = c("lightblue", "pink"), hl.cex = .5,
@@ -615,7 +615,7 @@ limma::plotMD(filteredCountsAF_voom_efit,
       collapse = ", "
     )
   ),
-  legend = F
+  legend = F, cex.lab=1.5
 )
 abline(h = 0, col = "black")
 rug(quantile(filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 2, 3) / 4),
@@ -629,13 +629,31 @@ rug(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 2, 3) / 4),
 
 # log-fold-change vs identification
 
-gplots::boxplot2(split(
+boxplot(split(
  filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'],
  filteredCountsAF_voom_efit_dt[,'HCCvsControl']),
  outline=F,
  border=c("pink", "grey", "lightblue"), xaxt='n',
- ylab='log-fold-change', ylim=c(-.5, .5))
- axis(side=1, at=1:3, c('down', 'notDE', 'up'))
+ ylab='log-fold-change', ylim=c(-.4, .4),
+ cex.lab=1.5
+)
+axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
+
+REPLACE.THIS <- function(){
+tmp.lst <- lapply( 
+split(
+ filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'],
+ filteredCountsAF_voom_efit_dt[,'HCCvsControl']
+),
+density)
+
+plot(tmp.lst[["-1"]]$y, tmp.lst[["-1"]]$x, col='pink', 
+     lwd=2, type='l', ylim=c(-.4,.4), xlim=c(0, 17),
+ xlab='density', ylab='log-fold-change', cex.lab=1.5)
+#lines(tmp.lst[["0"]]$y, tmp.lst[["0"]]$x, col='grey', lwd=2)
+lines(tmp.lst[["1"]]$y, tmp.lst[["1"]]$x, col='lightblue', lwd=2)
+
+}#REPLACE.THIS
 
 
 # gc vs identification
@@ -649,12 +667,12 @@ boxplot(split(
  filteredCountsAF_voom_efit_dt[,'HCCvsControl']),
  outline=F,
  border=c("pink", "grey", "lightblue"), xaxt='n',
- ylab='gene-gc')
- axis(side=1, at=1:3, c('down', 'notDE', 'up'))
+ ylab='gene-gc', cex.lab=1.5
+)
+axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
 
- mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
+ #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
 ```
-
 
 ```{r quantlogFC,echo=F}
 
@@ -679,10 +697,29 @@ knitr::kable(featureCountsAF_logFC_sum,
 ```
 
 
-We see that while many genes are identified, the effect sizes are quite small.
-The GC content of down regulated genes tends to be slightly lower than the
-rest of the genes.
+While many genes are identified, the effect sizes are quite small,
+which results in a low signal-to-noise ratio context.   See 
+Section \@ref(snr-regime) below.
 
+The log-fold-change distribution for up-represented genes is long-tailed,
+with many high log fold-change values.
+By contrast, log-fold-change distribution for down-represented genes
+closer to symmetric and has few genes with low log fold-change values.
+We will see how this affects the results of identifying genes with
+an effect size requirement.
+
+The GC content of down regulated genes tends to be slightly lower than the
+rest of the genes.  A statistical test would find that the difference
+between the mean of the down regulated gene population is singificantly different
+than the mean of the other gene population even though the difference is
+quite small
+(`r round( 
+mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']=='-1']) -
+mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']!='-1']),
+3)`).
+
+These asymmetries are minor, but it would still be good to establish that
+they relfect biology rather than processing artifacts.  
 
 
 ### DE genes at 10% fold change {-}
@@ -737,11 +774,24 @@ rug(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 2, 3) / 4),
 
 ```
 
+As noted above, the log-fold-change distribution for the up-represented genes
+is long-tailes in  comparison to log-fold-change distribution for the down-represented genes.
+As a result fewer down-represented than up-regulated genes are identified when a 
+minimum log-FC requirement is imposed.
 
-## Look at signal-to-noise ratio
 
-We can extract sigma and signal from the fit objects to get SNR values for each gene.
+## Signal-to-noise ratio regime {#snr-regime}
 
+In Hastie et al. (2017) [@Hastie:2017aa]) results from `lasso` fits are
+compared with `best subset` and `forward selection` fits and it is argued
+that while `best subset` is optimal for high signal-to-noise regimes, 
+the lasso gains some competitive advantage when the prevailing signal-to-noise
+ratio of the dataset is lowered.  
+
+We can extract sigma and signal from the fit objects to get SNR values for each gene
+to see in what SNR regime the 5hmC gene body data are.
+
+ 
 ```{r altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
 lib.size <- colSums(AF_dgel$counts)
 
@@ -788,5 +838,5 @@ knitr::kable(t(SNR_quant),
 ```
 
 These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
-best subset and forard selection fits (see Hastie et al. (2017) [@Hastie:2017aa]).
+best subset and forward selection fits (see  Hastie et al. (2017) [@Hastie:2017aa]).
 
