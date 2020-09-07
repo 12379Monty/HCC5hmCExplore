@@ -3,4 +3,21 @@
 We examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.
 
+Predicted probabilities can be transformed into a sample
+quality score: $Q_i = p_i^{y_i}(1-p_i)^{1-y_i}$, where $p_i$ is the out-of-fold
+estimated probability of HCC for sample i and $y_i$ is 1 for HCC samples and
+0 for Controls.  ie. we use the fitted likelihood as a sample quality score.
+The quality scores derived from a particular cv run will depend
+to some extent on the random assignment of samples to folds.
+To remove this dependency, we can derive quality scores by averaging over many 
+cv runs, 30 say.  Hard to classify samples will have low quality scores.  
+In the results that we discuss below, when we look at variability across repeated 
+random sampling of different sizes, we can use sample quality scores to investigate 
+how much of the variability is due to sample selection.  Note that quality here is not used
+to say anything about the sample data quality.  Low quality here only means
+that a sample is different from the core of the data set in a way that
+makes it hard to properly classify.  That could happen if the
+sample were mislabeled, in which case we could think of this sample as being
+poor quality of course.
+
 

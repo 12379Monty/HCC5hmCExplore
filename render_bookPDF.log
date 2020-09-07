@@ -4,66 +4,66 @@ processing file: HCC5hmCExplore.Rmd
   |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   1%
    inline R code fragments
 
-  |                                                                              |..                                                                    |   3%
+  |                                                                              |.                                                                     |   2%
 label: setup
-  |                                                                              |...                                                                   |   4%
+  |                                                                              |..                                                                    |   2%
    inline R code fragments
 
-  |                                                                              |....                                                                  |   5%
+  |                                                                              |..                                                                    |   3%
 label: setup-preproc (with options) 
 List of 1
  $ include: symbol F
 
-  |                                                                              |....                                                                  |   6%
+  |                                                                              |...                                                                   |   4%
   ordinary text without R code
 
-  |                                                                              |.....                                                                 |   8%
+  |                                                                              |...                                                                   |   5%
 label: chunk-options (with options) 
 List of 2
  $ include: logi FALSE
  $ eval   : symbol F
 
-  |                                                                              |......                                                                |   9%
+  |                                                                              |....                                                                  |   6%
   ordinary text without R code
 
-  |                                                                              |.......                                                               |  10%
+  |                                                                              |.....                                                                 |   7%
 label: libraries (with options) 
 List of 2
  $ include: logi FALSE
  $ eval   : symbol T
 
-  |                                                                              |........                                                              |  11%
+
   ordinary text without R code
 
-  |                                                                              |.........                                                             |  13%
+  |                                                                              |......                                                                |   8%
 label: loadData (with options) 
 List of 1
  $ cache: symbol F
 
-  |                                                                              |..........                                                            |  14%
+  |                                                                              |......                                                                |   9%
   ordinary text without R code
 
-  |                                                                              |...........                                                           |  15%
+  |                                                                              |.......                                                               |  10%
 label: subsetSamples (with options) 
 List of 3
  $ cache     : symbol T
  $ cache.vars: language c("sampDescA", "groupCol")
  $ echo      : symbol F
 
-  |                                                                              |............                                                          |  16%
+  |                                                                              |.......                                                               |  11%
   ordinary text without R code
 
-  |                                                                              |............                                                          |  18%
+  |                                                                              |........                                                              |  11%
 label: getfeatures (with options) 
 List of 3
  $ cache     : symbol T
  $ cache.vars: language c("featureCountsA")
  $ echo      : symbol F
 
-  |                                                                              |.............                                                         |  19%
+  |                                                                              |.........                                                             |  12%
   ordinary text without R code
 
-  |                                                                              |..............                                                        |  20%
+  |                                                                              |.........                                                             |  13%
 label: lcpmBxp (with options) 
 List of 5
  $ cache     : symbol T
@@ -72,18 +72,18 @@ List of 5
  $ fig.cap   : chr "Sample log2 count boxplots"
  $ echo      : symbol F
 
-  |                                                                              |...............                                                       |  22%
+  |                                                                              |..........                                                            |  14%
   ordinary text without R code
 
-  |                                                                              |................                                                      |  23%
+  |                                                                              |..........                                                            |  15%
 label: quantCountsA (with options) 
 List of 1
  $ echo: symbol F
 
-  |                                                                              |.................                                                     |  24%
+  |                                                                              |...........                                                           |  16%
    inline R code fragments
 
-  |                                                                              |..................                                                    |  25%
+
 label: rlr (with options) 
 List of 8
  $ cache     : symbol T
@@ -95,10 +95,10 @@ List of 8
  $ echo      : symbol F
  $ include   : symbol F
 
-  |                                                                              |...................                                                   |  27%
+  |                                                                              |............                                                          |  17%
   ordinary text without R code
 
-  |                                                                              |...................                                                   |  28%
+  |                                                                              |.............                                                         |  18%
 label: densityLcpm (with options) 
 List of 5
  $ fig.height: num 4
@@ -107,10 +107,10 @@ List of 5
  $ eval      : symbol T
  $ echo      : symbol F
 
-  |                                                                              |....................                                                  |  29%
+  |                                                                              |.............                                                         |  19%
    inline R code fragments
 
-  |                                                                              |.....................                                                 |  30%
+  |                                                                              |..............                                                        |  20%
 label: removeWeak (with options) 
 List of 4
  $ cache     : symbol T
@@ -118,10 +118,10 @@ List of 4
  $ echo      : symbol F
  $ include   : symbol F
 
-  |                                                                              |......................                                                |  32%
+
   ordinary text without R code
 
-  |                                                                              |.......................                                               |  33%
+  |                                                                              |...............                                                       |  21%
 label: densityLcpm2 (with options) 
 List of 5
  $ fig.height: num 4
@@ -130,19 +130,19 @@ List of 5
  $ eval      : symbol T
  $ echo      : symbol F
 
-  |                                                                              |........................                                              |  34%
+  |                                                                              |...............                                                       |  22%
   ordinary text without R code
 
-  |                                                                              |.........................                                             |  35%
+  |                                                                              |................                                                      |  23%
 label: getDGEL (with options) 
 List of 2
  $ cache    : symbol T
  $ cache.var: language c("AF_dgel", "AF_lcmp_mtx")
 
-  |                                                                              |..........................                                            |  37%
+  |                                                                              |.................                                                     |  24%
   ordinary text without R code
 
-  |                                                                              |...........................                                           |  38%
+  |                                                                              |.................                                                     |  25%
 label: normedLcpmBxp (with options) 
 List of 5
  $ cache     : symbol T
@@ -151,10 +151,10 @@ List of 5
  $ fig.cap   : chr "Sample log2 count boxplots"
  $ echo      : symbol F
 
-  |                                                                              |...........................                                           |  39%
+  |                                                                              |..................                                                    |  25%
   ordinary text without R code
 
-  |                                                                              |............................                                          |  41%
+  |                                                                              |..................                                                    |  26%
 label: plotMDS (with options) 
 List of 5
  $ cache     : symbol T
@@ -163,10 +163,10 @@ List of 5
  $ fig.cap   : chr "MDS plots of log-CPM values"
  $ echo      : symbol F
 
-  |                                                                              |.............................                                         |  42%
+  |                                                                              |...................                                                   |  27%
   ordinary text without R code
 
-  |                                                                              |..............................                                        |  43%
+  |                                                                              |....................                                                  |  28%
 label: GlMDSplot (with options) 
 List of 6
  $ echo      : symbol T
@@ -176,29 +176,29 @@ List of 6
  $ fig.width : num 11
  $ fig.cap   : chr "MDS plots of log-CPM values"
 
-  |                                                                              |...............................                                       |  44%
+  |                                                                              |....................                                                  |  29%
    inline R code fragments
 
-  |                                                                              |................................                                      |  46%
+  |                                                                              |.....................                                                 |  30%
 label: DEADesign (with options) 
 List of 3
  $ cache  : symbol F
  $ include: symbol T
  $ echo   : symbol F
 
-  |                                                                              |.................................                                     |  47%
+
   ordinary text without R code
 
-  |                                                                              |..................................                                    |  48%
+  |                                                                              |......................                                                |  31%
 label: printDesign (with options) 
 List of 2
  $ echo   : symbol F
  $ include: symbol F
 
-  |                                                                              |...................................                                   |  49%
+  |                                                                              |......................                                                |  32%
   ordinary text without R code
 
-  |                                                                              |...................................                                   |  51%
+  |                                                                              |.......................                                               |  33%
 label: Voom1 (with options) 
 List of 6
  $ cache     : symbol T
@@ -208,41 +208,41 @@ List of 6
  $ fig.cap   : chr "Removing heteroscedascity"
  $ echo      : symbol T
 
-  |                                                                              |....................................                                  |  52%
-   inline R code fragments
+  |                                                                              |........................                                              |  34%
+  ordinary text without R code
 
-  |                                                                              |.....................................                                 |  53%
+
 label: lmFit (with options) 
 List of 3
  $ cache     : symbol T
  $ echo      : symbol T
  $ cache.vars: language c("filteredCountsAF_voom_efit", "filteredCountsAF_voom_efit_dt")
 
-  |                                                                              |......................................                                |  54%
+  |                                                                              |.........................                                             |  35%
   ordinary text without R code
 
-  |                                                                              |.......................................                               |  56%
+  |                                                                              |.........................                                             |  36%
 label: mdPlotEfit (with options) 
 List of 6
  $ cache     : symbol T
- $ cache.vars: chr ""
+ $ cache.vars: chr "GC_vec"
  $ fig.height: num 5
  $ fig.width : num 11
- $ fig.cap   : chr "HCC vs Control - Identified Genes at FDR = 0,05"
+ $ fig.cap   : chr "HCC vs Control - Genes Identified at FDR = 0,05"
  $ echo      : symbol F
 
-  |                                                                              |........................................                              |  57%
+  |                                                                              |..........................                                            |  37%
   ordinary text without R code
 
-  |                                                                              |.........................................                             |  58%
+  |                                                                              |..........................                                            |  38%
 label: quantlogFC (with options) 
 List of 1
  $ echo: symbol F
 
-  |                                                                              |..........................................                            |  59%
-  ordinary text without R code
+  |                                                                              |...........................                                           |  39%
+   inline R code fragments
 
-  |                                                                              |...........................................                           |  61%
+  |                                                                              |............................                                          |  39%
 label: mdPlotTfit (with options) 
 List of 6
  $ cache     : symbol T
@@ -252,10 +252,10 @@ List of 6
  $ fig.cap   : chr "HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%"
  $ echo      : symbol F
 
-  |                                                                              |...........................................                           |  62%
+  |                                                                              |............................                                          |  40%
   ordinary text without R code
 
-  |                                                                              |............................................                          |  63%
+  |                                                                              |.............................                                         |  41%
 label: altCV (with options) 
 List of 5
  $ cache     : symbol T
@@ -264,10 +264,10 @@ List of 5
  $ fig.width : num 6
  $ fig.cap   : chr "Alternative CV Calculation"
 
-  |                                                                              |.............................................                         |  65%
+  |                                                                              |.............................                                         |  42%
   ordinary text without R code
 
-  |                                                                              |..............................................                        |  66%
+  |                                                                              |..............................                                        |  43%
 label: plotSNR (with options) 
 List of 6
  $ fig.height: num 5
@@ -277,105 +277,310 @@ List of 6
  $ echo      : symbol F
  $ include   : symbol T
 
-  |                                                                              |...............................................                       |  67%
+
   ordinary text without R code
 
-  |                                                                              |................................................                      |  68%
+  |                                                                              |...............................                                       |  44%
 label: setParameters
-  |                                                                              |.................................................                     |  70%
+  |                                                                              |................................                                      |  45%
    inline R code fragments
 
-  |                                                                              |..................................................                    |  71%
+  |                                                                              |................................                                      |  46%
 label: getTrainVal (with options) 
 List of 2
  $ cache     : symbol T
  $ cache.vars: language c("train_sampID_vec", "test_sampID_vec", "train_group_vec", "test_group_vec",      "train_lcpm_mtx", "test_lcpm_mtx")
 
-  |                                                                              |...................................................                   |  72%
+  |                                                                              |.................................                                     |  47%
    inline R code fragments
 
-  |                                                                              |...................................................                   |  73%
+  |                                                                              |.................................                                     |  48%
 label: getTrainFolds (with options) 
 List of 2
  $ cache     : symbol T
  $ cache.vars: chr "train_foldid_vec"
 
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  49%
+label: doMC (with options) 
+List of 1
+ $ include: symbol F
+
+  |                                                                              |...................................                                   |  50%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  51%
+label: logistic_f
+  |                                                                              |....................................                                  |  52%
+  ordinary text without R code
+
+  |                                                                              |.....................................                                 |  52%
+label: fit-lasso (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: language c("cv_lasso")
+
+  |                                                                              |.....................................                                 |  53%
+  ordinary text without R code
+
+  |                                                                              |......................................                                |  54%
+label: fit-ridge (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: language c("cv_ridge")
+
+  |                                                                              |......................................                                |  55%
+  ordinary text without R code
+
+  |                                                                              |.......................................                               |  56%
+label: fit-enet (with options) 
+List of 2
+ $ cache     : symbol T
+ $ cache.vars: language c("cv_enet")
+
+  |                                                                              |........................................                              |  57%
+  ordinary text without R code
+
+
+label: fit-lassoC (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: language c("cv_lassoC")
+ $ eval      : symbol F
+ $ echo      : symbol F
+
+  |                                                                              |.........................................                             |  58%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  59%
+label: plot_cv_f (with options) 
+List of 1
+ $ echo: symbol F
+
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |..........................................                            |  61%
+label: lookFits (with options) 
+List of 6
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 11
+ $ fig.cap   : chr "compare fits"
+ $ echo      : symbol F
+
+  |                                                                              |...........................................                           |  61%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  62%
+label: printErrors (with options) 
+List of 1
+ $ fig.cap: chr "model errors"
+
+  |                                                                              |............................................                          |  63%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: fitLassoR (with options) 
+List of 3
+ $ cache     : symbol T
+ $ cache.vars: language c("cv_lassoR")
+ $ include   : symbol F
+
+  |                                                                              |.............................................                         |  65%
+  ordinary text without R code
+
+  |                                                                              |..............................................                        |  66%
+label: lookLassoR (with options) 
+List of 6
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 5
+ $ fig.cap   : chr "lassoR fit"
+ $ echo      : symbol F
+
+
+  ordinary text without R code
+
+  |                                                                              |...............................................                       |  67%
+label: trainROC (with options) 
+List of 5
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 5
+ $ fig.cap   : chr "Train data out-of-sample ROCs"
+
+  |                                                                              |................................................                      |  68%
+  ordinary text without R code
+
+  |                                                                              |................................................                      |  69%
+label: thresh90 (with options) 
+List of 3
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.cap   : chr "90% Specificiy Thresholds"
+
+  |                                                                              |.................................................                     |  70%
+  ordinary text without R code
+
+
+label: trainOOFprops (with options) 
+List of 5
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "Train data out-of-fold predicted probabilities"
+
+  |                                                                              |..................................................                    |  71%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  72%
+label: testROC (with options) 
+List of 5
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 5
+ $ fig.cap   : chr "Test data out-of-sample ROCs"
+
+  |                                                                              |...................................................                   |  73%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  74%
+label: testOOFprops (with options) 
+List of 5
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 10
+ $ fig.cap   : chr "Test data out-of-fold predicted probabilities"
+
   |                                                                              |....................................................                  |  75%
   ordinary text without R code
 
-  |                                                                              |.....................................................                 |  76%
-label: fitModels (with options) 
-List of 2
- $ cache     : symbol T
- $ cache.vars: language c("cv_lasso", "cv_ridge", "cv_enet", "cv_lassoC")
+  |                                                                              |.....................................................                 |  75%
+label: fitPrevalByGroup (with options) 
+List of 5
+ $ cache     : symbol F
+ $ cache.vars: chr ""
+ $ fig.height: num 6
+ $ fig.width : num 8
+ $ fig.cap   : chr "Predicted Probabilities - Train and Test"
 
-  |                                                                              |......................................................                |  77%
+  |                                                                              |.....................................................                 |  76%
   ordinary text without R code
 
+  |                                                                              |......................................................                |  77%
+label: trainLassoPred (with options) 
+List of 7
+ $ cache     : symbol F
+ $ cache.vras: chr ""
+ $ fig.height: num 5
+ $ fig.width : num 11
+ $ fig.cap   : chr "train data lassofit"
+ $ eval      : symbol F
+ $ echo      : symbol F
+
   |                                                                              |.......................................................               |  78%
-label: plot_cv_f
+label: confMtxTrainLasso (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.cap   : chr "Train set confusion"
+ $ echo      : symbol F
+
+  |                                                                              |.......................................................               |  79%
+  ordinary text without R code
+
   |                                                                              |........................................................              |  80%
+label: confMtxTrainLassoR (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.cap   : chr "Train set confusion"
+ $ echo      : symbol F
+
+
   ordinary text without R code
 
   |                                                                              |.........................................................             |  81%
-label: lookLasso (with options) 
-List of 5
+label: confMtxTestLasso (with options) 
+List of 4
  $ cache     : symbol T
  $ cache.vars: chr ""
- $ fig.height: num 5
- $ fig.width : num 5
- $ fig.cap   : chr "lasso fit"
+ $ fig.cap   : chr "Test set confusion"
+ $ echo      : symbol F
 
-  |                                                                              |..........................................................            |  82%
+  |                                                                              |.........................................................             |  82%
   ordinary text without R code
 
-  |                                                                              |..........................................................            |  84%
-label: lookRidge (with options) 
-List of 5
+  |                                                                              |..........................................................            |  83%
+label: confMtxTestlassoR (with options) 
+List of 4
  $ cache     : symbol T
  $ cache.vars: chr ""
- $ fig.height: num 5
- $ fig.width : num 5
- $ fig.cap   : chr "ridge fit"
+ $ fig.cap   : chr "Test set confusion"
+ $ echo      : symbol F
 
-  |                                                                              |...........................................................           |  85%
+  |                                                                              |...........................................................           |  84%
+  ordinary text without R code
+
+
+label: doMC2 (with options) 
+List of 1
+ $ include: symbol F
+
+  |                                                                              |............................................................          |  85%
   ordinary text without R code
 
   |                                                                              |............................................................          |  86%
-label: lookEnet (with options) 
-List of 5
+label: fitModels2 (with options) 
+List of 2
  $ cache     : symbol T
- $ cache.vars: chr ""
- $ fig.height: num 5
- $ fig.width : num 5
- $ fig.cap   : chr "enet fit"
+ $ cache.vars: language c("cv_lasso2", "cv_ridge2", "cv_enet2", "cv_lassoC2")
 
   |                                                                              |.............................................................         |  87%
   ordinary text without R code
 
+  |                                                                              |.............................................................         |  88%
+label: plot_cv_f2 (with options) 
+List of 1
+ $ echo: symbol F
+
   |                                                                              |..............................................................        |  89%
-label: looklassoC (with options) 
-List of 5
+  ordinary text without R code
+
+  |                                                                              |...............................................................       |  89%
+label: lookFits2 (with options) 
+List of 6
  $ cache     : symbol T
  $ cache.vars: chr ""
  $ fig.height: num 5
- $ fig.width : num 5
- $ fig.cap   : chr "lassoC fit"
+ $ fig.width : num 11
+ $ fig.cap   : chr "compare fits"
+ $ echo      : symbol F
 
   |                                                                              |...............................................................       |  90%
-  ordinary text without R code
+   inline R code fragments
 
   |                                                                              |................................................................      |  91%
-label: fitLassoR (with options) 
-List of 2
+label: fitLassoR2 (with options) 
+List of 3
  $ cache     : symbol T
- $ cache.vars: language c("cv_lassoR")
+ $ cache.vars: language c("cv_lassoR2")
+ $ include   : symbol F
 
-  |                                                                              |.................................................................     |  92%
+  |                                                                              |................................................................      |  92%
   ordinary text without R code
 
-  |                                                                              |..................................................................    |  94%
-label: lookLassoR (with options) 
+  |                                                                              |.................................................................     |  93%
+label: lookLassoR2 (with options) 
 List of 5
  $ cache     : symbol T
  $ cache.vars: chr ""
@@ -383,25 +588,49 @@ List of 5
  $ fig.width : num 5
  $ fig.cap   : chr "lassoR fit"
 
-  |                                                                              |..................................................................    |  95%
+
+  ordinary text without R code
+
+  |                                                                              |..................................................................    |  94%
+label: confMtxTrainLasso2 (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.cap   : chr "Train set confusion"
+ $ echo      : symbol F
+
+  |                                                                              |...................................................................   |  95%
   ordinary text without R code
 
   |                                                                              |...................................................................   |  96%
-label: confMtxTrain (with options) 
-List of 3
- $ csche     : symbol T
+label: confMtxTrainLassoR2 (with options) 
+List of 4
+ $ cache     : symbol T
  $ cache.vars: chr ""
  $ fig.cap   : chr "Train set confusion"
+ $ echo      : symbol F
 
   |                                                                              |....................................................................  |  97%
   ordinary text without R code
 
-  |                                                                              |..................................................................... |  99%
-label: confMtxTest (with options) 
-List of 3
- $ csche     : symbol T
+  |                                                                              |....................................................................  |  98%
+label: confMtxTestLasso2 (with options) 
+List of 4
+ $ cache     : symbol T
  $ cache.vars: chr ""
  $ fig.cap   : chr "Test set confusion"
+ $ echo      : symbol F
+
+  |                                                                              |..................................................................... |  98%
+  ordinary text without R code
+
+  |                                                                              |..................................................................... |  99%
+label: confMtxTestlassoR2 (with options) 
+List of 4
+ $ cache     : symbol T
+ $ cache.vars: chr ""
+ $ fig.cap   : chr "Test set confusion"
+ $ echo      : symbol F
 
   |                                                                              |......................................................................| 100%
    inline R code fragments
@@ -409,14 +638,28 @@ List of 3
 
 output file: HCC5hmCExplore.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to latex --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.tex --self-contained --table-of-contents --toc-depth 2 --number-sections --highlight-style tango --pdf-engine pdflatex --variable graphics --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --wrap preserve --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpnJhnBM/rmarkdown-stra53158b024c5.html --variable tables=yes --standalone -Mhas-frontmatter=false --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to latex --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.tex --self-contained --table-of-contents --toc-depth 2 --number-sections --highlight-style tango --pdf-engine pdflatex --variable graphics --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --wrap preserve --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//Rtmp5i5cxR/rmarkdown-strb7fc5c27d8ca.html --variable tables=yes --standalone -Mhas-frontmatter=false --filter /usr/local/bin/pandoc-citeproc 
 
 Output created: docs/HCC5hmCExplore.pdf
 [1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/HCC5hmCExplore.pdf"
-Warning message:
-LaTeX Warning: Label `tab:getTrainVal' multiply defined.
-LaTeX Warning: Label `tab:confMtxTrain' multiply defined.
-LaTeX Warning: Label `tab:confMtxTest' multiply defined.
+Warning messages:
+1: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+2: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+3: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+4: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+5: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+6: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+7: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+8: In doTryCatch(return(expr), name, parentenv, handler) :
+  font width unknown for character 0x9
+9: LaTeX Warning: Label `tab:getTrainVal' multiply defined.
 LaTeX Warning: Reference `explore-sparsity-fits' on page 8 undefined on input l
 ine 226.
 LaTeX Warning: There were undefined references.

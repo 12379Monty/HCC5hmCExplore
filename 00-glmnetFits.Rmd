@@ -50,7 +50,7 @@ We explore some glmnet fits and the "bet on sparsity"
     - lasso: $\alpha = 1.0$ - sparse model  
     - ridge $\alpha = 0$ - shrunken coefficients model
     - elastic net:  $\alpha = 0.5$  - semi sparse model
-    - lassoC: $\alpha = 1-\epsilon =$ `r 1- EPS` - lasso for correlated predictors  
+<!-- - lassoC: $\alpha = 1-\epsilon =$ `r 1- EPS` - lasso for correlated predictors  -->
 * Does the relaxed lasso improve performance?    
 * Does the shrunken relaxed lasso (aka the blended mix) improve performance  
 * How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?    
@@ -94,17 +94,86 @@ data for each fold fit.
 * cross-validated accuracy
 * test set accuracy  
 * sparsity
-    - for lasso, enet and lassoC, examine number of selected variables
+    - for lasso, enet <!--and lassoC-->, examine number of selected variables
 
 Although “the one standard error rule” can produce a model with fewer predictors, it usually results in increased MSE and more biased parameter estimates
 (see Engebretsen et al. (2019) [@Engebretsen:2019aa] for example).
 We will look at both the minimum cv error and the one standard error rule model 
 preformance.
 
-```{r fitModels, cache=T, cache.vars=c('cv_lasso', 'cv_ridge', 'cv_enet', 'cv_lassoC')}
-
+```{r doMC, include=F}
 require(doMC)
 registerDoMC(cores=14)
+```
+
+
+### Logistic regression in `glmnet`
+
+`glmnet` provides functionality to extract various predicted of fitted values
+from calibrated models.  Note in passsing that some folks make a distinction between
+**fitted** or **estimated** values for sample points in the training data 
+vurses **predicted** values for sample points that
+are not in the training dataset.  `glmnet` makes no such distinction and the
+`predict` function is used to produce both fitted as well as predicted values.
+For logistic regressions, which is the model fitted in a regularized fashion
+when models are fitted by glmnet with the parameter `family='binomial'`, three
+fitted or predicted values can be extracted at a given design point.  
+Suppose our response variable Y is either 0 or 1 (Control or HCC in our case).
+These are specified by the `type` parameter.  `type='resp'` returns
+the fitted or predicted probability of $Y=1$.  `type='class'` returns the fitted or
+predicted class for the design point, which is simply dichotomizing the 
+response: class = 1 if the fitted or predicted probability is greater than 0.5
+(check to make sure class is no the Bayes estimate).  `type='link'` returns
+the fitted or predicted vealue of the linear predictor $\beta'x$.  The relationship
+between the linear predictor and the response can be derided from  the 
+logis toc regression model:
+
+$$P(Y=1|x,\beta) = g^{-1}(\beta'x) = h(\beta'x) = \frac{e^{\beta'x}}{1+e^{\beta'x}}$$
+
+where $g$ is the link function, $g^{-1}$ the mean function.
+The link function is given by:
+
+$$g(y) = h^{-1}(y) = ln(\frac{y}{1-y})$$
+
+This link function is called the logit function, and its inverse the logistic
+function.
+
+```{r logistic_f}
+
+logistic_f <- function(x) exp(x)/(1+exp(x))
+
+```
+
+It is important to note that all *predicted* values extracted from 
+`glmnet` fitted models by the **predict()** extraction method
+yield **fitted** values for design points that are part of the
+training data set.  This includes the predicted class for training data
+which ae used  to estimate misclassification error rates.  As a result, the cv error 
+rates quoted in various `glmnet` summaries are generally optimistic.
+`glmnet` fitting functions have a 
+parameter, *keep*, which instructs the fitting function to keep the
+`out-of-fold`, or `prevalidated`, predictions as part of the returned object.  The
+`out-of-fold` predictions are predicted values for the samples in the
+left-out folds, pooled across all cv folds.  For each hyper-parameter
+specification, we get one full set of `out-of-fold` predictions for
+the training set samples.  Performance assessments based on these
+values are usually more generalizable - ie. predictive of
+performance in unseen data - than assessments based on values
+produced from the full fit, which by default is what `glmnet` extraction
+methods provide.  See Höfling and Tibshirani (2008) [@Hofling:2008aa] 
+for a description of the use of pre-validation in model assessment.  
+
+
+Because the `keep=T` option will store predicted values for 
+all models evaluated in the cross-validation process, we will
+limit the number of models tested by setting **nlambda=30**
+when calling the fitting functions.  This has no effect on 
+performance in this data set.
+
+
+
+
+```{r fit-lasso, cache=T, cache.vars=c('cv_lasso')}
 
 start_time <-  proc.time()
 
@@ -114,10 +183,16 @@ cv_lasso <- glmnet::cv.glmnet(
  foldid=train_foldid_vec,
  alpha=1,
  family='binomial', 
- type.measure = "class")
+ type.measure = "class",
+ keep=T,
+ nlambda=30
+)
 
 message("lasso time: ", round((proc.time() - start_time)[3],2),"s")
 
+```
+
+```{r fit-ridge, cache=T, cache.vars=c('cv_ridge')}
 start_time <-  proc.time()
 
 cv_ridge <- glmnet::cv.glmnet(
@@ -126,10 +201,17 @@ cv_ridge <- glmnet::cv.glmnet(
  foldid=train_foldid_vec,
  alpha=0,
  family='binomial', 
- type.measure = "class")
+ type.measure = "class",
+ keep=T,
+ nlambda=30
+)
 
 message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
 
+```
+
+
+```{r fit-enet, cache=T, cache.vars=c('cv_enet')}
 start_time <-  proc.time()
 
 cv_enet <- glmnet::cv.glmnet(
@@ -138,10 +220,17 @@ cv_enet <- glmnet::cv.glmnet(
  foldid=train_foldid_vec,
  alpha=0.5,
  family='binomial',
- type.measure = "class")
+ type.measure = "class",
+ keep=T,
+ nlambda=30
+)
 
 message("enet time: ", round((proc.time() - start_time)[3],2),"s")
 
+```
+
+
+```{r fit-lassoC, cache=T, cache.vars=c('cv_lassoC'), eval=F, echo=F}
 start_time <-  proc.time()
 
 cv_lassoC <-  glmnet::cv.glmnet(
@@ -150,7 +239,10 @@ cv_lassoC <-  glmnet::cv.glmnet(
  foldid=train_foldid_vec,
  alpha=1-EPS,
  family='binomial',
- type.measure = "class")
+ type.measure = "class",
+ keep=T,
+ nlambda=30
+)
 
 message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
 
@@ -167,16 +259,31 @@ Maybe show in appendix??
 
 plot_cv_f <- function(cv_fit, Nzero=T, ...) {
  
- lambda.1se_p <- cv_fit$nzero[cv_fit$lambda==cv_fit$lambda.1se]
- lambda.min_p <- cv_fit$nzero[cv_fit$lambda==cv_fit$lambda.min]
+ library(glmnet)
+
+ # No nonger used
+ #lambda.1se_p <- cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se]
+ #lambda.min_p <- cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min]
  
+ # Get oof error
+ ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
+ train_oofPred_1se_vec <- ifelse(
+  cv_fit$fit.preval[,ndx_1se] > 0.5, 'HCC', 'Control')
+ train_oofPred_1se_error <- mean(train_oofPred_1se_vec != train_group_vec)
+
+ ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
+ train_oofPred_min_vec <- ifelse(
+  cv_fit$fit.preval[,ndx_min] > 0.5, 'HCC', 'Control')
+ train_oofPred_min_error <- mean(train_oofPred_min_vec != train_group_vec)
+
+ # Get test set error
  test_pred_1se_vec <- predict(
   cv_fit, 
   newx=test_lcpm_mtx, 
   s="lambda.1se",
   type="class"
  )
- test_pred_1se_error <- mean(test_pred_1se_vec!=test_group_vec)
+ test_pred_1se_error <- mean(test_pred_1se_vec != test_group_vec)
  
  test_pred_min_vec <- predict(
   cv_fit, 
@@ -184,7 +291,7 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
   s="lambda.min",
   type="class"
  )
- test_pred_min_error <- mean(test_pred_min_vec!=test_group_vec)
+ test_pred_min_error <- mean(test_pred_min_vec != test_group_vec)
  
   
  plot(
@@ -197,38 +304,53 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
  abline(v=log(c(cv_fit$lambda.1se, cv_fit$lambda.min)))
  if(Nzero)
  axis(side=3, tick=F, at=log(cv_fit$lambda), 
-  labels=cv_fit$nzero, line=-1
+  labels=cv_fit$nzero, line = -1
  )
  LL <- 2
- #mtext(side=1, outer=F, line=LL, "log(Lambda)")
+ #mtext(side=1, outer=F, line = LL, "log(Lambda)")
  #LL <- LL+1
- mtext(side=1, outer=F, line=LL, paste(
+ mtext(side=1, outer=F, line = LL, paste(
   #ifelse(Nzero, paste("1se p =", lambda.1se_p),''),
-  "1se: cv =", round(100*cv_fit$cvm[cv_fit$lambda==cv_fit$lambda.1se],1),
-  "test =", round(100*test_pred_1se_error,1)
+  "1se: cv =", round(100*cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se], 1),
+  "oof =", round(100*train_oofPred_1se_error, 1),
+  "test =", round(100*test_pred_1se_error, 1)
  ))
  LL <- LL+1
- mtext(side=1, outer=F, line=LL, paste(
+ mtext(side=1, outer=F, line = LL, paste(
   #ifelse(Nzero, paste("min p =", lambda.min_p),''),
-  "min: cv =", round(100*cv_fit$cvm[cv_fit$lambda==cv_fit$lambda.min],1),
-  "test =", round(100*test_pred_min_error,1)
+  "min: cv =", round(100*cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min], 1),
+  "oof =", round(100*train_oofPred_min_error, 1),
+  "test =", round(100*test_pred_min_error, 1)
  ))
- 
+
+ cbind(
+  error_1se = c(
+   train_cv = cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se],
+   train_oof = train_oofPred_1se_error,
+   test = test_pred_1se_error),
+  error_min = c(
+   train_cv = cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min],
+   train_oof = train_oofPred_min_error,
+   test = test_pred_min_error)
+  )
+                  
 }
 
 ```
 
 Examine model performance.
 
-```{r lookFits, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=F}
+```{r lookFits, cache=F, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=F}
+
  par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
- plot_cv_f(cv_lasso, ylim=c(0,.5))
+
+ lasso_errors_mtx <- plot_cv_f(cv_lasso, ylim=c(0,.5))
  title('lasso')
 
- plot_cv_f(cv_ridge, Nzero=F, ylim=c(0,.5))
+ rifge_errors_mtx <- plot_cv_f(cv_ridge, Nzero=F, ylim=c(0,.5))
  title('ridge')
 
- plot_cv_f(cv_enet, ylim=c(0,.5))
+ enet_errors_mtx <-  plot_cv_f(cv_enet, ylim=c(0,.5))
  title('enet')
 
  mtext(side=1, outer=T, cex=1.25, 'log(Lambda)')
@@ -236,11 +358,38 @@ Examine model performance.
 
 ```
 
-All models produce cv assessments of `r cv_lasso$name` that are substnatially lower than
-the test set assessments.  `lasso` performs comparably to `enet` and
-better than the `ridge` model.
+```{r printErrors, fig.cap='model errors'}
+
+
+errors_frm <- data.frame(
+  lasso = lasso_errors_mtx, ridge = rifge_errors_mtx, enet = enet_errors_mtx
+)
+
+knitr::kable(t(errors_frm)*100,
+ caption = 'Misclassifiaction error rates',
+ digits=1) %>% 
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+We see that the lasso and enet models do better than the ridge model.
+These is very little difference between the min lambda and the
+the one standard error rule lambda models (the two are the same for the 
+lasso in this data set).  We also see that the training data out-of-fold
+estimates of misclassification error rates are much closer to the
+test set estimates than are the cv estimated rates.  This has
+been our experience with regularized regression models fitted to
+genomic scale data.  It should also be noted thay the cv estimates of 
+misclassification rates become more biased as the sample size decreases,
+as we will show in Section \@ref(model-suite).  
+
 
 ## Relaxed lasso and blended mix
+
+Next we look at the so-called `relaxed lasso` and 
+the `blended mix` which is an optimized shrinkage
+between the relaxed lasso and the regular lasso.
+
 
 ```{r fitLassoR, cache=T, cache.vars=c('cv_lassoR'), include=F}
 
@@ -257,7 +406,11 @@ cv_lassoR <-  glmnet::cv.glmnet(
  alpha=1,
  relax=T,
  family='binomial',
- type.measure = "class")
+ type.measure = "class",
+ keep=T,
+ nlambda=30
+)
+
 
 message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
 
@@ -267,46 +420,397 @@ message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
 The relaxed fit takes quite a bit longer.  
 -->
 
-```{r lookLassoR, cache=T, cache.vars='', fig.height=5, fig.width=5, fig.cap="lassoR fit"}
- library(glmnet)
+```{r lookLassoR, cache=T, cache.vars='', fig.height=5, fig.width=5, fig.cap="lassoR fit", echo=F}
+library(glmnet)
 
- cv_lassoR_sum <- print(cv_lassoR)
+cv_lassoR_sum <- print(cv_lassoR)
 
- plot(cv_lassoR)
+plot(cv_lassoR)
 
-test_pred_1se_vec <- predict(
+# only report  1se
+ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+ndx_min <- match(cv_lassoR$lambda.min,cv_lassoR$lambda)
+
+if(ndx_1se != ndx_min) stop("lambda.1se != lambda.min")
+
+
+# train oof data
+# Get relaxed lasso (gamma=0) oof error
+train_oofPred_relaxed_1se_vec <- ifelse(
+  cv_lassoR$fit.preval[['g:0']][,ndx_1se] > 0.5, 'HCC', 'Control')
+train_oofPred_relaxed_1se_error <- mean(train_oofPred_relaxed_1se_vec != train_group_vec)
+
+# blended mix (gamma=0.5)
+train_oofPred_blended_1se_vec <- ifelse(
+  cv_lassoR$fit.preval[['g:0.5']][,ndx_1se] > 0.5, 'HCC', 'Control')
+train_oofPred_blended_1se_error <- mean(train_oofPred_blended_1se_vec != train_group_vec)
+
+
+# Test set error - relaxed
+test_pred_relaxed_1se_vec <- predict(
   cv_lassoR, 
   newx=test_lcpm_mtx, 
   s="lambda.1se",
-  type="class"
+  type="class",
+  gamma=0
 )
-test_pred_1se_error <- mean(test_pred_1se_vec!=test_group_vec)
+test_pred_relaxed_1se_error <- mean(test_pred_relaxed_1se_vec != test_group_vec)
  
-test_pred_min_vec <- predict(
+# Test set error - blended
+test_pred_blended_1se_vec <- predict(
   cv_lassoR, 
   newx=test_lcpm_mtx, 
-  s="lambda.min",
-  type="class"
+  s="lambda.1se",
+  type="class",
+  gamma= 0.5
 )
-test_pred_min_error <- mean(test_pred_min_vec!=test_group_vec)
+test_pred_blended_1se_error <- mean(test_pred_blended_1se_vec != test_group_vec)
   
 cv_lassoR_1se_error <- cv_lassoR_sum['1se','Measure']
 cv_lassoR_min_error <- cv_lassoR_sum['min','Measure']
 
-knitr::kable(rbind(
- onese=c(cv_error=cv_lassoR_1se_error, test_error=test_pred_1se_error)*100,
- min=c(cv_error=cv_lassoR_min_error, test_error=test_pred_min_error)*100
-),
- caption="CV vs test Errors", digits=1
-) %>%
+knitr::kable(t(data.frame(
+   train_blended_cv=cv_lassoR_1se_error, 
+     train_blended_oof = train_oofPred_blended_1se_error,
+     train_relaxed_oof = train_oofPred_relaxed_1se_error,
+     test_blended_oof = test_pred_blended_1se_error,
+     test_relaxed_oof = test_pred_relaxed_1se_error
+   ))*100, 
+  digits=1,
+  caption="Relaxed lasso and blended mix error rates"
+) %>% 
   kableExtra::kable_styling(full_width = F)
 
 
 ```
 
-Look at confusion matrices
+The relaxed lasso and blended mix error rates are comparable to the
+regular lasso fit error rate.  We see here too that the reported cv 
+error rates are quite optimistic, while out-of-fold error rates
+continue to be good indicaters of unseen data error rates.
+
+
+
+## Examination of sensitivity vs specificity
+
+In the results above we reported error rates without inspecting the 
+sensitivity vurses specificity trade off.  Here we look at this 
+question with the help of ROC curves.  
+
+### Training data out-of-fold ROC curves
+
+
+```{r trainROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Train data out-of-sample ROCs"}
+
+
+# train
+# lasso
+ndx_1se <- match(cv_lasso$lambda.1se,cv_lasso$lambda)
+train_lasso_oofProb_vec <- logistic_f(cv_lasso$fit.preval[,ndx_1se])
+train_lasso_roc <- pROC::roc(
+ response = as.numeric(train_group_vec=='HCC'),
+ predictor = train_lasso_oofProb_vec)
+
+# lasso - relaxed
+ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+train_lassoR_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0']][,ndx_1se])
+train_lassoR_roc <- pROC::roc(
+ response = as.numeric(train_group_vec=='HCC'),
+ predictor = train_lassoR_oofProb_vec)
+
+# blended mix (gamma=0.5)
+ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+train_blended_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
+train_blended_roc <- pROC::roc(
+ response = as.numeric(train_group_vec=='HCC'),
+ predictor = train_blended_oofProb_vec)
+
+plot(train_lasso_roc)
+lines(train_lassoR_roc, col='blue')
+lines(train_blended_roc, col='green')
+
+legend('bottomright', title='AUC',
+ legend=c(
+  paste('lasso =', round(train_lasso_roc[['auc']],3)),
+  paste('lassoR =', round(train_lassoR_roc[['auc']],3)),
+  paste('blended =', round(train_blended_roc[['auc']],3))
+ ),
+ text.col = c('black', 'blue', 'green'))
+
+```
+
+Compare thresholds for 90% Specificity:
+
+```{r thresh90, cache=F, cache.vars='', fig.cap='90% Specificiy Thresholds'}
+
+ lasso_ndx <- with(as.data.frame(pROC::coords(train_lasso_roc, transpose=F)), 
+   min(which(specificity >= 0.9)))
+
+ lassoR_ndx <- with(as.data.frame(pROC::coords(train_lassoR_roc, transpose=F)), 
+   min(which(specificity >= 0.9)))
+
+ blended_ndx <- with(as.data.frame(pROC::coords(train_blended_roc, transpose=F)), 
+   min(which(specificity >= 0.9)))
+
+  spec90_frm <- data.frame(rbind(
+  lasso=as.data.frame(pROC::coords(train_lasso_roc, transpose=F))[lasso_ndx,],
+  lassoR=as.data.frame(pROC::coords(train_lassoR_roc, transpose=F))[lassoR_ndx,],
+  blended=as.data.frame(pROC::coords(train_blended_roc, transpose=F))[blended_ndx,]
+ ))
+
+
+knitr::kable(spec90_frm,
+  digits=3,
+  caption="Specificity = .90 Coordinates"
+) %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+This is strange.
+
+
+```{r trainOOFprops, cache=F, cache.vars='', fig.height=5, fig.width=10, fig.cap="Train data out-of-fold predicted probabilities"}
+
+par(mfrow=c(1,3))
+
+# lasso
+plot(density(train_lasso_oofProb_vec[train_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(train_lasso_oofProb_vec[train_group_vec=='HCC']),
+   co='red')
+title("lasso")
+
+# lassoR
+plot(density(train_lassoR_oofProb_vec[train_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(train_lassoR_oofProb_vec[train_group_vec=='HCC']),
+   co='red')
+title("lassoR")
+
+sapply(split(train_lassoR_oofProb_vec,train_group_vec), summary)
+
+
+# blended
+plot(density(train_blended_oofProb_vec[train_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(train_blended_oofProb_vec[train_group_vec=='HCC']),
+   co='red')
+title("blended")
+
+
+```
+
+This makes no sense.
+
+Look at test data ROC.
+
+```{r testROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs"}
+
+
+# train
+# lasso
+test_lasso_oofProb_vec <- predict(
+ cv_lasso,
+ type='resp',
+ lambda='1se',
+ newx=test_lcpm_mtx
+)
+
+test_lasso_roc <- pROC::roc(
+ response = as.numeric(test_group_vec=='HCC'),
+ predictor = test_lasso_oofProb_vec)
+
+
+# lassoR
+test_lassoR_oofProb_vec <- predict(
+ cv_lassoR,
+ type='resp',
+ lambda='1se',
+ newx=test_lcpm_mtx,
+ gamma=0,
+)
+
+test_lassoR_roc <- pROC::roc(
+ response = as.numeric(test_group_vec=='HCC'),
+ predictor = test_lassoR_oofProb_vec)
+
+
+
+
+# blended mix (gamma=0.5)
+test_blended_oofProb_vec <- predict(
+ cv_lassoR,
+ type='resp',
+ lambda='1se',
+ newx=test_lcpm_mtx,
+ gamma=0.5,
+)
+
+test_blended_roc <- pROC::roc(
+ response = as.numeric(test_group_vec=='HCC'),
+ predictor = test_blended_oofProb_vec)
+
+
+
+plot(test_lasso_roc)
+lines(test_lassoR_roc, col='blue')
+lines(test_blended_roc, col='green')
+
+legend('bottomright', title='AUC',
+ legend=c(
+  paste('lasso =', round(test_lasso_roc[['auc']],3)),
+  paste('lassoR =', round(test_lassoR_roc[['auc']],3)),
+  paste('blended =', round(test_blended_roc[['auc']],3))
+ ),
+ text.col = c('black', 'blue', 'green'))
+
+```
+
+Look at desnities of predicted probabilities.
+
+```{r testOOFprops, cache=F, cache.vars='', fig.height=5, fig.width=10, fig.cap="Test data out-of-fold predicted probabilities"}
+
+par(mfrow=c(1,3))
+
+# lasso
+plot(density(test_lasso_oofProb_vec[test_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(test_lasso_oofProb_vec[test_group_vec=='HCC']),
+   co='red')
+title("lasso")
+
+# lassoR
+plot(density(test_lassoR_oofProb_vec[test_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(test_lassoR_oofProb_vec[test_group_vec=='HCC']),
+   co='red')
+title("lassoR")
+
+sapply(split(test_lassoR_oofProb_vec,test_group_vec), summary)
+
+
+# blended
+plot(density(test_blended_oofProb_vec[test_group_vec=='Control']),
+ xlim=c(0,1),main='', xlab='', col='green')
+lines(density(test_blended_oofProb_vec[test_group_vec=='HCC']),
+   co='red')
+title("blended")
+
+
+```
+
+```{r fitPrevalByGroup, cache=F, cache.vars='', fig.height=6, fig.width=8,fig.cap="Predicted Probabilities - Train and Test"}
+
+
+# Train - preval is out-of-fold linear predictor for training design points
+onese_ndx <- match(cv_lasso$lambda.1se,cv_lasso$lambda)
+train_1se_preval_vec <- cv_lasso$fit.preval[,onese_ndx]
+train_1se_predProb_vec <- logistic_f(train_1se_preval_vec)
+
+#Test
+test_1se_predProb_vec <- predict(
+ cv_lasso, 
+ newx=test_lcpm_mtx,
+ s="lambda.1se",
+ type='resp'
+)
+
+tmp <- c(
+ train=split(train_1se_predProb_vec, train_group_vec),
+ test=split(test_1se_predProb_vec, test_group_vec))
+names(tmp) <- sub('\\.','\t',names(tmp))
+
+
+boxplot(tmp)
+
+```
+
+<!--
+Another look - plot train and test set logitstic curves with annotation.
+
+The following shows that predcited classes come from fitted
+probabilities - not out of sample probabilities.
+Also shows that threshold is at 0.5 
+
+-->
+
+```{r trainLassoPred, cache=F, cache.vras='',fig.height=5, fig.width=11,fig.cap="train data lassofit", eval=F, echo=F}
+
+# Train - preval is out-of-fold linear predictor for training design points
+onese_ndx <- match(cv_lasso$lambda.1se,cv_lasso$lambda)
+train_1se_preval_vec <- cv_lasso$fit.preval[,onese_ndx]
+train_1se_predProb_vec <- logistic_f(train_1se_preval_vec)
+
+train_1se_class_vec <- predict(
+ cv_lasso,
+ newx=train_lcpm_mtx,
+ s="lambda.1se",
+ type='class'
+)
+#
+
+
+plot(
+ x=train_1se_preval_vec, xlab='linear predictor (truncated)',
+ y=train_1se_predProb_vec, ylab='predicted probability',
+ col=ifelse(train_1se_class_vec == 'Control', 'green', 'red'),
+ pch=ifelse(train_group_vec == 'Control', 1, 4),
+ xlim=c(-5,5)
+ )  
+
+# compare with fitted probabilities
+train_1se_link_vec <- predict(
+ cv_lasso,
+ newx=train_lcpm_mtx,
+ s="lambda.1se",
+ type='link'
+)
+
+train_1se_fittedProb_vec <- logistic_f(train_1se_link_vec)
+
+
+plot(
+ x=train_1se_link_vec, xlab='linear predictor (truncated)',
+ y=train_1se_fittedProb_vec, ylab='predicted probability',
+ col=ifelse(train_1se_class_vec == 'Control', 'green', 'red'),
+ pch=ifelse(train_group_vec == 'Control', 1, 4),
+ xlim=c(-5,5)
+ ) 
+
+
+  
 
 ```{r confMtxTrainLasso, cache=T, cache.vars='', fig.cap="Train set confusion", echo=F}
+
+# train
+# lasso 
+ndx_1se <- match(cv_lasso$lambda.1se,cv_lasso$lambda)
+train_lasso_oofProb_vec <- cv_lasso$fit.preval[,ndx_1se]
+train_lasso_oofClass_vec <- ifelse(
+   train_lasso_oofProb_vec > 0.5, 'HCC', 'Control')
+train_lasso_oof_error <- mean(train_lasso_oofClass_vec != train_group_vec)
+
+
+# lasso - relaxed
+ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+train_lassoR_oofProb_vec <- cv_lassoR$fit.preval[['g:0']][,ndx_1se] 
+train_lassoR_oofClass_vec <- ifelse(
+   train_lassoR_oofProb_vec > 0.5, 'HCC', 'Control')
+train_lassoR_oof_error <- mean(train_lassoR_oofClass_vec != train_group_vec)
+
+
+# blended mix (gamma=0.5)
+ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+train_blended_oofProb_vec <- cv_lassoR$fit.preval[['g:0.5']][,ndx_1se] 
+train_blended_oofClass_vec <- ifelse(
+   train_blended_oofProb_vec > 0.5, 'HCC', 'Control')
+train_blended_oof_error <- mean(train_blended_oofClass_vec != train_group_vec)
+
+
+# lasso - blended
+
+# test
 
 cv_lasso_cnf <- glmnet::confusion.glmnet(
  cv_lasso, 
@@ -359,8 +863,3 @@ knitr::kable(cv_lassoR_cnf, caption="cv lassoR confusion matrix: test set")  %>%
 
 
 ```
-
-
-In all models the sensitivity weak compared to the sensitivity.  Let's examine the 
-ROC curves to see where the trade-off is.
-

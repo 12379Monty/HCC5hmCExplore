@@ -1,9 +1,12 @@
 ## Refit with "auc" as optimization
 
-```{r fitModels2, cache=T, cache.vars=c('cv_lasso2', 'cv_ridge2', 'cv_enet2', 'cv_lassoC2')}
 
+```{r doMC2, include=F}
 require(doMC)
 registerDoMC(cores=14)
+```
+
+```{r fitModels2, cache=T, cache.vars=c('cv_lasso2', 'cv_ridge2', 'cv_enet2', 'cv_lassoC2')}
 
 start_time <-  proc.time()
 
@@ -57,19 +60,76 @@ message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
 
 The ridge regression model takes over 10 times longer to compute.
 
+<!-- do not show
+Define plotting function.
+Maybe show in appendix??
+-->
+```{r plot_cv_f2,echo=F}
 
+plot_cv_f2 <- function(cv_fit, Nzero=T, ...) {
+ 
+ lambda.1se_p <- cv_fit$nzero[cv_fit$lambda==cv_fit$lambda.1se]
+ lambda.min_p <- cv_fit$nzero[cv_fit$lambda==cv_fit$lambda.min]
+ 
+ test_pred_1se_vec <- predict(
+  cv_fit, 
+  newx=test_lcpm_mtx, 
+  s="lambda.1se",
+  type="response"
+ )
+ test_pred_1se_auc <- suppressWarnings(pROC::auc(test_group_vec,test_pred_1se_vec)[1])
+ 
+ test_pred_min_vec <- predict(
+  cv_fit, 
+  newx=test_lcpm_mtx, 
+  s="lambda.min",
+  type="response"
+ )
+ test_pred_min_auc <- suppressWarnings(pROC::auc(test_group_vec,test_pred_min_vec)[1])
+ 
+  
+ plot(
+  log(cv_fit$lambda),
+  cv_fit$cvm,
+  pch=16,col="red",
+  xlab='',ylab='',
+  ...
+ )
+ abline(v=log(c(cv_fit$lambda.1se, cv_fit$lambda.min)))
+ if(Nzero)
+ axis(side=3, tick=F, at=log(cv_fit$lambda), 
+  labels=cv_fit$nzero, line=-1
+ )
+ LL <- 2
+ #mtext(side=1, outer=F, line=LL, "log(Lambda)")
+ #LL <- LL+1
+ mtext(side=1, outer=F, line=LL, paste(
+  #ifelse(Nzero, paste("1se p =", lambda.1se_p),''),
+  "1se: cv =", round(100*cv_fit$cvm[cv_fit$lambda==cv_fit$lambda.1se],1),
+  "test =", round(100*test_pred_1se_auc,1)
+ ))
+ LL <- LL+1
+ mtext(side=1, outer=F, line=LL, paste(
+  #ifelse(Nzero, paste("min p =", lambda.min_p),''),
+  "min: cv =", round(100*cv_fit$cvm[cv_fit$lambda==cv_fit$lambda.min],1),
+  "test =", round(100*test_pred_min_auc,1)
+ ))
+ 
+}
+
+```
 
 Examine model performance.
 
 ```{r lookFits2, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=F}
  par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
- plot_cv_f(cv_lasso2, ylim=c(0,.5))
+ plot_cv_f2(cv_lasso2, ylim=c(.65,1))
  title('lasso')
 
- plot_cv_f(cv_ridge2, Nzero=F, ylim=c(0,.5))
+ plot_cv_f2(cv_ridge2, Nzero=F, ylim=c(0.65,1))
  title('ridge')
 
- plot_cv_f(cv_enet2, ylim=c(0,.5))
+ plot_cv_f2(cv_enet2, ylim=c(0.65,1))
  title('enet')
 
  mtext(side=1, outer=T, cex=1.25, 'log(Lambda)')
@@ -77,7 +137,7 @@ Examine model performance.
 
 ```
 
-All models produce cv assessments of `r cv_lasso$name` that are substnatially lower than
+All models produce cv assessments of `r cv_lasso$name` that are slightly better than
 the test set assessments.  `lasso` performs comparably to `enet` and
 better than the `ridge` model.
 
@@ -91,7 +151,7 @@ registerDoMC(cores=14)
 
 start_time <-  proc.time()
 
-cv_lassoR <-  glmnet::cv.glmnet(
+cv_lassoR2 <-  glmnet::cv.glmnet(
  x=train_lcpm_mtx,
  y=train_group_vec,
  foldid=train_foldid_vec,
@@ -119,24 +179,24 @@ test_pred_1se_vec <- predict(
   cv_lassoR2, 
   newx=test_lcpm_mtx, 
   s="lambda.1se",
-  type="class"
+  type="response"
 )
-test_pred_1se_error <- mean(test_pred_1se_vec!=test_group_vec)
+test_pred_1se_auc <- suppressWarnings(pROC::auc(test_group_vec,test_pred_1se_vec)[1])
  
 test_pred_min_vec <- predict(
   cv_lassoR2, 
   newx=test_lcpm_mtx, 
   s="lambda.min",
-  type="class"
+  type="response"
 )
-test_pred_min_error <- mean(test_pred_min_vec!=test_group_vec)
+test_pred_min_auc <- suppressWarnings(pROC::auc(test_group_vec,test_pred_min_vec)[1])
   
-cv_lassoR2_1se_error <- cv_lassoR2_sum['1se','Measure']
-cv_lassoR2_min_error <- cv_lassoR2_sum['min','Measure']
+cv_lassoR2_1se_auc <- cv_lassoR2_sum['1se','Measure']
+cv_lassoR2_min_auc <- cv_lassoR2_sum['min','Measure']
 
 knitr::kable(rbind(
- onese=c(cv_error=cv_lassoR2_1se_error, test_error=test_pred_1se_error)*100,
- min=c(cv_error=cv_lassoR2_min_error, test_error=test_pred_min_error)*100
+ onese=c(cv_eucg=cv_lassoR2_1se_auc, test_auc=test_pred_1se_auc)*100,
+ min=c(cv_eucg=cv_lassoR2_min_auc, test_auc=test_pred_min_auc)*100
 ),
  caption="CV vs test Errors", digits=1
 ) %>%
@@ -167,7 +227,7 @@ cv_lassoR_cnf <- glmnet::confusion.glmnet(
  newy=train_group_vec
 )
 
-knitr::kable(cv_lassoR2_cnf, caption="cv lassoR2 confusion matrix: train set")  %>%
+knitr::kable(cv_lassoR_cnf, caption="cv lassoR2 confusion matrix: train set")  %>%
   kableExtra::kable_styling(full_width = F)
 
 
@@ -195,14 +255,14 @@ cv_lassoR_cnf <- glmnet::confusion.glmnet(
  newy=test_group_vec
 )
 
-knitr::kable(cv_lassoR2_cnf, caption="cv lassoR2 confusion matrix: test set")  %>%
+knitr::kable(cv_lassoR_cnf, caption="cv lassoR2 confusion matrix: test set")  %>%
   kableExtra::kable_styling(full_width = F)
 
 
 ```
 
 
-In all models the sensitivity weak compared to the sensitivity.  Let's examine the 
+In all models the sensitivity weak compared to the specificity.  Let's examine the 
 ROC curves to see where the trade-off is.
 
 
