@@ -1,23 +1,45 @@
 # Fitted Model Suite {#model-suite}
 
 We examine the results of fitting a suite of models to
-investigate the effect of sample size on model performance.
+investigate the effect of sample size on 
+various aspects of model performance:  
 
-Predicted probabilities can be transformed into a sample
-quality score: $Q_i = p_i^{y_i}(1-p_i)^{1-y_i}$, where $p_i$ is the out-of-fold
+* assessed accuracy    
+    - out-of-fold estimates of precision and variability  and
+cv assessed accuracy bias.
+
+* selected feature profile stability - to what extent does the
+feature set implicitly selected by the lasso vary across random
+sampling and what is the effect of sample size.
+
+It is hypothesized that below a certain threshold,
+sample sizes are too small to provide reliable estimates
+of performance and stable selected feature profiles.  
+
+We will attempt to separate variability which is due to
+sample size from variability due to sample composition.
+To to this we will track sample quality.
+Predicted probabilities from fitted model can be transformed into sample
+quality scores: $Q_i = p_i^{y_i}(1-p_i)^{1-y_i}$, where $p_i$ is the 
 estimated probability of HCC for sample i and $y_i$ is 1 for HCC samples and
 0 for Controls.  ie. we use the fitted likelihood as a sample quality score.
-The quality scores derived from a particular cv run will depend
-to some extent on the random assignment of samples to folds.
-To remove this dependency, we can derive quality scores by averaging over many 
-cv runs, 30 say.  Hard to classify samples will have low quality scores.  
+To derive the quality scores, we will use the predicted response from a 
+lasso model fitted to the entire data set.
+
+Hard to classify samples will have low quality scores.  
 In the results that we discuss below, when we look at variability across repeated 
 random sampling of different sizes, we can use sample quality scores to investigate 
-how much of the variability is due to sample selection.  Note that quality here is not used
-to say anything about the sample data quality.  Low quality here only means
-that a sample is different from the core of the data set in a way that
-makes it hard to properly classify.  That could happen if the
-sample were mislabeled, in which case we could think of this sample as being
-poor quality of course.
+how much of the variability is due to sample selection.
+Note that quality here is not used to say anything about the sample data quality.
+Low quality here only means that a sample is different from the 
+core of the data set in a way that makes it hard to properly classify.  
+That could happen if the sample were mislabeled, in which case we could 
+think of this sample as being poor quality of course.
 
+## Sample quality scores
 
+## Model suite
+
+### Simulation setup
+
+ 

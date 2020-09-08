@@ -20,9 +20,16 @@ renv::snapshot()
 
 ##############################################
 # build the book
-nohup Rscript -e "bookdown::render_book('index.Rmd')"    > render_book.log &
+# THIS DOESNT WORK - object 'params' not found
+#nohup Rscript -e "bookdown::render_book('index.Rmd', params=list(format='html'),clean_envir = FALSE)"    > render_book.log &
 
+# SET  options(knitr.table.format = 'html' in index.rmd
+nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+
+
+# SET  options(knitr.table.format = 'latex' in index.rmd
 nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"  > render_bookPDF.log &
+
 nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::gitbook')"  > render_bookGIT.log &
 nohup Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::epub_book')"  > render_bookEPUB.log &
 

@@ -3,27 +3,31 @@
 Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
 relevant exploratory data  analyis results.
 
-
+<!--
 In the section we look at  some models fitted to discriminate between
 early stage HCC and healthy and benign samples (grouped as Controls here)
 from the GSE112679 data set.  
 
 
-* Some questions to addredd with the baseline model 
+* Some questions to address with the baseline model 
    - how separable are the data: what accuracy do we expect 
    - individual sample quality scores: which samples are hard to classify?  Compute a score
-in [0, 1], where 1 is perfectly good classification and 0 is poerfectly bad.
+in [0, 1], where 1 is perfectly good classification and 0 is perfectly bad.
+
+-->
 
 ## Predictive modeling for genomic data
 
 The main challenge in calibrating predictive models to genomic data is that
 there are many more features than there are example cases to fit to;
-the  now classic $n << p$ problem.  
-In this scenario, fitting methods tend to overfit.  The problem
-can be addressed by selecting variables, regularizng the fit or both.
+the  now classic $n << p$ problem.
+In this scenario, fitting methods tend to over fit.  The problem
+can be addressed by selecting variables, regularizing the fit or both.
+<!--
 See the Trevor Hastie talk: 
 [Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf)
 for a good discussion of this problem and potential solutions.
+-->
 
 
 
@@ -31,26 +35,26 @@ for a good discussion of this problem and potential solutions.
 
 [The `caret` Package](https://topepo.github.io/caret/index.html)
 provide a set of functions that streamline the process for fitting and
-evalluating a large numbet of predictive models in parallel. The package contains tools for:
+evaluating a large number of predictive models in parallel. The package contains tools for:
 
 * data splitting  
 * pre-processing  
 * feature selection  
-* model tuning using resampling  
+* model tuning using re-sampling  
 * variable importance estimation  
 
-The tools facilitate the process of automating randomly spliting data sets into training, 
+The tools facilitate the process of automating randomly splitting data sets into training, 
 testing and evaluating so that predictive models can be evaluated on a comparable and
 exhaustive basis.  Especially useful is the functionality that is provided to
 repeatedly randomly stratify samples into train and test set so that any
 sample selection bias is removed.  
 
 
-What makes the `caret` package extremely useful is that a common interface is
-provided to an exhaustive collection of fitting procedures.  Without
-this common interface, one has to learn the programming interfaces that
-are used in all fitting procedures to be included in a comparative analysis,
-which can be quite burdenful.  
+What makes the `caret` package extremely useful is that it provides a common interface 
+to an exhaustive collection of fitting procedures.  Without
+this common interface one has to learn the specific syntax that
+used in each fitting procedure to be included in a comparative analysis,
+which can be quite burdensome.  
 
 Some of the models which can be evaluated with caret include: 
 (only some of these can be used with multinomial responses)
@@ -68,16 +72,17 @@ Some of the models which can be evaluated with caret include:
 * neuralnet - neural network  
 
 Many more models can be implemented and evaluated with `caret`, 
-including some `deep learning` methods.
-
-`Simulated Annealing Feature Selection` and `Genetic Algorithms`.
-Many methods found [here](https://topepo.github.io/caret/available-models.html)
+including some `deep learning` methods, `Simulated Annealing Feature Selection` 
+and `Genetic Algorithms`.
+Many other methods found [here](https://topepo.github.io/caret/available-models.html)
 are also worth investigating.
 
-We only mention `caret` here because it is an exteremely useful tool for 
+We only mention `caret` here because it is an extremely useful tool for 
 anyone interested in comparing many predictive models.  We have done that
 in the past and have found that regularized regression models perform
-as welll as any in the context of classifiction based on genomic scale data.
+as well as any in the context of classification based on genomic scale data
+and will focus on the particular set of tools for fitting and analyzing
+regularized regression models provided by the `glmnet` R package.
 
 
 
@@ -98,11 +103,11 @@ does well in dense problems*.
 
 * in our experience building classifiers from genomic scale data, regularized
 classification models using the elastic net penalty do as well as any other,
-and are more economical in terms of computing time, espacially in comparison to
+and are more economical in terms of computing time, especially in comparison to
 the more exotic boosting algorithms.
 
 * the `lasso` has been shown to be near optimal for the $n<<p$ problem
-over a wide range of signal-to-noise regiments. 
+over a wide range of signal-to-noise regiments (Hastie et al. (2017) [@Hastie:2017aa]).
 
 
 ***
@@ -113,7 +118,7 @@ Much of the following comes from the
 
 
 Glmnet is a package that fits a generalized linear model via penalized maximum likelihood. 
-The regularization path is computed for the lasso or elasticnet penalty at a 
+The regularization path is computed for the lasso or elastic net penalty at a 
 grid of values for the regularization parameter lambda 
 ([@Friedman:2010aa;@Tibshirani:2012aa;@Simon:2011aa;@Simon:2013aa]). 
 
@@ -183,7 +188,7 @@ $$\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \h
 
 $\gamma \in [0,\, 1]$ is an additional tuning parameter which can be selected by cross validation.
 
-The debiasing will potentially improve prediction performance, and CV will typically select a model 
+The de-biasing will potentially improve prediction performance, and CV will typically select a model 
 with a smaller number of variables. This procedure is very competitive with forward-stepwise and 
 best-subset regression, and has a considerable speed advantage when the number of variables is large. 
 This is especially true for best-subset, but even so for forward stepwise. 

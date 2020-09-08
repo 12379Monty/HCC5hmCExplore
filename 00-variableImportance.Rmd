@@ -1,0 +1,16 @@
+# Variable importance  {#variable-importance}
+
+Cai et al. [@Cai:2019aa] used the fequency of selection across
+bootstrap replicates to select features form their final model.
+We sus[ect that this simply selects features with large coefficients
+which would correspond the the variable importance metric
+used in the `caret` package.  In this section we measure
+variable importance as the loss in performance when the variable is left out
+of the model.  Depending on the correlation structure, it is quite possible
+for a feature to have a large coefficient and be un-important, in our sense of the word.
+It is also possible for a feature to be frequently selected in bootstrap samples, and
+still not un-important.  In a sense, this measure of importance is really a measure
+of `single importance`.  We should therefore also have a measure of `group importance`.
+
+Other questions ...
+

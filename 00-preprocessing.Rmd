@@ -73,7 +73,7 @@ For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
 The appropriate outcome variable will be renamed or aliased `group`
 
-```{r subsetSamples, cache=T, cache.vars=c('sampDescA','groupCol'), echo=F}
+```{r subsetSamples, cache=T, cache.vars=c('sampDescA','groupCol'), echo=T}
 
 # Use suffix 'A' for Analysis samples
 sampDescA <-
@@ -130,7 +130,7 @@ We will simply run a *minimal set of QC sanity checks* to make sure that
 there are no apparent systematic effects in the data.
 
 
-```{r getfeatures, cache=T, cache.vars=c('featureCountsA'), echo=F}
+```{r getfeatures, cache=T, cache.vars=c('featureCountsA'), echo=T}
 
 featureCountsA <- cbind(
   Train_featureCount,
@@ -145,7 +145,7 @@ across samples. To detect shared variability, samples can be annotated and order
 according to sample features that may be linked to sample batch processing.  Here we 
 the samples have been ordered by group and sample id (an alias of geoAcc).
 
-```{r lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=F}
+```{r lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
 
 par(mar = c(1, 3, 2, 1))
 boxplot(log2(featureCountsA + 1),
@@ -173,7 +173,7 @@ keep track of the actual coverage which can be adequetely tracked by distributio
 quantiles.
 -->
 
-```{r quantCountsA, echo=F}
+```{r quantCountsA, echo=T}
 
 featureCountsA_quant <- apply(featureCountsA, 2, function(CC) {
   c(quantile(CC, prob = c(.15, (1:3) / 4)), totCovM = sum(CC) / 1e6)
@@ -206,7 +206,7 @@ We next look at relative log representation (RLR) (in the context of measuring t
 two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.
 -->
-```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=F,include=F}
+```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F}
 
 lcpm_mtx <- edgeR::cpm(featureCountsA, log = T)
 median_vec <- apply(lcpm_mtx, 1, median)
@@ -272,7 +272,7 @@ downtream analyses.
 
 To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
-```{r densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=F}
+```{r densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=T}
 
 par(mar = c(4, 3, 2, 1))
 plot(density(lcpm_mtx[, 1]),
@@ -320,7 +320,7 @@ Remove weakly represented genes and replot densities.
 `r weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR `
 Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
 
-```{r removeWeak, cache=T, cache.vars=c('featureCountsAF', 'genes_annotAF', 'lcpm_mtx'), echo=F, include=F}
+```{r removeWeak, cache=T, cache.vars=c('featureCountsAF', 'genes_annotAF', 'lcpm_mtx'), echo=T, include=F}
 
 # Use suffix 'F' for Filtered genes
 featureCountsAF <- featureCountsA[!weak_flg, ]
@@ -337,7 +337,7 @@ rm(featureCountsA)
 ```
 
 
-```{r densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=F}
+```{r densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=T}
 
 par(mar = c(4, 3, 2, 1))
 plot(density(lcpm_mtx[, 1]),
@@ -390,7 +390,7 @@ save(list = "AF_dgel", file = "RData/AF_dgel")
 Verify that the counts are properly normalized.
 
 
-```{r normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=F}
+```{r normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
 
 par(mar = c(1, 3, 2, 1))
 boxplot(AF_lcmp_mtx,
@@ -414,7 +414,7 @@ axis(side = 4, at = round(median(SampleMedian), 1),
 
 Proceed with MDS plots.
 
-```{r plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values', echo=F}
+```{r plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values', echo=T}
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 
@@ -445,7 +445,7 @@ core set, but in no particular direction.  There is some structure in the
 `glMDSPlot` from package `Glimma` provides an interactive MDS 
 plot that can extremely usful for exploration
 
-```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=F}
+```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=T}
 
 Glimma::glMDSPlot(AF_dgel[, samp_ndx],
   groups = AF_dgel$samples[
@@ -489,7 +489,7 @@ Before proceeding with the statistical modeling used for the
 differential expression analysis, we need to set up a
 model design matrix.
 
-```{r DEADesign, cache=F, include=T, echo=F, include=T}
+```{r DEADesign, cache=F, include=T, echo=T, include=T}
 
 Design_mtx <- model.matrix( ~  -1 + group, data=AF_dgel$samples)
 colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
@@ -506,7 +506,7 @@ Contrasts_mtx
 
 ```
 
-```{r printDesign, echo=F, include=F}
+```{r printDesign, echo=T, include=F}
  knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
   kableExtra::kable_styling(full_width = F)
 ```
@@ -559,7 +559,7 @@ of interest, in our case HCC vs Control.
 
 Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
 
-```{r lmFit, cache=T, echo=T, cache.vars=c('filteredCountsAF_voom_efit','filteredCountsAF_voom_efit_dt'),echo=F}
+```{r lmFit, cache=T, echo=T, cache.vars=c('filteredCountsAF_voom_efit','filteredCountsAF_voom_efit_dt'),echo=T}
 
 
  filteredCountsAF_voom_fit <- limma::lmFit(filteredCountsAF_voom, Design_mtx)
@@ -591,7 +591,7 @@ We may also be interested in whether certain gene features are
 related to gene identification.  Gene GC content, for example, might be
 of interest.
 
-```{r mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=F}
+```{r mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=T}
 
 
 par(mfrow=c(1,3), mar=c(4.5,4.5,2,1),oma=c(1,1,2,0))
@@ -640,23 +640,6 @@ boxplot(split(
 )
 axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
 
-REPLACE.THIS <- function(){
-tmp.lst <- lapply( 
-split(
- filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'],
- filteredCountsAF_voom_efit_dt[,'HCCvsControl']
-),
-density)
-
-plot(tmp.lst[["-1"]]$y, tmp.lst[["-1"]]$x, col='pink', 
-     lwd=2, type='l', ylim=c(-.4,.4), xlim=c(0, 17),
- xlab='density', ylab='log-fold-change', cex.lab=1.5)
-#lines(tmp.lst[["0"]]$y, tmp.lst[["0"]]$x, col='grey', lwd=2)
-lines(tmp.lst[["1"]]$y, tmp.lst[["1"]]$x, col='lightblue', lwd=2)
-
-}#REPLACE.THIS
-
-
 # gc vs identification
 genes_ndx <- match(rownames(filteredCountsAF_voom_efit), genes_annotAF$Symbol)
 if(sum(is.na(genes_ndx))) stop("filteredCountsAF_voom_efit/genes_annotAF: genes mismatch")
@@ -675,7 +658,7 @@ axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
  #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
 ```
 
-```{r quantlogFC,echo=F}
+```{r quantlogFC,echo=T}
 
 featureCountsAF_logFC_sum <- sapply(
  split(
@@ -732,7 +715,7 @@ from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 The number of differentially expressed genes are greatly reduced if we 
 impose a minimal fold-change requirement of 10%.
 
-```{r mdPlotTfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%",echo=F}
+```{r mdPlotTfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
 
 filteredCountsAF_voom_tfit <- limma::treat(filteredCountsAF_voom_fit, lfc=log2(1.10))
 filteredCountsAF_voom_tfit_dt <- limma::decideTests(filteredCountsAF_voom_tfit)
@@ -811,7 +794,7 @@ boxplot(cbind(BCV_mtx, CV), outline=F)
 -->
 
 
-```{r plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=F,include=T}
+```{r plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
 
 Effect <- abs(filteredCountsAF_voom_efit$coefficients[,'HCCvsControl'])
 Noise <- filteredCountsAF_voom_efit$sigma

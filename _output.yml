@@ -1,4 +1,6 @@
 bookdown::gitbook:
+  includes:
+    in_header: header.html
   split_bib: no
   css: css/style.css
   config:
