@@ -1,8 +1,11 @@
 # Preamble {.unnumbered #index} 
 
 
-This vignette offers some exploratory data analyses of data available from 
-the [NCBI GEO web site](https://www.ncbi.nlm.nih.gov/geo/).  
+This vignette offers some exploratory data analyses of 
+DNA Hydroxymethylation data available from 
+NCBI GEO [Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679).
+These data can be conveniently accessed through an R data package.
+See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/).
 
 ## License {-}
 
@@ -81,11 +84,11 @@ in the context classifying samples based on 5hmC data.
 
 The layout of the paper is the following:  
 
-* In Section \@ref(preproc) we preprocess the data that
-we will use for the classification analysis and perform some light QC analyses.  
+* In Section \@ref(modeling-background) we provide some background on modeling
+genomic data, ie. $n << p$ data.
 
-* In Section \@ref(modeling-background) we provide some background to our
-modeling approach.  
+* In Section \@ref(preproc) we preprocess the 5hmC data that
+we will use for the classification analysis and perform some light QC analyses.  
 
 * In Section \@ref(explore-sparsity) we explore some glmnet fits
 that discriminate between early stage HCC and control samples.  
@@ -95,4 +98,5 @@ investigate the effect of sample size on model performance.
 
 * In Section \@ref(variable-importance) look at the question of assessing variable importance.
 
+* Concluding remarks are in Section \@ref(conclusions).
 

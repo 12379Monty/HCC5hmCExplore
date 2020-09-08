@@ -45,8 +45,9 @@ can be conveniently accessed through an R data package.
 Attaching the GSE112679 package makes the count data tables 
 available as well as a gene annotation table and a sample description table.
 See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/).
-For the Cai et al. [@Cai:2019aa] model fitting and analysis, samples were separated into
-`Train` and `Val-1` subsets.  `Val-2` was an external validation set.
+In the Cai et al. [@Cai:2019aa] paper, samples were separated into
+`Train` and `Val-1` subsets for model fitting and analysis.
+`Val-2` was used as an external validation set.
 
 ```{r loadData, cache=F}
 

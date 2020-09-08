@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 3 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="preproc.html"/>
-<link rel="next" href="explore-sparsity.html"/>
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="preproc.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -164,10 +164,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<ul>
+<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
+<li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
@@ -176,19 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise ratio regime</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
-<ul>
-<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
-</ul></li>
+<li class="chapter" data-level="3.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
@@ -237,8 +238,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="modeling-background" class="section level1" number="3">
-<h1><span class="header-section-number">Section 3</span> Modeling - Background</h1>
+<div id="modeling-background" class="section level1" number="2">
+<h1><span class="header-section-number">Section 2</span> Modeling - Background</h1>
 <p>Refer to <a href="https://hcc-5hmc-analysis.netlify.app/">first pass study</a> for
 relevant exploratory data analyis results.</p>
 <!--
@@ -253,8 +254,8 @@ from the GSE112679 data set.
 in [0, 1], where 1 is perfectly good classification and 0 is perfectly bad.
 
 -->
-<div id="predictive-modeling-for-genomic-data" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Predictive modeling for genomic data</h2>
+<div id="predictive-modeling-for-genomic-data" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Predictive modeling for genomic data</h2>
 <p>The main challenge in calibrating predictive models to genomic data is that
 there are many more features than there are example cases to fit to;
 the now classic <span class="math inline">\(n &lt;&lt; p\)</span> problem.
@@ -265,8 +266,8 @@ See the Trevor Hastie talk:
 [Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf)
 for a good discussion of this problem and potential solutions.
 --></p>
-<div id="caret-for-model-evaluation" class="section level3" number="3.1.1">
-<h3><span class="header-section-number">3.1.1</span> caret for model evaluation</h3>
+<div id="caret-for-model-evaluation" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> caret for model evaluation</h3>
 <p><a href="https://topepo.github.io/caret/index.html">The <code>caret</code> Package</a>
 provide a set of functions that streamline the process for fitting and
 evaluating a large number of predictive models in parallel. The package contains tools for:</p>
@@ -329,10 +330,10 @@ and will focus on the particular set of tools for fitting and analyzing
 regularized regression models provided by the <code>glmnet</code> R package.</p>
 </div>
 </div>
-<div id="glmnet" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> glmnet</h2>
+<div id="glmnet" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> glmnet</h2>
 <p>In this investigation we will focus on models that can be
-analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">15</a>]</span>. Several
+analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>]</span>. Several
 factors favor this choice:</p>
 <ul>
 <li><p>the glmnet package is a well supported package providing
@@ -347,7 +348,7 @@ classification models using the elastic net penalty do as well as any other,
 and are more economical in terms of computing time, especially in comparison to
 the more exotic boosting algorithms.</p></li>
 <li><p>the <code>lasso</code> has been shown to be near optimal for the <span class="math inline">\(n&lt;&lt;p\)</span> problem
-over a wide range of signal-to-noise regiments (Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>).</p></li>
+over a wide range of signal-to-noise regiments (Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>).</p></li>
 </ul>
 <hr />
 <p>Much of the following comes from the
@@ -355,7 +356,7 @@ over a wide range of signal-to-noise regiments (Hastie et al. (2017) <span clas
 <p>Glmnet is a package that fits a generalized linear model via penalized maximum likelihood.
 The regularization path is computed for the lasso or elastic net penalty at a
 grid of values for the regularization parameter lambda
-(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">15</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">18</a>]</span>).</p>
+(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>,<a href="references.html#ref-Tibshirani:2012aa" role="doc-biblioref">8</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">10</a>]</span>).</p>
 <p><code>glmnet</code> solves the following problem:</p>
 <p><span class="math display">\[\min_{\beta_0,\beta} \frac{1}{N} \sum_{i=1}^{N} w_i l(y_i,\beta_0+\beta^T x_i) + \lambda\left[(1-\alpha)||\beta||_2^2/2 + \alpha ||\beta||_1\right],\]</span></p>
 <p>over a grid of values of <span class="math inline">\(\lambda\)</span>.
@@ -376,75 +377,102 @@ for example, the <em>elastic net with <span class="math inline">\(\alpha = 1 - \
 performs much like the lasso, but removes any degeneracies and wild behavior caused
 by extreme correlations</em>.</p>
 </div>
+<div id="signal-to-noise-ratio" class="section level3 unnumbered" number="">
+<h3>Signal-to-noise Ratio</h3>
+<p>A key characteristic of classification problems is the
+prevailing signal-to-noise ratio (SNR) of the problem at hand.</p>
+<p>To define SNR, let <span class="math inline">\((x_0, y_0) \in \mathbb{R}^p \times \mathbb{R}\)</span>
+be a pair of predcitor and response variables and define
+<span class="math inline">\(f(x_0) = \mathbb{E}(y_0|x_0)\)</span> and <span class="math inline">\(\epsilon = y_0 - f(x_0)\)</span> so that</p>
+<p><span class="math display">\[y_0 = f(x_0) + \epsilon_0.\]</span></p>
+<p>The signal-to-noise ratio in this model is defined as</p>
+<p><span class="math display">\[SNR=\frac{var(f(x_0))}{var(\epsilon_0)}.\]</span></p>
+<p>It is useful to relate the SNR of a model to the proportion of variance explained (PVE).
+For a given prediction function g — eg. one trained on n samples
+<span class="math inline">\((x_i, y_i) i = 1, \dots, n\)</span> that are i.i.d. to <span class="math inline">\((x_0, y_0)\)</span> — its
+associated proportion of variance explained is defined as</p>
+<p><span class="math display">\[PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}.\]</span></p>
+<p>This is maximized when we take <span class="math inline">\(g\)</span> to be the mean function <span class="math inline">\(f\)</span> itself,
+in which case</p>
+<p><span class="math display">\[PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}.\]</span></p>
+<p>Or equivalently,</p>
+<p><span class="math display">\[SNR = \frac{PVE}{1-PVE}.\]</span></p>
+<p>Hastie, Tibshirani, and Tibshirani (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>, point out that
+PVE is typically in the 0.2 range, and much lower in financial data. It
+is also much lower in 5hmC data, as we will see in the next section.</p>
+<p>Note that the SNR is a different characterization of noise level than the
+coefficient of variation:</p>
+<p><span class="math display">\[c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}\]</span></p>
+<p>Note that for small SNR, SNR <span class="math inline">\(\approx\)</span> PVE.</p>
+<p>See Xiang et al. (2020) <span class="citation">[<a href="references.html#ref-Xiang:2020aa" role="doc-biblioref">11</a>]</span>, Lozoya et al. (2018) <span class="citation">[<a href="references.html#ref-Lozoya:2018aa" role="doc-biblioref">12</a>]</span>,
+Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">13</a>]</span> and
+Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">14</a>]</span> for SNR in RNA-Seq</p>
+</div>
 <div id="lasso-vs-best-subset" class="section level3 unnumbered" number="">
 <h3>Lasso vs Best Subset</h3>
-<ul>
-<li>Best subset selection</li>
-</ul>
-<p><span class="math display">\[\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k\]</span></p>
-<ul>
-<li>lasso</li>
-</ul>
-<p><span class="math display">\[\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t\]</span></p>
-<ul>
-<li>Bertsimas et al. (2016) <span class="citation">[<a href="references.html#ref-Bertsimas:2016aa" role="doc-biblioref">19</a>]</span>
-<ul>
-<li>presented a mixed integer optimization (MIO) formulation for the best subset selection problem<br />
-</li>
-<li>Using these MIO solvers, can solve problems with p in the hundreds and even thousands</li>
-<li>demonstrated that best subset selection generally gives superior prediction accuracy compared to forward stepwise selection and the lasso, over a variety of problem setups.</li>
-</ul></li>
-<li>Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>
-<ul>
-<li>neither best subset selection nor the lasso uniformly dominate the other, with best subset selection generally performing better in high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes;</li>
-<li>best subset selection and forward stepwise perform quite similarly throughout;</li>
-<li>the relaxed lasso is the overall winner, performing just about as well as the lasso in low SNR scenarios,
-and as well as best subset selection in high SNR scenarios. We conclude that it is
-able to use its auxiliary shrinkage parameter (<span class="math inline">\(\gamma\)</span>) to get the “best of both worlds”:
-it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.</li>
-</ul></li>
-<li>relaxed lasso</li>
-</ul>
-<p><span class="math display">\[\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)\]</span></p>
-<ul>
-<li>shrunken relaxed lasso (aka the blended fit)</li>
-</ul>
+<p>Best subset selection finds the subset of k predictors that
+produces the best fit in terms of squared error, solving the nonconvex problem:</p>
+<p><span class="math display" id="eq:best-sub">\[\begin{equation}
+ \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k
+ \tag{2.1}
+\end{equation}\]</span></p>
+<p>The lasso solves a covex relaxation of <a href="modeling-background.html#eq:best-sub">(2.1)</a> where we replace the
+<span class="math inline">\(l_0\)</span> norm by the <span class="math inline">\(l_1\)</span> norm, namely</p>
+<p><span class="math display" id="eq:lasso">\[\begin{equation}
+
+ \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t
+
+ \tag{2.2}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(||\beta||_1 = \sum_{i=1}^{p} |\beta_i|\)</span>, and <span class="math inline">\(t \geq 0\)</span> is a tuning parameter.</p>
+<p>Bertsimas et al. (2016) <span class="citation">[<a href="references.html#ref-Bertsimas:2016aa" role="doc-biblioref">15</a>]</span> presented a mixed integer optimization (MIO)
+formulation for the best subset selection problem. Using these MIO solvers,
+one can solve problems with p in the hundreds and even thousands.
+Bertsimas et al. showed evidence that
+best subset selection generally gives superior prediction accuracy compared
+to forward stepwise selection and the lasso, over a variety of problem setups.</p>
+<p>In Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>, the authors countered by arguing that
+neither best subset selection nor the lasso uniformly dominate the other,
+with best subset selection generally performing better in high signal-to-noise (SNR)
+ratio regimes, and <strong>the lasso better in low SNR regimes</strong>.
+Best subset selection and forward stepwise perform quite similarly over
+a range of SNR contexts, but the relaxed lasso is the overall best option,
+performing just about as well as the lasso in low SNR scenarios,
+and as well as best subset selection in high SNR scenarios.
+Hastie et al. conclude that a blended mix of lasso and relaxed lasso estimator,
+the <em>shrunken relaxed lasso fit</em>, is able to use its auxiliary shrinkage
+parameter (<span class="math inline">\(\gamma\)</span>) to get the “best of both worlds”:
+it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.</p>
+<!--
+* relaxed lasso
+
+$$\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)$$
+
+* shrunken relaxed lasso (aka the blended fit)
+-->
 <p>Suppose the <strong>glmnet</strong> fitted linear predictor at <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(\hat{\eta}_\lambda(x)\)</span>
 and the relaxed version is <span class="math inline">\(\tilde{\eta}_\lambda(x)\)</span>, then the shrunken relaxed lasso fit is</p>
-<p><span class="math display">\[\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)\]</span></p>
+<p><span class="math display" id="eq:blended">\[\begin{equation}
+
+\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)
+
+ \tag{2.3}
+\end{equation}\]</span></p>
 <p><span class="math inline">\(\gamma \in [0,\, 1]\)</span> is an additional tuning parameter which can be selected by cross validation.</p>
-<p>The de-biasing will potentially improve prediction performance, and CV will typically select a model
-with a smaller number of variables. This procedure is very competitive with forward-stepwise and
-best-subset regression, and has a considerable speed advantage when the number of variables is large.
-This is especially true for best-subset, but even so for forward stepwise.
-The latter has to plod through the variables one-at-a-time,
-while glmnet will just plunge in and find a good active set.</p>
+<p>The de-biasing will potentially improve prediction performance, and
+cross-validation will typically select a model with a smaller number of variables.
+This procedure is very competitive with forward-stepwise and
+best-subset regression, and has a considerable speed advantage when the
+number of variables is large. This is especially true for best-subset,
+but even so for forward stepwise. The latter has to plod through the
+variables one-at-a-time, while glmnet will just plunge in and find a good active set.</p>
 <p>Further details may be found in
 Friedman, Hastie, and Tibshirani (2010),
 Tibshirani et al. (2012),
 Simon et al. (2011),
 Simon, Friedman, and Hastie (2013) and
 Hastie, Tibshirani, and Tibshirani (2017)
-(<span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">18</a>]</span>).</p>
-<ul>
-<li>SNR
-<ul>
-<li><span class="math inline">\(y_0=f(x_0) + \epsilon_0\)</span></li>
-<li><span class="math inline">\(SNR=\frac{var(f(x_0))}{var(\epsilon_0)}\)</span></li>
-<li><span class="math inline">\(PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}\)</span></li>
-<li><span class="math inline">\(PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}\)</span></li>
-<li><span class="math inline">\(SNR = \frac{PVE}{1-PVE}\)</span></li>
-<li><span class="math inline">\(c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}\)</span>
-<ul>
-<li>a PVE of 0.5 is rare for noisy observational data, and 0.2 may be more typical</li>
-<li>A PVE of 0.86, corresponding to an SNR of 6, is unheard of!</li>
-<li>For small SNR, SNR <span class="math inline">\(\approx\)</span> PVE</li>
-<li>See Xiang et al. (2020) <span class="citation">[<a href="references.html#ref-Xiang:2020aa" role="doc-biblioref">20</a>]</span>, Lozoya et al. (2018) <span class="citation">[<a href="references.html#ref-Lozoya:2018aa" role="doc-biblioref">21</a>]</span>,
-Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">22</a>]</span> and
-Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">23</a>]</span> for SNR in RNA-Seq</li>
-</ul></li>
-</ul></li>
-</ul>
+(<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">10</a>]</span>).</p>
 
 </div>
 </div>
@@ -454,8 +482,8 @@ Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rap
           </div>
         </div>
       </div>
-<a href="preproc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="explore-sparsity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preproc.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

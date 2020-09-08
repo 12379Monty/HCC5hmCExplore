@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 2 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 3 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 2 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 3 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 2 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 3 Preprocessing | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="modeling-background.html"/>
+<link rel="prev" href="modeling-background.html"/>
+<link rel="next" href="explore-sparsity.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -164,10 +164,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<ul>
+<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
+<li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
@@ -176,19 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise ratio regime</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
-<ul>
-<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
-</ul></li>
+<li class="chapter" data-level="3.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
@@ -237,8 +238,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="preproc" class="section level1" number="2">
-<h1><span class="header-section-number">Section 2</span> Preprocessing</h1>
+<div id="preproc" class="section level1" number="3">
+<h1><span class="header-section-number">Section 3</span> Preprocessing</h1>
 <!--
  FN <- 'tmp'
  # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
@@ -253,8 +254,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  # The usual shotcuts
  zz <- function(n='') source(paste("t", n, sep=''))
 -->
-<div id="load-the-data" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Load the data</h2>
+<div id="load-the-data" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Load the data</h2>
 <!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
 <!-- TO TURN ON, SET eval=T                            -->
 <!-- Add base libraries -->
@@ -264,8 +265,9 @@ can be conveniently accessed through an R data package.
 Attaching the GSE112679 package makes the count data tables
 available as well as a gene annotation table and a sample description table.
 See <a href="https://12379monty.github.io/GSE112679/">GSE112679 R Data Package page</a>.
-For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span> model fitting and analysis, samples were separated into
-<code>Train</code> and <code>Val-1</code> subsets. <code>Val-2</code> was an external validation set.</p>
+In the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:2019aa" role="doc-biblioref">2</a>]</span> paper, samples were separated into
+<code>Train</code> and <code>Val-1</code> subsets for model fitting and analysis.
+<code>Val-2</code> was used as an external validation set.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="preproc.html#cb2-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;GSE112679&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>()))) {</span>
 <span id="cb2-2"><a href="preproc.html#cb2-2"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;devtools&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</span>
 <span id="cb2-3"><a href="preproc.html#cb2-3"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
@@ -284,7 +286,7 @@ For the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:201
 <span id="cb2-16"><a href="preproc.html#cb2-16"></a>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:loadData">Table 2.1: </span>GSE112679 Samples by Dx Group and Subset
+<span id="tab:loadData">Table 3.1: </span>GSE112679 Samples by Dx Group and Subset
 </caption>
 <thead>
 <tr>
@@ -430,7 +432,7 @@ The appropriate outcome variable will be renamed or aliased <code>group</code></
 <span id="cb3-23"><a href="preproc.html#cb3-23"></a>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:subsetSamples">Table 2.2: </span>Samples used in this analysis
+<span id="tab:subsetSamples">Table 3.2: </span>Samples used in this analysis
 </caption>
 <thead>
 <tr>
@@ -473,8 +475,8 @@ the blood samples collected - as well as library preparation and sequencing metr
 in order to detect any sign of processing artifacts that may be present in the dataset.
 This is particularly important when dealing with blood samples as variable
 DNA quality degradation is a well known challenge that is encountered when dealing with
-such samples <span class="citation">[<a href="references.html#ref-Huang:2017aa" role="doc-biblioref">6</a>]</span>. Although blood specimen handling protocols can be
-put in place to minimize quality variation <span class="citation">[<a href="references.html#ref-Permenter:2015aa" role="doc-biblioref">7</a>]</span>, variability
+such samples <span class="citation">[<a href="references.html#ref-Huang:2017aa" role="doc-biblioref">16</a>]</span>. Although blood specimen handling protocols can be
+put in place to minimize quality variation <span class="citation">[<a href="references.html#ref-Permenter:2015aa" role="doc-biblioref">17</a>]</span>, variability
 can never be completely eradicated, especially in the context of blood samples
 collected by different groups, working in different environments. The problem
 of variable DNA quality becomes paricularly pernicuous when it is compounded
@@ -514,7 +516,7 @@ the samples have been ordered by group and sample id (an alias of geoAcc).</p>
 <div class="figure"><span id="fig:lcpmBxp"></span>
 <img src="Static/figures/lcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
 <p class="caption">
-Figure 2.1: Sample log2 count boxplots
+Figure 3.1: Sample log2 count boxplots
 </p>
 </div>
 <!--
@@ -539,7 +541,7 @@ quantiles.
 <span id="cb6-15"><a href="preproc.html#cb6-15"></a>) <span class="op">%&gt;%</span><span class="st"> </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:quantCountsA">Table 2.3: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
+<span id="tab:quantCountsA">Table 3.3: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
 Rows are quartiles across samples
 </caption>
 <thead>
@@ -641,11 +643,11 @@ We note that the HCC samples have slightly more variable coverage distribution.
 A few samples are quite different.
 -->
 </div>
-<div id="dra" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Differential representation analysis</h2>
+<div id="dra" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Differential representation analysis</h2>
 <p>In the remainder of this section, we will process the data and
 perform differential expression analysis as outlined in
-Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span>. The main analysis steps are:</p>
+Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">18</a>]</span>. The main analysis steps are:</p>
 <ul>
 <li>remove lowly expressed genes</li>
 <li>normalize gene expression distributions</li>
@@ -655,7 +657,7 @@ Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018
 <p>It is good practice to perform this differential expression analysis prior to
 fitting models to get an idea of how difficult it will be to discriminate
 between samples belonging to the different subgroups. The pipeline
-outlined in Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">8</a>]</span> also provides some
+outlined in Law et al. (2018) <span class="citation">[<a href="references.html#ref-Law:2018aa" role="doc-biblioref">18</a>]</span> also provides some
 basic quality assessment opportunities.</p>
 <div id="remove-lowly-expressed-genes" class="section level3 unnumbered" number="">
 <h3>Remove lowly expressed genes</h3>
@@ -682,7 +684,7 @@ downtream analyses.</p>
 <div class="figure"><span id="fig:densityLcpm"></span>
 <img src="Static/figures/densityLcpm-1.png" alt="Sample $log_2$ CPM densities" width="960" />
 <p class="caption">
-Figure 2.2: Sample <span class="math inline">\(log_2\)</span> CPM densities
+Figure 3.2: Sample <span class="math inline">\(log_2\)</span> CPM densities
 </p>
 </div>
 <p>As is typically the case with RNA-Seq data, we notice many weakly represented genes
@@ -722,7 +724,7 @@ greatest sequencing depth (library size 13.3 million).
 <div class="figure"><span id="fig:densityLcpm2"></span>
 <img src="Static/figures/densityLcpm2-1.png" alt="Sample $log_2$ CPM densities after removing weak genes" width="960" />
 <p class="caption">
-Figure 2.3: Sample <span class="math inline">\(log_2\)</span> CPM densities after removing weak genes
+Figure 3.3: Sample <span class="math inline">\(log_2\)</span> CPM densities after removing weak genes
 </p>
 </div>
 <!--
@@ -730,7 +732,7 @@ Note that the $log_2(CMP)$ distribution is not quite symmetric.
 -->
 <p>As another sanity check, we will look at a
 multidimensional scaling plot of distances between gene expression
-profiles. We use <code>plotMDS</code> in limma package <span class="citation">[<a href="references.html#ref-Ritchie:2015aa" role="doc-biblioref">9</a>]</span>),
+profiles. We use <code>plotMDS</code> in limma package <span class="citation">[<a href="references.html#ref-Ritchie:2015aa" role="doc-biblioref">19</a>]</span>),
 which plots samples on a two-dimensional scatterplot so that distances on
 the plot approximate the typical log2 fold changes between the
 samples.</p>
@@ -771,7 +773,7 @@ Call the set ‘AF’, for set ‘A’, ‘Filtered’.</p>
 <div class="figure"><span id="fig:normedLcpmBxp"></span>
 <img src="Static/figures/normedLcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
 <p class="caption">
-Figure 2.4: Sample log2 count boxplots
+Figure 3.4: Sample log2 count boxplots
 </p>
 </div>
 <p>Proceed with MDS plots.</p>
@@ -797,7 +799,7 @@ Figure 2.4: Sample log2 count boxplots
 <div class="figure"><span id="fig:plotMDS"></span>
 <img src="Static/figures/plotMDS-1.png" alt="MDS plots of log-CPM values" width="960" />
 <p class="caption">
-Figure 2.5: MDS plots of log-CPM values
+Figure 3.5: MDS plots of log-CPM values
 </p>
 </div>
 <p>The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
@@ -826,9 +828,9 @@ the 6th dimension. The percent of variance exaplained by this dimension or
 especially without having the complete information about the sample attributes
 and provenance.</p>
 <p>Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
-(see Peixoto et al. (2015) <span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">10</a>]</span>), and many procedures have been proposed
+(see Peixoto et al. (2015) <span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">20</a>]</span>), and many procedures have been proposed
 to reduce the effect of unwanted variation on RNA-Seq analsys results
-(<span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">10</a>–<a href="references.html#ref-Risso:2014aa" role="doc-biblioref">12</a>]</span>). There are undoubtedly
+(<span class="citation">[<a href="references.html#ref-Peixoto:2015aa" role="doc-biblioref">20</a>–<a href="references.html#ref-Risso:2014aa" role="doc-biblioref">22</a>]</span>). There are undoubtedly
 some similar sources of systematic variation in the 5hmC data, but it is
 beyond the scope of this work to investigate these in this particular dataset.
 Given that the clustering of samples occurs in MDS dimensions that explain
@@ -874,7 +876,7 @@ weights calculated by the voom function. We apply this transformation next.</p>
 <div class="figure"><span id="fig:Voom1"></span>
 <img src="Static/figures/Voom1-1.png" alt="Removing heteroscedascity" width="1056" />
 <p class="caption">
-Figure 2.6: Removing heteroscedascity
+Figure 3.6: Removing heteroscedascity
 </p>
 </div>
 <p>Note that the voom-plot provides a visual check on the level of filtering performed upstream.
@@ -901,7 +903,7 @@ a better idea.
 the linear models can be fitted to each gene and the results
 examined to assess differential expression between the two groups
 of interest, in our case HCC vs Control.</p>
-<p>Table <a href="preproc.html#tab:lmFit">2.4</a> displays the counts of genes in each DE category:</p>
+<p>Table <a href="preproc.html#tab:lmFit">3.4</a> displays the counts of genes in each DE category:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="preproc.html#cb22-1"></a> filteredCountsAF_voom_fit &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">lmFit</span>(filteredCountsAF_voom, Design_mtx)</span>
 <span id="cb22-2"><a href="preproc.html#cb22-2"></a> <span class="kw">colnames</span>(filteredCountsAF_voom_fit<span class="op">$</span>coefficients) &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">(Intercept</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;Intercept&quot;</span>,</span>
 <span id="cb22-3"><a href="preproc.html#cb22-3"></a> <span class="kw">colnames</span>(filteredCountsAF_voom_fit<span class="op">$</span>coefficients) )</span>
@@ -919,7 +921,7 @@ of interest, in our case HCC vs Control.</p>
 <span id="cb22-15"><a href="preproc.html#cb22-15"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lmFit">Table 2.4: </span>DE Results at FDR = 0.05
+<span id="tab:lmFit">Table 3.4: </span>DE Results at FDR = 0.05
 </caption>
 <thead>
 <tr>
@@ -1026,7 +1028,7 @@ of interest.</p>
 <div class="figure"><span id="fig:mdPlotEfit"></span>
 <img src="Static/figures/mdPlotEfit-1.png" alt="HCC vs Control - Genes Identified at FDR = 0,05" width="1056" />
 <p class="caption">
-Figure 2.7: HCC vs Control - Genes Identified at FDR = 0,05
+Figure 3.7: HCC vs Control - Genes Identified at FDR = 0,05
 </p>
 </div>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="preproc.html#cb24-1"></a> <span class="co">#mtext(side=3, outer=T, cex=1.25, &quot;Genes identified at adjusted p-value=0.05&quot;)</span></span></code></pre></div>
@@ -1049,7 +1051,7 @@ Figure 2.7: HCC vs Control - Genes Identified at FDR = 0,05
 <span id="cb25-17"><a href="preproc.html#cb25-17"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:quantlogFC">Table 2.5: </span>log FC quartiles by gene identification
+<span id="tab:quantlogFC">Table 3.5: </span>log FC quartiles by gene identification
 </caption>
 <thead>
 <tr>
@@ -1113,7 +1115,7 @@ up
 </table>
 <p>While many genes are identified, the effect sizes are quite small,
 which results in a low signal-to-noise ratio context. See
-Section <a href="preproc.html#snr-regime">2.3</a> below.</p>
+Section <a href="preproc.html#snr-regime">3.3</a> below.</p>
 <p>The log-fold-change distribution for up-represented genes is long-tailed,
 with many high log fold-change values.
 By contrast, log-fold-change distribution for down-represented genes
@@ -1133,7 +1135,7 @@ they relfect biology rather than processing artifacts.</p>
 <h3>DE genes at 10% fold change</h3>
 <p>For a stricter definition on significance, one may require log-fold-changes
 (log-FCs) to be above a minimum value. The treat method
-(McCarthy and Smyth 2009 <span class="citation">[<a href="references.html#ref-McCarthy:2009aa" role="doc-biblioref">13</a>]</span>) can be used to calculate p-values
+(McCarthy and Smyth 2009 <span class="citation">[<a href="references.html#ref-McCarthy:2009aa" role="doc-biblioref">23</a>]</span>) can be used to calculate p-values
 from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 The number of differentially expressed genes are greatly reduced if we
 impose a minimal fold-change requirement of 10%.</p>
@@ -1181,7 +1183,7 @@ impose a minimal fold-change requirement of 10%.</p>
 <div class="figure"><span id="fig:mdPlotTfit"></span>
 <img src="Static/figures/mdPlotTfit-1.png" alt="HCC vs Control - Identified Genes at FDR = 0,05 and logFC &gt; 10%" width="1056" />
 <p class="caption">
-Figure 2.8: HCC vs Control - Identified Genes at FDR = 0,05 and logFC &gt; 10%
+Figure 3.8: HCC vs Control - Identified Genes at FDR = 0,05 and logFC &gt; 10%
 </p>
 </div>
 <p>As noted above, the log-fold-change distribution for the up-represented genes
@@ -1190,9 +1192,9 @@ As a result fewer down-represented than up-regulated genes are identified when a
 minimum log-FC requirement is imposed.</p>
 </div>
 </div>
-<div id="snr-regime" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Signal-to-noise ratio regime</h2>
-<p>In Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>) results from <code>lasso</code> fits are
+<div id="snr-regime" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Signal-to-noise ratio regime</h2>
+<p>In Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>) results from <code>lasso</code> fits are
 compared with <code>best subset</code> and <code>forward selection</code> fits and it is argued
 that while <code>best subset</code> is optimal for high signal-to-noise regimes,
 the lasso gains some competitive advantage when the prevailing signal-to-noise
@@ -1226,7 +1228,7 @@ boxplot(cbind(BCV_mtx, CV), outline=F)
 <div class="figure"><span id="fig:plotSNR"></span>
 <img src="Static/figures/plotSNR-1.png" alt="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile" width="960" />
 <p class="caption">
-Figure 2.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile
+Figure 3.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile
 </p>
 </div>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="preproc.html#cb33-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">t</span>(SNR_quant),</span>
@@ -1236,7 +1238,7 @@ Figure 2.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentil
 <span id="cb33-5"><a href="preproc.html#cb33-5"></a>) <span class="op">%&gt;%</span><span class="st"> </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:plotSNR">Table 2.6: </span>SNR Quantiles
+<span id="tab:plotSNR">Table 3.6: </span>SNR Quantiles
 </caption>
 <thead>
 <tr>
@@ -1272,7 +1274,7 @@ Figure 2.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentil
 </tbody>
 </table>
 <p>These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
-best subset and forward selection fits (see Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">14</a>]</span>).</p>
+best subset and forward selection fits (see Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>).</p>
 
 </div>
 </div>
@@ -1281,8 +1283,8 @@ best subset and forward selection fits (see Hastie et al. (2017) <span class="c
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="modeling-background.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="modeling-background.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="explore-sparsity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

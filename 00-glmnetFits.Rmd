@@ -49,14 +49,27 @@ test_lcpm_mtx <- t(lcpm_mtx[,test_sampID_vec])
 
 We explore some glmnet fits and the "bet on sparsity"    
   
-* Consider models:  
-    - lasso: $\alpha = 1.0$ - sparse model  
-    - ridge $\alpha = 0$ - shrunken coefficients model
+We consider three models, specified by the value of the
+**alpha** parameter in the elastic net parametrization:  
+    - lasso: $\alpha = 1.0$ - sparse models  
+    - ridge $\alpha = 0$ - shrunken coefficients models
     - elastic net:  $\alpha = 0.5$  - semi sparse model
 <!-- - lassoC: $\alpha = 1-\epsilon =$ `r 1- EPS` - lasso for correlated predictors  -->
-* Does the relaxed lasso improve performance?    
-* Does the shrunken relaxed lasso (aka the blended mix) improve performance  
+
+Some questions of interest include:
 * How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?    
+
+<!--
+    - The exploratory analysis done in the preprocessing step
+indicates that differential gene body 5hmC representation effects are small.
+With reasonably large sample sizes we would expect many genes to be selected.
+???
+-->
+
+* Does the relaxed lasso improve performance in this case?  
+
+* Does the shrunken relaxed lasso (aka the blended mix) improve performance  
+
 * Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?  
 
 In this analysis, we will only evaluate models in terms of 
@@ -65,8 +78,14 @@ of significance testing of hypotheses about model parameters
 completely out.  See Lockhart et al. (2014) [@Lockhart:2014aa]
 and Wassermam (2014) [@Wasserman:2014aa] for a discussion of this topic.
 
+In this section we look at the relative performance and size of the models
+considered.  The effect of the size of the sample set on the level and 
+stability of performance will be investigated in the next section.
 
-Next we create folds for `r K_FOLD`-fold cross-validation of models fitted to
+
+***
+
+First we create folds for `r K_FOLD`-fold cross-validation of models fitted to
 training data.  We'll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.
 
@@ -93,21 +112,19 @@ data for each fold fit.
 
 ## Fit and compare models 
 
-
-* cross-validated accuracy
-* test set accuracy  
-* sparsity
-    - for lasso, enet <!--and lassoC-->, examine number of selected variables
-
-Although “the one standard error rule” can produce a model with fewer predictors, it usually results in increased MSE and more biased parameter estimates
+`glmnet` provides cross-validation methods to pick the parameter **lambda** which
+controls to size of the penalty function. The  “one standard error rule” 
+produces a model with fewer predictors  then the minimum cv error model.
+On the training data, this usually results in increased MSE and more 
+biased parameter estimates 
 (see Engebretsen et al. (2019) [@Engebretsen:2019aa] for example).
-We will look at both the minimum cv error and the one standard error rule model 
-preformance.
+The question of iterest though is the performance on unseen data; not on the training data.
+In the analysis below, we compare the cv error rates with out-of-fold and
+test set error rates.  The results show that out-of-fold error rates computed from
+the training data are good indicators of test set error rates, and that
+the one standard error rule models do as well as the minimim cv error models
+for the lasso, which has the best overall performance.
 
-```{r doMC, include=F}
-require(doMC)
-registerDoMC(cores=14)
-```
 
 
 ### Logistic regression in `glmnet`
@@ -118,9 +135,14 @@ from calibrated models.  Note in passing that some folks make a distinction betw
 versus **predicted** values for sample points that
 are not in the training dataset.  `glmnet` makes no such distinction and the
 `predict` function is used to produce both fitted as well as predicted values.
+When predict is invoked to make predictions for design points that are part 
+of the training dataset, what is returned are fitted values.  
+When predict is invoked to make predictions for design points that are not part 
+of the training dataset, what is returned are predicted values.  
+
 For logistic regressions, which is the model fitted in a regularized fashion
 when models are fitted by glmnet with the parameter `family='binomial'`, three
-fitted or predicted values can be extracted at a given design point.  
+fitted or predicted values can be extracted at a given design point.
 Suppose our response variable Y is either 0 or 1 (Control or HCC in our case).
 These are specified by the `type` parameter.  `type='resp'` returns
 the fitted or predicted probability of $Y=1$.  `type='class'` returns the fitted or
@@ -138,8 +160,9 @@ The link function is given by:
 
 $$g(y) = h^{-1}(y) = ln(\frac{y}{1-y})$$
 
-This link function is called the logit function, and its inverse the logistic
+This link function is called the *logit* function, and its inverse the *logistic*
 function.
+
 
 ```{r logistic_f}
 
@@ -151,7 +174,7 @@ It is important to note that all *predicted* values extracted from
 `glmnet` fitted models by the **predict()** extraction method
 yield **fitted** values for design points that are part of the
 training data set.  This includes the predicted class for training data
-which ae used  to estimate misclassification error rates.  As a result, the cv error 
+which are used  to estimate misclassification error rates.  As a result, the cv error 
 rates quoted in various `glmnet` summaries are generally optimistic.
 `glmnet` fitting functions have a 
 parameter, *keep*, which instructs the fitting function to keep the
@@ -174,6 +197,11 @@ when calling the fitting functions.  This has no effect on
 performance in this data set.
 
 
+
+```{r doMC, include=F}
+require(doMC)
+registerDoMC(cores=14)
+```
 
 
 ```{r fit-lasso, cache=T, cache.vars=c('cv_lasso')}
@@ -325,18 +353,23 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
   "oof =", round(100*train_oofPred_min_error, 1),
   "test =", round(100*test_pred_min_error, 1)
  ))
-
+ 
+ tmp <-
  cbind(
   error_1se = c(
-   train_cv = cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se],
-   train_oof = train_oofPred_1se_error,
-   test = test_pred_1se_error),
+   p = cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se],
+   train_cv = 100*cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se],
+   train_oof = 100*train_oofPred_1se_error,
+   test = 100*test_pred_1se_error),
   error_min = c(
-   train_cv = cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min],
-   train_oof = train_oofPred_min_error,
-   test = test_pred_min_error)
+   p = cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min],
+   train_cv = 100*cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min],
+   train_oof = 100*train_oofPred_min_error,
+   test = 100*test_pred_min_error)
   )
-                  
+  # Need to fix names  
+  rownames(tmp) <- c('p', 'train_cv', 'train_oof', 'test')
+  tmp 
 }
 
 ```
@@ -368,7 +401,7 @@ errors_frm <- data.frame(
   lasso = lasso_errors_mtx, ridge = rifge_errors_mtx, enet = enet_errors_mtx
 )
 
-knitr::kable(t(errors_frm)*100,
+knitr::kable(t(errors_frm),
  caption = 'Misclassifiaction error rates',
  digits=1) %>% 
   kableExtra::kable_styling(full_width = F)
@@ -376,9 +409,16 @@ knitr::kable(t(errors_frm)*100,
 ```
 
 We see that the lasso and enet models do better than the ridge model.
-These is very little difference between the min lambda and the
-the one standard error rule lambda models (the two are the same for the 
-lasso in this data set).  We also see that the training data out-of-fold
+There is very little difference between the min lambda and the
+the one standard error (1se) rule lambda models (the two are the same for the 
+lasso in this data set).  
+
+The *1se* lambda lasso fit is only slightly more parsimonious than the 
+*1se* elastic net fit, but its test set accuracy is better.
+The *min* lambda elastic net fit performs as well as the lasso model,
+but is much less parsimonious.
+
+We also see that the training data out-of-fold
 estimates of misclassification error rates are much closer to the
 test set estimates than are the cv estimated rates.  This has
 been our experience with regularized regression models fitted to
@@ -392,6 +432,7 @@ as we will show in Section \@ref(model-suite).
 Next we look at the so-called `relaxed lasso` and 
 the `blended mix` which is an optimized shrinkage
 between the relaxed lasso and the regular lasso.
+See \@ref(eq:blended) in Section \@ref(modeling-background).  
 
 
 ```{r fitLassoR, cache=T, cache.vars=c('cv_lassoR'), include=F}
@@ -424,7 +465,7 @@ message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
 The relaxed fit takes quite a bit longer.  
 -->
 
-```{r lookLassoR, cache=T, cache.vars='', fig.height=5, fig.width=5, fig.cap="lassoR fit", echo=T}
+```{r lookLassoR, cache=T, cache.vars='', fig.height=5, fig.width=6, fig.cap="Relaxed lasso fit", echo=T}
 
 library(glmnet)
 
@@ -432,6 +473,9 @@ cv_lassoR_sum <- print(cv_lassoR)
 
 plot(cv_lassoR)
 
+```
+
+```{r lookLassoR2,cache=T, cache.vars=''}
 # only report  1se
 ndx_1se <- match(cv_lassoR$lambda.1se, cv_lassoR$lambda)
 ndx_min <- match(cv_lassoR$lambda.min, cv_lassoR$lambda)
@@ -474,6 +518,9 @@ test_pred_blended_1se_vec <- predict(
 )
 test_pred_blended_1se_error <- mean(test_pred_blended_1se_vec != test_group_vec)
 
+
+# FIX THIS
+
 cv_lassoR_1se_error <- cv_lassoR_sum["1se", "Measure"]
 cv_lassoR_min_error <- cv_lassoR_sum["min", "Measure"]
 
@@ -494,15 +541,25 @@ caption = "Relaxed lasso and blended mix error rates"
 The relaxed lasso and blended mix error rates are comparable to the
 regular lasso fit error rate.  We see here too that the reported cv 
 error rates are quite optimistic, while out-of-fold error rates
-continue to be good indicators of unseen data error rates.
+continue to be good indicators of unseen data error rates, as captured
+by the test set.  
+
+The *1se* lambda rule applied to the relaxed lasso fit selected a model with 
+`r cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]` features,
+while for the blended mix model 
+(See \@ref(eq:blended) in Section \@ref(modeling-background))
+the *1se* lambda rule selected
+`r cv_lassoR$relaxed$nzero.1se` features (vertical 
+dotted reference line in Figure \@ref(fig:lookLassoR)).
+
 
 
 
 ## Examination of sensitivity vs specificity
 
 In the results above we reported error rates without inspecting the 
-sensitivity versus specificity trade off.  Here we look at this 
-question with the help of ROC curves.  
+sensitivity versus specificity trade-off.  ROC curves can be examined
+to get a sense of the trade-off.
 
 ### Training data out-of-fold ROC curves
 
@@ -558,7 +615,7 @@ legend('bottomright', title='AUC',
 
 Compare thresholds for 90% Specificity:
 
-```{r thresh90, cache=F, cache.vars='', fig.cap='90% Specificiy Thresholds'}
+```{r thresh90, cache=F, cache.vars='', fig.cap='90% Specificity Thresholds'}
 
  lasso_ndx <- with(as.data.frame(pROC::coords(train_lasso_roc, transpose=F)), 
    min(which(specificity >= 0.9)))

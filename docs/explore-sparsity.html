@@ -24,14 +24,14 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="modeling-background.html"/>
+<link rel="prev" href="preproc.html"/>
 <link rel="next" href="model-suite.html"/>
 <script src="libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -164,10 +164,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<ul>
+<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
+<li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
@@ -176,19 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise ratio regime</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
-<ul>
-<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
-</ul></li>
+<li class="chapter" data-level="3.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
@@ -339,29 +340,35 @@ HCC
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="explore-sparsity.html#cb37-1"></a>train_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(lcpm_mtx[,train_sampID_vec])</span>
 <span id="cb37-2"><a href="explore-sparsity.html#cb37-2"></a>test_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(lcpm_mtx[,test_sampID_vec])</span></code></pre></div>
 <p>We explore some glmnet fits and the “bet on sparsity”</p>
+<p>We consider three models, specified by the value of the
+<strong>alpha</strong> parameter in the elastic net parametrization:<br />
+- lasso: <span class="math inline">\(\alpha = 1.0\)</span> - sparse models<br />
+- ridge <span class="math inline">\(\alpha = 0\)</span> - shrunken coefficients models
+- elastic net: <span class="math inline">\(\alpha = 0.5\)</span> - semi sparse model
+<!-- - lassoC: $\alpha = 1-\epsilon =$ 0.95 - lasso for correlated predictors  --></p>
+<p>Some questions of interest include:
+* How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?</p>
+<!--
+    - The exploratory analysis done in the preprocessing step
+indicates that differential gene body 5hmC representation effects are small.
+With reasonably large sample sizes we would expect many genes to be selected.
+???
+-->
 <ul>
-<li>Consider models:
-<ul>
-<li>lasso: <span class="math inline">\(\alpha = 1.0\)</span> - sparse model<br />
-</li>
-<li>ridge <span class="math inline">\(\alpha = 0\)</span> - shrunken coefficients model</li>
-<li>elastic net: <span class="math inline">\(\alpha = 0.5\)</span> - semi sparse model
-<!-- - lassoC: $\alpha = 1-\epsilon =$ 0.95 - lasso for correlated predictors  --></li>
-</ul></li>
-<li>Does the relaxed lasso improve performance?<br />
-</li>
-<li>Does the shrunken relaxed lasso (aka the blended mix) improve performance<br />
-</li>
-<li>How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?<br />
-</li>
-<li>Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?</li>
+<li><p>Does the relaxed lasso improve performance in this case?</p></li>
+<li><p>Does the shrunken relaxed lasso (aka the blended mix) improve performance</p></li>
+<li><p>Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?</p></li>
 </ul>
 <p>In this analysis, we will only evaluate models in terms of
 model size, stability and performance. We leave the question
 of significance testing of hypotheses about model parameters
 completely out. See Lockhart et al. (2014) <span class="citation">[<a href="references.html#ref-Lockhart:2014aa" role="doc-biblioref">24</a>]</span>
 and Wassermam (2014) <span class="citation">[<a href="references.html#ref-Wasserman:2014aa" role="doc-biblioref">25</a>]</span> for a discussion of this topic.</p>
-<p>Next we create folds for 10-fold cross-validation of models fitted to
+<p>In this section we look at the relative performance and size of the models
+considered. The effect of the size of the sample set on the level and
+stability of performance will be investigated in the next section.</p>
+<hr />
+<p>First we create folds for 10-fold cross-validation of models fitted to
 training data. We’ll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="explore-sparsity.html#cb38-1"></a><span class="co"># This is too variable, both in terms of fold size And composition</span></span>
@@ -494,19 +501,18 @@ data for each fold fit.</p>
 </div>
 <div id="fit-and-compare-models" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Fit and compare models</h2>
-<ul>
-<li>cross-validated accuracy</li>
-<li>test set accuracy<br />
-</li>
-<li>sparsity
-<ul>
-<li>for lasso, enet <!--and lassoC-->, examine number of selected variables</li>
-</ul></li>
-</ul>
-<p>Although “the one standard error rule” can produce a model with fewer predictors, it usually results in increased MSE and more biased parameter estimates
+<p><code>glmnet</code> provides cross-validation methods to pick the parameter <strong>lambda</strong> which
+controls to size of the penalty function. The “one standard error rule”
+produces a model with fewer predictors then the minimum cv error model.
+On the training data, this usually results in increased MSE and more
+biased parameter estimates
 (see Engebretsen et al. (2019) <span class="citation">[<a href="references.html#ref-Engebretsen:2019aa" role="doc-biblioref">26</a>]</span> for example).
-We will look at both the minimum cv error and the one standard error rule model
-preformance.</p>
+The question of iterest though is the performance on unseen data; not on the training data.
+In the analysis below, we compare the cv error rates with out-of-fold and
+test set error rates. The results show that out-of-fold error rates computed from
+the training data are good indicators of test set error rates, and that
+the one standard error rule models do as well as the minimim cv error models
+for the lasso, which has the best overall performance.</p>
 <div id="logistic-regression-in-glmnet" class="section level3" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Logistic regression in <code>glmnet</code></h3>
 <p><code>glmnet</code> provides functionality to extract various predicted of fitted values
@@ -515,9 +521,13 @@ from calibrated models. Note in passing that some folks make a distinction betwe
 versus <strong>predicted</strong> values for sample points that
 are not in the training dataset. <code>glmnet</code> makes no such distinction and the
 <code>predict</code> function is used to produce both fitted as well as predicted values.
-For logistic regressions, which is the model fitted in a regularized fashion
+When predict is invoked to make predictions for design points that are part
+of the training dataset, what is returned are fitted values.<br />
+When predict is invoked to make predictions for design points that are not part
+of the training dataset, what is returned are predicted values.</p>
+<p>For logistic regressions, which is the model fitted in a regularized fashion
 when models are fitted by glmnet with the parameter <code>family='binomial'</code>, three
-fitted or predicted values can be extracted at a given design point.<br />
+fitted or predicted values can be extracted at a given design point.
 Suppose our response variable Y is either 0 or 1 (Control or HCC in our case).
 These are specified by the <code>type</code> parameter. <code>type='resp'</code> returns
 the fitted or predicted probability of <span class="math inline">\(Y=1\)</span>. <code>type='class'</code> returns the fitted or
@@ -531,14 +541,14 @@ logistic regression model:</p>
 <p>where <span class="math inline">\(g\)</span> is the link function, <span class="math inline">\(g^{-1}\)</span> the mean function.
 The link function is given by:</p>
 <p><span class="math display">\[g(y) = h^{-1}(y) = ln(\frac{y}{1-y})\]</span></p>
-<p>This link function is called the logit function, and its inverse the logistic
+<p>This link function is called the <em>logit</em> function, and its inverse the <em>logistic</em>
 function.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="explore-sparsity.html#cb39-1"></a>logistic_f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x))</span></code></pre></div>
 <p>It is important to note that all <em>predicted</em> values extracted from
 <code>glmnet</code> fitted models by the <strong>predict()</strong> extraction method
 yield <strong>fitted</strong> values for design points that are part of the
 training data set. This includes the predicted class for training data
-which ae used to estimate misclassification error rates. As a result, the cv error
+which are used to estimate misclassification error rates. As a result, the cv error
 rates quoted in various <code>glmnet</code> summaries are generally optimistic.
 <code>glmnet</code> fitting functions have a
 parameter, <em>keep</em>, which instructs the fitting function to keep the
@@ -672,19 +682,24 @@ Maybe show in appendix??
 <span id="cb46-63"><a href="explore-sparsity.html#cb46-63"></a>  <span class="st">&quot;oof =&quot;</span>, <span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span>train_oofPred_min_error, <span class="dv">1</span>),</span>
 <span id="cb46-64"><a href="explore-sparsity.html#cb46-64"></a>  <span class="st">&quot;test =&quot;</span>, <span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span>test_pred_min_error, <span class="dv">1</span>)</span>
 <span id="cb46-65"><a href="explore-sparsity.html#cb46-65"></a> ))</span>
-<span id="cb46-66"><a href="explore-sparsity.html#cb46-66"></a></span>
-<span id="cb46-67"><a href="explore-sparsity.html#cb46-67"></a> <span class="kw">cbind</span>(</span>
-<span id="cb46-68"><a href="explore-sparsity.html#cb46-68"></a>  <span class="dt">error_1se =</span> <span class="kw">c</span>(</span>
-<span id="cb46-69"><a href="explore-sparsity.html#cb46-69"></a>   <span class="dt">train_cv =</span> cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se],</span>
-<span id="cb46-70"><a href="explore-sparsity.html#cb46-70"></a>   <span class="dt">train_oof =</span> train_oofPred_1se_error,</span>
-<span id="cb46-71"><a href="explore-sparsity.html#cb46-71"></a>   <span class="dt">test =</span> test_pred_1se_error),</span>
-<span id="cb46-72"><a href="explore-sparsity.html#cb46-72"></a>  <span class="dt">error_min =</span> <span class="kw">c</span>(</span>
-<span id="cb46-73"><a href="explore-sparsity.html#cb46-73"></a>   <span class="dt">train_cv =</span> cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min],</span>
-<span id="cb46-74"><a href="explore-sparsity.html#cb46-74"></a>   <span class="dt">train_oof =</span> train_oofPred_min_error,</span>
-<span id="cb46-75"><a href="explore-sparsity.html#cb46-75"></a>   <span class="dt">test =</span> test_pred_min_error)</span>
-<span id="cb46-76"><a href="explore-sparsity.html#cb46-76"></a>  )</span>
-<span id="cb46-77"><a href="explore-sparsity.html#cb46-77"></a>                  </span>
-<span id="cb46-78"><a href="explore-sparsity.html#cb46-78"></a>}</span></code></pre></div>
+<span id="cb46-66"><a href="explore-sparsity.html#cb46-66"></a> </span>
+<span id="cb46-67"><a href="explore-sparsity.html#cb46-67"></a> tmp &lt;-</span>
+<span id="cb46-68"><a href="explore-sparsity.html#cb46-68"></a><span class="st"> </span><span class="kw">cbind</span>(</span>
+<span id="cb46-69"><a href="explore-sparsity.html#cb46-69"></a>  <span class="dt">error_1se =</span> <span class="kw">c</span>(</span>
+<span id="cb46-70"><a href="explore-sparsity.html#cb46-70"></a>   <span class="dt">p =</span> cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se],</span>
+<span id="cb46-71"><a href="explore-sparsity.html#cb46-71"></a>   <span class="dt">train_cv =</span> <span class="dv">100</span><span class="op">*</span>cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se],</span>
+<span id="cb46-72"><a href="explore-sparsity.html#cb46-72"></a>   <span class="dt">train_oof =</span> <span class="dv">100</span><span class="op">*</span>train_oofPred_1se_error,</span>
+<span id="cb46-73"><a href="explore-sparsity.html#cb46-73"></a>   <span class="dt">test =</span> <span class="dv">100</span><span class="op">*</span>test_pred_1se_error),</span>
+<span id="cb46-74"><a href="explore-sparsity.html#cb46-74"></a>  <span class="dt">error_min =</span> <span class="kw">c</span>(</span>
+<span id="cb46-75"><a href="explore-sparsity.html#cb46-75"></a>   <span class="dt">p =</span> cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min],</span>
+<span id="cb46-76"><a href="explore-sparsity.html#cb46-76"></a>   <span class="dt">train_cv =</span> <span class="dv">100</span><span class="op">*</span>cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min],</span>
+<span id="cb46-77"><a href="explore-sparsity.html#cb46-77"></a>   <span class="dt">train_oof =</span> <span class="dv">100</span><span class="op">*</span>train_oofPred_min_error,</span>
+<span id="cb46-78"><a href="explore-sparsity.html#cb46-78"></a>   <span class="dt">test =</span> <span class="dv">100</span><span class="op">*</span>test_pred_min_error)</span>
+<span id="cb46-79"><a href="explore-sparsity.html#cb46-79"></a>  )</span>
+<span id="cb46-80"><a href="explore-sparsity.html#cb46-80"></a>  <span class="co"># Need to fix names  </span></span>
+<span id="cb46-81"><a href="explore-sparsity.html#cb46-81"></a>  <span class="kw">rownames</span>(tmp) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;p&#39;</span>, <span class="st">&#39;train_cv&#39;</span>, <span class="st">&#39;train_oof&#39;</span>, <span class="st">&#39;test&#39;</span>)</span>
+<span id="cb46-82"><a href="explore-sparsity.html#cb46-82"></a>  tmp </span>
+<span id="cb46-83"><a href="explore-sparsity.html#cb46-83"></a>}</span></code></pre></div>
 <p>Examine model performance.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="explore-sparsity.html#cb47-1"></a> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>)) </span>
 <span id="cb47-2"><a href="explore-sparsity.html#cb47-2"></a></span>
@@ -712,7 +727,7 @@ Figure 4.1: compare fits
 <span id="cb52-2"><a href="explore-sparsity.html#cb52-2"></a>  <span class="dt">lasso =</span> lasso_errors_mtx, <span class="dt">ridge =</span> rifge_errors_mtx, <span class="dt">enet =</span> enet_errors_mtx</span>
 <span id="cb52-3"><a href="explore-sparsity.html#cb52-3"></a>)</span>
 <span id="cb52-4"><a href="explore-sparsity.html#cb52-4"></a></span>
-<span id="cb52-5"><a href="explore-sparsity.html#cb52-5"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">t</span>(errors_frm)<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb52-5"><a href="explore-sparsity.html#cb52-5"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">t</span>(errors_frm),</span>
 <span id="cb52-6"><a href="explore-sparsity.html#cb52-6"></a> <span class="dt">caption =</span> <span class="st">&#39;Misclassifiaction error rates&#39;</span>,</span>
 <span id="cb52-7"><a href="explore-sparsity.html#cb52-7"></a> <span class="dt">digits=</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb52-8"><a href="explore-sparsity.html#cb52-8"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
@@ -723,6 +738,9 @@ Figure 4.1: compare fits
 <thead>
 <tr>
 <th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+p
 </th>
 <th style="text-align:right;">
 train_cv
@@ -741,6 +759,9 @@ test
 lasso.error_1se
 </td>
 <td style="text-align:right;">
+99
+</td>
+<td style="text-align:right;">
 7.0
 </td>
 <td style="text-align:right;">
@@ -753,6 +774,9 @@ lasso.error_1se
 <tr>
 <td style="text-align:left;">
 lasso.error_min
+</td>
+<td style="text-align:right;">
+99
 </td>
 <td style="text-align:right;">
 7.0
@@ -769,6 +793,9 @@ lasso.error_min
 ridge.error_1se
 </td>
 <td style="text-align:right;">
+15752
+</td>
+<td style="text-align:right;">
 13.5
 </td>
 <td style="text-align:right;">
@@ -781,6 +808,9 @@ ridge.error_1se
 <tr>
 <td style="text-align:left;">
 ridge.error_min
+</td>
+<td style="text-align:right;">
+15752
 </td>
 <td style="text-align:right;">
 12.5
@@ -797,6 +827,9 @@ ridge.error_min
 enet.error_1se
 </td>
 <td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
 7.2
 </td>
 <td style="text-align:right;">
@@ -811,6 +844,9 @@ enet.error_1se
 enet.error_min
 </td>
 <td style="text-align:right;">
+278
+</td>
+<td style="text-align:right;">
 6.7
 </td>
 <td style="text-align:right;">
@@ -823,9 +859,14 @@ enet.error_min
 </tbody>
 </table>
 <p>We see that the lasso and enet models do better than the ridge model.
-These is very little difference between the min lambda and the
-the one standard error rule lambda models (the two are the same for the
-lasso in this data set). We also see that the training data out-of-fold
+There is very little difference between the min lambda and the
+the one standard error (1se) rule lambda models (the two are the same for the
+lasso in this data set).</p>
+<p>The <em>1se</em> lambda lasso fit is only slightly more parsimonious than the
+<em>1se</em> elastic net fit, but its test set accuracy is better.
+The <em>min</em> lambda elastic net fit performs as well as the lasso model,
+but is much less parsimonious.</p>
+<p>We also see that the training data out-of-fold
 estimates of misclassification error rates are much closer to the
 test set estimates than are the cv estimated rates. This has
 been our experience with regularized regression models fitted to
@@ -838,7 +879,8 @@ as we will show in Section <a href="model-suite.html#model-suite">5</a>.</p>
 <h2><span class="header-section-number">4.3</span> Relaxed lasso and blended mix</h2>
 <p>Next we look at the so-called <code>relaxed lasso</code> and
 the <code>blended mix</code> which is an optimized shrinkage
-between the relaxed lasso and the regular lasso.</p>
+between the relaxed lasso and the regular lasso.
+See <a href="modeling-background.html#eq:blended">(2.3)</a> in Section <a href="modeling-background.html#modeling-background">2</a>.</p>
 <!--
 The relaxed fit takes quite a bit longer.  
 -->
@@ -855,7 +897,7 @@ The relaxed fit takes quite a bit longer.
 ## 1se   0.5 0.0379 0.06748 0.005274      35</code></pre>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="explore-sparsity.html#cb55-1"></a><span class="kw">plot</span>(cv_lassoR)</span></code></pre></div>
 <div class="figure"><span id="fig:lookLassoR"></span>
-<img src="Static/figures/lookLassoR-1.png" alt="lassoR fit" width="480" />
+<img src="Static/figures/lookLassoR-1.png" alt="lassoR fit" width="576" />
 <p class="caption">
 Figure 4.2: lassoR fit
 </p>
@@ -918,7 +960,7 @@ Figure 4.2: lassoR fit
 <span id="cb56-56"><a href="explore-sparsity.html#cb56-56"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lookLassoR">Table 4.4: </span>Relaxed lasso and blended mix error rates
+<span id="tab:lookLassoR2">Table 4.4: </span>Relaxed lasso and blended mix error rates
 </caption>
 <tbody>
 <tr>
@@ -966,13 +1008,21 @@ test_relaxed_oof
 <p>The relaxed lasso and blended mix error rates are comparable to the
 regular lasso fit error rate. We see here too that the reported cv
 error rates are quite optimistic, while out-of-fold error rates
-continue to be good indicators of unseen data error rates.</p>
+continue to be good indicators of unseen data error rates, as captured
+by the test set.</p>
+<p>The <em>1se</em> lambda rule applied to the relaxed lasso fit selected a model with
+99 features,
+while for the blended mix model
+(See <a href="modeling-background.html#eq:blended">(2.3)</a> in Section <a href="modeling-background.html#modeling-background">2</a>
+the <em>1se</em> lambda rule selected
+35 features (See vertical
+dotted reference line in Figure <a href="explore-sparsity.html#fig:lookLassoR">4.2</a>).</p>
 </div>
 <div id="examination-of-sensitivity-vs-specificity" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Examination of sensitivity vs specificity</h2>
 <p>In the results above we reported error rates without inspecting the
-sensitivity versus specificity trade off. Here we look at this
-question with the help of ROC curves.</p>
+sensitivity versus specificity trade-off. ROC curves can be examined
+to get a sense of the trade-off.</p>
 <div id="training-data-out-of-fold-roc-curves" class="section level3" number="4.4.1">
 <h3><span class="header-section-number">4.4.1</span> Training data out-of-fold ROC curves</h3>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="explore-sparsity.html#cb57-1"></a><span class="co"># train</span></span>
@@ -2005,7 +2055,7 @@ Figure 4.13: Enet Model Genes
           </div>
         </div>
       </div>
-<a href="modeling-background.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preproc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="model-suite.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

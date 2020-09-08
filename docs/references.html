@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,10 +164,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>2</b> Preprocessing</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>2.1</b> Load the data</a></li>
-<li class="chapter" data-level="2.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>2.2</b> Differential representation analysis</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<ul>
+<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
+<li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#remove-lowly-expressed-genes"><i class="fa fa-check"></i>Remove lowly expressed genes</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#creating-a-design-matrix-and-contrasts"><i class="fa fa-check"></i>Creating a design matrix and contrasts</a></li>
@@ -176,19 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#graphical-representations-of-de-results-md-plots"><i class="fa fa-check"></i>Graphical representations of DE results: MD Plots</a></li>
 <li class="chapter" data-level="" data-path="preproc.html"><a href="preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise ratio regime</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>3</b> Modeling - Background</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>3.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>3.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="3.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>3.2</b> glmnet</a>
-<ul>
-<li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
-</ul></li>
+<li class="chapter" data-level="3.3" data-path="preproc.html"><a href="preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
@@ -256,59 +257,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-Collin:2018aa">
 <p>5. Collin, F., Ning, Y., Phillips, T., McCarthy, E., Scott, A., Ellison, C., Ku, C.-J., Guler, G.D., Chau, K., and Ashworth, A. <em>et al.</em> Detection of early stage pancreatic cancer using 5-hydroxymethylcytosine signatures in circulating cell free dna. bioRxiv, 422675. Available at: <a href="http://biorxiv.org/content/early/2018/09/26/422675.abstract">http://biorxiv.org/content/early/2018/09/26/422675.abstract</a>.</p>
 </div>
-<div id="ref-Huang:2017aa">
-<p>6. Huang, L.-H., Lin, P.-H., Tsai, K.-W., Wang, L.-J., Huang, Y.-H., Kuo, H.-C., and Li, S.-C. The effects of storage temperature and duration of blood samples on dna and rna qualities. PloS one <em>12</em>, e0184692–e0184692. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/28926588">https://pubmed.ncbi.nlm.nih.gov/28926588</a>.</p>
-</div>
-<div id="ref-Permenter:2015aa">
-<p>7. Permenter, J., Ishwar, A., Rounsavall, A., Smith, M., Faske, J., Sailey, C.J., and Alfaro, M.P. (2015). Quantitative analysis of genomic dna degradation in whole blood under various storage conditions for molecular diagnostic testing. Molecular and Cellular Probes <em>29</em>, 449–453. Available at: <a href="http://www.sciencedirect.com/science/article/pii/S0890850815300207">http://www.sciencedirect.com/science/article/pii/S0890850815300207</a>.</p>
-</div>
-<div id="ref-Law:2018aa">
-<p>8. Law, C., Alhamdoosh, M., Su, S., Dong, X., Tian, L., Smyth, G., and Ritchie, M. (2018). RNA-seq analysis is easy as 1-2-3 with limma, glimma and edgeR [version 3; peer review: 3 approved]. F1000Research <em>5</em>. Available at: <a href="https://dx.doi.org/10.12688%2Ff1000research.9005.3">https://dx.doi.org/10.12688%2Ff1000research.9005.3</a>.</p>
-</div>
-<div id="ref-Ritchie:2015aa">
-<p>9. Ritchie, M.E., Phipson, B., Wu, D., Hu, Y., Law, C.W., Shi, W., and Smyth, G.K. Limma powers differential expression analyses for rna-sequencing and microarray studies. Nucleic acids research <em>43</em>, e47–e47. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/25605792">https://pubmed.ncbi.nlm.nih.gov/25605792</a>.</p>
-</div>
-<div id="ref-Peixoto:2015aa">
-<p>10. Peixoto, L., Risso, D., Poplawski, S.G., Wimmer, M.E., Speed, T.P., Wood, M.A., and Abel, T. How data analysis affects power, reproducibility and biological insight of rna-seq studies in complex datasets. Nucleic acids research <em>43</em>, 7664–7674. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/26202970">https://pubmed.ncbi.nlm.nih.gov/26202970</a>.</p>
-</div>
-<div id="ref-Gandolfo:2018aa">
-<p>11. Gandolfo, L.C., and Speed, T.P. RLE plots: Visualizing unwanted variation in high dimensional data. PloS one <em>13</em>, e0191629–e0191629. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29401521">https://pubmed.ncbi.nlm.nih.gov/29401521</a>.</p>
-</div>
-<div id="ref-Risso:2014aa">
-<p>12. Risso, D., Ngai, J., Speed, T.P., and Dudoit, S. (2014). Normalization of rna-seq data using factor analysis of control genes or samples. Nature Biotechnology <em>32</em>, 896–902. Available at: <a href="https://doi.org/10.1038/nbt.2931">https://doi.org/10.1038/nbt.2931</a>.</p>
-</div>
-<div id="ref-McCarthy:2009aa">
-<p>13. McCarthy, D.J., and Smyth, G.K. Testing significance relative to a fold-change threshold is a treat. Bioinformatics <em>25</em>, 765–771. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/</a>.</p>
+<div id="ref-Friedman:2010aa">
+<p>6. Friedman, J., Hastie, T., and Tibshirani, R. (2010). Regularization paths for generalized linear models via coordinate descent. J Stat Softw <em>33</em>, 1–22.</p>
 </div>
 <div id="ref-Hastie:2017aa">
-<p>14. Hastie, T., and Tibshirani, R. (2017). Extended comparisons of best subset selection, forward stepwise selection, and the lasso. arXiv: Methodology.</p>
-</div>
-<div id="ref-Friedman:2010aa">
-<p>15. Friedman, J., Hastie, T., and Tibshirani, R. (2010). Regularization paths for generalized linear models via coordinate descent. J Stat Softw <em>33</em>, 1–22.</p>
+<p>7. Hastie, T., and Tibshirani, R. (2017). Extended comparisons of best subset selection, forward stepwise selection, and the lasso. arXiv: Methodology.</p>
 </div>
 <div id="ref-Tibshirani:2012aa">
-<p>16. Tibshirani, R., Bien, J., Friedman, J., Hastie, T., Simon, N., Taylor, J., and Tibshirani, R.J. Strong rules for discarding predictors in lasso-type problems. Journal of the Royal Statistical Society. Series B, Statistical methodology <em>74</em>, 245–266. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/25506256">https://pubmed.ncbi.nlm.nih.gov/25506256</a>.</p>
+<p>8. Tibshirani, R., Bien, J., Friedman, J., Hastie, T., Simon, N., Taylor, J., and Tibshirani, R.J. Strong rules for discarding predictors in lasso-type problems. Journal of the Royal Statistical Society. Series B, Statistical methodology <em>74</em>, 245–266. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/25506256">https://pubmed.ncbi.nlm.nih.gov/25506256</a>.</p>
 </div>
 <div id="ref-Simon:2011aa">
-<p>17. Simon, N., Friedman, J., Hastie, T., and Tibshirani, R. Regularization paths for cox’s proportional hazards model via coordinate descent. J Stat Softw <em>39</em>, 1–13.</p>
+<p>9. Simon, N., Friedman, J., Hastie, T., and Tibshirani, R. Regularization paths for cox’s proportional hazards model via coordinate descent. J Stat Softw <em>39</em>, 1–13.</p>
 </div>
 <div id="ref-Simon:2013aa">
-<p>18. Simon, N., Friedman, J., and Hastie, T. (2013). A blockwise descent algorithm for group-penalized multiresponse and multinomial regression. arXiv preprint arXiv:1311.6529.</p>
-</div>
-<div id="ref-Bertsimas:2016aa">
-<p>19. Bertsimas, D., King, A., and Mazumder, R. (2016). Best subset selection via a modern optimization lens. Ann. Statist. <em>44</em>, 813–852. Available at: <a href="https://projecteuclid.org:443/euclid.aos/1458245736">https://projecteuclid.org:443/euclid.aos/1458245736</a>.</p>
+<p>10. Simon, N., Friedman, J., and Hastie, T. (2013). A blockwise descent algorithm for group-penalized multiresponse and multinomial regression. arXiv preprint arXiv:1311.6529.</p>
 </div>
 <div id="ref-Xiang:2020aa">
-<p>20. Xiang, G., Keller, C.A., Giardine, B., An, L., Li, Q., Zhang, Y., and Hardison, R.C. (2020). S3norm: Simultaneous normalization of sequencing depth and signal-to-noise ratio in epigenomic data. Nucleic Acids Research <em>48</em>, e43–e43. Available at: <a href="https://doi.org/10.1093/nar/gkaa105">https://doi.org/10.1093/nar/gkaa105</a>.</p>
+<p>11. Xiang, G., Keller, C.A., Giardine, B., An, L., Li, Q., Zhang, Y., and Hardison, R.C. (2020). S3norm: Simultaneous normalization of sequencing depth and signal-to-noise ratio in epigenomic data. Nucleic Acids Research <em>48</em>, e43–e43. Available at: <a href="https://doi.org/10.1093/nar/gkaa105">https://doi.org/10.1093/nar/gkaa105</a>.</p>
 </div>
 <div id="ref-Lozoya:2018aa">
-<p>21. Lozoya, O.A., Santos, J.H., and Woychik, R.P. A leveraged signal-to-noise ratio (lstnr) method to extract differentially expressed genes and multivariate patterns of expression from noisy and low-replication rnaseq data. Frontiers in genetics <em>9</em>, 176–176. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29868123">https://pubmed.ncbi.nlm.nih.gov/29868123</a>.</p>
+<p>12. Lozoya, O.A., Santos, J.H., and Woychik, R.P. A leveraged signal-to-noise ratio (lstnr) method to extract differentially expressed genes and multivariate patterns of expression from noisy and low-replication rnaseq data. Frontiers in genetics <em>9</em>, 176–176. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29868123">https://pubmed.ncbi.nlm.nih.gov/29868123</a>.</p>
 </div>
 <div id="ref-Simonsen:2018aa">
-<p>22. Simonsen, A.T., Hansen, M.C., Kjeldsen, E., Møller, P.L., Hindkjær, J.J., Hokland, P., and Aggerholm, A. (2018). Systematic evaluation of signal-to-noise ratio in variant detection from single cell genome multiple displacement amplification and exome sequencing. BMC Genomics <em>19</em>, 681. Available at: <a href="https://doi.org/10.1186/s12864-018-5063-5">https://doi.org/10.1186/s12864-018-5063-5</a>.</p>
+<p>13. Simonsen, A.T., Hansen, M.C., Kjeldsen, E., Møller, P.L., Hindkjær, J.J., Hokland, P., and Aggerholm, A. (2018). Systematic evaluation of signal-to-noise ratio in variant detection from single cell genome multiple displacement amplification and exome sequencing. BMC Genomics <em>19</em>, 681. Available at: <a href="https://doi.org/10.1186/s12864-018-5063-5">https://doi.org/10.1186/s12864-018-5063-5</a>.</p>
 </div>
 <div id="ref-Rapaport:2013aa">
-<p>23. Rapaport, F., Khanin, R., Liang, Y., Pirun, M., Krek, A., Zumbo, P., Mason, C.E., Socci, N.D., and Betel, D. (2013). Comprehensive evaluation of differential gene expression analysis methods for rna-seq data. Genome biology <em>14</em>, R95–R95. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/24020486">https://pubmed.ncbi.nlm.nih.gov/24020486</a>.</p>
+<p>14. Rapaport, F., Khanin, R., Liang, Y., Pirun, M., Krek, A., Zumbo, P., Mason, C.E., Socci, N.D., and Betel, D. (2013). Comprehensive evaluation of differential gene expression analysis methods for rna-seq data. Genome biology <em>14</em>, R95–R95. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/24020486">https://pubmed.ncbi.nlm.nih.gov/24020486</a>.</p>
+</div>
+<div id="ref-Bertsimas:2016aa">
+<p>15. Bertsimas, D., King, A., and Mazumder, R. (2016). Best subset selection via a modern optimization lens. Ann. Statist. <em>44</em>, 813–852. Available at: <a href="https://projecteuclid.org:443/euclid.aos/1458245736">https://projecteuclid.org:443/euclid.aos/1458245736</a>.</p>
+</div>
+<div id="ref-Huang:2017aa">
+<p>16. Huang, L.-H., Lin, P.-H., Tsai, K.-W., Wang, L.-J., Huang, Y.-H., Kuo, H.-C., and Li, S.-C. The effects of storage temperature and duration of blood samples on dna and rna qualities. PloS one <em>12</em>, e0184692–e0184692. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/28926588">https://pubmed.ncbi.nlm.nih.gov/28926588</a>.</p>
+</div>
+<div id="ref-Permenter:2015aa">
+<p>17. Permenter, J., Ishwar, A., Rounsavall, A., Smith, M., Faske, J., Sailey, C.J., and Alfaro, M.P. (2015). Quantitative analysis of genomic dna degradation in whole blood under various storage conditions for molecular diagnostic testing. Molecular and Cellular Probes <em>29</em>, 449–453. Available at: <a href="http://www.sciencedirect.com/science/article/pii/S0890850815300207">http://www.sciencedirect.com/science/article/pii/S0890850815300207</a>.</p>
+</div>
+<div id="ref-Law:2018aa">
+<p>18. Law, C., Alhamdoosh, M., Su, S., Dong, X., Tian, L., Smyth, G., and Ritchie, M. (2018). RNA-seq analysis is easy as 1-2-3 with limma, glimma and edgeR [version 3; peer review: 3 approved]. F1000Research <em>5</em>. Available at: <a href="https://dx.doi.org/10.12688%2Ff1000research.9005.3">https://dx.doi.org/10.12688%2Ff1000research.9005.3</a>.</p>
+</div>
+<div id="ref-Ritchie:2015aa">
+<p>19. Ritchie, M.E., Phipson, B., Wu, D., Hu, Y., Law, C.W., Shi, W., and Smyth, G.K. Limma powers differential expression analyses for rna-sequencing and microarray studies. Nucleic acids research <em>43</em>, e47–e47. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/25605792">https://pubmed.ncbi.nlm.nih.gov/25605792</a>.</p>
+</div>
+<div id="ref-Peixoto:2015aa">
+<p>20. Peixoto, L., Risso, D., Poplawski, S.G., Wimmer, M.E., Speed, T.P., Wood, M.A., and Abel, T. How data analysis affects power, reproducibility and biological insight of rna-seq studies in complex datasets. Nucleic acids research <em>43</em>, 7664–7674. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/26202970">https://pubmed.ncbi.nlm.nih.gov/26202970</a>.</p>
+</div>
+<div id="ref-Gandolfo:2018aa">
+<p>21. Gandolfo, L.C., and Speed, T.P. RLE plots: Visualizing unwanted variation in high dimensional data. PloS one <em>13</em>, e0191629–e0191629. Available at: <a href="https://pubmed.ncbi.nlm.nih.gov/29401521">https://pubmed.ncbi.nlm.nih.gov/29401521</a>.</p>
+</div>
+<div id="ref-Risso:2014aa">
+<p>22. Risso, D., Ngai, J., Speed, T.P., and Dudoit, S. (2014). Normalization of rna-seq data using factor analysis of control genes or samples. Nature Biotechnology <em>32</em>, 896–902. Available at: <a href="https://doi.org/10.1038/nbt.2931">https://doi.org/10.1038/nbt.2931</a>.</p>
+</div>
+<div id="ref-McCarthy:2009aa">
+<p>23. McCarthy, D.J., and Smyth, G.K. Testing significance relative to a fold-change threshold is a treat. Bioinformatics <em>25</em>, 765–771. Available at: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2654802/</a>.</p>
 </div>
 <div id="ref-Lockhart:2014aa">
 <p>24. Lockhart, R., Taylor, J., Tibshirani, R.J., and Tibshirani, R. A significance test for the lasso. Ann Stat <em>42</em>, 413–468.</p>

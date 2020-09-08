@@ -148,52 +148,124 @@ performs much like the lasso, but removes any degeneracies and wild behavior cau
 by extreme correlations*.
 
 
+### Signal-to-noise Ratio {-}
 
-### Lasso vs Best Subset  {-}
+A key characteristic of classification problems is the 
+prevailing signal-to-noise ratio (SNR) of the problem at hand.
 
-* Best subset selection 
+To define SNR, let $(x_0, y_0) \in  \mathbb{R}^p \times \mathbb{R}$
+be a pair of predcitor and response variables and define
+$f(x_0) = \mathbb{E}(y_0|x_0)$ and $\epsilon = y_0 - f(x_0)$ so that
 
- $$\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k$$
+$$y_0 = f(x_0) + \epsilon_0.$$
+
+The signal-to-noise ratio in this model is defined as
+
+$$SNR=\frac{var(f(x_0))}{var(\epsilon_0)}.$$
+
+It is useful to relate the SNR of a model to the proportion of variance explained (PVE).
+For a given prediction function g --- eg. one trained on n samples
+$(x_i, y_i) i = 1, \dots, n$ that are i.i.d. to $(x_0, y_0)$ --- its
+associated proportion of variance explained is defined as
+
+$$PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}.$$
+
+This is maximized when we take $g$ to be the mean function $f$ itself,
+in which case
+
+$$PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}.$$
+
+Or equivalently,
+
+$$SNR = \frac{PVE}{1-PVE}.$$
+
+Hastie, Tibshirani, and Tibshirani (2017) [@Hastie:2017aa], point out that
+PVE is typically in the 0.2 range, and much lower in financial data.  It
+is also much lower in 5hmC data, as we will see in the next section.  
+
+Note that the SNR is a different characterization of noise level than the
+coefficient of variation:
+
+$$c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}$$
+
+Note that for small SNR, SNR $\approx$ PVE.
 
 
-* lasso 
+See Xiang et al. (2020) [@Xiang:2020aa], Lozoya et al. (2018) [@Lozoya:2018aa], 
+Simonson et al. (2018) [@Simonsen:2018aa] and
+Rapaport et al. (2013) [@Rapaport:2013aa] for SNR in RNA-Seq
 
- $$\min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t$$
+### Lasso vs Best Subset  {-} 
+
+Best subset selection finds the subset of k predictors that 
+produces the best fit in terms of squared error, solving the nonconvex problem:
+
+\begin{equation}
+ \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k
+ (\#eq:best-sub)
+\end{equation}
+
+The lasso solves a covex relaxation of \@ref(eq:best-sub) where we replace the 
+$l_0$ norm by the $l_1$ norm, namely
+
+\begin{equation}
+
+ \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_1 \leq t
+
+ (\#eq:lasso)
+\end{equation}
+
+where $||\beta||_1 = \sum_{i=1}^{p} |\beta_i|$, and $t \geq 0$ is a tuning parameter.
 
 
-* Bertsimas et al. (2016) [@Bertsimas:2016aa]
-    - presented a mixed integer optimization (MIO) formulation for the best subset selection problem   
-    - Using these MIO solvers, can solve problems with p in the hundreds and even thousands
-    - demonstrated that best subset selection generally gives superior prediction accuracy compared to forward stepwise selection and the lasso, over a variety of problem setups. 
+Bertsimas et al. (2016) [@Bertsimas:2016aa] presented a mixed integer optimization (MIO) 
+formulation for the best subset selection problem.  Using these MIO solvers, 
+one can solve problems with p in the hundreds and even thousands.
+Bertsimas et al. showed evidence that
+best subset selection generally gives superior prediction accuracy compared 
+to forward stepwise selection and the lasso, over a variety of problem setups. 
 
-* Hastie et al. (2017) [@Hastie:2017aa]
-    - neither best subset selection nor the lasso uniformly dominate the other, with best subset selection generally performing better in high signal-to-noise (SNR) ratio regimes, and the lasso better in low SNR regimes;
-    - best subset selection and forward stepwise perform quite similarly throughout;
-    - the relaxed lasso is the overall winner, performing just about as well as the lasso in low SNR scenarios, 
-and as well as best subset selection in high SNR scenarios. We conclude that it is 
-able to use its auxiliary shrinkage parameter ($\gamma$) to get the “best of both worlds”: 
+In Hastie et al. (2017) [@Hastie:2017aa], the authors countered by arguing that
+neither best subset selection nor the lasso uniformly dominate the other, 
+with best subset selection generally performing better in high signal-to-noise (SNR) 
+ratio regimes, and **the lasso better in low SNR regimes**.
+Best subset selection and forward stepwise perform quite similarly over
+a range of SNR contexts, but the relaxed lasso is the overall best option, 
+performing just about as well as the lasso in low SNR scenarios, 
+and as well as best subset selection in high SNR scenarios. 
+Hastie et al. conclude that a blended mix of lasso and relaxed lasso estimator,
+the *shrunken relaxed lasso fit*, is able to use its auxiliary shrinkage 
+parameter ($\gamma$) to get the “best of both worlds”: 
 it accepts the heavy shrinkage from the lasso when such shrinkage is helpful, and reverses it when it is not.
    
 
+<!--
 * relaxed lasso
 
 $$\hat{\beta}^{relax}(\lambda, \gamma) = \gamma \beta^{lasso}(\lambda) + (1 - \gamma)(\beta^{LS}(\lambda)$$
 
 * shrunken relaxed lasso (aka the blended fit)
+-->
 
 Suppose the **glmnet** fitted linear predictor at $\lambda$ is $\hat{\eta}_\lambda(x)$
 and the relaxed version is $\tilde{\eta}_\lambda(x)$, then the shrunken relaxed lasso fit is
 
-$$\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)$$
+\begin{equation}
+
+\tilde{\eta}_{\lambda,\gamma}(x)=(1-\gamma)\tilde{\eta}_\lambda(x) + \gamma \hat{\eta}_\lambda(x)
+
+ (\#eq:blended)
+\end{equation}
 
 $\gamma \in [0,\, 1]$ is an additional tuning parameter which can be selected by cross validation.
 
-The de-biasing will potentially improve prediction performance, and CV will typically select a model 
-with a smaller number of variables. This procedure is very competitive with forward-stepwise and 
-best-subset regression, and has a considerable speed advantage when the number of variables is large. 
-This is especially true for best-subset, but even so for forward stepwise. 
-The latter has to plod through the variables one-at-a-time,
-while glmnet will just plunge in and find a good active set.
+The de-biasing will potentially improve prediction performance, and 
+cross-validation will typically select a model with a smaller number of variables. 
+This procedure is very competitive with forward-stepwise and 
+best-subset regression, and has a considerable speed advantage when the 
+number of variables is large.  This is especially true for best-subset, 
+but even so for forward stepwise.  The latter has to plod through the 
+variables one-at-a-time, while glmnet will just plunge in and find a good active set.
 
 Further details may be found in 
 Friedman, Hastie, and Tibshirani (2010),
@@ -202,18 +274,3 @@ Simon et al. (2011),
 Simon, Friedman, and Hastie (2013) and 
 Hastie, Tibshirani, and Tibshirani (2017)
 ([@Friedman:2010aa;@Tibshirani:2012aa;@Simon:2011aa;@Simon:2013aa;@Hastie:2017aa]). 
-
-
-* SNR  
-    - $y_0=f(x_0) + \epsilon_0$
-    - $SNR=\frac{var(f(x_0))}{var(\epsilon_0)}$
-    - $PVE(g)=1 - \frac{\mathbb{E}(y_0-g(x_0))^2}{Var(y_0)}$
-    - $PVE(f) = 1 - \frac{Var(\epsilon_0)}{Var(y_0)} = \frac{SNR}{1+SNR}$
-    - $SNR = \frac{PVE}{1-PVE}$
-    - $c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}$
-        - a PVE of 0.5 is rare for noisy observational data, and 0.2 may be more typical
-        - A PVE of 0.86, corresponding to an SNR of 6, is unheard of!
-        - For small SNR, SNR $\approx$ PVE
-        - See Xiang et al. (2020) [@Xiang:2020aa], Lozoya et al. (2018) [@Lozoya:2018aa], 
-Simonson et al. (2018) [@Simonsen:2018aa] and
-Rapaport et al. (2013) [@Rapaport:2013aa] for SNR in RNA-Seq
