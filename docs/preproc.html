@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-08" />
+<meta name="date" content="2020-09-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -210,10 +210,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a></li>
-<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#model-suite-1"><i class="fa fa-check"></i><b>5.2</b> Model suite</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="model-suite.html"><a href="model-suite.html#simulation-setup"><i class="fa fa-check"></i><b>5.2.1</b> Simulation setup</a></li>
-</ul></li>
+<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.2</b> Simulation Design</a></li>
+<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.3</b> Setup simulation</a></li>
+<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.4</b> Run simulations</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a></li>
 <li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
@@ -629,9 +628,9 @@ totCovM
 </tbody>
 </table>
 <p>From this table, we see that 25% of the samples have total coverage exceeding
-8M reads, 25% of samples
+<span class="math inline">\(8\)</span>M reads, 25% of samples
 have a 15 percentile of coverage lower than
-4, etc.</p>
+<span class="math inline">\(4\)</span>, etc.</p>
 <!-- SKIP
 We next look at relative log representation (RLR) (in the context of measuring the density of 
 5hmC marks in genes, we refer to `representation` as opposed to `expression`; the
@@ -687,27 +686,30 @@ downtream analyses.</p>
 Figure 3.2: Sample <span class="math inline">\(log_2\)</span> CPM densities
 </p>
 </div>
+<p><span class="math display">\[
+\]</span></p>
 <p>As is typically the case with RNA-Seq data, we notice many weakly represented genes
 in this dataset. A cpm value of 1 appears to adequatly separate
 the expressed from the un-expressed genes, but we will be slightly more strict here
-and require a CPM threshold of 3 . Using a nominal CPM value of
-3, genes are deeemed to be <code>represented</code> if their expression is
+and require a CPM threshold of <span class="math inline">\(3\)</span> . Using a nominal CPM value of
+<span class="math inline">\(3\)</span>, genes are deeemed to be <code>represented</code> if their expression is
 above this threshold, and not represented otherwise.
 For this analysis we will require that genes be <code>represented</code> in at least
-25 samples across the entire dataset to be retained for downstream analysis.
-Here, a CPM value of 3 means that a gene is represented if it
-has at least 9 reads in the sample with the
-lowest sequencing depth (library size 2.9 million).
+<span class="math inline">\(25\)</span> samples across the entire dataset to be retained for downstream analysis.
+Here, a CPM value of <span class="math inline">\(3\)</span> means that a gene is represented if it
+has at least <span class="math inline">\(9\)</span> reads in the sample with the
+lowest sequencing depth (library size <span class="math inline">\(2.9\)</span> million).
 Note that the thresholds used here are arbitrary as there are no hard and fast
 rules to set these by.
 The voom-plot, which is part of analyses done to remove heteroscedasticity,
 can be examined to verify that the filtering performed is adequate.</p>
 <!-- or at least 
-40 counts in the sample with the 
-greatest sequencing depth (library size 13.3 million).
+$40$ counts in the sample with the 
+greatest sequencing depth (library size $13.3$ million).
 -->
 <p>Remove weakly represented genes and replot densities.</p>
-<p>Removing 17.5% of genes…</p>
+<p>$$
+Removing <span class="math inline">\(17.5\)</span>% of genes…</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="preproc.html#cb8-1"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
 <span id="cb8-2"><a href="preproc.html#cb8-2"></a><span class="kw">plot</span>(<span class="kw">density</span>(lcpm_mtx[, <span class="dv">1</span>]),</span>
 <span id="cb8-3"><a href="preproc.html#cb8-3"></a>  <span class="dt">col =</span> groupCol[sampDescA<span class="op">$</span>group[<span class="dv">1</span>]],</span>
@@ -819,7 +821,7 @@ plot that can extremely usful for exploration</p>
 <span id="cb12-8"><a href="preproc.html#cb12-8"></a>  <span class="dt">html =</span> <span class="kw">paste0</span>(<span class="st">&quot;GlMDSplot&quot;</span>), <span class="dt">launch =</span> F</span>
 <span id="cb12-9"><a href="preproc.html#cb12-9"></a>)</span></code></pre></div>
 <p>Link to glMDSPlot:
-<a href="Static/figures//GlMDSplot.html">Here</a></p>
+<a href="$Static/figures//GlMDSplot.html$">Here</a></p>
 <p>No obvious factor links the samples in the 3 clusters observed on the
 4th MDS dimensions. The percent of variance exaplained by this dimension or
 <span class="math inline">\(\approx\)</span> 4%. The glMDSPlot indicates further segregation along
@@ -1127,7 +1129,7 @@ rest of the genes. A statistical test would find that the difference
 between the mean of the down regulated gene population is singificantly different
 than the mean of the other gene population even though the difference is
 quite small
-(-0.028).</p>
+(<span class="math inline">\(-0.028\)</span>).</p>
 <p>These asymmetries are minor, but it would still be good to establish that
 they relfect biology rather than processing artifacts.</p>
 </div>

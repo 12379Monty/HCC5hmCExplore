@@ -3,19 +3,25 @@
 In this section we explore various fits that can be computed 
 and analyzed with tools provided in the `glmnet` package.
 Refer to the [Glmnet Vignette](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html)
-for a quick reference guide.
+for a quick reference guide.  
 
-## CV analysis setup 
+We focus our analyses on lasso fits which tend to favor sparse models.
+
+## Cross-validation analysis setup 
 
 ```{r setParameters}
 
 K_FOLD <- 10
 trainP <- 0.8
-EPS <- 0.05    # Have no idea what "small" epsilon means
 
 ```
 
-First we divide the analysis dataset into `train` and `test` in a `r trainP/(1-trainP)`:1 ratio.  
+<!-- NOT CURRENTLY USED 
+EPS <- 0.05    # Have no idea what "small" epsilon means
+-->
+
+
+First we divide the analysis dataset into `train` and `test` in a $`r trainP/(1-trainP)`$:1 ratio.  
 
 ```{r getTrainVal, cache=T, cache.vars=c('train_sampID_vec', 'test_sampID_vec','train_group_vec','test_group_vec','train_lcpm_mtx','test_lcpm_mtx')}
 
@@ -47,17 +53,17 @@ test_lcpm_mtx <- t(lcpm_mtx[,test_sampID_vec])
 
 ```
 
-We explore some glmnet fits and the "bet on sparsity"    
-  
+We explore some glmnet fits and the "bet on sparsity".
 We consider three models, specified by the value of the
 **alpha** parameter in the elastic net parametrization:  
     - lasso: $\alpha = 1.0$ - sparse models  
-    - ridge $\alpha = 0$ - shrunken coefficients models
-    - elastic net:  $\alpha = 0.5$  - semi sparse model
-<!-- - lassoC: $\alpha = 1-\epsilon =$ `r 1- EPS` - lasso for correlated predictors  -->
+    - ridge $\alpha = 0$ - shrunken coefficients models  
+    - elastic net:  $\alpha = 0.5$  - semi sparse model  
+<!-- - lassoC: $\alpha = 1-\epsilon =$ $TICKr 1- EPSTICK - lasso for correlated predictors  -->
 
-Some questions of interest include:
-* How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?    
+Some questions of interest include:  
+
+* How sparse are models enabling good 5hmC classification of Early HCC vs Control samples?    
 
 <!--
     - The exploratory analysis done in the preprocessing step
@@ -66,26 +72,28 @@ With reasonably large sample sizes we would expect many genes to be selected.
 ???
 -->
 
+<!-- DROP THIS - havign trouble getting at pure lassoR
 * Does the relaxed lasso improve performance in this case?  
+-->
 
-* Does the shrunken relaxed lasso (aka the blended mix) improve performance  
+* Does the shrunken relaxed lasso (aka the blended mix) improve performance in this case? 
 
 * Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?  
 
 In this analysis, we will only evaluate models in terms of 
-model size, stability and performance.  We leave the question
+model sparsity, stability and performance.  We leave the question
 of significance testing of hypotheses about model parameters
 completely out.  See Lockhart et al. (2014) [@Lockhart:2014aa]
 and Wassermam (2014) [@Wasserman:2014aa] for a discussion of this topic.
 
-In this section we look at the relative performance and size of the models
+In this section we look at the relative performance and sparsity of the models
 considered.  The effect of the size of the sample set on the level and 
 stability of performance will be investigated in the next section.
 
 
 ***
 
-First we create folds for `r K_FOLD`-fold cross-validation of models fitted to
+First we create folds for $`r K_FOLD`$-fold cross-validation of models fitted to
 training data.  We'll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.
 
@@ -190,12 +198,13 @@ methods provide.  See Höfling and Tibshirani (2008) [@Hofling:2008aa]
 for a description of the use of pre-validation in model assessment.  
 
 
+<!--
 Because the `keep=T` option will store predicted values for 
 all models evaluated in the cross-validation process, we will
 limit the number of models tested by setting **nlambda=30**
 when calling the fitting functions.  This has no effect on 
 performance in this data set.
-
+-->
 
 
 ```{r doMC, include=F}
@@ -279,8 +288,9 @@ message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
 
 ```
 
+<!--
 The ridge regression model takes over 10 times longer to compute.
-
+-->
 
 <!-- do not show
 Define plotting function.
@@ -290,7 +300,7 @@ Maybe show in appendix??
 
 plot_cv_f <- function(cv_fit, Nzero=T, ...) {
  
- library(glmnet)
+ suppressPackageStartupMessages(require(glmnet))
 
  # No nonger used
  #lambda.1se_p <- cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se]
@@ -376,7 +386,7 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
 
 Examine model performance.
 
-```{r lookFits, cache=F, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=T}
+```{r lookFits, cache=F, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=T, warnings=F,message=F}
 
  par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
 
@@ -409,10 +419,6 @@ knitr::kable(t(errors_frm),
 ```
 
 We see that the lasso and enet models do better than the ridge model.
-There is very little difference between the min lambda and the
-the one standard error (1se) rule lambda models (the two are the same for the 
-lasso in this data set).  
-
 The *1se* lambda lasso fit is only slightly more parsimonious than the 
 *1se* elastic net fit, but its test set accuracy is better.
 The *min* lambda elastic net fit performs as well as the lasso model,
@@ -427,9 +433,9 @@ misclassification rates become more biased as the sample size decreases,
 as we will show in Section \@ref(model-suite).  
 
 
-## Relaxed lasso and blended mix
+## The relaxed lasso and blended mix models
 
-Next we look at the so-called `relaxed lasso` and 
+Next we look at the so-called `relaxed lasso` model, and 
 the `blended mix` which is an optimized shrinkage
 between the relaxed lasso and the regular lasso.
 See \@ref(eq:blended) in Section \@ref(modeling-background).  
@@ -519,17 +525,22 @@ test_pred_blended_1se_vec <- predict(
 test_pred_blended_1se_error <- mean(test_pred_blended_1se_vec != test_group_vec)
 
 
-# FIX THIS
 
-cv_lassoR_1se_error <- cv_lassoR_sum["1se", "Measure"]
-cv_lassoR_min_error <- cv_lassoR_sum["min", "Measure"]
+cv_lassoR_1se_error <- cv_lassoR$cvm[cv_lassoR$lambda==cv_lassoR$lambda.min]
+
+cv_blended_statlist <- cv_lassoR$relaxed$statlist[['g:0.5']]
+cv_blended_1se_error <- cv_blended_statlist$cvm[cv_blended_statlist$lambda==
+   cv_lassoR$relaxed$lambda.1se]
+ 
+
 
 knitr::kable(t(data.frame(
-  train_lassoR_cv = cv_lassoR_1se_error,
-  train_blended_oof = train_oofPred_blended_1se_error,
+  train_relaxed_cv = cv_lassoR_1se_error,
+  train_blended_cv = cv_blended_1se_error,
   train_relaxed_oof = train_oofPred_relaxed_1se_error,
-  test_blended_oof = test_pred_blended_1se_error,
-  test_relaxed_oof = test_pred_relaxed_1se_error
+  train_blended_oof = train_oofPred_blended_1se_error,
+  test_relaxed_oof = test_pred_relaxed_1se_error,
+  test_blended_oof = test_pred_blended_1se_error
 )) * 100,
 digits = 1,
 caption = "Relaxed lasso and blended mix error rates"
@@ -545,13 +556,12 @@ continue to be good indicators of unseen data error rates, as captured
 by the test set.  
 
 The *1se* lambda rule applied to the relaxed lasso fit selected a model with 
-`r cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]` features,
+$`r cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]`$ features,
 while for the blended mix model 
 (See \@ref(eq:blended) in Section \@ref(modeling-background))
 the *1se* lambda rule selected
-`r cv_lassoR$relaxed$nzero.1se` features (vertical 
+$`r cv_lassoR$relaxed$nzero.1se`$ features (vertical 
 dotted reference line in Figure \@ref(fig:lookLassoR)).
-
 
 
 
@@ -583,10 +593,10 @@ train_enet_roc <- pROC::roc(
 
 # lasso - relaxed
 ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
-train_lassoR_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0']][,ndx_1se])
-train_lassoR_roc <- pROC::roc(
+train_relaxed_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0']][,ndx_1se])
+train_relaxed_roc <- pROC::roc(
  response = as.numeric(train_group_vec=='HCC'),
- predictor = train_lassoR_oofProb_vec)
+ predictor = train_relaxed_oofProb_vec)
 
 # blended mix (gamma=0.5)
 ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
@@ -597,14 +607,14 @@ train_blended_roc <- pROC::roc(
 
 plot(train_lasso_roc, col=col_vec[1])
 lines(train_enet_roc, col=col_vec[2])
-lines(train_lassoR_roc, col=col_vec[3])
+lines(train_relaxed_roc, col=col_vec[3])
 lines(train_blended_roc, col=col_vec[4])
 
 legend('bottomright', title='AUC',
  legend=c(
   paste('lasso =', round(train_lasso_roc[['auc']],3)),
   paste('enet =', round(train_enet_roc[['auc']],3)),
-  paste('lassoR =', round(train_lassoR_roc[['auc']],3)),
+  paste('relaxed =', round(train_relaxed_roc[['auc']],3)),
   paste('blended =', round(train_blended_roc[['auc']],3))
  ),
  text.col = col_vec[1:4],
@@ -623,7 +633,7 @@ Compare thresholds for 90% Specificity:
  enet_ndx <- with(as.data.frame(pROC::coords(train_enet_roc, transpose=F)), 
    min(which(specificity >= 0.9)))
 
- lassoR_ndx <- with(as.data.frame(pROC::coords(train_lassoR_roc, transpose=F)), 
+ lassoR_ndx <- with(as.data.frame(pROC::coords(train_relaxed_roc, transpose=F)), 
    min(which(specificity >= 0.9)))
 
  blended_ndx <- with(as.data.frame(pROC::coords(train_blended_roc, transpose=F)), 
@@ -632,7 +642,7 @@ Compare thresholds for 90% Specificity:
   spec90_frm <- data.frame(rbind(
   lasso=as.data.frame(pROC::coords(train_lasso_roc, transpose=F))[lasso_ndx,],
   enet=as.data.frame(pROC::coords(train_enet_roc, transpose=F))[enet_ndx,],
-  lassoR=as.data.frame(pROC::coords(train_lassoR_roc, transpose=F))[lassoR_ndx,],
+  relaxed=as.data.frame(pROC::coords(train_relaxed_roc, transpose=F))[lassoR_ndx,],
   blended=as.data.frame(pROC::coords(train_blended_roc, transpose=F))[blended_ndx,]
  ))
 
@@ -672,10 +682,10 @@ lines(density(train_enet_oofProb_vec[train_group_vec == "HCC"]),
 title("enet")
 
 # lassoR
-plot(density(train_lassoR_oofProb_vec[train_group_vec == "Control"]),
+plot(density(train_relaxed_oofProb_vec[train_group_vec == "Control"]),
   xlim = c(0, 1), main = "", xlab = "", ylab = "", col = "green"
 )
-lines(density(train_lassoR_oofProb_vec[train_group_vec == "HCC"]),
+lines(density(train_relaxed_oofProb_vec[train_group_vec == "HCC"]),
   col = "red"
 )
 title("lassoR")
@@ -695,7 +705,7 @@ mtext(side = 2, outer = T, "density", cex = 1.25)
 ```
 
 The relaxed lasso fit results in essentially dichotomized predicted probability
-distribution - predicted probabilities arr very close to 0 or 1.
+distribution - predicted probabilities are very close to 0 or 1.
 
  
 Look at test data ROC curves.
@@ -731,7 +741,7 @@ test_enet_roc <- pROC::roc(
 
 
 # lassoR
-test_lassoR_predProb_vec <- predict(
+test_relaxed_predProb_vec <- predict(
   cv_lassoR,
   type = "resp",
   lambda = "1se",
@@ -739,9 +749,9 @@ test_lassoR_predProb_vec <- predict(
   gamma = 0,
 )
 
-test_lassoR_roc <- pROC::roc(
+test_relaxed_roc <- pROC::roc(
   response = as.numeric(test_group_vec == "HCC"),
-  predictor = test_lassoR_predProb_vec
+  predictor = test_relaxed_predProb_vec
 )
 
 # blended mix (gamma=0.5)
@@ -764,7 +774,7 @@ test_blended_roc <- pROC::roc(
 # plot all
 plot(test_lasso_roc, col = col_vec[1])
 lines(test_enet_roc, col = col_vec[2])
-lines(test_lassoR_roc, col = col_vec[3])
+lines(test_relaxed_roc, col = col_vec[3])
 lines(test_blended_roc, col = col_vec[4])
 
 legend("bottomright",
@@ -772,7 +782,7 @@ legend("bottomright",
   legend = c(
     paste("lasso =", round(test_lasso_roc[["auc"]], 3)),
     paste("enet =", round(test_enet_roc[["auc"]], 3)),
-    paste("lassoR =", round(test_lassoR_roc[["auc"]], 3)),
+    paste("relaxed =", round(test_relaxed_roc[["auc"]], 3)),
     paste("blended =", round(test_blended_roc[["auc"]], 3))
   ),
   text.col = col_vec[1:4],
@@ -806,16 +816,16 @@ lines(density(test_enet_predProb_vec[test_group_vec == "HCC"]),
 )
 title("enet")
 
-# lassoR
-plot(density(test_lassoR_predProb_vec[test_group_vec == "Control"]),
+# relaxed
+plot(density(test_relaxed_predProb_vec[test_group_vec == "Control"]),
   xlim = c(0, 1), main = "", xlab = "", ylab = "", col = "green"
 )
-lines(density(test_lassoR_predProb_vec[test_group_vec == "HCC"]),
+lines(density(test_relaxed_predProb_vec[test_group_vec == "HCC"]),
   col = "red"
 )
-title("lassoR")
+title("relaxed")
 
-#sapply(split(test_lassoR_predProb_vec, test_group_vec), summary)
+#sapply(split(test_relaxed_predProb_vec, test_group_vec), summary)
 
 
 # blended
@@ -870,7 +880,7 @@ bxpPredProb_f(cv_enet)
 title('enet')
 
 bxpPredProb_f(cv_lassoR, Gamma='g:0')
-title('lassoR')
+title('relaxed')
 
 bxpPredProb_f(cv_lassoR, Gamma='g:0.5')
 title('blended')
@@ -996,10 +1006,11 @@ test_enet_predClass_vec <- predict(
 )
 
 
-# lasso - relaxed (gamma=0)
+
+# relaxed lasso (gamma=0)
 ##########################
 # train - cv predicted
-train_lassoR_predClass_vec <- predict(
+train_relaxed_predClass_vec <- predict(
  cv_lassoR,
  g=0,
  newx=train_lcpm_mtx,
@@ -1007,14 +1018,15 @@ train_lassoR_predClass_vec <- predict(
  type='class'
 )
 
+# RECALL: cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]
 # train - oof
 ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
-train_lassoR_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0']][,ndx_1se])
-train_lassoR_oofClass_vec <- ifelse(
-   train_lassoR_oofProb_vec > 0.5, 'HCC', 'Control')
+train_relaxed_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0']][,ndx_1se])
+train_relaxed_oofClass_vec <- ifelse(
+   train_relaxed_oofProb_vec > 0.5, 'HCC', 'Control')
 
 # test 
-test_lassoR_predClass_vec <- predict(
+test_relaxed_predClass_vec <- predict(
  cv_lassoR,
  g=0,
  newx=test_lcpm_mtx,
@@ -1034,8 +1046,14 @@ train_blended_predClass_vec <- predict(
  type='class'
 )
 
+# RECALL $`r cv_lassoR$relaxed$nzero.1se`$ features (vertical 
+#  cv_blended_statlist <- cv_lassoR$relaxed$statlist[['g:0.5']]
+#  cv_blended_1se_error <- cv_blended_statlist$cvm[cv_blended_statlist$lambda==
+      #cv_lassoR$relaxed$lambda.1se]
+
 # train - oof
-ndx_1se <- match(cv_lassoR$lambda.1se,cv_lassoR$lambda)
+cv_blended_statlist <- cv_lassoR$relaxed$statlist[['g:0.5']]
+ndx_1se <- match(cv_lassoR$relaxed$lambda.1se, cv_blended_statlist$lambda)
 train_blended_oofProb_vec <- logistic_f(cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
 train_blended_oofClass_vec <- ifelse(
    train_blended_oofProb_vec > 0.5, 'HCC', 'Control')
@@ -1055,12 +1073,15 @@ all_models_confustion_mtx <- rbind(
  train_lasso_cv = as.vector(table(train_lasso_predClass_vec, train_group_vec)),
  train_lasso_oof = as.vector(table(train_lasso_oofClass_vec, train_group_vec)),
  test_lasso = as.vector(table(test_lasso_predClass_vec, test_group_vec)),
+
  train_enet_cv = as.vector(table(train_enet_predClass_vec, train_group_vec)),
  train_enet_oof = as.vector(table(train_enet_oofClass_vec, train_group_vec)),
  test_enet = as.vector(table(test_enet_predClass_vec, test_group_vec)),
- train_lassoR_cv = as.vector(table(train_lassoR_predClass_vec, train_group_vec)),
- train_lassoR_oof = as.vector(table(train_lassoR_oofClass_vec, train_group_vec)),
- test_lassoR = as.vector(table(test_lassoR_predClass_vec, test_group_vec)),
+
+ train_relaxed_cv = as.vector(table(train_relaxed_predClass_vec, train_group_vec)),
+ train_relaxed_oof = as.vector(table(train_relaxed_oofClass_vec, train_group_vec)),
+ test_relaxed = as.vector(table(test_relaxed_predClass_vec, test_group_vec)),
+
  train_blended_cv = as.vector(table(train_blended_predClass_vec, train_group_vec)),
  train_blended_oof = as.vector(table(train_blended_oofClass_vec, train_group_vec)),
  test_blended = as.vector(table(test_blended_predClass_vec, test_group_vec))
@@ -1081,6 +1102,10 @@ knitr::kable(100*all_models_confustionRates_mtx,
 
 ```
 
+The out-of-fold error rates are larger for the relaxed lasso and blended fit models.
+On the test set, errors are slightly higher for the elastic net model.
+
+
 ## Compare predictions at misclassified samples
 
 It is useful to examine classification errors more carefully.
@@ -1094,7 +1119,7 @@ as they are too similar in nature.
 misclass_id_vec <- unique(c(
  names(train_lasso_oofClass_vec)[train_lasso_oofClass_vec!=train_group_vec],
  names(train_enet_oofClass_vec)[train_enet_oofClass_vec!=train_group_vec],
- names(train_lassoR_oofClass_vec)[train_lassoR_oofClass_vec!=train_group_vec],
+ names(train_relaxed_oofClass_vec)[train_relaxed_oofClass_vec!=train_group_vec],
  names(train_blended_oofClass_vec)[train_blended_oofClass_vec!=train_group_vec]
  )
 )
@@ -1103,7 +1128,7 @@ misclass_id_vec <- unique(c(
 missclass_oofProb_mtx <- cbind(
  train_lasso_oofProb_vec[misclass_id_vec],
  train_enet_oofProb_vec[misclass_id_vec],
- train_lassoR_oofProb_vec[misclass_id_vec],
+ train_relaxed_oofProb_vec[misclass_id_vec],
  train_blended_oofProb_vec[misclass_id_vec]
 )
 colnames(missclass_oofProb_mtx) <- c('lasso','enet', 'lassoR', 'blended')
@@ -1146,7 +1171,7 @@ Now look at the same plot on the test data set.
 misclass_id_vec <- unique(c(
  names(test_lasso_predClass_vec[,1])[test_lasso_predClass_vec!=test_group_vec],
  names(test_enet_predClass_vec[,1])[test_enet_predClass_vec!=test_group_vec],
- names(test_lassoR_predClass_vec[,1])[test_lassoR_predClass_vec!=test_group_vec],
+ names(test_relaxed_predClass_vec[,1])[test_relaxed_predClass_vec!=test_group_vec],
  names(test_blended_predClass_vec[,1])[test_blended_predClass_vec!=test_group_vec]
  )
 )
@@ -1155,7 +1180,7 @@ misclass_id_vec <- unique(c(
 missclass_oofProb_mtx <- cbind(
  test_lasso_predProb_vec[misclass_id_vec,],
  test_enet_predProb_vec[misclass_id_vec,],
- test_lassoR_predProb_vec[misclass_id_vec,],
+ test_relaxed_predProb_vec[misclass_id_vec,],
  test_blended_predProb_vec[misclass_id_vec,]
 )
 colnames(missclass_oofProb_mtx) <- c('lasso','enet', 'lassoR', 'blended')
@@ -1184,6 +1209,17 @@ abline(h=0.5)
     
 ```
 
+The relaxed lasso fit results in essentially dichotomized predicted probability
+distribution - predicted probabilities are very close to 0 or 1.
+
+We see that for design points in the training set, the predicted probabilies from the relaxed lasso
+are  essentially dichotomized to be tightly distributed at the extremes of the
+response range.  For design points in the test set, the predicted probabilies from the relaxed lasso
+are comparable to the lasso model predicted porbabilities.  This seems to indicate over-fitting
+in the relaxed lasso fit.
+
+
+
 ## Compare coefficient profiles
 
 ```{r compCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficient Profiles"}
@@ -1210,8 +1246,10 @@ enet_coef_frm <- data.frame(
  gene=enet_coef@Dimnames[[1]][c(1, enet_coef@i[-1])],
  enet=enet_coef@x)
 
-# lasso - relaxed (gamma=0)
+# THESE ARE NOT CORRECT - SKIP
+# relaxed lasso (gamma=0)
 ##########################
+SKIP <- function() {
 lassoR_coef <- coef(
  cv_lassoR,
  s='lambda.1se',
@@ -1220,7 +1258,7 @@ lassoR_coef <- coef(
 lassoR_coef_frm <- data.frame(
  gene=lassoR_coef@Dimnames[[1]][c(1, lassoR_coef@i[-1])],
  lassoR=lassoR_coef@x)
-
+}
 
 # blended mix (gamma=0.5)
 ###############################
@@ -1240,12 +1278,15 @@ all_coef_frm <-
  x = lasso_coef_frm, 
  y = base::merge(
      x = enet_coef_frm,
-     y = base::merge(
-         x = lassoR_coef_frm,
-         y = blended_coef_frm,
+     y = blended_coef_frm,
          by='gene', all=T),
-     by='gene', all=T),
  by='gene', all=T)
+
+# SKIPPED
+#base::merge(
+         #x = lassoR_coef_frm,
+         #y = blended_coef_frm,
+         #by='gene', all=T),
 
 all_coef_frm[,-1][is.na(all_coef_frm[,-1])] <- 0
 
@@ -1261,10 +1302,30 @@ for(CC in 2:ncol(all_coef_frm)) {
 
 ```
 
+Note that there is little difference between the elastic net and the lasso
+in the selected features, and when the coefficient is zero in one set, it 
+is smaell in the other.  By contrast, the blended fit produces more shrinkage.
 
+```{r zreros, fig.cap=''}
+
+knitr::kable(
+with(all_coef_frm[,-1], table(lassoZero=lasso==0, enetZero=enet==0)),
+ caption='Zero Ceofficient: rows are lasso, columns enet') %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+
+
+<!--
 Coefficients in the relaxed lasso fit are much larger than those in the
 lasso fit, or zero.  As a consequence, the blended fit coefficients look 
 like a shrunken version of the relaxed lasso fit coefficients.  
+-->
+
+Coefficients in the blended fit are larger than those in the
+lasso fit, or zero.  
+
 
 We can also examine these with a scatter plot matrix.
 

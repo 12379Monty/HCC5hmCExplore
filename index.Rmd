@@ -53,10 +53,10 @@ col_vec <- KellyColors.vec
 
 
  # This is for kableExtra::kable_styling to work
- # speify for html
+ # specify for html
  options(knitr.table.format = 'html')
 
- # speify for pdf
+ # specify for pdf
  #options(knitr.table.format = 'latex')
   
 

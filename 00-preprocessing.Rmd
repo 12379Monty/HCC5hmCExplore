@@ -196,9 +196,9 @@ knitr::kable(featureCountsA_quant2,
 
 
 From this table, we see that 25% of the samples have total coverage exceeding
-`r round(featureCountsA_quant2["75%", "totCovM"],1)`M reads, 25% of samples
+$`r round(featureCountsA_quant2["75%", "totCovM"],1)`$M reads, 25% of samples
 have a 15 percentile of coverage lower than
-`r featureCountsA_quant2["25%", "15%"]`, etc.  
+$`r featureCountsA_quant2["25%", "15%"]`$, etc.  
 
 
 <!-- SKIP
@@ -207,6 +207,7 @@ We next look at relative log representation (RLR) (in the context of measuring t
 two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.
 -->
+
 ```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F}
 
 lcpm_mtx <- edgeR::cpm(featureCountsA, log = T)
@@ -233,6 +234,7 @@ for (GRP in unique(sampDescA$group)) {
   abline(h = apply(group_Q1Q3_mtx, 1, median), 
      col = groupCol[GRP], lwd = 2)
 }
+
 
 
 ```
@@ -291,20 +293,20 @@ legend("topright", legend = names(groupCol),
 
 ```
 
-`r  LibSizeSum <- summary( colSums(featureCountsA) / 1e6 )`
-`r CPM_THR <- 3; SAMP_THR <- 25` 
+$`r  LibSizeSum <- summary( colSums(featureCountsA) / 1e6 )`$
+$`r CPM_THR <- 3; SAMP_THR <- 25`$ 
 
 As is typically the case with RNA-Seq data, we notice many weakly represented genes 
 in this dataset.  A cpm value of 1 appears to adequatly separate 
 the expressed from the un-expressed genes, but we will be slightly more strict here
-and require a CPM threshold of `r CPM_THR` .  Using a nominal CPM value of 
-`r CPM_THR`, genes are deeemed to be `represented` if their expression is 
+and require a CPM threshold of $`r CPM_THR`$ .  Using a nominal CPM value of 
+$`r CPM_THR`$, genes are deeemed to be `represented` if their expression is 
 above this threshold, and not represented otherwise. 
 For this analysis we will require that genes be `represented` in at least 
-`r SAMP_THR` samples across the entire dataset to be retained for downstream analysis.
-Here, a CPM value of `r CPM_THR` means that a gene is represented if it 
-has at least `r round(CPM_THR*LibSizeSum['Min.'])` reads in the sample with the 
-lowest sequencing depth (library size `r round(LibSizeSum['Min.'],1)` million).
+$`r SAMP_THR`$ samples across the entire dataset to be retained for downstream analysis.
+Here, a CPM value of $`r CPM_THR`$ means that a gene is represented if it 
+has at least $`r round(CPM_THR*LibSizeSum['Min.'])`$ reads in the sample with the 
+lowest sequencing depth (library size $`r round(LibSizeSum['Min.'],1)`$ million).
 Note that the thresholds used here are arbitrary as there are no hard and fast 
 rules to set these by.
 The voom-plot, which is part of analyses done to remove heteroscedasticity,
@@ -312,14 +314,14 @@ can be examined to verify that the filtering performed is adequate.
 
 
 <!-- or at least 
-`r round(CPM_THR*LibSizeSum['Max.'])` counts in the sample with the 
-greatest sequencing depth (library size `r round(LibSizeSum['Max.'],1)` million).
+$`r round(CPM_THR*LibSizeSum['Max.'])`$ counts in the sample with the 
+greatest sequencing depth (library size $`r round(LibSizeSum['Max.'],1)`$ million).
 -->
 
 Remove weakly represented genes and replot densities.
 
-`r weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR `
-Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
+$`r weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR `$
+Removing $`r round(100 * mean(weak_flg), 1)`$%  of genes...
 
 ```{r removeWeak, cache=T, cache.vars=c('featureCountsAF', 'genes_annotAF', 'lcpm_mtx'), echo=T, include=F}
 
@@ -460,7 +462,7 @@ Glimma::glMDSPlot(AF_dgel[, samp_ndx],
 ```
 
 Link to glMDSPlot: 
-[Here](`r file.path(figures_DIR, paste0("GlMDSplot.html"))`)  
+[Here]($`r file.path(figures_DIR, paste0("GlMDSplot.html"))`$)  
 
 No obvious factor links the samples in the 3 clusters observed on the
 4th MDS dimensions. The percent of variance exaplained by this dimension or 
@@ -698,10 +700,10 @@ rest of the genes.  A statistical test would find that the difference
 between the mean of the down regulated gene population is singificantly different
 than the mean of the other gene population even though the difference is
 quite small
-(`r round( 
+($`r round( 
 mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']=='-1']) -
 mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']!='-1']),
-3)`).
+3)`$).
 
 These asymmetries are minor, but it would still be good to establish that
 they relfect biology rather than processing artifacts.  
