@@ -947,7 +947,7 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
@@ -1078,7 +1078,7 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 

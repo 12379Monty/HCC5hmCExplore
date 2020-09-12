@@ -603,7 +603,7 @@ per iteration, or 4 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r enet-run-sim, cache=T, cache.vars='start_time', eval=T}
+```{r enet-run-sim, cache=T, cache.vars='start_time', eval=F}
 start_time <- proc.time()
 
 # Get stage from SIZE
@@ -848,7 +848,7 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
@@ -980,7 +980,7 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 

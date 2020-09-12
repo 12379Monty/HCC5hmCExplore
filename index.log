@@ -1,12 +1,0 @@
-
-
-processing file: index.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |......................................................................| 100%
-   inline R code fragments
-
-
-output file: index.knit.md
-
-/usr/local/bin/pandoc +RTS -K512m -RTS index.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output index.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//Rtmp9GlDVi/rmarkdown-str1046f42d324cf.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --filter /usr/local/bin/pandoc-citeproc 
-
-Output created: index.html
