@@ -128,7 +128,7 @@
 
 \title{DNA Hydroxymethylation in Hepatocellular Carcinoma}
 \author{Francois Collin}
-\date{2020-09-09}
+\date{2020-09-11}
 
 \begin{document}
 \maketitle
@@ -207,13 +207,14 @@ The layout of the paper is the following:
 
 \begin{itemize}
 \item
-  In Section \ref{modeling-background} we provide some background on modeling
-  genomic data, ie. \(n << p\) data.
+  In Section \ref{modeling-background} we provide background on fitting and
+  analyizing predictive models in the \texttt{n\ \textless{}\textless{}\ p} context and
+  give some detail about the primary tool used in this report.
 \item
   In Section \ref{preproc} we preprocess the 5hmC data that
   we will use for the classification analysis and perform some light QC analyses.
 \item
-  In Section \ref{explore-sparsity} we explore some glmnet fits
+  In Section \ref{explore-sparsity} we explore sparse models
   that discriminate between early stage HCC and control samples.
 \item
   In Section \ref{model-suite} we examine the results of fitting a suite of models to
@@ -225,19 +226,22 @@ The layout of the paper is the following:
 \end{itemize}
 
 \hypertarget{modeling-background}{%
-\chapter{Modeling - Background}\label{modeling-background}}
+\chapter{\texorpdfstring{Classification Analysis in the \texttt{n\ \textless{}\textless{}\ p} Context}{Classification Analysis in the n \textless\textless{} p Context}}\label{modeling-background}}
 
 Refer to \href{https://hcc-5hmc-analysis.netlify.app/}{first pass study} for
 relevant exploratory data analyis results.
-
-\hypertarget{predictive-modeling-for-genomic-data}{%
-\section{Predictive modeling for genomic data}\label{predictive-modeling-for-genomic-data}}
 
 The main challenge in calibrating predictive models to genomic data is that
 there are many more features than there are example cases to fit to;
 the now classic \(n << p\) problem.
 In this scenario, fitting methods tend to over fit. The problem
 can be addressed by selecting variables, regularizing the fit or both.
+
+In this report, we use genomic data to illustrate analyses of regularized regression
+models in the \texttt{n\ \textless{}\textless{}\ p} context. Much of the analysis focuses on lasso models fitted
+and analyzed using tools the the \texttt{glmnet} R package. Before providing some background
+on that glmnet package and the models that it supports, we breifly describe another R package
+which is an essential tool for anyone who is doing predicitive analytics in R - \texttt{caret} R pacakge.
 
 \hypertarget{caret-for-model-evaluation}{%
 \subsection{caret for model evaluation}\label{caret-for-model-evaluation}}
@@ -434,10 +438,10 @@ produces the best fit in terms of squared error, solving the nonconvex problem:
 
 \begin{equation}
  \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k
- \label{eq:best-sub}
+ \label{eq:bestSub}
 \end{equation}
 
-The lasso solves a covex relaxation of \eqref{eq:best-sub} where we replace the
+The lasso solves a covex relaxation of the above where we replace the
 \(l_0\) norm by the \(l_1\) norm, namely
 
 \begin{equation}
@@ -498,7 +502,7 @@ Hastie, Tibshirani, and Tibshirani (2017)
 ({[}\protect\hyperlink{ref-Friedman:2010aa}{6}--\protect\hyperlink{ref-Simon:2013aa}{10}{]}).
 
 \hypertarget{preproc}{%
-\chapter{Preprocessing}\label{preproc}}
+\chapter{5hmc Data Preprocessing}\label{preproc}}
 
 \hypertarget{load-the-data}{%
 \section{Load the data}\label{load-the-data}}
@@ -1411,14 +1415,15 @@ and analyzed with tools provided in the \texttt{glmnet} package.
 Refer to the \href{https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html}{Glmnet Vignette}
 for a quick reference guide.
 
-\hypertarget{cv-analysis-setup}{%
-\section{CV analysis setup}\label{cv-analysis-setup}}
+We focus our analyses on lasso fits which tend to favor sparse models.
+
+\hypertarget{cross-validation-analysis-setup}{%
+\section{Cross-validation analysis setup}\label{cross-validation-analysis-setup}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{K\_FOLD <{-}}\StringTok{ }\DecValTok{10}
 \NormalTok{trainP <{-}}\StringTok{ }\FloatTok{0.8}
-\NormalTok{EPS <{-}}\StringTok{ }\FloatTok{0.05}    \CommentTok{\# Have no idea what "small" epsilon means}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1492,33 +1497,35 @@ HCC & 111\\
 \end{Highlighting}
 \end{Shaded}
 
-We explore some glmnet fits and the ``bet on sparsity''
-
+We explore some glmnet fits and the ``bet on sparsity''.
 We consider three models, specified by the value of the
 \textbf{alpha} parameter in the elastic net parametrization:\\
 - lasso: \(\alpha = 1.0\) - sparse models\\
-- ridge \(\alpha = 0\) - shrunken coefficients models
-- elastic net: \(\alpha = 0.5\) - semi sparse model
+- ridge \(\alpha = 0\) - shrunken coefficients models\\
+- elastic net: \(\alpha = 0.5\) - semi sparse model\\
 
 Some questions of interest include:
-* How sparse is the model undelying best 5hmC classifier for Early HCC vs Control?
+
+\begin{itemize}
+\tightlist
+\item
+  How sparse are models enabling good 5hmC classification of Early HCC vs Control samples?
+\end{itemize}
 
 \begin{itemize}
 \item
-  Does the relaxed lasso improve performance in this case?
-\item
-  Does the shrunken relaxed lasso (aka the blended mix) improve performance
+  Does the shrunken relaxed lasso (aka the blended mix) improve performance in this case?
 \item
   Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?
 \end{itemize}
 
 In this analysis, we will only evaluate models in terms of
-model size, stability and performance. We leave the question
+model sparsity, stability and performance. We leave the question
 of significance testing of hypotheses about model parameters
 completely out. See Lockhart et al.~(2014) {[}\protect\hyperlink{ref-Lockhart:2014aa}{24}{]}
 and Wassermam (2014) {[}\protect\hyperlink{ref-Wasserman:2014aa}{25}{]} for a discussion of this topic.
 
-In this section we look at the relative performance and size of the models
+In this section we look at the relative performance and sparsity of the models
 considered. The effect of the size of the sample set on the level and
 stability of performance will be investigated in the next section.
 
@@ -1641,12 +1648,6 @@ produced from the full fit, which by default is what \texttt{glmnet} extraction
 methods provide. See Höfling and Tibshirani (2008) {[}\protect\hyperlink{ref-Hofling:2008aa}{27}{]}
 for a description of the use of pre-validation in model assessment.
 
-Because the \texttt{keep=T} option will store predicted values for
-all models evaluated in the cross-validation process, we will
-limit the number of models tested by setting \textbf{nlambda=30}
-when calling the fitting functions. This has no effect on
-performance in this data set.
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{start\_time <{-}}\StringTok{  }\KeywordTok{proc.time}\NormalTok{()}
@@ -1716,13 +1717,11 @@ performance in this data set.
 ## enet time: 12.72s
 \end{verbatim}
 
-The ridge regression model takes over 10 times longer to compute.
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{plot\_cv\_f <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(cv\_fit, }\DataTypeTok{Nzero=}\NormalTok{T, ...) \{}
  
- \KeywordTok{library}\NormalTok{(glmnet)}
+ \KeywordTok{suppressPackageStartupMessages}\NormalTok{(}\KeywordTok{require}\NormalTok{(glmnet))}
 
  \CommentTok{\# No nonger used}
  \CommentTok{\#lambda.1se\_p <{-} cv\_fit$nzero[cv\_fit$lambda == cv\_fit$lambda.1se]}
@@ -1813,6 +1812,15 @@ Examine model performance.
  \KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)) }
 
 \NormalTok{ lasso\_errors\_mtx <{-}}\StringTok{ }\KeywordTok{plot\_cv\_f}\NormalTok{(cv\_lasso, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,.}\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'glmnet' was built under R version 4.0.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
  \KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}lasso\textquotesingle{}}\NormalTok{)}
 
 \NormalTok{ rifge\_errors\_mtx <{-}}\StringTok{ }\KeywordTok{plot\_cv\_f}\NormalTok{(cv\_ridge, }\DataTypeTok{Nzero=}\NormalTok{F, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,.}\DecValTok{5}\NormalTok{))}
@@ -1837,6 +1845,7 @@ Examine model performance.
 \NormalTok{errors\_frm <{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
   \DataTypeTok{lasso =}\NormalTok{ lasso\_errors\_mtx, }\DataTypeTok{ridge =}\NormalTok{ rifge\_errors\_mtx, }\DataTypeTok{enet =}\NormalTok{ enet\_errors\_mtx}
 \NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(errors\_frm) <{-}}\StringTok{ }\KeywordTok{sub}\NormalTok{(}\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.error\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\KeywordTok{colnames}\NormalTok{(errors\_frm))}
 
 \NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{t}\NormalTok{(errors\_frm),}
  \DataTypeTok{caption =} \StringTok{\textquotesingle{}Misclassifiaction error rates\textquotesingle{}}\NormalTok{,}
@@ -1853,26 +1862,22 @@ Examine model performance.
 \hline
   & p & train\_cv & train\_oof & test\\
 \hline
-lasso.error\_1se & 99 & 7.0 & 9.7 & 10.2\\
+lasso\_1se & 99 & 7.0 & 9.7 & 10.2\\
 \hline
-lasso.error\_min & 99 & 7.0 & 9.7 & 10.2\\
+lasso\_min & 99 & 7.0 & 9.7 & 10.2\\
 \hline
-ridge.error\_1se & 15752 & 13.5 & 19.0 & 18.4\\
+ridge\_1se & 15752 & 13.5 & 19.0 & 18.4\\
 \hline
-ridge.error\_min & 15752 & 12.5 & 16.9 & 16.2\\
+ridge\_min & 15752 & 12.5 & 16.9 & 16.2\\
 \hline
-enet.error\_1se & 118 & 7.2 & 11.1 & 12.0\\
+enet\_1se & 118 & 7.2 & 11.1 & 12.0\\
 \hline
-enet.error\_min & 278 & 6.7 & 9.2 & 10.2\\
+enet\_min & 278 & 6.7 & 9.2 & 10.2\\
 \hline
 \end{tabular}
 \end{table}
 
 We see that the lasso and enet models do better than the ridge model.
-There is very little difference between the min lambda and the
-the one standard error (1se) rule lambda models (the two are the same for the
-lasso in this data set).
-
 The \emph{1se} lambda lasso fit is only slightly more parsimonious than the
 \emph{1se} elastic net fit, but its test set accuracy is better.
 The \emph{min} lambda elastic net fit performs as well as the lasso model,
@@ -1886,10 +1891,10 @@ genomic scale data. It should also be noted that the cv estimates of
 misclassification rates become more biased as the sample size decreases,
 as we will show in Section \ref{model-suite}.
 
-\hypertarget{relaxed-lasso-and-blended-mix}{%
-\section{Relaxed lasso and blended mix}\label{relaxed-lasso-and-blended-mix}}
+\hypertarget{the-relaxed-lasso-and-blended-mix-models}{%
+\section{The relaxed lasso and blended mix models}\label{the-relaxed-lasso-and-blended-mix-models}}
 
-Next we look at the so-called \texttt{relaxed\ lasso} and
+Next we look at the so-called \texttt{relaxed\ lasso} model, and
 the \texttt{blended\ mix} which is an optimized shrinkage
 between the relaxed lasso and the regular lasso.
 See \eqref{eq:blended} in Section \ref{modeling-background}.
@@ -2689,6 +2694,15 @@ Now look at the same plot on the test data set.
 \caption{\label{fig:misclassTest}Test data predicted probabilities at miscassified samples}
 \end{figure}
 
+The relaxed lasso fit results in essentially dichotomized predicted probability
+distribution - predicted probabilities are very close to 0 or 1.
+
+We see that for design points in the training set, the predicted probabilies from the relaxed lasso
+are essentially dichotomized to be tightly distributed at the extremes of the
+response range. For design points in the test set, the predicted probabilies from the relaxed lasso
+are comparable to the lasso model predicted porbabilities. This seems to indicate over-fitting
+in the relaxed lasso fit.
+
 \hypertarget{compare-coefficient-profiles}{%
 \section{Compare coefficient profiles}\label{compare-coefficient-profiles}}
 
@@ -2922,9 +2936,9 @@ heat maps.
 \end{figure}
 
 \hypertarget{model-suite}{%
-\chapter{Fitted Model Suite}\label{model-suite}}
+\chapter{Does Size Matter?}\label{model-suite}}
 
-We now examine the results of fitting a suite of models to
+We now examine the results of fitting a suite of lasso models to
 investigate the effect of sample size on
 various aspects of model performance:
 
@@ -2965,8 +2979,12 @@ think of this sample as being poor quality of course.
 \hypertarget{sample-quality-scores}{%
 \section{Sample quality scores}\label{sample-quality-scores}}
 
-To get sample quality scores, fit a lasso model, extracted predicted probabilities and
-convert to a quality score.
+To get sample quality scores, fit a lasso model to all samples in the
+analysis data set, extract predicted probabilities and
+convert them to quality scores.
+
+First assemble the data set. This entails simply re-combining the
+train and test data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2986,11 +3004,44 @@ convert to a quality score.
  \KeywordTok{names}\NormalTok{(test\_group\_vec)}
 \NormalTok{)}
 
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{table}\NormalTok{(}\DataTypeTok{group =}\NormalTok{ all\_group\_vec),}
+  \DataTypeTok{caption =} \StringTok{"samples by group"}\NormalTok{) }\OperatorTok{\%>\%}
+\StringTok{   }\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kable\_styling}\NormalTok{(}\DataTypeTok{full\_width =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:get-all-data}samples by group}
+\centering
+\begin{tabular}[t]{l|r}
+\hline
+group & Freq\\
+\hline
+Control & 778\\
+\hline
+HCC & 555\\
+\hline
+\end{tabular}
+\end{table}
+
+Now fit the losso model through cross-validation.
+Note that the results of a cv fit are random due to the
+random allocation of samples to folds. We can reduce this
+varibility by properly averaging results over repeated cv fits.
+Here we will obtain samplle quality scores by averaging results
+over 30 cv runs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#\#\# CLEAR CACHE}
+
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+
 \NormalTok{start\_time <{-}}\StringTok{  }\KeywordTok{proc.time}\NormalTok{()}
 
-\CommentTok{\# since we have not set the foldid, set seed here}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{cv\_lassoAll <{-}}\StringTok{ }\NormalTok{glmnet}\OperatorTok{::}\KeywordTok{cv.glmnet}\NormalTok{(}
+\NormalTok{cv\_lassoAll\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{30}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(REP) \{}
+\NormalTok{glmnet}\OperatorTok{::}\KeywordTok{cv.glmnet}\NormalTok{(}
  \DataTypeTok{x =}\NormalTok{ all\_lcpm\_mtx,}
  \DataTypeTok{y =} \KeywordTok{factor}\NormalTok{(all\_group\_vec,}\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Control\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{)),}
  \DataTypeTok{alpha =} \DecValTok{1}\NormalTok{,}
@@ -2999,122 +3050,313 @@ convert to a quality score.
  \DataTypeTok{keep =}\NormalTok{ F,}
  \DataTypeTok{nlambda =} \DecValTok{100}
 \NormalTok{)}
+\NormalTok{\}}
+\NormalTok{)}
 
 \KeywordTok{message}\NormalTok{(}\StringTok{"lassoAll time: "}\NormalTok{, }\KeywordTok{round}\NormalTok{((}\KeywordTok{proc.time}\NormalTok{() }\OperatorTok{{-}}\StringTok{ }\NormalTok{start\_time)[}\DecValTok{3}\NormalTok{],}\DecValTok{2}\NormalTok{),}\StringTok{"s"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## lassoAll time: 27.29s
+## lassoAll time: 837.56s
 \end{verbatim}
 
-We can examine the fit.
+Examine the fits.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{cv\_lassoAll}
-\end{Highlighting}
-\end{Shaded}
+\CommentTok{\#\#\# CLEAR CACHE}
+\KeywordTok{plot}\NormalTok{(}
+ \KeywordTok{log}\NormalTok{(cv\_lassoAll\_lst[[}\DecValTok{1}\NormalTok{]]}\OperatorTok{$}\NormalTok{lambda),}
+\NormalTok{ cv\_lassoAll\_lst[[}\DecValTok{1}\NormalTok{]]}\OperatorTok{$}\NormalTok{cvm,}
+ \DataTypeTok{lwd=}\DecValTok{2}\NormalTok{,}
+ \DataTypeTok{xlab=}\StringTok{\textquotesingle{}log(Lambda)\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{\textquotesingle{}CV Misclassification Error\textquotesingle{}}\NormalTok{, }\DataTypeTok{type=}\StringTok{\textquotesingle{}l\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.5}\NormalTok{)}
+\NormalTok{)}
 
-\begin{verbatim}
-## 
-## Call:  glmnet::cv.glmnet(x = all_lcpm_mtx, y = factor(all_group_vec,      levels = c("Control", "HCC")), type.measure = "class", keep = F,      alpha = 1, family = "binomial", nlambda = 100) 
-## 
-## Measure: Misclassification Error 
-## 
-##      Lambda Measure       SE Nonzero
-## min 0.01345 0.07127 0.007375     144
-## 1se 0.01863 0.07802 0.007109      93
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(cv\_lassoAll)}
+\ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\KeywordTok{length}\NormalTok{(cv\_lassoAll\_lst))}
+ \KeywordTok{lines}\NormalTok{(}
+  \KeywordTok{log}\NormalTok{(cv\_lassoAll\_lst[[JJ]]}\OperatorTok{$}\NormalTok{lambda),}
+\NormalTok{  cv\_lassoAll\_lst[[JJ]]}\OperatorTok{$}\NormalTok{cvm,}
+  \DataTypeTok{lwd=}\DecValTok{2}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 \centering
 \includegraphics{Static/figures/plot-lassoAll-1.pdf}
-\caption{\label{fig:plot-lassoAll}lasso model fitted to all samples}
+\caption{\label{fig:plot-lassoAll}Repeated cv lasso models fitted to all samples}
 \end{figure}
 
-More features are now selected, but the cv error rate is comparable to the results
-of the lasso fit to the training set. We can use this fit to compute sample
-quality scores. We will use the minimum lambda model to provide
-the fitted probabilities.
+These cv curves are remarkably consistent meaning that the determination of the size or sparsity
+of the model through cross validation is fairly precise:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# predicted probs}
-\NormalTok{lassoAll\_predResp\_vec <{-}}\StringTok{ }\KeywordTok{predict}\NormalTok{(}
-\NormalTok{ cv\_lassoAll,}
- \DataTypeTok{newx =}\NormalTok{ all\_lcpm\_mtx,}
- \DataTypeTok{s =} \StringTok{"lambda.min"}\NormalTok{,}
- \DataTypeTok{type =} \StringTok{"resp"}
-\NormalTok{ )}
+\KeywordTok{library}\NormalTok{(magrittr)}
 
-\CommentTok{\# also get predicted class}
-\NormalTok{lassoAll\_predClass\_vec <{-}}\StringTok{ }\KeywordTok{predict}\NormalTok{( }
-\NormalTok{ cv\_lassoAll,}
- \DataTypeTok{newx =}\NormalTok{ all\_lcpm\_mtx,}
- \DataTypeTok{s =} \StringTok{"lambda.min"}\NormalTok{,}
- \DataTypeTok{type =} \StringTok{"class"}
-\NormalTok{ )}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{))}
 
-\CommentTok{\# get qual scores}
+\CommentTok{\# nzero}
+\NormalTok{nzero\_1se\_vec <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst,}
+ \ControlFlowTok{function}\NormalTok{(cv\_fit) cv\_fit}\OperatorTok{$}\NormalTok{nzero[cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda}\FloatTok{.1}\NormalTok{se])}
 
-\CommentTok{\# Note here that factors are a little but of a pain.}
-\NormalTok{y <{-}}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}HCC\textquotesingle{}}\NormalTok{)}
-\NormalTok{p <{-}}\StringTok{ }\NormalTok{lassoAll\_predResp\_vec}
-\NormalTok{sample\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
-\NormalTok{sample\_qual\_vec <{-}}\StringTok{ }\NormalTok{sample\_qual\_vec[,}\DecValTok{1}\NormalTok{] }\CommentTok{\# to drop the matrix structure}
+\NormalTok{nzero\_min\_vec <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst,}
+ \ControlFlowTok{function}\NormalTok{(cv\_fit) cv\_fit}\OperatorTok{$}\NormalTok{nzero[cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda.min])}
 
-\CommentTok{\# Look at quality scores as a finction of classification}
-\NormalTok{lassoAll\_conf\_vec <{-}}\StringTok{ }\KeywordTok{paste}\NormalTok{(}
-\NormalTok{ y, }
- \KeywordTok{as.numeric}\NormalTok{(lassoAll\_predClass\_vec}\OperatorTok{==}\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{),}
- \DataTypeTok{sep =} \StringTok{\textquotesingle{}:\textquotesingle{}}
-\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\StringTok{\textasciigrave{}}\DataTypeTok{1se}\StringTok{\textasciigrave{}}\NormalTok{=nzero\_1se\_vec, }\DataTypeTok{min =}\NormalTok{ nzero\_min\_vec), }\DataTypeTok{ylab=}\StringTok{"Number of selected features"}\NormalTok{)}
 
-\NormalTok{lassoAll\_conf\_mtx <{-}}\StringTok{ }\KeywordTok{table}\NormalTok{(}
- \DataTypeTok{truth =}\NormalTok{ all\_group\_vec,}
- \DataTypeTok{pred =}\NormalTok{ lassoAll\_predClass\_vec}
+\CommentTok{\# error}
+\NormalTok{error\_1se\_vec <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst,}
+ \ControlFlowTok{function}\NormalTok{(cv\_fit) cv\_fit}\OperatorTok{$}\NormalTok{cvm[cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda}\FloatTok{.1}\NormalTok{se])}
+
+\NormalTok{error\_min\_vec <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst,}
+ \ControlFlowTok{function}\NormalTok{(cv\_fit) cv\_fit}\OperatorTok{$}\NormalTok{cvm[cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda.min])}
+
+\KeywordTok{boxplot}\NormalTok{(}
+ \KeywordTok{list}\NormalTok{(}\StringTok{\textasciigrave{}}\DataTypeTok{1se}\StringTok{\textasciigrave{}}\NormalTok{=error\_1se\_vec, }\DataTypeTok{min =}\NormalTok{ error\_min\_vec), }
+ \DataTypeTok{ylab=}\NormalTok{cv\_lassoAll\_lst[[}\DecValTok{1}\NormalTok{]]}\OperatorTok{$}\NormalTok{name,}
+ \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.06}\NormalTok{, }\FloatTok{.10}\NormalTok{)}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
+\begin{figure}
+\centering
+\includegraphics{Static/figures/model-size-lassoAll-1.pdf}
+\caption{\label{fig:model-size-lassoAll}Feature selection and estimated error by repeated cv lasso models}
+\end{figure}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(lassoAll\_conf\_mtx,}
-  \DataTypeTok{caption =} \StringTok{"Rows are truth.  Columns are predicted"}\NormalTok{) }\OperatorTok{\%>\%}
+\CommentTok{\# tabular format}
+\NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(}
+ \StringTok{\textasciigrave{}}\DataTypeTok{features\_1se}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{summary}\NormalTok{(nzero\_1se\_vec),}
+ \DataTypeTok{features\_min =} \KeywordTok{summary}\NormalTok{(nzero\_min\_vec),}
+ \StringTok{\textasciigrave{}}\DataTypeTok{features:min{-}1se}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{summary}\NormalTok{(nzero\_min\_vec }\OperatorTok{{-}}\StringTok{ }\NormalTok{nzero\_1se\_vec),}
+ \StringTok{\textasciigrave{}}\DataTypeTok{cv\_error\_1se}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\DecValTok{100}\OperatorTok{*}\NormalTok{error\_1se\_vec),}
+ \DataTypeTok{cv\_error\_min =} \KeywordTok{summary}\NormalTok{(}\DecValTok{100}\OperatorTok{*}\NormalTok{error\_min\_vec),}
+ \StringTok{\textasciigrave{}}\DataTypeTok{cv\_error:1se{-}min}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{summary}\NormalTok{(}\DecValTok{100}\OperatorTok{*}\NormalTok{(error\_1se\_vec}\OperatorTok{{-}}\NormalTok{error\_min\_vec))}
+\NormalTok{))}
+
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(tmp }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{{-}}\NormalTok{Mean),}
+  \DataTypeTok{caption =} \StringTok{"Number of selected features"}\NormalTok{,}
+  \DataTypeTok{digits=}\DecValTok{1}\NormalTok{) }\OperatorTok{\%>\%}
 \StringTok{   }\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kable\_styling}\NormalTok{(}\DataTypeTok{full\_width =}\NormalTok{ F)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{table}
 
-\caption{\label{tab:print-conf}Rows are truth.  Columns are predicted}
+\caption{\label{tab:model-size-lassoAll}Number of selected features}
 \centering
-\begin{tabular}[t]{l|r|r}
+\begin{tabular}[t]{l|r|r|r|r|r}
 \hline
-  & Control & HCC\\
+  & Min. & X1st.Qu. & Median & X3rd.Qu. & Max.\\
 \hline
-Control & 765 & 13\\
+features\_1se & 54.0 & 102.0 & 108.0 & 132.5 & 194.0\\
 \hline
-HCC & 39 & 516\\
+features\_min & 118.0 & 175.2 & 200.0 & 261.0 & 365.0\\
+\hline
+features:min-1se & 10.0 & 55.0 & 86.0 & 141.5 & 247.0\\
+\hline
+cv\_error\_1se & 6.9 & 7.6 & 7.7 & 8.1 & 8.9\\
+\hline
+cv\_error\_min & 6.7 & 7.1 & 7.1 & 7.3 & 8.0\\
+\hline
+cv\_error:1se-min & 0.2 & 0.5 & 0.6 & 0.7 & 1.0\\
 \hline
 \end{tabular}
 \end{table}
 
-The model makes few errors (although in most liquid biopsy applications,
-this error rate would arguably be too high). We can examine how quality
-varies among classification groups.
+The number of features selected by the minimum lambda model is larger
+than the number selected by the ``one standard error'' rule by median
+of \(86\) and results on
+a median reduction in cv error rates of
+\(0.6\)\%.
+
+The lasso fit cv error rates on the this set are comparable to the
+cv error rates estimated by the lasso model fitted to the training sample set
+consisting of 80\% of the samples in this set. See Table \ref{tab:printErrors}.
+It's not clear at this point whether the minimum lambda model is better than
+the ``one standard error'' rule model. We would need and external validation
+set to make this determination. We can compare the two sets
+of predicted values, averaged across cv replicates, to see if
+there is a meaningful difference between the two.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_qual\_vec, lassoAll\_conf\_vec), }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}Quality Score\textquotesingle{}}\NormalTok{)}
-\KeywordTok{title}\NormalTok{(}\DataTypeTok{sub =} \StringTok{\textquotesingle{}Classification {-} Truth:Predicted\textquotesingle{}}\NormalTok{)}
+\CommentTok{\# predicted probs {-} 1se}
+\NormalTok{lassoAll\_predResp\_1se\_mtx <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)}
+\KeywordTok{predict}\NormalTok{(}
+\NormalTok{ cv\_fit,}
+ \DataTypeTok{newx =}\NormalTok{ all\_lcpm\_mtx,}
+ \DataTypeTok{s =} \StringTok{"lambda.1se"}\NormalTok{,}
+ \DataTypeTok{type =} \StringTok{"resp"}
+\NormalTok{ )}
+\NormalTok{)}
+\KeywordTok{rownames}\NormalTok{(lassoAll\_predResp\_1se\_mtx) <{-}}\StringTok{ }\KeywordTok{rownames}\NormalTok{(all\_lcpm\_mtx)}
+
+\NormalTok{lassoAll\_predResp\_1se\_vec <{-}}\StringTok{ }\KeywordTok{rowMeans}\NormalTok{(lassoAll\_predResp\_1se\_mtx)}
+
+\CommentTok{\# predicted probs {-} min}
+\NormalTok{lassoAll\_predResp\_min\_mtx <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)}
+\KeywordTok{predict}\NormalTok{(}
+\NormalTok{ cv\_fit,}
+ \DataTypeTok{newx =}\NormalTok{ all\_lcpm\_mtx,}
+ \DataTypeTok{s =} \StringTok{"lambda.min"}\NormalTok{,}
+ \DataTypeTok{type =} \StringTok{"resp"}
+\NormalTok{ )}
+\NormalTok{)}
+\KeywordTok{rownames}\NormalTok{(lassoAll\_predResp\_min\_mtx) <{-}}\StringTok{ }\KeywordTok{rownames}\NormalTok{(all\_lcpm\_mtx)}
+
+\NormalTok{lassoAll\_predResp\_min\_vec <{-}}\StringTok{ }\KeywordTok{rowMeans}\NormalTok{(lassoAll\_predResp\_min\_mtx)}
+
+\CommentTok{\# plot}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}
+ \StringTok{\textasciigrave{}}\DataTypeTok{1se}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{split}\NormalTok{(lassoAll\_predResp\_1se\_vec, all\_group\_vec),}
+ \DataTypeTok{min =} \KeywordTok{split}\NormalTok{(lassoAll\_predResp\_min\_vec, all\_group\_vec)}
+\NormalTok{)}
+\KeywordTok{names}\NormalTok{(tmp) <{-}}\StringTok{ }\KeywordTok{sub}\NormalTok{(}\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{.\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{, }\KeywordTok{names}\NormalTok{(tmp))}
+
+\KeywordTok{boxplot}\NormalTok{(}
+\NormalTok{ tmp,}
+ \DataTypeTok{ylab=}\StringTok{\textquotesingle{}Predicted probability\textquotesingle{}}\NormalTok{,}
+ \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
+ \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
+\NormalTok{)}
+\KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{at=}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(tmp), }\DataTypeTok{tick=}\NormalTok{F, }\KeywordTok{names}\NormalTok{(tmp))}
+
+
+\CommentTok{\# compare the two}
+\KeywordTok{plot}\NormalTok{(}
+ \DataTypeTok{x =}\NormalTok{ lassoAll\_predResp\_1se\_vec, }\DataTypeTok{xlab=}\StringTok{\textquotesingle{}one standard error rule models\textquotesingle{}}\NormalTok{,}
+ \DataTypeTok{y =}\NormalTok{ lassoAll\_predResp\_min\_vec, }\DataTypeTok{ylab=}\StringTok{\textquotesingle{}minimum lambda models\textquotesingle{}}\NormalTok{,}
+ \DataTypeTok{col =} \KeywordTok{ifelse}\NormalTok{(all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}HCC\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+ 
+\CommentTok{\# Add referecne lines at 10\% false positive}
+\NormalTok{thres\_1se <{-}}\StringTok{ }\KeywordTok{quantile}\NormalTok{(lassoAll\_predResp\_1se\_vec[all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}Control\textquotesingle{}}\NormalTok{], }\DataTypeTok{prob=}\NormalTok{.}\DecValTok{9}\NormalTok{)}
+\NormalTok{thres\_min <{-}}\StringTok{ }\KeywordTok{quantile}\NormalTok{(lassoAll\_predResp\_min\_vec[all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}Control\textquotesingle{}}\NormalTok{], }\DataTypeTok{prob=}\NormalTok{.}\DecValTok{9}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\DataTypeTok{v =}\NormalTok{ thres\_1se, }\DataTypeTok{h =}\NormalTok{ thres\_min, }\DataTypeTok{col=}\StringTok{\textquotesingle{}grey\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Static/figures/get-sample-pred-1.pdf}
+\caption{\label{fig:get-sample-pred}Predicted probabilities - averaged over cv replicates}
+\end{figure}
+
+We see that the minimum lambda models provide a better fit to the data,
+which is to be expected as the minimum lambda models have more estimated
+parameters than the one standard error rule models. One way to quantify
+the difference in classification errors is to classify samples
+according to each vector of predicted probabilities, setting
+the thresholds to achieve a fixed false positive rate, 10\% say.
+These thresholds are indicated by the grey lines in the scatter plot
+on the right side of Figure \ref{fig:get-sample-pred}. We note
+that althouth predicted probability distributions are quite different
+for the two models, the the class predictions at a 10\% false discovery threshold
+are largely in agreement.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lassoAll\_predClass\_1se\_vec <{-}}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(}
+\NormalTok{ lassoAll\_predResp\_1se\_vec }\OperatorTok{>}\StringTok{ }\NormalTok{thres\_1se, }\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Control\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{lassoAll\_predClass\_min\_vec <{-}}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(}
+\NormalTok{ lassoAll\_predResp\_min\_vec }\OperatorTok{>}\StringTok{ }\NormalTok{thres\_min, }\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Control\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}
+ \KeywordTok{table}\NormalTok{(}\DataTypeTok{truth=}\NormalTok{all\_group\_vec, }\StringTok{\textasciigrave{}}\DataTypeTok{1se{-}pred}\StringTok{\textasciigrave{}}\NormalTok{=lassoAll\_predClass\_1se\_vec),}
+ \KeywordTok{table}\NormalTok{(}\DataTypeTok{truth=}\NormalTok{all\_group\_vec, }\StringTok{\textasciigrave{}}\DataTypeTok{min{-}pred}\StringTok{\textasciigrave{}}\NormalTok{=lassoAll\_predClass\_min\_vec)}
+\NormalTok{) }
+\CommentTok{\# Hack for printing}
+\KeywordTok{colnames}\NormalTok{(tmp) <{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}1se{-}Control\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}1se{-}HCC\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}min{-}Control\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}min{-}HCC\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(tmp,}
+  \DataTypeTok{caption =} \StringTok{"Classifications: rows are truth"}\NormalTok{,}
+  \DataTypeTok{digits=}\DecValTok{1}\NormalTok{) }\OperatorTok{\%>\%}
+\StringTok{   }\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kable\_styling}\NormalTok{(}\DataTypeTok{full\_width =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:get-sample-class}Classifications: rows are truth}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+  & 1se-Control & 1se-HCC & min-Control & min-HCC\\
+\hline
+Control & 700 & 78 & 700 & 78\\
+\hline
+HCC & 8 & 547 & 0 & 555\\
+\hline
+\end{tabular}
+\end{table}
+
+We see that the min lambda model, makes no false negative calls at a 90\% sensitivity
+setting, and the sensitivity could be increased substantially at no false negative
+cost. This is definitely over-fitting the data set. For the purpose
+of computing sample quality scores - what do these differecnes mean?
+
+\hypertarget{get-quality-scores}{%
+\subsection*{Get quality scores}\label{get-quality-scores}}
+\addcontentsline{toc}{subsection}{Get quality scores}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# get qual scores}
+
+\NormalTok{y <{-}}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}HCC\textquotesingle{}}\NormalTok{)}
+\CommentTok{\# 1se}
+\NormalTok{p <{-}}\StringTok{ }\NormalTok{lassoAll\_predResp\_1se\_vec}
+\NormalTok{sample\_1se\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
+
+\CommentTok{\# min}
+\NormalTok{p <{-}}\StringTok{ }\NormalTok{lassoAll\_predResp\_min\_vec}
+\NormalTok{sample\_min\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
+\end{Highlighting}
+\end{Shaded}
+
+We can examine quality scores as a function of classification bin.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <{-}}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}HCC\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# 1se}
+\NormalTok{lassoAll\_1se\_conf\_vec <{-}}\StringTok{ }\KeywordTok{paste}\NormalTok{(}
+\NormalTok{ y, }
+ \KeywordTok{as.numeric}\NormalTok{(lassoAll\_predClass\_1se\_vec}\OperatorTok{==}\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{),}
+ \DataTypeTok{sep =} \StringTok{\textquotesingle{}:\textquotesingle{}}
+\NormalTok{)}
+
+\CommentTok{\# min}
+\NormalTok{lassoAll\_min\_conf\_vec <{-}}\StringTok{ }\KeywordTok{paste}\NormalTok{(}
+\NormalTok{ y, }
+ \KeywordTok{as.numeric}\NormalTok{(lassoAll\_predClass\_min\_vec}\OperatorTok{==}\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{),}
+ \DataTypeTok{sep =} \StringTok{\textquotesingle{}:\textquotesingle{}}
+\NormalTok{)}
+
+
+\NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}
+ \KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
+ \KeywordTok{split}\NormalTok{(sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec)}
+\NormalTok{)}
+
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}Quality Score\textquotesingle{}}\NormalTok{)}
+\KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}1se lambda Q vs C\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec), }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}Quality Score\textquotesingle{}}\NormalTok{)}
+\KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}min lambda Q vs C\textquotesingle{}}\NormalTok{)}
+
+
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.5}\NormalTok{, }\StringTok{\textquotesingle{}Classification {-} Truth:Predicted\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3123,6 +3365,110 @@ varies among classification groups.
 \includegraphics{Static/figures/plot-qual-conf-1.pdf}
 \caption{\label{fig:plot-qual-conf}quality scores by classification - HCC=1}
 \end{figure}
+
+We will use the minimum lambda model to provide
+the fitted probabilities used to compute quality scores.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_qual\_vec <{-}}\StringTok{ }\NormalTok{sample\_min\_qual\_vec}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{selected-feature-list-stability}{%
+\subsection*{Selected feature list stability}\label{selected-feature-list-stability}}
+\addcontentsline{toc}{subsection}{Selected feature list stability}
+
+Before moving on to the simulation, let's examine gene selection stability on the
+full data set. We have two sets of sellected features - one for the
+one standard deviation rile model, and one for the mimimum lambda model.
+We saw in Table \ref{tab:model-size-lassoAl} that the number of features
+selected by the minimum lambda models had an IQR of
+\(175.25-261\),
+while the one standard error rule models had an IQR of
+\(102-132.5\).
+
+Let's examine the stability of the gene lists across cv replicates.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 1se}
+\NormalTok{lassoAll\_coef\_1se\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)\{}
+\NormalTok{ cv\_fit\_coef <{-}}\StringTok{ }\KeywordTok{coef}\NormalTok{(}
+\NormalTok{ cv\_fit,}
+ \DataTypeTok{s =} \StringTok{"lambda.1se"}
+\NormalTok{ )}
+\NormalTok{ cv\_fit\_coef}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][cv\_fit\_coef}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\NormalTok{ \})}
+
+\CommentTok{\# put into matrix}
+\NormalTok{lassoAll\_coef\_1se\_all <{-}}\StringTok{ }\KeywordTok{Reduce}\NormalTok{(union, lassoAll\_coef\_1se\_lst)}
+\NormalTok{lassoAll\_coef\_1se\_mtx <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(lassoAll\_coef\_1se\_lst, }
+  \ControlFlowTok{function}\NormalTok{(LL) }\KeywordTok{is.element}\NormalTok{(lassoAll\_coef\_1se\_all, LL)}
+\NormalTok{)}
+
+\NormalTok{genes\_by\_rep\_1se\_tbl <{-}}\StringTok{ }\KeywordTok{table}\NormalTok{(}\KeywordTok{rowSums}\NormalTok{(lassoAll\_coef\_1se\_mtx))}
+\KeywordTok{barplot}\NormalTok{(}
+\NormalTok{ genes\_by\_rep\_1se\_tbl,}
+ \DataTypeTok{xlab=}\StringTok{\textquotesingle{}Number of Replicates\textquotesingle{}}\NormalTok{,}
+ \DataTypeTok{ylab=}\StringTok{\textquotesingle{}Number of features\textquotesingle{}}
+
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Static/figures/feature-list-1se-1.pdf}
+\caption{\label{fig:feature-list-1se}Feature list stability for one the standard error rule models}
+\end{figure}
+
+We see that \(44\) features are included in every
+cv replicate. These make up between
+\(33\)\%
+and
+\(43\)\%
+(Q1 and Q3) of the cv replicate one standard error rule models feature lists.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# min}
+\NormalTok{lassoAll\_coef\_min\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)\{}
+\NormalTok{ cv\_fit\_coef <{-}}\StringTok{ }\KeywordTok{coef}\NormalTok{(}
+\NormalTok{ cv\_fit,}
+ \DataTypeTok{s =} \StringTok{"lambda.min"}
+\NormalTok{ )}
+\NormalTok{ cv\_fit\_coef}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][cv\_fit\_coef}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\NormalTok{ \})}
+
+\CommentTok{\# put into matrix}
+\NormalTok{lassoAll\_coef\_min\_all <{-}}\StringTok{ }\KeywordTok{Reduce}\NormalTok{(union, lassoAll\_coef\_min\_lst)}
+\NormalTok{lassoAll\_coef\_min\_mtx <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(lassoAll\_coef\_min\_lst, }
+  \ControlFlowTok{function}\NormalTok{(LL) }\KeywordTok{is.element}\NormalTok{(lassoAll\_coef\_min\_all, LL)}
+\NormalTok{)}
+
+\NormalTok{genes\_by\_rep\_min\_tbl <{-}}\StringTok{ }\KeywordTok{table}\NormalTok{(}\KeywordTok{rowSums}\NormalTok{(lassoAll\_coef\_min\_mtx))}
+\KeywordTok{barplot}\NormalTok{(}
+\NormalTok{ genes\_by\_rep\_min\_tbl,}
+ \DataTypeTok{xlab=}\StringTok{\textquotesingle{}Number of Replicates\textquotesingle{}}\NormalTok{,}
+ \DataTypeTok{ylab=}\StringTok{\textquotesingle{}Number of features\textquotesingle{}}
+
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Static/figures/feature-list-min-1.pdf}
+\caption{\label{fig:feature-list-min}Feature list stability for minimum lambda models}
+\end{figure}
+
+We see that \(106\) features are included in every
+cv replicate. These make up between
+\(41\)\%
+and
+\(60\)\%
+(Q1 and Q3) of the cv replicate min feature lists.
 
 \hypertarget{simulation-design}{%
 \section{Simulation Design}\label{simulation-design}}
@@ -3173,6 +3519,12 @@ to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features. We will want
 to examine how these stabilize as the sample size increases.
 
+Note that we limit the simulations to a maximum of sample size of 300 in
+order to allow us to have repeated simulations with low overlap. With 300
+randomly selected HCC samples, the expected overlap between two randomly
+selected sets of HCC samples is \(29.2\)\%.
+For Controls the expected overlap is \(14.9\)\%.
+
 \hypertarget{setup-simulation}{%
 \section{Setup simulation}\label{setup-simulation}}
 
@@ -3186,9 +3538,9 @@ and one for the selection of HCC samples.
 \end{Highlighting}
 \end{Shaded}
 
-We have \(778\) IDs of control samples in stored in \texttt{all\_control\_vec}
-and \(555\) IDs of affected samples in stored in \texttt{all\_affected\_vec}.
-To create random samples from these we only need to randomly select indices from
+We have \(778\) control sample IDs stored in \texttt{all\_control\_vec}
+and \(555\) affected sample IDs stored in \texttt{all\_affected\_vec}.
+To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
 \begin{Shaded}
@@ -3211,8 +3563,9 @@ each vector.
 \end{Shaded}
 
 Each simulation is specified by a given column of the simulation design matrices:
-\texttt{sim\_control\_mtx} and \texttt{sim\_affected\_mtx}. Within each simulation, we can run
-the analyses of size \(25, 50, 100, 200, 300\).
+\texttt{sim\_control\_mtx} and \texttt{sim\_affected\_mtx}, each with domensions \(300, 30\).
+Within each simulation, we can run the analyses of size \(25, 50, 100, 200, 300\) by simply selecting
+samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
 
@@ -3305,9 +3658,10 @@ in the early accrual stages.
 \hypertarget{run-simulations}{%
 \section{Run simulations}\label{run-simulations}}
 
-As these make take a while to run, and space to store,
+As these make take a while to run,
 we will save the results of each similation to a different
-object and store to disk.
+object and store to disk. These can be easily read from disk
+when needed for analysis.
 
 The simulation saves results to the file system and
 only needs to be run once. The simulation takes \(\approx\) 8 minutes
@@ -3317,13 +3671,14 @@ Running under: macOS Mojave 10.14.6)
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{start\_time <{-}}\StringTok{ }\KeywordTok{proc.time}\NormalTok{()}
+
 \CommentTok{\# Get stage from SIZE}
 \NormalTok{stage\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(sim\_control\_qual\_mtx), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, SIZE), }\DataTypeTok{include.lowest =}\NormalTok{ T)}
 
 \ControlFlowTok{for}\NormalTok{ (SIMno }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(sim\_control\_qual\_mtx)) \{}
-\NormalTok{  start\_time <{-}}\StringTok{ }\KeywordTok{proc.time}\NormalTok{()}
 
-  \KeywordTok{cat}\NormalTok{(}\StringTok{"Running simulation "}\NormalTok{, SIMno, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \CommentTok{\#cat("Running simulation ", SIMno, "\textbackslash{}n")}
 
 \NormalTok{  sim\_cv\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(}\KeywordTok{levels}\NormalTok{(stage\_vec)), }\ControlFlowTok{function}\NormalTok{(STGno) \{}
 \NormalTok{    Stage\_rows\_vec <{-}}\StringTok{ }\KeywordTok{which}\NormalTok{(stage\_vec }\OperatorTok{\%in\%}\StringTok{ }\KeywordTok{levels}\NormalTok{(stage\_vec)[}\DecValTok{1}\OperatorTok{:}\NormalTok{STGno])}
@@ -3335,7 +3690,7 @@ Running under: macOS Mojave 10.14.6)
 \NormalTok{    )}
 \NormalTok{    sim\_stage\_lcpm\_mtx <{-}}\StringTok{ }\NormalTok{all\_lcpm\_mtx[sim\_stage\_samples\_vec, ]}
 \NormalTok{    sim\_stage\_group\_vec <{-}}\StringTok{ }\NormalTok{all\_group\_vec[sim\_stage\_samples\_vec]}
-    \KeywordTok{print}\NormalTok{(}\KeywordTok{table}\NormalTok{(sim\_stage\_group\_vec))}
+    \CommentTok{\#print(table(sim\_stage\_group\_vec))}
 
 \NormalTok{    sim\_stage\_cv\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{CV\_REP, }\ControlFlowTok{function}\NormalTok{(CV) \{}
 \NormalTok{      cv\_fit <{-}}\StringTok{ }\NormalTok{glmnet}\OperatorTok{::}\KeywordTok{cv.glmnet}\NormalTok{(}
@@ -3347,6 +3702,9 @@ Running under: macOS Mojave 10.14.6)
         \DataTypeTok{keep =}\NormalTok{ T,}
         \DataTypeTok{nlambda =} \DecValTok{30}
 \NormalTok{      )}
+
+      \CommentTok{\# Extract 1se metrics from cv\_fit}
+      \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \NormalTok{      ndx\_1se <{-}}\StringTok{ }\KeywordTok{which}\NormalTok{(cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda}\FloatTok{.1}\NormalTok{se)}
 
 \NormalTok{      nzero\_1se <{-}}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{nzero[ndx\_1se]}
@@ -3376,10 +3734,53 @@ Running under: macOS Mojave 10.14.6)
 \NormalTok{        cv\_fit,}
         \DataTypeTok{s =} \StringTok{"lambda.1se"}
 \NormalTok{      )}
-\NormalTok{      genes <{-}}\StringTok{ }\NormalTok{coef\_1se}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][coef\_1se}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\NormalTok{      genes\_1se <{-}}\StringTok{ }\NormalTok{coef\_1se}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][coef\_1se}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
 
-      \KeywordTok{list}\NormalTok{(}\DataTypeTok{p =}\NormalTok{ nzero\_1se, }\DataTypeTok{cv\_error =}\NormalTok{ cvm\_1se, }\DataTypeTok{oof\_error =}\NormalTok{ oofPred\_1se\_error, }
-           \DataTypeTok{test\_error=}\NormalTok{test\_1se\_error, }\DataTypeTok{genes =}\NormalTok{ genes)}
+      \CommentTok{\# Extract min metrics from cv\_fit}
+      \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\NormalTok{      ndx\_min <{-}}\StringTok{ }\KeywordTok{which}\NormalTok{(cv\_fit}\OperatorTok{$}\NormalTok{lambda }\OperatorTok{==}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{lambda.min)}
+
+\NormalTok{      nzero\_min <{-}}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{nzero[ndx\_min]}
+\NormalTok{      cvm\_min <{-}}\StringTok{ }\NormalTok{cv\_fit}\OperatorTok{$}\NormalTok{cvm[ndx\_min]}
+
+      \CommentTok{\# oof error}
+\NormalTok{      oofPred\_min\_vec <{-}}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(}
+\NormalTok{        cv\_fit}\OperatorTok{$}\NormalTok{fit.preval[, ndx\_min] }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{, }\StringTok{"HCC"}\NormalTok{, }\StringTok{"Control"}
+\NormalTok{      )}
+\NormalTok{      oofPred\_min\_error <{-}}\StringTok{ }\KeywordTok{mean}\NormalTok{(oofPred\_min\_vec }\OperatorTok{!=}\StringTok{ }\NormalTok{sim\_stage\_group\_vec)}
+
+      \CommentTok{\# test error}
+\NormalTok{      sim\_stage\_test\_samples\_vec <{-}}\StringTok{ }\KeywordTok{setdiff}\NormalTok{(}\KeywordTok{rownames}\NormalTok{(all\_lcpm\_mtx), sim\_stage\_samples\_vec)}
+\NormalTok{      sim\_stage\_test\_lcpm\_mtx <{-}}\StringTok{ }\NormalTok{all\_lcpm\_mtx[sim\_stage\_test\_samples\_vec,]}
+\NormalTok{      sim\_stage\_test\_group\_vec <{-}}\StringTok{ }\NormalTok{all\_group\_vec[sim\_stage\_test\_samples\_vec]}
+
+\NormalTok{      test\_pred\_min\_vec <{-}}\StringTok{ }\KeywordTok{predict}\NormalTok{(}
+\NormalTok{       cv\_fit,}
+       \DataTypeTok{newx=}\NormalTok{sim\_stage\_test\_lcpm\_mtx,}
+       \DataTypeTok{s=}\StringTok{"lambda.min"}\NormalTok{,}
+       \DataTypeTok{type=}\StringTok{"class"}
+\NormalTok{      )}
+\NormalTok{      test\_min\_error <{-}}\StringTok{ }\KeywordTok{mean}\NormalTok{(test\_pred\_min\_vec }\OperatorTok{!=}\StringTok{ }\NormalTok{sim\_stage\_test\_group\_vec)}
+
+      \CommentTok{\# genes}
+\NormalTok{      coef\_min <{-}}\StringTok{ }\KeywordTok{coef}\NormalTok{(}
+\NormalTok{        cv\_fit,}
+        \DataTypeTok{s =} \StringTok{"lambda.min"}
+\NormalTok{      )}
+\NormalTok{      genes\_min <{-}}\StringTok{ }\NormalTok{coef\_min}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][coef\_min}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+
+      \CommentTok{\# return cv\_fit summary metrics}
+      \KeywordTok{list}\NormalTok{(}
+       \DataTypeTok{p\_1se =}\NormalTok{ nzero\_1se, }
+       \DataTypeTok{p\_min =}\NormalTok{ nzero\_min, }
+       \DataTypeTok{cv\_1se =}\NormalTok{ cvm\_1se, }
+       \DataTypeTok{cv\_min =}\NormalTok{ cvm\_min, }
+       \DataTypeTok{oof\_1se =}\NormalTok{ oofPred\_1se\_error, }
+       \DataTypeTok{oof\_min =}\NormalTok{ oofPred\_min\_error, }
+       \DataTypeTok{test\_1se=}\NormalTok{test\_1se\_error, }
+       \DataTypeTok{test\_min=}\NormalTok{test\_min\_error, }
+       \DataTypeTok{genes\_1se =}\NormalTok{ genes\_1se,}
+       \DataTypeTok{genes\_min =}\NormalTok{ genes\_min)}
 \NormalTok{    \})}
 \NormalTok{    sim\_stage\_cv\_lst}
 \NormalTok{  \})}
@@ -3389,10 +3790,204 @@ Running under: macOS Mojave 10.14.6)
   \KeywordTok{assign}\NormalTok{(fName, sim\_cv\_lst)}
   \KeywordTok{save}\NormalTok{(}\DataTypeTok{list =}\NormalTok{ fName, }\DataTypeTok{file=}\KeywordTok{file.path}\NormalTok{(}\StringTok{"RData"}\NormalTok{, fName))}
 
-  \KeywordTok{message}\NormalTok{(}\StringTok{"simulation time: "}\NormalTok{, }\KeywordTok{round}\NormalTok{((}\KeywordTok{proc.time}\NormalTok{() }\OperatorTok{{-}}\StringTok{ }\NormalTok{start\_time)[}\DecValTok{3}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s"}\NormalTok{)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \KeywordTok{message}\NormalTok{(}\StringTok{"simulation time: "}\NormalTok{, }\KeywordTok{round}\NormalTok{((}\KeywordTok{proc.time}\NormalTok{() }\OperatorTok{{-}}\StringTok{ }\NormalTok{start\_time)[}\DecValTok{3}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## simulation time: 904.14s
+\end{verbatim}
+
+\hypertarget{simulation-results}{%
+\section{Simulation results}\label{simulation-results}}
+
+The results are
+* error: cv, oof, test
+- examine relationship to each other and with respect to sample size
+* genes:\\
+- how variable are the selected gene lists, both in terms of composition and size
+
+Recall the we have \(30\) randomly selected sets of HCC and Control samples,
+analyzed in inreasing sizes of \(25, 50, 100, 200, 300\), with
+\(30\) repeated cross-validated lasso fits:
+
+\begin{itemize}
+\item
+  Sample sizes: SIZE = \(25, 50, 100, 200, 300\)
+\item
+  Number of CV Replicates: CV\_REP = \(30\)
+\end{itemize}
+
+First we extract simluation results and store into one big table.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sim\_files\_vec <{-}}\StringTok{ }\KeywordTok{list.files}\NormalTok{(}\StringTok{\textquotesingle{}RData\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\^{}sim\_\textquotesingle{}}\NormalTok{)}
+
+
+\CommentTok{\# define extraction methods}
+
+\CommentTok{\# Each sumulation is a list of cv results }
+\CommentTok{\#\# nested in a list of replicates}
+\CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+
+\CommentTok{\# cvList2frm\_f makes a frame out of the inner list}
+\NormalTok{cvList2frm\_f <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(cv\_lst) \{}
+\NormalTok{ frm1 <{-}}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{t}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(cv\_lst, }\ControlFlowTok{function}\NormalTok{(x) x)))}
+\NormalTok{ frm2 <{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}
+  \KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{1}\NormalTok{]]), }\KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{2}\NormalTok{]]),}
+  \KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{3}\NormalTok{]]), }\KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{4}\NormalTok{]]),}
+  \KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{5}\NormalTok{]]), }\KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{6}\NormalTok{]]),}
+  \KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{7}\NormalTok{]]), }\KeywordTok{unlist}\NormalTok{(frm1[[}\DecValTok{8}\NormalTok{]]),}
+\NormalTok{  frm1[}\DecValTok{9}\NormalTok{], frm1[}\DecValTok{10}\NormalTok{])}
+  \KeywordTok{names}\NormalTok{(frm2) <{-}}\StringTok{ }\KeywordTok{names}\NormalTok{(frm1)}
+  \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Rep=}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(frm2), frm2)\}}
+
+\CommentTok{\# cv\_lst\_to\_frm loop over replicates, concatenating the inner list frames}
+\NormalTok{cv\_lst\_to\_frm <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(sim\_cv\_lst) \{}
+ \KeywordTok{do.call}\NormalTok{(}\StringTok{\textquotesingle{}rbind\textquotesingle{}}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(sim\_cv\_lst),}
+  \ControlFlowTok{function}\NormalTok{(JJ) \{}
+\NormalTok{    siz\_frm <{-}}\StringTok{ }\KeywordTok{cvList2frm\_f}\NormalTok{(sim\_cv\_lst[[JJ]])}
+    \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Size=}\NormalTok{SIZE[JJ], siz\_frm)}
+\NormalTok{  \}))}
+\NormalTok{\}}
+
+\CommentTok{\# we loop across simulations to combine all results into one big table}
+\NormalTok{sim\_results\_frm <{-}}\StringTok{ }\KeywordTok{do.call}\NormalTok{(}\StringTok{\textquotesingle{}rbind\textquotesingle{}}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(sim\_files\_vec),}
+ \ControlFlowTok{function}\NormalTok{(SIM\_NO) \{}
+  \KeywordTok{load}\NormalTok{(}\DataTypeTok{file=}\KeywordTok{file.path}\NormalTok{(}\StringTok{\textquotesingle{}RData\textquotesingle{}}\NormalTok{, sim\_files\_vec[SIM\_NO]))}
+  \KeywordTok{assign}\NormalTok{(}\StringTok{\textquotesingle{}sim\_cv\_lst\textquotesingle{}}\NormalTok{, }\KeywordTok{get}\NormalTok{(sim\_files\_vec[SIM\_NO]))}
+  \KeywordTok{rm}\NormalTok{(}\DataTypeTok{list=}\NormalTok{sim\_files\_vec[SIM\_NO])}
+  
+  \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{SimNo=}\KeywordTok{paste0}\NormalTok{(}\StringTok{\textquotesingle{}Sim\_\textquotesingle{}}\NormalTok{,}\KeywordTok{formatC}\NormalTok{(SIM\_NO,}\DataTypeTok{width =} \DecValTok{2}\NormalTok{,}\DataTypeTok{flag =} \DecValTok{0}\NormalTok{)), }\KeywordTok{cv\_lst\_to\_frm}\NormalTok{(sim\_cv\_lst))}
+\NormalTok{\} }
+\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+Have a table of simulation results - \texttt{sim\_results\_frm}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{head}\NormalTok{(}\KeywordTok{with}\NormalTok{(sim\_results\_frm, }\KeywordTok{table}\NormalTok{(SimNo, Size))),}
+  \DataTypeTok{caption =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Simulation Results {-} N Sim ="}\NormalTok{, SIM)) }\OperatorTok{\%>\%}
+\StringTok{   }\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kable\_styling}\NormalTok{(}\DataTypeTok{full\_width =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}
+
+\caption{\label{tab:sum-table}Simulation Results - N Sim = 30}
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r}
+\hline
+  & 25 & 50 & 100 & 200 & 300\\
+\hline
+Sim\_01 & 30 & 30 & 30 & 30 & 30\\
+\hline
+Sim\_02 & 30 & 30 & 30 & 30 & 30\\
+\hline
+Sim\_03 & 30 & 30 & 30 & 30 & 30\\
+\hline
+Sim\_04 & 30 & 30 & 30 & 30 & 30\\
+\hline
+Sim\_05 & 30 & 30 & 30 & 30 & 30\\
+\hline
+Sim\_06 & 30 & 30 & 30 & 30 & 30\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{head}\NormalTok{(sim\_results\_frm }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(genes\_1se, genes\_min)),}
+    \DataTypeTok{caption =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Simulation Results {-} not showing genes column"}\NormalTok{))) }\OperatorTok{\%>\%}
+\StringTok{   }\NormalTok{kableExtra}\OperatorTok{::}\KeywordTok{kable\_styling}\NormalTok{(}\DataTypeTok{full\_width =}\NormalTok{ F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|r|r|r|r|r|r|r|r|r|r}
+\hline
+SimNo & Size & Rep & p\_1se & p\_min & cv\_1se & cv\_min & oof\_1se & oof\_min & test\_1se & test\_min\\
+\hline
+Sim\_01 & 25 & 1 & 20 & 40 & 0.32 & 0.26 & 0.34 & 0.32 & 0.2961808 & 0.3125487\\
+\hline
+Sim\_01 & 25 & 2 & 26 & 26 & 0.22 & 0.22 & 0.32 & 0.32 & 0.2946220 & 0.2946220\\
+\hline
+Sim\_01 & 25 & 3 & 6 & 32 & 0.34 & 0.30 & 0.44 & 0.32 & 0.3452845 & 0.3070928\\
+\hline
+Sim\_01 & 25 & 4 & 10 & 24 & 0.36 & 0.30 & 0.38 & 0.32 & 0.3195635 & 0.2938426\\
+\hline
+Sim\_01 & 25 & 5 & 27 & 32 & 0.26 & 0.22 & 0.36 & 0.32 & 0.2992985 & 0.3070928\\
+\hline
+Sim\_01 & 25 & 6 & 20 & 27 & 0.36 & 0.32 & 0.34 & 0.32 & 0.2961808 & 0.2992985\\
+\hline
+\end{tabular}
+\end{table}
+
+First look at results for one simulation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SIM <{-}}\StringTok{ "Sim\_01"}
+
+\ControlFlowTok{for}\NormalTok{(SIM }\ControlFlowTok{in} \KeywordTok{unique}\NormalTok{(sim\_results\_frm}\OperatorTok{$}\NormalTok{SimNo))\{}
+
+\NormalTok{somNo\_results\_frm <{-}}\StringTok{ }\NormalTok{sim\_results\_frm }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(SimNo}\OperatorTok{==}\NormalTok{SIM)}
+
+\CommentTok{\# 1se}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{(VAR }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\StringTok{"p\_1se"}\NormalTok{, }\StringTok{"cv\_1se"}\NormalTok{, }\StringTok{"oof\_1se"}\NormalTok{, }\StringTok{"test\_1se"}\NormalTok{))\{}
+\NormalTok{   var\_lst <{-}}\StringTok{ }\KeywordTok{split}\NormalTok{(somNo\_results\_frm[, VAR], somNo\_results\_frm}\OperatorTok{$}\NormalTok{Size)}
+   \KeywordTok{names}\NormalTok{(var\_lst) <{-}}\StringTok{ }\NormalTok{SIZE}
+   \KeywordTok{boxplot}\NormalTok{(var\_lst, }\DataTypeTok{main=}\NormalTok{VAR)}
+\NormalTok{\}}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"Sim ="}\NormalTok{, SIM))}
+
+\CommentTok{\# min}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{(VAR }\ControlFlowTok{in} \KeywordTok{c}\NormalTok{(}\StringTok{"p\_min"}\NormalTok{, }\StringTok{"cv\_min"}\NormalTok{, }\StringTok{"oof\_min"}\NormalTok{, }\StringTok{"test\_min"}\NormalTok{))\{}
+\NormalTok{   var\_lst <{-}}\StringTok{ }\KeywordTok{split}\NormalTok{(somNo\_results\_frm[, VAR], somNo\_results\_frm}\OperatorTok{$}\NormalTok{Size)}
+   \KeywordTok{names}\NormalTok{(var\_lst) <{-}}\StringTok{ }\NormalTok{SIZE}
+   \KeywordTok{boxplot}\NormalTok{(var\_lst, }\DataTypeTok{main=}\NormalTok{VAR)}
+\NormalTok{\}}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"Sim ="}\NormalTok{, SIM))}
+
+\CommentTok{\# 1se}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{(SZ }\ControlFlowTok{in}\NormalTok{ SIZE[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{]) \{}
+  \KeywordTok{boxplot}\NormalTok{(somNo\_results\_frm }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(Size}\OperatorTok{==}\NormalTok{SZ) }
+    \OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\StringTok{"cv\_1se"}\NormalTok{, }\StringTok{"oof\_1se"}\NormalTok{, }\StringTok{"test\_1se"}\NormalTok{),}
+    \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,.}\DecValTok{5}\NormalTok{))}
+   \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{at=}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{labels=}\KeywordTok{c}\NormalTok{(}\StringTok{"cvi\_1se"}\NormalTok{, }\StringTok{"oof\_1se"}\NormalTok{, }\StringTok{"test\_1se"}\NormalTok{))}
+   \KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Size =\textquotesingle{}}\NormalTok{, SZ))}
+\NormalTok{\}}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"Sim ="}\NormalTok{, SIM))}
+
+\CommentTok{\# min}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{(SZ }\ControlFlowTok{in}\NormalTok{ SIZE[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{]) \{}
+  \KeywordTok{boxplot}\NormalTok{(somNo\_results\_frm }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(Size}\OperatorTok{==}\NormalTok{SZ) }
+    \OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\StringTok{"cv\_min"}\NormalTok{, }\StringTok{"oof\_min"}\NormalTok{, }\StringTok{"test\_min"}\NormalTok{),}
+    \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,.}\DecValTok{5}\NormalTok{))}
+   \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{at=}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{labels=}\KeywordTok{c}\NormalTok{(}\StringTok{"cvi\_min"}\NormalTok{, }\StringTok{"oof\_min"}\NormalTok{, }\StringTok{"test\_min"}\NormalTok{))}
+   \KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}Size =\textquotesingle{}}\NormalTok{, SZ))}
+\NormalTok{\}}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"Sim ="}\NormalTok{, SIM))}
+
+\NormalTok{\} }\CommentTok{\# for(SIM}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Static/figures/simRes-Sim1-1se-1.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-2.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-3.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-4.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-5.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-6.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-7.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-8.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-9.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-10.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-11.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-12.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-13.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-14.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-15.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-16.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-17.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-18.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-19.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-20.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-21.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-22.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-23.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-24.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-25.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-26.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-27.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-28.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-29.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-30.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-31.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-32.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-33.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-34.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-35.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-36.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-37.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-38.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-39.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-40.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-41.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-42.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-43.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-44.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-45.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-46.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-47.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-48.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-49.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-50.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-51.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-52.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-53.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-54.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-55.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-56.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-57.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-58.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-59.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-60.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-61.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-62.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-63.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-64.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-65.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-66.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-67.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-68.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-69.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-70.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-71.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-72.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-73.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-74.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-75.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-76.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-77.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-78.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-79.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-80.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-81.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-82.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-83.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-84.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-85.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-86.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-87.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-88.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-89.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-90.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-91.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-92.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-93.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-94.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-95.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-96.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-97.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-98.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-99.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-100.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-101.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-102.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-103.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-104.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-105.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-106.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-107.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-108.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-109.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-110.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-111.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-112.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-113.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-114.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-115.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-116.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-117.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-118.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-119.pdf} \includegraphics{Static/figures/simRes-Sim1-1se-120.pdf}
 
 \hypertarget{variable-importance}{%
 \chapter{Variable importance}\label{variable-importance}}

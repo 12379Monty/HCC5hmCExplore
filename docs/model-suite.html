@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 5 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 5 Does Size Matter? | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 5 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 5 Does Size Matter? | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 5 Fitted Model Suite | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 5 Does Size Matter? | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-09" />
+<meta name="date" content="2020-09-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,20 +164,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Classification Analysis in the <code>n &lt;&lt; p</code> Context</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1</b> caret for model evaluation</a></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#the-glmnet-r-package"><i class="fa fa-check"></i><b>2.2</b> The <code>glmnet</code> R package</a>
 <ul>
 <li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
+<li class="chapter" data-level="2.3" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="2.4" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-sub"><i class="fa fa-check"></i><b>2.4</b> Lasso vs Best Subset</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> 5hmc Data Preprocessing</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
 <li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
@@ -193,12 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cv-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> CV analysis setup</a></li>
+<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cross-validation-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> Cross-validation analysis setup</a></li>
 <li class="chapter" data-level="4.2" data-path="explore-sparsity.html"><a href="explore-sparsity.html#fit-and-compare-models"><i class="fa fa-check"></i><b>4.2</b> Fit and compare models</a>
 <ul>
 <li class="chapter" data-level="4.2.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#logistic-regression-in-glmnet"><i class="fa fa-check"></i><b>4.2.1</b> Logistic regression in <code>glmnet</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#relaxed-lasso-and-blended-mix"><i class="fa fa-check"></i><b>4.3</b> Relaxed lasso and blended mix</a></li>
+<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#the-relaxed-lasso-and-blended-mix-models"><i class="fa fa-check"></i><b>4.3</b> The relaxed lasso and blended mix models</a></li>
 <li class="chapter" data-level="4.4" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examination-of-sensitivity-vs-specificity"><i class="fa fa-check"></i><b>4.4</b> Examination of sensitivity vs specificity</a>
 <ul>
 <li class="chapter" data-level="4.4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#training-data-out-of-fold-roc-curves"><i class="fa fa-check"></i><b>4.4.1</b> Training data out-of-fold ROC curves</a></li>
@@ -207,12 +204,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.6" data-path="explore-sparsity.html"><a href="explore-sparsity.html#compare-coefficient-profiles"><i class="fa fa-check"></i><b>4.6</b> Compare coefficient profiles</a></li>
 <li class="chapter" data-level="4.7" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examine-feature-selection"><i class="fa fa-check"></i><b>4.7</b> Examine feature selection</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Does Size Matter?</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a></li>
-<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.2</b> Simulation Design</a></li>
-<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.3</b> Setup simulation</a></li>
-<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.4</b> Run simulations</a></li>
+<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a>
+<ul>
+<li class="chapter" data-level="" data-path="model-suite.html"><a href="model-suite.html#get-quality-scores"><i class="fa fa-check"></i>Get quality scores</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#selected-feature-list-stability"><i class="fa fa-check"></i><b>5.2</b> Selected feature list stability</a></li>
+<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.3</b> Simulation Design</a></li>
+<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.4</b> Setup simulation</a></li>
+<li class="chapter" data-level="5.5" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.5</b> Run simulations</a></li>
+<li class="chapter" data-level="5.6" data-path="model-suite.html"><a href="model-suite.html#simulation-results"><i class="fa fa-check"></i><b>5.6</b> Simulation results</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a></li>
 <li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
@@ -238,13 +240,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="model-suite" class="section level1" number="5">
-<h1><span class="header-section-number">Section 5</span> Fitted Model Suite</h1>
-<p>We now examine the results of fitting a suite of models to
+<h1><span class="header-section-number">Section 5</span> Does Size Matter?</h1>
+<p>We now examine the results of fitting a suite of lasso models to
 investigate the effect of sample size on
 various aspects of model performance:</p>
 <ul>
-<li><p>assessed accuracy: out-of-fold estimates of precision and variability and
-cv assessed accuracy and bias.</p></li>
+<li><p>assessed accuracy: out-of-fold estimates of precision and variability vs train set estimates</p></li>
 <li><p>selected feature profile stability - to what extent does the
 feature set implicitly selected by the lasso vary across random
 sampling and what is the effect of sample size.</p></li>
@@ -252,14 +253,20 @@ sampling and what is the effect of sample size.</p></li>
 <p>It is hypothesized that below a certain threshold,
 sample sizes are too small to provide reliable estimates
 of performance or stable selected feature profiles.</p>
-<p>We will attempt to separate variability which is due to
-sample size from variability due to sample composition.
-To to this we will track sample quality.
+<p>In examining the relationship between sample size and
+model performance, including variability and reliability
+of performance indicators derived from fits, we should bear in
+mind that in addition to sample size, sample composition might
+also play a factor. If a training data set contains many outliers
+or otherwise <em>hard to properly classify</em> samples, the performance
+of models fitted to such a data set is expected to be negatively impacted.</p>
+<p>In the simulations that we run below we will track sample quality
+to examine its impact on fitted model performance.
 Predicted probabilities from fitted model can be transformed into sample
 quality scores: <span class="math inline">\(Q_i = p_i^{y_i}(1-p_i)^{1-y_i}\)</span>, where <span class="math inline">\(p_i\)</span> is the
 estimated probability of HCC for sample i and <span class="math inline">\(y_i\)</span> is 1 for HCC samples and
 0 for Controls. ie. we use the fitted sample contribution to the
-likelihood function as a sample quality score. To derive the quality scores,
+likelihood function as a sample quality score. To derive the sample quality scores,
 we will use the predicted response from a lasso model fitted to the entire data set.</p>
 <p>Hard to classify samples will have low quality scores.
 In the results that we discuss below, when we look at variability across repeated
@@ -270,114 +277,64 @@ Low quality here only means that a sample is different from the
 core of the data set in a way that makes it hard to properly classify.
 That could happen if the sample were mislabeled, in which case we could
 think of this sample as being poor quality of course.</p>
+<p>The variability in sample set <em>quality</em> the we get from simple random sampling,
+as is done in the simulation below, is not expected to adequately reflect
+sample set quality variation encountered in practice when data for a particular
+study are accumulated over extensive time horizons and across varied
+physical settings. In order to accrue study samples at an acceptable rate,
+it is not uncommon for the study sponsor to work with several clinics, medical centers,
+or other tissue or blood sample provider. Or the sponsor may sub-contract the sample acquisition
+task to a third party who may have suppliers distributed across the globe. This
+is great news for the rate of sample acquisition, but not such great news for
+the uniformity of quality of samples. In such a context, the variability
+in sample set quality as the data set grows over time would not
+be adequately captured by simple random sampling variability;
+the variability would be more akin to cluster sampling with potential confounding
+batch effects. The impact that these effects can have on the classification analysis
+results cannot be understated, especially in the context of a new technology that
+is exploiting biological processes that are still not fully understood. All this
+to make the point that the variability the we are studying here has to be regarded
+as a lower bound on the variability that is to be expected in practice, and that without
+an external validation data set to verify results, one should be cautious
+when interpreting empirical findings, especially in the absence of solid
+biological underpinnings.</p>
 <div id="sample-quality-scores" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Sample quality scores</h2>
-<p>To get sample quality scores, fit a lasso model, extracted predicted probabilities and
-convert to a quality score.</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="model-suite.html#cb77-1"></a><span class="co"># combine train and test </span></span>
-<span id="cb77-2"><a href="model-suite.html#cb77-2"></a>all_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">rbind</span>(train_lcpm_mtx, test_lcpm_mtx)</span>
-<span id="cb77-3"><a href="model-suite.html#cb77-3"></a></span>
-<span id="cb77-4"><a href="model-suite.html#cb77-4"></a><span class="co"># we have to be careful with factors!</span></span>
-<span id="cb77-5"><a href="model-suite.html#cb77-5"></a><span class="co"># We&#39;ll keep as a character and change to factor when needed</span></span>
-<span id="cb77-6"><a href="model-suite.html#cb77-6"></a>all_group_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb77-7"><a href="model-suite.html#cb77-7"></a> <span class="kw">as.character</span>(train_group_vec), </span>
-<span id="cb77-8"><a href="model-suite.html#cb77-8"></a> <span class="kw">as.character</span>(test_group_vec)</span>
-<span id="cb77-9"><a href="model-suite.html#cb77-9"></a>)</span>
-<span id="cb77-10"><a href="model-suite.html#cb77-10"></a><span class="co"># I suspect adding names to vectors breaks one of the tidy commandments,</span></span>
-<span id="cb77-11"><a href="model-suite.html#cb77-11"></a><span class="co"># but then again I am sure I have already offended the creed beyond salvation</span></span>
-<span id="cb77-12"><a href="model-suite.html#cb77-12"></a><span class="kw">names</span>(all_group_vec) &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb77-13"><a href="model-suite.html#cb77-13"></a> <span class="kw">names</span>(train_group_vec),</span>
-<span id="cb77-14"><a href="model-suite.html#cb77-14"></a> <span class="kw">names</span>(test_group_vec)</span>
-<span id="cb77-15"><a href="model-suite.html#cb77-15"></a>)</span>
-<span id="cb77-16"><a href="model-suite.html#cb77-16"></a></span>
-<span id="cb77-17"><a href="model-suite.html#cb77-17"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
-<span id="cb77-18"><a href="model-suite.html#cb77-18"></a></span>
-<span id="cb77-19"><a href="model-suite.html#cb77-19"></a><span class="co"># since we have not set the foldid, set seed here</span></span>
-<span id="cb77-20"><a href="model-suite.html#cb77-20"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb77-21"><a href="model-suite.html#cb77-21"></a>cv_lassoAll &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb77-22"><a href="model-suite.html#cb77-22"></a> <span class="dt">x =</span> all_lcpm_mtx,</span>
-<span id="cb77-23"><a href="model-suite.html#cb77-23"></a> <span class="dt">y =</span> <span class="kw">factor</span>(all_group_vec,<span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;Control&#39;</span>, <span class="st">&#39;HCC&#39;</span>)),</span>
-<span id="cb77-24"><a href="model-suite.html#cb77-24"></a> <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
-<span id="cb77-25"><a href="model-suite.html#cb77-25"></a> <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
-<span id="cb77-26"><a href="model-suite.html#cb77-26"></a> <span class="dt">type.measure  =</span>  <span class="st">&quot;class&quot;</span>,</span>
-<span id="cb77-27"><a href="model-suite.html#cb77-27"></a> <span class="dt">keep =</span> F,</span>
-<span id="cb77-28"><a href="model-suite.html#cb77-28"></a> <span class="dt">nlambda =</span> <span class="dv">100</span></span>
-<span id="cb77-29"><a href="model-suite.html#cb77-29"></a>)</span>
-<span id="cb77-30"><a href="model-suite.html#cb77-30"></a></span>
-<span id="cb77-31"><a href="model-suite.html#cb77-31"></a><span class="kw">message</span>(<span class="st">&quot;lassoAll time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## lassoAll time: 27.34s</code></pre>
-<p>We can examine the fit.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="model-suite.html#cb79-1"></a>cv_lassoAll</span></code></pre></div>
-<pre><code>## 
-## Call:  glmnet::cv.glmnet(x = all_lcpm_mtx, y = factor(all_group_vec,      levels = c(&quot;Control&quot;, &quot;HCC&quot;)), type.measure = &quot;class&quot;, keep = F,      alpha = 1, family = &quot;binomial&quot;, nlambda = 100) 
-## 
-## Measure: Misclassification Error 
-## 
-##      Lambda Measure       SE Nonzero
-## min 0.01345 0.07127 0.007375     144
-## 1se 0.01863 0.07802 0.007109      93</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="model-suite.html#cb81-1"></a><span class="kw">plot</span>(cv_lassoAll)</span></code></pre></div>
-<div class="figure"><span id="fig:plot-lassoAll"></span>
-<img src="Static/figures/plot-lassoAll-1.png" alt="lasso model fitted to all samples" width="576" />
-<p class="caption">
-Figure 5.1: lasso model fitted to all samples
-</p>
-</div>
-<p>More features are now selected, but the cv error rate is comparable to the results
-of the lasso fit to the training set. We can use this fit to compute sample
-quality scores. We will use the minimum lambda model to provide
-the fitted probabilities.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="model-suite.html#cb82-1"></a><span class="co"># predicted probs</span></span>
-<span id="cb82-2"><a href="model-suite.html#cb82-2"></a>lassoAll_predResp_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb82-3"><a href="model-suite.html#cb82-3"></a> cv_lassoAll,</span>
-<span id="cb82-4"><a href="model-suite.html#cb82-4"></a> <span class="dt">newx =</span> all_lcpm_mtx,</span>
-<span id="cb82-5"><a href="model-suite.html#cb82-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span>,</span>
-<span id="cb82-6"><a href="model-suite.html#cb82-6"></a> <span class="dt">type =</span> <span class="st">&quot;resp&quot;</span></span>
-<span id="cb82-7"><a href="model-suite.html#cb82-7"></a> )</span>
-<span id="cb82-8"><a href="model-suite.html#cb82-8"></a></span>
-<span id="cb82-9"><a href="model-suite.html#cb82-9"></a><span class="co"># also get predicted class</span></span>
-<span id="cb82-10"><a href="model-suite.html#cb82-10"></a>lassoAll_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>( </span>
-<span id="cb82-11"><a href="model-suite.html#cb82-11"></a> cv_lassoAll,</span>
-<span id="cb82-12"><a href="model-suite.html#cb82-12"></a> <span class="dt">newx =</span> all_lcpm_mtx,</span>
-<span id="cb82-13"><a href="model-suite.html#cb82-13"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span>,</span>
-<span id="cb82-14"><a href="model-suite.html#cb82-14"></a> <span class="dt">type =</span> <span class="st">&quot;class&quot;</span></span>
-<span id="cb82-15"><a href="model-suite.html#cb82-15"></a> )</span>
-<span id="cb82-16"><a href="model-suite.html#cb82-16"></a></span>
-<span id="cb82-17"><a href="model-suite.html#cb82-17"></a><span class="co"># get qual scores</span></span>
-<span id="cb82-18"><a href="model-suite.html#cb82-18"></a></span>
-<span id="cb82-19"><a href="model-suite.html#cb82-19"></a><span class="co"># Note here that factors are a little but of a pain.</span></span>
-<span id="cb82-20"><a href="model-suite.html#cb82-20"></a>y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>)</span>
-<span id="cb82-21"><a href="model-suite.html#cb82-21"></a>p &lt;-<span class="st"> </span>lassoAll_predResp_vec</span>
-<span id="cb82-22"><a href="model-suite.html#cb82-22"></a>sample_qual_vec &lt;-<span class="st"> </span>p<span class="op">^</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">^</span>(<span class="dv">1</span><span class="op">-</span>y)</span>
-<span id="cb82-23"><a href="model-suite.html#cb82-23"></a>sample_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[,<span class="dv">1</span>] <span class="co"># to drop the matrix structure</span></span>
-<span id="cb82-24"><a href="model-suite.html#cb82-24"></a></span>
-<span id="cb82-25"><a href="model-suite.html#cb82-25"></a><span class="co"># Look at quality scores as a finction of classification</span></span>
-<span id="cb82-26"><a href="model-suite.html#cb82-26"></a>lassoAll_conf_vec &lt;-<span class="st"> </span><span class="kw">paste</span>(</span>
-<span id="cb82-27"><a href="model-suite.html#cb82-27"></a> y, </span>
-<span id="cb82-28"><a href="model-suite.html#cb82-28"></a> <span class="kw">as.numeric</span>(lassoAll_predClass_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
-<span id="cb82-29"><a href="model-suite.html#cb82-29"></a> <span class="dt">sep =</span> <span class="st">&#39;:&#39;</span></span>
-<span id="cb82-30"><a href="model-suite.html#cb82-30"></a>)</span>
-<span id="cb82-31"><a href="model-suite.html#cb82-31"></a></span>
-<span id="cb82-32"><a href="model-suite.html#cb82-32"></a>lassoAll_conf_mtx &lt;-<span class="st"> </span><span class="kw">table</span>(</span>
-<span id="cb82-33"><a href="model-suite.html#cb82-33"></a> <span class="dt">truth =</span> all_group_vec,</span>
-<span id="cb82-34"><a href="model-suite.html#cb82-34"></a> <span class="dt">pred =</span> lassoAll_predClass_vec</span>
-<span id="cb82-35"><a href="model-suite.html#cb82-35"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="model-suite.html#cb83-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(lassoAll_conf_mtx,</span>
-<span id="cb83-2"><a href="model-suite.html#cb83-2"></a>  <span class="dt">caption =</span> <span class="st">&quot;Rows are truth.  Columns are predicted&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb83-3"><a href="model-suite.html#cb83-3"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<p>To get sample quality scores, fit a lasso model to all samples in the
+analysis data set, extract predicted probabilities and
+convert them to quality scores.</p>
+<p>First assemble the data set. This entails simply re-combining the
+train and test data.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="model-suite.html#cb79-1"></a><span class="co"># combine train and test </span></span>
+<span id="cb79-2"><a href="model-suite.html#cb79-2"></a>all_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">rbind</span>(train_lcpm_mtx, test_lcpm_mtx)</span>
+<span id="cb79-3"><a href="model-suite.html#cb79-3"></a></span>
+<span id="cb79-4"><a href="model-suite.html#cb79-4"></a><span class="co"># we have to be careful with factors!</span></span>
+<span id="cb79-5"><a href="model-suite.html#cb79-5"></a><span class="co"># We&#39;ll keep as a character and change to factor when needed</span></span>
+<span id="cb79-6"><a href="model-suite.html#cb79-6"></a>all_group_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb79-7"><a href="model-suite.html#cb79-7"></a> <span class="kw">as.character</span>(train_group_vec), </span>
+<span id="cb79-8"><a href="model-suite.html#cb79-8"></a> <span class="kw">as.character</span>(test_group_vec)</span>
+<span id="cb79-9"><a href="model-suite.html#cb79-9"></a>)</span>
+<span id="cb79-10"><a href="model-suite.html#cb79-10"></a><span class="co"># I suspect adding names to vectors breaks one of the tidy commandments,</span></span>
+<span id="cb79-11"><a href="model-suite.html#cb79-11"></a><span class="co"># but then again I am sure I have already offended the creed beyond salvation</span></span>
+<span id="cb79-12"><a href="model-suite.html#cb79-12"></a><span class="kw">names</span>(all_group_vec) &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb79-13"><a href="model-suite.html#cb79-13"></a> <span class="kw">names</span>(train_group_vec),</span>
+<span id="cb79-14"><a href="model-suite.html#cb79-14"></a> <span class="kw">names</span>(test_group_vec)</span>
+<span id="cb79-15"><a href="model-suite.html#cb79-15"></a>)</span>
+<span id="cb79-16"><a href="model-suite.html#cb79-16"></a></span>
+<span id="cb79-17"><a href="model-suite.html#cb79-17"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(<span class="dt">group =</span> all_group_vec),</span>
+<span id="cb79-18"><a href="model-suite.html#cb79-18"></a>  <span class="dt">caption =</span> <span class="st">&quot;samples by group&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-19"><a href="model-suite.html#cb79-19"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:print-conf">Table 5.1: </span>Rows are truth. Columns are predicted
+<span id="tab:get-all-data">Table 5.1: </span>samples by group
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
+group
 </th>
 <th style="text-align:right;">
-Control
-</th>
-<th style="text-align:right;">
-HCC
+Freq
 </th>
 </tr>
 </thead>
@@ -387,10 +344,396 @@ HCC
 Control
 </td>
 <td style="text-align:right;">
-765
+778
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HCC
 </td>
 <td style="text-align:right;">
-13
+555
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now fit the losso model through cross-validation.
+Note that the results of a cv fit are random due to the
+random allocation of samples to folds. We can reduce this
+varibility by properly averaging results over repeated cv fits.
+Here we will obtain samplle quality scores by averaging results
+over 30 cv runs.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="model-suite.html#cb80-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb80-2"><a href="model-suite.html#cb80-2"></a></span>
+<span id="cb80-3"><a href="model-suite.html#cb80-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
+<span id="cb80-4"><a href="model-suite.html#cb80-4"></a></span>
+<span id="cb80-5"><a href="model-suite.html#cb80-5"></a>cv_lassoAll_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, <span class="cf">function</span>(REP) {</span>
+<span id="cb80-6"><a href="model-suite.html#cb80-6"></a>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb80-7"><a href="model-suite.html#cb80-7"></a> <span class="dt">x =</span> all_lcpm_mtx,</span>
+<span id="cb80-8"><a href="model-suite.html#cb80-8"></a> <span class="dt">y =</span> <span class="kw">factor</span>(all_group_vec,<span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;Control&#39;</span>, <span class="st">&#39;HCC&#39;</span>)),</span>
+<span id="cb80-9"><a href="model-suite.html#cb80-9"></a> <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb80-10"><a href="model-suite.html#cb80-10"></a> <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
+<span id="cb80-11"><a href="model-suite.html#cb80-11"></a> <span class="dt">type.measure  =</span>  <span class="st">&quot;class&quot;</span>,</span>
+<span id="cb80-12"><a href="model-suite.html#cb80-12"></a> <span class="dt">keep =</span> T,</span>
+<span id="cb80-13"><a href="model-suite.html#cb80-13"></a> <span class="dt">nlambda =</span> <span class="dv">100</span></span>
+<span id="cb80-14"><a href="model-suite.html#cb80-14"></a>)</span>
+<span id="cb80-15"><a href="model-suite.html#cb80-15"></a>}</span>
+<span id="cb80-16"><a href="model-suite.html#cb80-16"></a>)</span>
+<span id="cb80-17"><a href="model-suite.html#cb80-17"></a></span>
+<span id="cb80-18"><a href="model-suite.html#cb80-18"></a><span class="kw">message</span>(<span class="st">&quot;lassoAll time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
+<pre><code>## lassoAll time: 816.16s</code></pre>
+<p>Examine the fits.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="model-suite.html#cb82-1"></a><span class="co">### CLEAR CACHE</span></span>
+<span id="cb82-2"><a href="model-suite.html#cb82-2"></a><span class="kw">plot</span>(</span>
+<span id="cb82-3"><a href="model-suite.html#cb82-3"></a> <span class="kw">log</span>(cv_lassoAll_lst[[<span class="dv">1</span>]]<span class="op">$</span>lambda),</span>
+<span id="cb82-4"><a href="model-suite.html#cb82-4"></a> cv_lassoAll_lst[[<span class="dv">1</span>]]<span class="op">$</span>cvm,</span>
+<span id="cb82-5"><a href="model-suite.html#cb82-5"></a> <span class="dt">lwd=</span><span class="dv">2</span>,</span>
+<span id="cb82-6"><a href="model-suite.html#cb82-6"></a> <span class="dt">xlab=</span><span class="st">&#39;log(Lambda)&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;CV Misclassification Error&#39;</span>, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.5</span>)</span>
+<span id="cb82-7"><a href="model-suite.html#cb82-7"></a>)</span>
+<span id="cb82-8"><a href="model-suite.html#cb82-8"></a></span>
+<span id="cb82-9"><a href="model-suite.html#cb82-9"></a><span class="cf">for</span>(JJ <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(cv_lassoAll_lst))</span>
+<span id="cb82-10"><a href="model-suite.html#cb82-10"></a> <span class="kw">lines</span>(</span>
+<span id="cb82-11"><a href="model-suite.html#cb82-11"></a>  <span class="kw">log</span>(cv_lassoAll_lst[[JJ]]<span class="op">$</span>lambda),</span>
+<span id="cb82-12"><a href="model-suite.html#cb82-12"></a>  cv_lassoAll_lst[[JJ]]<span class="op">$</span>cvm,</span>
+<span id="cb82-13"><a href="model-suite.html#cb82-13"></a>  <span class="dt">lwd=</span><span class="dv">2</span></span>
+<span id="cb82-14"><a href="model-suite.html#cb82-14"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:plot-lassoAll"></span>
+<img src="Static/figures/plot-lassoAll-1.png" alt="Repeated cv lasso models fitted to all samples" width="576" />
+<p class="caption">
+Figure 5.1: Repeated cv lasso models fitted to all samples
+</p>
+</div>
+<p>These cv curves are remarkably consistent meaning that the determination of the size or sparsity
+of the model through cross validation is fairly precise:</p>
+<!-- DONT CACHE THIS ??? -->
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="model-suite.html#cb83-1"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb83-2"><a href="model-suite.html#cb83-2"></a></span>
+<span id="cb83-3"><a href="model-suite.html#cb83-3"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb83-4"><a href="model-suite.html#cb83-4"></a></span>
+<span id="cb83-5"><a href="model-suite.html#cb83-5"></a><span class="co"># nzero</span></span>
+<span id="cb83-6"><a href="model-suite.html#cb83-6"></a>nzero_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst,</span>
+<span id="cb83-7"><a href="model-suite.html#cb83-7"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
+<span id="cb83-8"><a href="model-suite.html#cb83-8"></a></span>
+<span id="cb83-9"><a href="model-suite.html#cb83-9"></a>nzero_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst,</span>
+<span id="cb83-10"><a href="model-suite.html#cb83-10"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
+<span id="cb83-11"><a href="model-suite.html#cb83-11"></a></span>
+<span id="cb83-12"><a href="model-suite.html#cb83-12"></a><span class="kw">boxplot</span>(<span class="kw">list</span>(<span class="st">`</span><span class="dt">1se</span><span class="st">`</span>=nzero_1se_vec, <span class="dt">min =</span> nzero_min_vec), <span class="dt">ylab=</span><span class="st">&quot;Number of selected features&quot;</span>)</span>
+<span id="cb83-13"><a href="model-suite.html#cb83-13"></a></span>
+<span id="cb83-14"><a href="model-suite.html#cb83-14"></a><span class="co"># error</span></span>
+<span id="cb83-15"><a href="model-suite.html#cb83-15"></a>error_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst,</span>
+<span id="cb83-16"><a href="model-suite.html#cb83-16"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
+<span id="cb83-17"><a href="model-suite.html#cb83-17"></a></span>
+<span id="cb83-18"><a href="model-suite.html#cb83-18"></a>error_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst,</span>
+<span id="cb83-19"><a href="model-suite.html#cb83-19"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
+<span id="cb83-20"><a href="model-suite.html#cb83-20"></a></span>
+<span id="cb83-21"><a href="model-suite.html#cb83-21"></a><span class="kw">boxplot</span>(</span>
+<span id="cb83-22"><a href="model-suite.html#cb83-22"></a> <span class="kw">list</span>(<span class="st">`</span><span class="dt">1se</span><span class="st">`</span>=error_1se_vec, <span class="dt">min =</span> error_min_vec), </span>
+<span id="cb83-23"><a href="model-suite.html#cb83-23"></a> <span class="dt">ylab=</span>cv_lassoAll_lst[[<span class="dv">1</span>]]<span class="op">$</span>name,</span>
+<span id="cb83-24"><a href="model-suite.html#cb83-24"></a> <span class="dt">ylim=</span><span class="kw">c</span>(<span class="fl">0.06</span>, <span class="fl">.10</span>)</span>
+<span id="cb83-25"><a href="model-suite.html#cb83-25"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:model-size-lassoAll"></span>
+<img src="Static/figures/model-size-lassoAll-1.png" alt="Feature selection and estimated error by repeated cv lasso models" width="768" />
+<p class="caption">
+Figure 5.2: Feature selection and estimated error by repeated cv lasso models
+</p>
+</div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="model-suite.html#cb84-1"></a><span class="co"># tabular format</span></span>
+<span id="cb84-2"><a href="model-suite.html#cb84-2"></a>tmp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">rbind</span>(</span>
+<span id="cb84-3"><a href="model-suite.html#cb84-3"></a> <span class="st">`</span><span class="dt">features_1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">summary</span>(nzero_1se_vec),</span>
+<span id="cb84-4"><a href="model-suite.html#cb84-4"></a> <span class="dt">features_min =</span> <span class="kw">summary</span>(nzero_min_vec),</span>
+<span id="cb84-5"><a href="model-suite.html#cb84-5"></a> <span class="st">`</span><span class="dt">features:min-1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">summary</span>(nzero_min_vec <span class="op">-</span><span class="st"> </span>nzero_1se_vec),</span>
+<span id="cb84-6"><a href="model-suite.html#cb84-6"></a> <span class="st">`</span><span class="dt">cv_error_1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">summary</span>(<span class="dv">100</span><span class="op">*</span>error_1se_vec),</span>
+<span id="cb84-7"><a href="model-suite.html#cb84-7"></a> <span class="dt">cv_error_min =</span> <span class="kw">summary</span>(<span class="dv">100</span><span class="op">*</span>error_min_vec),</span>
+<span id="cb84-8"><a href="model-suite.html#cb84-8"></a> <span class="st">`</span><span class="dt">cv_error:1se-min</span><span class="st">`</span> =<span class="st"> </span><span class="kw">summary</span>(<span class="dv">100</span><span class="op">*</span>(error_1se_vec<span class="op">-</span>error_min_vec))</span>
+<span id="cb84-9"><a href="model-suite.html#cb84-9"></a>))</span>
+<span id="cb84-10"><a href="model-suite.html#cb84-10"></a></span>
+<span id="cb84-11"><a href="model-suite.html#cb84-11"></a>knitr<span class="op">::</span><span class="kw">kable</span>(tmp <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Mean),</span>
+<span id="cb84-12"><a href="model-suite.html#cb84-12"></a>  <span class="dt">caption =</span> <span class="st">&quot;Number of selected features&quot;</span>,</span>
+<span id="cb84-13"><a href="model-suite.html#cb84-13"></a>  <span class="dt">digits=</span><span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb84-14"><a href="model-suite.html#cb84-14"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:model-size-lassoAll">Table 5.2: </span>Number of selected features
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+X1st.Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+X3rd.Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+features_1se
+</td>
+<td style="text-align:right;">
+54.0
+</td>
+<td style="text-align:right;">
+102.0
+</td>
+<td style="text-align:right;">
+108.0
+</td>
+<td style="text-align:right;">
+132.5
+</td>
+<td style="text-align:right;">
+194.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+features_min
+</td>
+<td style="text-align:right;">
+118.0
+</td>
+<td style="text-align:right;">
+175.2
+</td>
+<td style="text-align:right;">
+200.0
+</td>
+<td style="text-align:right;">
+261.0
+</td>
+<td style="text-align:right;">
+365.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+features:min-1se
+</td>
+<td style="text-align:right;">
+10.0
+</td>
+<td style="text-align:right;">
+55.0
+</td>
+<td style="text-align:right;">
+86.0
+</td>
+<td style="text-align:right;">
+141.5
+</td>
+<td style="text-align:right;">
+247.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cv_error_1se
+</td>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+7.6
+</td>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+8.1
+</td>
+<td style="text-align:right;">
+8.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cv_error_min
+</td>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+7.3
+</td>
+<td style="text-align:right;">
+8.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cv_error:1se-min
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:right;">
+0.7
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+</tr>
+</tbody>
+</table>
+<p>The number of features selected by the minimum lambda model is larger
+than the number selected by the “one standard error” rule by a median
+of <span class="math inline">\(86\)</span> and results on
+a median reduction in cv error rates of
+<span class="math inline">\(0.6\)</span>%.</p>
+<p>The cv error rates observed in this set are comparable to the
+rates oberved in the lasso models fitted to the training sample set
+which consisted of 80% of the samples in this set. See Table <a href="explore-sparsity.html#tab:printErrors">4.3</a>.
+It’s not clear at this point whether the minimum lambda model is better than
+the “one standard error” rule model. We would need and external validation
+set to make this determination. We can compare the two sets
+of out-of-fold predicted values, averaged across cv replicates, to see if
+there is a meaningful difference between the two.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="model-suite.html#cb85-1"></a><span class="co"># predicted probs - 1se</span></span>
+<span id="cb85-2"><a href="model-suite.html#cb85-2"></a>lassoAll_predResp_1se_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst, <span class="cf">function</span>(cv_fit) { </span>
+<span id="cb85-3"><a href="model-suite.html#cb85-3"></a>  ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_fit<span class="op">$</span>lambda)</span>
+<span id="cb85-4"><a href="model-suite.html#cb85-4"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb85-5"><a href="model-suite.html#cb85-5"></a> })</span>
+<span id="cb85-6"><a href="model-suite.html#cb85-6"></a>lassoAll_predResp_1se_vec &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(lassoAll_predResp_1se_mtx)</span>
+<span id="cb85-7"><a href="model-suite.html#cb85-7"></a></span>
+<span id="cb85-8"><a href="model-suite.html#cb85-8"></a><span class="co"># predicted probs - min</span></span>
+<span id="cb85-9"><a href="model-suite.html#cb85-9"></a>lassoAll_predResp_min_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_lassoAll_lst, <span class="cf">function</span>(cv_fit) { </span>
+<span id="cb85-10"><a href="model-suite.html#cb85-10"></a>  ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda.min,cv_fit<span class="op">$</span>lambda)</span>
+<span id="cb85-11"><a href="model-suite.html#cb85-11"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_min])</span>
+<span id="cb85-12"><a href="model-suite.html#cb85-12"></a> })</span>
+<span id="cb85-13"><a href="model-suite.html#cb85-13"></a>lassoAll_predResp_min_vec &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(lassoAll_predResp_min_mtx)</span>
+<span id="cb85-14"><a href="model-suite.html#cb85-14"></a></span>
+<span id="cb85-15"><a href="model-suite.html#cb85-15"></a><span class="co"># plot</span></span>
+<span id="cb85-16"><a href="model-suite.html#cb85-16"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb85-17"><a href="model-suite.html#cb85-17"></a>tmp &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb85-18"><a href="model-suite.html#cb85-18"></a> <span class="st">`</span><span class="dt">1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">split</span>(lassoAll_predResp_1se_vec, all_group_vec),</span>
+<span id="cb85-19"><a href="model-suite.html#cb85-19"></a> <span class="dt">min =</span> <span class="kw">split</span>(lassoAll_predResp_min_vec, all_group_vec)</span>
+<span id="cb85-20"><a href="model-suite.html#cb85-20"></a>)</span>
+<span id="cb85-21"><a href="model-suite.html#cb85-21"></a><span class="kw">names</span>(tmp) &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&#39;</span><span class="ch">\\</span><span class="st">.&#39;</span>, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>, <span class="kw">names</span>(tmp))</span>
+<span id="cb85-22"><a href="model-suite.html#cb85-22"></a></span>
+<span id="cb85-23"><a href="model-suite.html#cb85-23"></a><span class="kw">boxplot</span>(</span>
+<span id="cb85-24"><a href="model-suite.html#cb85-24"></a> tmp,</span>
+<span id="cb85-25"><a href="model-suite.html#cb85-25"></a> <span class="dt">ylab=</span><span class="st">&#39;Predicted oof probability&#39;</span>,</span>
+<span id="cb85-26"><a href="model-suite.html#cb85-26"></a> <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
+<span id="cb85-27"><a href="model-suite.html#cb85-27"></a> <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb85-28"><a href="model-suite.html#cb85-28"></a>)</span>
+<span id="cb85-29"><a href="model-suite.html#cb85-29"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">at=</span><span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(tmp), <span class="dt">tick=</span>F, <span class="kw">names</span>(tmp))</span>
+<span id="cb85-30"><a href="model-suite.html#cb85-30"></a></span>
+<span id="cb85-31"><a href="model-suite.html#cb85-31"></a></span>
+<span id="cb85-32"><a href="model-suite.html#cb85-32"></a><span class="co"># compare the two</span></span>
+<span id="cb85-33"><a href="model-suite.html#cb85-33"></a><span class="kw">plot</span>(</span>
+<span id="cb85-34"><a href="model-suite.html#cb85-34"></a> <span class="dt">x =</span> lassoAll_predResp_1se_vec, <span class="dt">xlab=</span><span class="st">&#39;1se model oof Prob&#39;</span>,</span>
+<span id="cb85-35"><a href="model-suite.html#cb85-35"></a> <span class="dt">y =</span> lassoAll_predResp_min_vec, <span class="dt">ylab=</span><span class="st">&#39;min lambda model oof Prob&#39;</span>,</span>
+<span id="cb85-36"><a href="model-suite.html#cb85-36"></a> <span class="dt">col =</span> <span class="kw">ifelse</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>, <span class="st">&#39;red&#39;</span>, <span class="st">&#39;green&#39;</span>)</span>
+<span id="cb85-37"><a href="model-suite.html#cb85-37"></a>)</span>
+<span id="cb85-38"><a href="model-suite.html#cb85-38"></a> </span>
+<span id="cb85-39"><a href="model-suite.html#cb85-39"></a><span class="co"># Add referecne lines at 10% false positive</span></span>
+<span id="cb85-40"><a href="model-suite.html#cb85-40"></a>thres_1se &lt;-<span class="st"> </span><span class="kw">quantile</span>(lassoAll_predResp_1se_vec[all_group_vec <span class="op">==</span><span class="st"> &#39;Control&#39;</span>], <span class="dt">prob=</span>.<span class="dv">9</span>)</span>
+<span id="cb85-41"><a href="model-suite.html#cb85-41"></a>thres_min &lt;-<span class="st"> </span><span class="kw">quantile</span>(lassoAll_predResp_min_vec[all_group_vec <span class="op">==</span><span class="st"> &#39;Control&#39;</span>], <span class="dt">prob=</span>.<span class="dv">9</span>)</span>
+<span id="cb85-42"><a href="model-suite.html#cb85-42"></a><span class="kw">abline</span>(<span class="dt">v =</span> thres_1se, <span class="dt">h =</span> thres_min, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:get-sample-pred"></span>
+<img src="Static/figures/get-sample-pred-1.png" alt="Predicted probabilities - averaged over cv replicates" width="960" />
+<p class="caption">
+Figure 5.3: Predicted probabilities - averaged over cv replicates
+</p>
+</div>
+<!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
+We see that the minimum lambda models provide a better fit to the data,
+which is to be expected as the minimum lambda models have more estimated
+parameters than the one standard error rule models.  
+-->
+<p>We see that there isn’t a big difference in out-of-fold predicted
+probabilities between the one-standard-error rule ans minimum lamda models.
+One way to quantify
+the difference in classification errors is to classify samples
+according to each vector of predicted probabilities, setting
+the thresholds to achieve a fixed false positive rate, 10% say.
+These thresholds are indicated by the grey lines in the scatter plot
+on the right side of Figure <a href="model-suite.html#fig:get-sample-pred">5.3</a>.</p>
+<!-- APPLIED TO THE FITTED VALUES
+We note
+that althouth predicted probability distributions are quite different
+for the two models, the the class predictions at a 10% false discovery threshold
+are largely in agreement.
+-->
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="model-suite.html#cb86-1"></a>lassoAll_predClass_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
+<span id="cb86-2"><a href="model-suite.html#cb86-2"></a> lassoAll_predResp_1se_vec <span class="op">&gt;</span><span class="st"> </span>thres_1se, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
+<span id="cb86-3"><a href="model-suite.html#cb86-3"></a></span>
+<span id="cb86-4"><a href="model-suite.html#cb86-4"></a>lassoAll_predClass_min_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
+<span id="cb86-5"><a href="model-suite.html#cb86-5"></a> lassoAll_predResp_min_vec <span class="op">&gt;</span><span class="st"> </span>thres_min, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
+<span id="cb86-6"><a href="model-suite.html#cb86-6"></a></span>
+<span id="cb86-7"><a href="model-suite.html#cb86-7"></a>tmp &lt;-<span class="st"> </span><span class="kw">cbind</span>(</span>
+<span id="cb86-8"><a href="model-suite.html#cb86-8"></a> <span class="kw">table</span>(<span class="dt">truth=</span>all_group_vec, <span class="st">`</span><span class="dt">1se-pred</span><span class="st">`</span>=lassoAll_predClass_1se_vec),</span>
+<span id="cb86-9"><a href="model-suite.html#cb86-9"></a> <span class="kw">table</span>(<span class="dt">truth=</span>all_group_vec, <span class="st">`</span><span class="dt">min-pred</span><span class="st">`</span>=lassoAll_predClass_min_vec)</span>
+<span id="cb86-10"><a href="model-suite.html#cb86-10"></a>) </span>
+<span id="cb86-11"><a href="model-suite.html#cb86-11"></a><span class="co"># Hack for printing</span></span>
+<span id="cb86-12"><a href="model-suite.html#cb86-12"></a><span class="kw">colnames</span>(tmp) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;1se-Control&#39;</span>, <span class="st">&#39;1se-HCC&#39;</span>, <span class="st">&#39;min-Control&#39;</span>, <span class="st">&#39;min-HCC&#39;</span>)</span>
+<span id="cb86-13"><a href="model-suite.html#cb86-13"></a></span>
+<span id="cb86-14"><a href="model-suite.html#cb86-14"></a>knitr<span class="op">::</span><span class="kw">kable</span>(tmp,</span>
+<span id="cb86-15"><a href="model-suite.html#cb86-15"></a>  <span class="dt">caption =</span> <span class="st">&quot;Classifications: rows are truth&quot;</span>,</span>
+<span id="cb86-16"><a href="model-suite.html#cb86-16"></a>  <span class="dt">digits=</span><span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb86-17"><a href="model-suite.html#cb86-17"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:get-sample-class">Table 5.3: </span>Classifications: rows are truth
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+1se-Control
+</th>
+<th style="text-align:right;">
+1se-HCC
+</th>
+<th style="text-align:right;">
+min-Control
+</th>
+<th style="text-align:right;">
+min-HCC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:right;">
+78
 </td>
 </tr>
 <tr>
@@ -403,27 +746,179 @@ HCC
 <td style="text-align:right;">
 516
 </td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+523
+</td>
 </tr>
 </tbody>
 </table>
-<p>The model makes few errors (although in most liquid biopsy applications,
-this error rate would arguably be too high). We can examine how quality
-varies among classification groups.</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="model-suite.html#cb84-1"></a>gplots<span class="op">::</span><span class="kw">boxplot2</span>(<span class="kw">split</span>(sample_qual_vec, lassoAll_conf_vec), <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>)</span>
-<span id="cb84-2"><a href="model-suite.html#cb84-2"></a><span class="kw">title</span>(<span class="dt">sub =</span> <span class="st">&#39;Classification - Truth:Predicted&#39;</span>)</span></code></pre></div>
+<p>When we fix the false positive rate at 10%, the <code>1se</code> model makes 39 false
+negative calls whereas the minimum lambda model makes 32. A difference
+of <span class="math inline">\(1.3\)</span>%</p>
+<!-- APPLIED TO THE FITTED PROBABILITIES
+We see that the min lambda model, makes no false negative calls at a 90% sensitivity
+setting, and the sensitivity could be increased substantially at no false negative
+cost.  This is definitely over-fitting the data set.  For the purpose
+of computing sample quality scores - what do these differences mean? 
+-->
+<div id="get-quality-scores" class="section level3 unnumbered" number="">
+<h3>Get quality scores</h3>
+<p>To compute quality scores, we will use the out-of-fold predicted probabilities.</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="model-suite.html#cb87-1"></a><span class="co"># get qual scores</span></span>
+<span id="cb87-2"><a href="model-suite.html#cb87-2"></a></span>
+<span id="cb87-3"><a href="model-suite.html#cb87-3"></a>y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>)</span>
+<span id="cb87-4"><a href="model-suite.html#cb87-4"></a><span class="co"># 1se</span></span>
+<span id="cb87-5"><a href="model-suite.html#cb87-5"></a>p &lt;-<span class="st"> </span>lassoAll_predResp_1se_vec</span>
+<span id="cb87-6"><a href="model-suite.html#cb87-6"></a>sample_1se_qual_vec &lt;-<span class="st"> </span>p<span class="op">^</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">^</span>(<span class="dv">1</span><span class="op">-</span>y)</span>
+<span id="cb87-7"><a href="model-suite.html#cb87-7"></a></span>
+<span id="cb87-8"><a href="model-suite.html#cb87-8"></a><span class="co"># min</span></span>
+<span id="cb87-9"><a href="model-suite.html#cb87-9"></a>p &lt;-<span class="st"> </span>lassoAll_predResp_min_vec</span>
+<span id="cb87-10"><a href="model-suite.html#cb87-10"></a>sample_min_qual_vec &lt;-<span class="st"> </span>p<span class="op">^</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">^</span>(<span class="dv">1</span><span class="op">-</span>y)</span></code></pre></div>
+<p>We can examine quality scores as a function of classification bin.</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="model-suite.html#cb88-1"></a>y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>)</span>
+<span id="cb88-2"><a href="model-suite.html#cb88-2"></a></span>
+<span id="cb88-3"><a href="model-suite.html#cb88-3"></a><span class="co"># 1se</span></span>
+<span id="cb88-4"><a href="model-suite.html#cb88-4"></a>lassoAll_1se_conf_vec &lt;-<span class="st"> </span><span class="kw">paste</span>(</span>
+<span id="cb88-5"><a href="model-suite.html#cb88-5"></a> y, </span>
+<span id="cb88-6"><a href="model-suite.html#cb88-6"></a> <span class="kw">as.numeric</span>(lassoAll_predClass_1se_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb88-7"><a href="model-suite.html#cb88-7"></a> <span class="dt">sep =</span> <span class="st">&#39;:&#39;</span></span>
+<span id="cb88-8"><a href="model-suite.html#cb88-8"></a>)</span>
+<span id="cb88-9"><a href="model-suite.html#cb88-9"></a></span>
+<span id="cb88-10"><a href="model-suite.html#cb88-10"></a><span class="co"># min</span></span>
+<span id="cb88-11"><a href="model-suite.html#cb88-11"></a>lassoAll_min_conf_vec &lt;-<span class="st"> </span><span class="kw">paste</span>(</span>
+<span id="cb88-12"><a href="model-suite.html#cb88-12"></a> y, </span>
+<span id="cb88-13"><a href="model-suite.html#cb88-13"></a> <span class="kw">as.numeric</span>(lassoAll_predClass_min_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb88-14"><a href="model-suite.html#cb88-14"></a> <span class="dt">sep =</span> <span class="st">&#39;:&#39;</span></span>
+<span id="cb88-15"><a href="model-suite.html#cb88-15"></a>)</span>
+<span id="cb88-16"><a href="model-suite.html#cb88-16"></a></span>
+<span id="cb88-17"><a href="model-suite.html#cb88-17"></a></span>
+<span id="cb88-18"><a href="model-suite.html#cb88-18"></a>tmp &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb88-19"><a href="model-suite.html#cb88-19"></a> <span class="kw">split</span>(sample_1se_qual_vec, lassoAll_1se_conf_vec), </span>
+<span id="cb88-20"><a href="model-suite.html#cb88-20"></a> <span class="kw">split</span>(sample_min_qual_vec, lassoAll_min_conf_vec)</span>
+<span id="cb88-21"><a href="model-suite.html#cb88-21"></a>)</span>
+<span id="cb88-22"><a href="model-suite.html#cb88-22"></a></span>
+<span id="cb88-23"><a href="model-suite.html#cb88-23"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb88-24"><a href="model-suite.html#cb88-24"></a>gplots<span class="op">::</span><span class="kw">boxplot2</span>(<span class="kw">split</span>(sample_1se_qual_vec, lassoAll_1se_conf_vec), </span>
+<span id="cb88-25"><a href="model-suite.html#cb88-25"></a>  <span class="dt">outline=</span>F, <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb88-26"><a href="model-suite.html#cb88-26"></a><span class="kw">title</span>(<span class="st">&#39;1se Model&#39;</span>)</span>
+<span id="cb88-27"><a href="model-suite.html#cb88-27"></a></span>
+<span id="cb88-28"><a href="model-suite.html#cb88-28"></a>gplots<span class="op">::</span><span class="kw">boxplot2</span>(<span class="kw">split</span>(sample_min_qual_vec, lassoAll_min_conf_vec), </span>
+<span id="cb88-29"><a href="model-suite.html#cb88-29"></a>  <span class="dt">outline=</span>F, <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb88-30"><a href="model-suite.html#cb88-30"></a><span class="kw">title</span>(<span class="st">&#39;min lambda Model&#39;</span>)</span>
+<span id="cb88-31"><a href="model-suite.html#cb88-31"></a></span>
+<span id="cb88-32"><a href="model-suite.html#cb88-32"></a></span>
+<span id="cb88-33"><a href="model-suite.html#cb88-33"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Classification - Truth:Predicted&#39;</span>)</span>
+<span id="cb88-34"><a href="model-suite.html#cb88-34"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Quality vs Classification Outcome&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:plot-qual-conf"></span>
-<img src="Static/figures/plot-qual-conf-1.png" alt="quality scores by classification - HCC=1" width="480" />
+<img src="Static/figures/plot-qual-conf-1.png" alt="quality scores by classification - HCC=1" width="768" />
 <p class="caption">
-Figure 5.2: quality scores by classification - HCC=1
+Figure 5.4: quality scores by classification - HCC=1
 </p>
 </div>
+<p>We will use the minimum lambda model to provide
+the fitted probabilities used to compute quality scores,
+but we could have used either one.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="model-suite.html#cb89-1"></a>sample_qual_vec &lt;-<span class="st"> </span>sample_min_qual_vec</span></code></pre></div>
 </div>
-<div id="simulation-design" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> Simulation Design</h2>
+</div>
+<div id="selected-feature-list-stability" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Selected feature list stability</h2>
+<p>Before moving on to the simulation, let’s examine gene selection stability on the
+full data set. We have two sets of sellected features - one for the
+one standard deviation rile model, and one for the mimimum lambda model.
+We saw in Table <a href="model-suite.html#tab:model-size-lassoAll">5.2</a> that the number of features
+selected by the minimum lambda models had an IQR of
+<span class="math inline">\(175.25-261\)</span>,
+while the one standard error rule models had an IQR of
+<span class="math inline">\(102-132.5\)</span>.</p>
+<p>Let’s examine the stability of the gene lists across cv replicates.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="model-suite.html#cb90-1"></a><span class="co"># 1se</span></span>
+<span id="cb90-2"><a href="model-suite.html#cb90-2"></a>lassoAll_coef_1se_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_lassoAll_lst, <span class="cf">function</span>(cv_fit){</span>
+<span id="cb90-3"><a href="model-suite.html#cb90-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb90-4"><a href="model-suite.html#cb90-4"></a> cv_fit,</span>
+<span id="cb90-5"><a href="model-suite.html#cb90-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
+<span id="cb90-6"><a href="model-suite.html#cb90-6"></a> )</span>
+<span id="cb90-7"><a href="model-suite.html#cb90-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb90-8"><a href="model-suite.html#cb90-8"></a> })</span>
+<span id="cb90-9"><a href="model-suite.html#cb90-9"></a></span>
+<span id="cb90-10"><a href="model-suite.html#cb90-10"></a><span class="co"># put into matrix</span></span>
+<span id="cb90-11"><a href="model-suite.html#cb90-11"></a>lassoAll_coef_1se_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, lassoAll_coef_1se_lst)</span>
+<span id="cb90-12"><a href="model-suite.html#cb90-12"></a>lassoAll_coef_1se_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(lassoAll_coef_1se_lst, </span>
+<span id="cb90-13"><a href="model-suite.html#cb90-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(lassoAll_coef_1se_all, LL)</span>
+<span id="cb90-14"><a href="model-suite.html#cb90-14"></a>)</span>
+<span id="cb90-15"><a href="model-suite.html#cb90-15"></a><span class="kw">rownames</span>(lassoAll_coef_1se_mtx) &lt;-<span class="st"> </span>lassoAll_coef_1se_all</span>
+<span id="cb90-16"><a href="model-suite.html#cb90-16"></a></span>
+<span id="cb90-17"><a href="model-suite.html#cb90-17"></a>genes_by_rep_1se_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(lassoAll_coef_1se_mtx))</span>
+<span id="cb90-18"><a href="model-suite.html#cb90-18"></a><span class="kw">barplot</span>(</span>
+<span id="cb90-19"><a href="model-suite.html#cb90-19"></a> genes_by_rep_1se_tbl,</span>
+<span id="cb90-20"><a href="model-suite.html#cb90-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
+<span id="cb90-21"><a href="model-suite.html#cb90-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
+<span id="cb90-22"><a href="model-suite.html#cb90-22"></a></span>
+<span id="cb90-23"><a href="model-suite.html#cb90-23"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:feature-list-1se"></span>
+<img src="Static/figures/feature-list-1se-1.png" alt="Feature list stability for one the standard error rule models" width="768" />
+<p class="caption">
+Figure 5.5: Feature list stability for one the standard error rule models
+</p>
+</div>
+<p>We see that <span class="math inline">\(44\)</span> features are included in every
+cv replicate. These make up between
+<span class="math inline">\(33\)</span>%
+and
+<span class="math inline">\(43\)</span>%
+(Q1 and Q3) of the cv replicate one standard error rule models feature lists.</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="model-suite.html#cb91-1"></a><span class="co"># min</span></span>
+<span id="cb91-2"><a href="model-suite.html#cb91-2"></a>lassoAll_coef_min_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_lassoAll_lst, <span class="cf">function</span>(cv_fit){</span>
+<span id="cb91-3"><a href="model-suite.html#cb91-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb91-4"><a href="model-suite.html#cb91-4"></a> cv_fit,</span>
+<span id="cb91-5"><a href="model-suite.html#cb91-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
+<span id="cb91-6"><a href="model-suite.html#cb91-6"></a> )</span>
+<span id="cb91-7"><a href="model-suite.html#cb91-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb91-8"><a href="model-suite.html#cb91-8"></a> })</span>
+<span id="cb91-9"><a href="model-suite.html#cb91-9"></a></span>
+<span id="cb91-10"><a href="model-suite.html#cb91-10"></a><span class="co"># put into matrix</span></span>
+<span id="cb91-11"><a href="model-suite.html#cb91-11"></a>lassoAll_coef_min_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, lassoAll_coef_min_lst)</span>
+<span id="cb91-12"><a href="model-suite.html#cb91-12"></a>lassoAll_coef_min_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(lassoAll_coef_min_lst, </span>
+<span id="cb91-13"><a href="model-suite.html#cb91-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(lassoAll_coef_min_all, LL)</span>
+<span id="cb91-14"><a href="model-suite.html#cb91-14"></a>)</span>
+<span id="cb91-15"><a href="model-suite.html#cb91-15"></a><span class="kw">rownames</span>(lassoAll_coef_min_mtx) &lt;-<span class="st"> </span>lassoAll_coef_min_all</span>
+<span id="cb91-16"><a href="model-suite.html#cb91-16"></a></span>
+<span id="cb91-17"><a href="model-suite.html#cb91-17"></a>genes_by_rep_min_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(lassoAll_coef_min_mtx))</span>
+<span id="cb91-18"><a href="model-suite.html#cb91-18"></a><span class="kw">barplot</span>(</span>
+<span id="cb91-19"><a href="model-suite.html#cb91-19"></a> genes_by_rep_min_tbl,</span>
+<span id="cb91-20"><a href="model-suite.html#cb91-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
+<span id="cb91-21"><a href="model-suite.html#cb91-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
+<span id="cb91-22"><a href="model-suite.html#cb91-22"></a></span>
+<span id="cb91-23"><a href="model-suite.html#cb91-23"></a>)</span></code></pre></div>
+<div class="figure"><span id="fig:feature-list-min"></span>
+<img src="Static/figures/feature-list-min-1.png" alt="Feature list stability for minimum lambda models" width="768" />
+<p class="caption">
+Figure 5.6: Feature list stability for minimum lambda models
+</p>
+</div>
+<p>We see that <span class="math inline">\(106\)</span> features are included in every
+cv replicate. These make up between
+<span class="math inline">\(41\)</span>%
+and
+<span class="math inline">\(60\)</span>%
+(Q1 and Q3) of the cv replicate min feature lists.
+We will consider the genes that are selected in all cv replicates as a
+gene signature produced by each model.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="model-suite.html#cb92-1"></a>gene_sign_1se_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(lassoAll_coef_1se_mtx)[<span class="kw">rowSums</span>(lassoAll_coef_1se_mtx)<span class="op">==</span><span class="dv">30</span>]</span>
+<span id="cb92-2"><a href="model-suite.html#cb92-2"></a>gene_sign_min_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(lassoAll_coef_min_mtx)[<span class="kw">rowSums</span>(lassoAll_coef_min_mtx)<span class="op">==</span><span class="dv">30</span>]</span></code></pre></div>
+<p>44 out of
+44 of the genes in the 1se model gene signature
+are contained in the min lambda model gene signature.</p>
+</div>
+<div id="simulation-design" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Simulation Design</h2>
 <p>We are now ready to run the simulations.</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="model-suite.html#cb85-1"></a> SIM &lt;-<span class="st"> </span><span class="dv">30</span></span>
-<span id="cb85-2"><a href="model-suite.html#cb85-2"></a> SIZE &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>)</span>
-<span id="cb85-3"><a href="model-suite.html#cb85-3"></a> CV_REP &lt;-<span class="st"> </span><span class="dv">30</span></span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="model-suite.html#cb93-1"></a> SIM &lt;-<span class="st"> </span><span class="dv">30</span></span>
+<span id="cb93-2"><a href="model-suite.html#cb93-2"></a> SIZE &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>)</span>
+<span id="cb93-3"><a href="model-suite.html#cb93-3"></a> CV_REP &lt;-<span class="st"> </span><span class="dv">30</span></span></code></pre></div>
 <p>Simluation parameters:</p>
 <ul>
 <li><p>Number of simulations : SIM = <span class="math inline">\(30\)</span></p></li>
@@ -433,11 +928,13 @@ Figure 5.2: quality scores by classification - HCC=1
 <p>We will repeat the simulation process SIM = <span class="math inline">\(30\)</span> times.
 For each simulation iteration, we will select <span class="math inline">\(300\)</span> Control and
 <span class="math inline">\(300\)</span> HCC samples at random. Models will be fitted and analyzed
-to balanced subsets of sise SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span>, in a telescopic manner to
-emulated a typical sample accrual process. Note that in this accural process
+to balanced subsets of SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span>, in a <code>Matryoshka doll</code> manner to
+emulate a typical sample accrual process. Note that in this accural process
 there is no time effect - the accrual process is completely randomized. In practice,
 there could be significant time effects. For example, the first 25 HCC samples could come
-from Center A, while the next 25 could come from Center B. In other words,
+from Center A, while the next 25 could come from Center B. And
+affected and control samples could be acquired from different clinics
+or in different time interevals. In other words,
 there is no batch effect or shared variability in our simulation,
 while these are almost always present in real data, including
 batch effects that are associated with class labels - controls being in
@@ -453,200 +950,1076 @@ we can obtain <span class="math inline">\(30\)</span> out-of-fold assessments of
 to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features. We will want
 to examine how these stabilize as the sample size increases.</p>
+<p>Note that we limit the simulations to a maximum of sample size of 300 in
+order to to have simulations with low overlap. With 300
+randomly selected HCC samples, the expected overlap between two randomly
+selected sets of HCC samples is <span class="math inline">\(29.2\)</span>%.
+For Controls the expected overlap is <span class="math inline">\(14.9\)</span>%.</p>
 </div>
-<div id="setup-simulation" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Setup simulation</h2>
+<div id="setup-simulation" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Setup simulation</h2>
 <p>To setup the simulation, we only need two master tables: one for the selection of Controls
 and one for the selection of HCC samples.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="model-suite.html#cb86-1"></a>all_control_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>]) </span>
-<span id="cb86-2"><a href="model-suite.html#cb86-2"></a>all_affected_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>])  </span></code></pre></div>
-<p>We have <span class="math inline">\(778\)</span> IDs of control samples in stored in <code>all_control_vec</code>
-and <span class="math inline">\(555\)</span> IDs of affected samples in stored in <code>all_affected_vec</code>.
-To create random samples from these we only need to randomly select indices from
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="model-suite.html#cb94-1"></a>all_control_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>]) </span>
+<span id="cb94-2"><a href="model-suite.html#cb94-2"></a>all_affected_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>])  </span></code></pre></div>
+<p>We have <span class="math inline">\(778\)</span> control sample IDs stored in <code>all_control_vec</code>
+and <span class="math inline">\(555\)</span> affected sample IDs stored in <code>all_affected_vec</code>.
+To create a suite of random samples from these, we only need to randomly select indices from
 each vector.</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="model-suite.html#cb87-1"></a><span class="kw">set.seed</span>(<span class="dv">12379</span>)</span>
-<span id="cb87-2"><a href="model-suite.html#cb87-2"></a></span>
-<span id="cb87-3"><a href="model-suite.html#cb87-3"></a>sim_control_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb87-4"><a href="model-suite.html#cb87-4"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
-<span id="cb87-5"><a href="model-suite.html#cb87-5"></a> <span class="cf">function</span>(dummy) </span>
-<span id="cb87-6"><a href="model-suite.html#cb87-6"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_control_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
-<span id="cb87-7"><a href="model-suite.html#cb87-7"></a>)</span>
-<span id="cb87-8"><a href="model-suite.html#cb87-8"></a></span>
-<span id="cb87-9"><a href="model-suite.html#cb87-9"></a></span>
-<span id="cb87-10"><a href="model-suite.html#cb87-10"></a>sim_affected_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb87-11"><a href="model-suite.html#cb87-11"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
-<span id="cb87-12"><a href="model-suite.html#cb87-12"></a> <span class="cf">function</span>(dummy) </span>
-<span id="cb87-13"><a href="model-suite.html#cb87-13"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_affected_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
-<span id="cb87-14"><a href="model-suite.html#cb87-14"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="model-suite.html#cb95-1"></a><span class="kw">set.seed</span>(<span class="dv">12379</span>)</span>
+<span id="cb95-2"><a href="model-suite.html#cb95-2"></a></span>
+<span id="cb95-3"><a href="model-suite.html#cb95-3"></a>sim_control_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
+<span id="cb95-4"><a href="model-suite.html#cb95-4"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
+<span id="cb95-5"><a href="model-suite.html#cb95-5"></a> <span class="cf">function</span>(dummy) </span>
+<span id="cb95-6"><a href="model-suite.html#cb95-6"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_control_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
+<span id="cb95-7"><a href="model-suite.html#cb95-7"></a>)</span>
+<span id="cb95-8"><a href="model-suite.html#cb95-8"></a></span>
+<span id="cb95-9"><a href="model-suite.html#cb95-9"></a></span>
+<span id="cb95-10"><a href="model-suite.html#cb95-10"></a>sim_affected_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
+<span id="cb95-11"><a href="model-suite.html#cb95-11"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
+<span id="cb95-12"><a href="model-suite.html#cb95-12"></a> <span class="cf">function</span>(dummy) </span>
+<span id="cb95-13"><a href="model-suite.html#cb95-13"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_affected_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
+<span id="cb95-14"><a href="model-suite.html#cb95-14"></a>)</span></code></pre></div>
 <p>Each simulation is specified by a given column of the simulation design matrices:
-<code>sim_control_mtx</code> and <code>sim_affected_mtx</code>. Within each simulation, we can run
-the analyses of size <span class="math inline">\(25, 50, 100, 200, 300\)</span>.</p>
+<code>sim_control_mtx</code> and <code>sim_affected_mtx</code>, each with domensions <span class="math inline">\(300, 30\)</span>.
+Within each simulation, we can run the analyses of size <span class="math inline">\(25, 50, 100, 200, 300\)</span> by simply selecting
+samples specified in the appropriate rows of each design matrix.</p>
 <p>We can examine how much variability we have in the quality scores of the selected samples.</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="model-suite.html#cb88-1"></a>all_control_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_control_vec]</span>
-<span id="cb88-2"><a href="model-suite.html#cb88-2"></a>sim_control_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb88-3"><a href="model-suite.html#cb88-3"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_mtx), </span>
-<span id="cb88-4"><a href="model-suite.html#cb88-4"></a>  <span class="cf">function</span>(CC) all_control_qual_vec[sim_control_mtx[,CC]]</span>
-<span id="cb88-5"><a href="model-suite.html#cb88-5"></a> )</span>
-<span id="cb88-6"><a href="model-suite.html#cb88-6"></a></span>
-<span id="cb88-7"><a href="model-suite.html#cb88-7"></a>all_affected_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_affected_vec]</span>
-<span id="cb88-8"><a href="model-suite.html#cb88-8"></a>sim_affected_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb88-9"><a href="model-suite.html#cb88-9"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_mtx),  </span>
-<span id="cb88-10"><a href="model-suite.html#cb88-10"></a>  <span class="cf">function</span>(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]</span>
-<span id="cb88-11"><a href="model-suite.html#cb88-11"></a> )</span>
-<span id="cb88-12"><a href="model-suite.html#cb88-12"></a></span>
-<span id="cb88-13"><a href="model-suite.html#cb88-13"></a><span class="co"># Get stage from SIZE </span></span>
-<span id="cb88-14"><a href="model-suite.html#cb88-14"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb88-15"><a href="model-suite.html#cb88-15"></a></span>
-<span id="cb88-16"><a href="model-suite.html#cb88-16"></a>sim_control_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
-<span id="cb88-17"><a href="model-suite.html#cb88-17"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx), </span>
-<span id="cb88-18"><a href="model-suite.html#cb88-18"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_control_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
-<span id="cb88-19"><a href="model-suite.html#cb88-19"></a> )</span>
-<span id="cb88-20"><a href="model-suite.html#cb88-20"></a>)</span>
-<span id="cb88-21"><a href="model-suite.html#cb88-21"></a></span>
-<span id="cb88-22"><a href="model-suite.html#cb88-22"></a>sim_affected_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
-<span id="cb88-23"><a href="model-suite.html#cb88-23"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_qual_mtx), </span>
-<span id="cb88-24"><a href="model-suite.html#cb88-24"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
-<span id="cb88-25"><a href="model-suite.html#cb88-25"></a> )</span>
-<span id="cb88-26"><a href="model-suite.html#cb88-26"></a>)</span>
-<span id="cb88-27"><a href="model-suite.html#cb88-27"></a></span>
-<span id="cb88-28"><a href="model-suite.html#cb88-28"></a><span class="co"># PLOT</span></span>
-<span id="cb88-29"><a href="model-suite.html#cb88-29"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
-<span id="cb88-30"><a href="model-suite.html#cb88-30"></a><span class="co"># control</span></span>
-<span id="cb88-31"><a href="model-suite.html#cb88-31"></a><span class="kw">boxplot</span>(</span>
-<span id="cb88-32"><a href="model-suite.html#cb88-32"></a>  sim_control_qual_byStage_lst, </span>
-<span id="cb88-33"><a href="model-suite.html#cb88-33"></a>  <span class="dt">outline =</span> F, </span>
-<span id="cb88-34"><a href="model-suite.html#cb88-34"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
-<span id="cb88-35"><a href="model-suite.html#cb88-35"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
-<span id="cb88-36"><a href="model-suite.html#cb88-36"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
-<span id="cb88-37"><a href="model-suite.html#cb88-37"></a>)</span>
-<span id="cb88-38"><a href="model-suite.html#cb88-38"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;Stage&#39;</span>, <span class="dt">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb88-39"><a href="model-suite.html#cb88-39"></a> <span class="dt">legend =</span> <span class="kw">names</span>(sim_control_qual_byStage_lst[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]), </span>
-<span id="cb88-40"><a href="model-suite.html#cb88-40"></a> <span class="dt">text.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,</span>
-<span id="cb88-41"><a href="model-suite.html#cb88-41"></a> <span class="dt">bty =</span> <span class="st">&#39;n&#39;</span>, <span class="dt">horiz =</span> F</span>
-<span id="cb88-42"><a href="model-suite.html#cb88-42"></a>)</span>
-<span id="cb88-43"><a href="model-suite.html#cb88-43"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_control_qual_byStage_lst) <span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
-<span id="cb88-44"><a href="model-suite.html#cb88-44"></a><span class="kw">abline</span>(<span class="dt">v =</span> sim_ndx, <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb88-45"><a href="model-suite.html#cb88-45"></a><span class="kw">axis</span>(</span>
-<span id="cb88-46"><a href="model-suite.html#cb88-46"></a>  <span class="dt">side =</span> <span class="dv">1</span>, </span>
-<span id="cb88-47"><a href="model-suite.html#cb88-47"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>, </span>
-<span id="cb88-48"><a href="model-suite.html#cb88-48"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
-<span id="cb88-49"><a href="model-suite.html#cb88-49"></a>  <span class="dt">tick =</span> F, </span>
-<span id="cb88-50"><a href="model-suite.html#cb88-50"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
-<span id="cb88-51"><a href="model-suite.html#cb88-51"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
-<span id="cb88-52"><a href="model-suite.html#cb88-52"></a><span class="kw">title</span>(<span class="st">&quot;Control sample quality by stage and simulation&quot;</span>)</span>
-<span id="cb88-53"><a href="model-suite.html#cb88-53"></a></span>
-<span id="cb88-54"><a href="model-suite.html#cb88-54"></a><span class="co"># affected</span></span>
-<span id="cb88-55"><a href="model-suite.html#cb88-55"></a><span class="kw">boxplot</span>(</span>
-<span id="cb88-56"><a href="model-suite.html#cb88-56"></a>  sim_affected_qual_byStage_lst, </span>
-<span id="cb88-57"><a href="model-suite.html#cb88-57"></a>  <span class="dt">outline =</span> F, </span>
-<span id="cb88-58"><a href="model-suite.html#cb88-58"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
-<span id="cb88-59"><a href="model-suite.html#cb88-59"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
-<span id="cb88-60"><a href="model-suite.html#cb88-60"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
-<span id="cb88-61"><a href="model-suite.html#cb88-61"></a>)</span>
-<span id="cb88-62"><a href="model-suite.html#cb88-62"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
-<span id="cb88-63"><a href="model-suite.html#cb88-63"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>), <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb88-64"><a href="model-suite.html#cb88-64"></a><span class="kw">axis</span>(</span>
-<span id="cb88-65"><a href="model-suite.html#cb88-65"></a>  <span class="dt">side=</span><span class="dv">1</span>, </span>
-<span id="cb88-66"><a href="model-suite.html#cb88-66"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>,        </span>
-<span id="cb88-67"><a href="model-suite.html#cb88-67"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
-<span id="cb88-68"><a href="model-suite.html#cb88-68"></a>  <span class="dt">tick =</span> F, </span>
-<span id="cb88-69"><a href="model-suite.html#cb88-69"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
-<span id="cb88-70"><a href="model-suite.html#cb88-70"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
-<span id="cb88-71"><a href="model-suite.html#cb88-71"></a><span class="kw">title</span>(<span class="st">&quot;Affected sample quality by stage and simulation&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="model-suite.html#cb96-1"></a>all_control_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_control_vec]</span>
+<span id="cb96-2"><a href="model-suite.html#cb96-2"></a>sim_control_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
+<span id="cb96-3"><a href="model-suite.html#cb96-3"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_mtx), </span>
+<span id="cb96-4"><a href="model-suite.html#cb96-4"></a>  <span class="cf">function</span>(CC) all_control_qual_vec[sim_control_mtx[,CC]]</span>
+<span id="cb96-5"><a href="model-suite.html#cb96-5"></a> )</span>
+<span id="cb96-6"><a href="model-suite.html#cb96-6"></a></span>
+<span id="cb96-7"><a href="model-suite.html#cb96-7"></a>all_affected_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_affected_vec]</span>
+<span id="cb96-8"><a href="model-suite.html#cb96-8"></a>sim_affected_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
+<span id="cb96-9"><a href="model-suite.html#cb96-9"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_mtx),  </span>
+<span id="cb96-10"><a href="model-suite.html#cb96-10"></a>  <span class="cf">function</span>(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]</span>
+<span id="cb96-11"><a href="model-suite.html#cb96-11"></a> )</span>
+<span id="cb96-12"><a href="model-suite.html#cb96-12"></a></span>
+<span id="cb96-13"><a href="model-suite.html#cb96-13"></a><span class="co"># Get stage from SIZE </span></span>
+<span id="cb96-14"><a href="model-suite.html#cb96-14"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
+<span id="cb96-15"><a href="model-suite.html#cb96-15"></a></span>
+<span id="cb96-16"><a href="model-suite.html#cb96-16"></a>sim_control_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
+<span id="cb96-17"><a href="model-suite.html#cb96-17"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx), </span>
+<span id="cb96-18"><a href="model-suite.html#cb96-18"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_control_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
+<span id="cb96-19"><a href="model-suite.html#cb96-19"></a> )</span>
+<span id="cb96-20"><a href="model-suite.html#cb96-20"></a>)</span>
+<span id="cb96-21"><a href="model-suite.html#cb96-21"></a></span>
+<span id="cb96-22"><a href="model-suite.html#cb96-22"></a>sim_affected_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
+<span id="cb96-23"><a href="model-suite.html#cb96-23"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_qual_mtx), </span>
+<span id="cb96-24"><a href="model-suite.html#cb96-24"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
+<span id="cb96-25"><a href="model-suite.html#cb96-25"></a> )</span>
+<span id="cb96-26"><a href="model-suite.html#cb96-26"></a>)</span>
+<span id="cb96-27"><a href="model-suite.html#cb96-27"></a></span>
+<span id="cb96-28"><a href="model-suite.html#cb96-28"></a><span class="co"># PLOT</span></span>
+<span id="cb96-29"><a href="model-suite.html#cb96-29"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb96-30"><a href="model-suite.html#cb96-30"></a><span class="co"># control</span></span>
+<span id="cb96-31"><a href="model-suite.html#cb96-31"></a><span class="kw">boxplot</span>(</span>
+<span id="cb96-32"><a href="model-suite.html#cb96-32"></a>  sim_control_qual_byStage_lst, </span>
+<span id="cb96-33"><a href="model-suite.html#cb96-33"></a>  <span class="dt">outline =</span> F, </span>
+<span id="cb96-34"><a href="model-suite.html#cb96-34"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
+<span id="cb96-35"><a href="model-suite.html#cb96-35"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
+<span id="cb96-36"><a href="model-suite.html#cb96-36"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
+<span id="cb96-37"><a href="model-suite.html#cb96-37"></a>)</span>
+<span id="cb96-38"><a href="model-suite.html#cb96-38"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;Stage&#39;</span>, <span class="dt">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb96-39"><a href="model-suite.html#cb96-39"></a> <span class="dt">legend =</span> <span class="kw">names</span>(sim_control_qual_byStage_lst[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]), </span>
+<span id="cb96-40"><a href="model-suite.html#cb96-40"></a> <span class="dt">text.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,</span>
+<span id="cb96-41"><a href="model-suite.html#cb96-41"></a> <span class="dt">bty =</span> <span class="st">&#39;n&#39;</span>, <span class="dt">horiz =</span> F</span>
+<span id="cb96-42"><a href="model-suite.html#cb96-42"></a>)</span>
+<span id="cb96-43"><a href="model-suite.html#cb96-43"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_control_qual_byStage_lst) <span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb96-44"><a href="model-suite.html#cb96-44"></a><span class="kw">abline</span>(<span class="dt">v =</span> sim_ndx, <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb96-45"><a href="model-suite.html#cb96-45"></a><span class="kw">axis</span>(</span>
+<span id="cb96-46"><a href="model-suite.html#cb96-46"></a>  <span class="dt">side =</span> <span class="dv">1</span>, </span>
+<span id="cb96-47"><a href="model-suite.html#cb96-47"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>, </span>
+<span id="cb96-48"><a href="model-suite.html#cb96-48"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
+<span id="cb96-49"><a href="model-suite.html#cb96-49"></a>  <span class="dt">tick =</span> F, </span>
+<span id="cb96-50"><a href="model-suite.html#cb96-50"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
+<span id="cb96-51"><a href="model-suite.html#cb96-51"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
+<span id="cb96-52"><a href="model-suite.html#cb96-52"></a><span class="kw">title</span>(<span class="st">&quot;Control sample quality by stage and simulation&quot;</span>)</span>
+<span id="cb96-53"><a href="model-suite.html#cb96-53"></a></span>
+<span id="cb96-54"><a href="model-suite.html#cb96-54"></a><span class="co"># affected</span></span>
+<span id="cb96-55"><a href="model-suite.html#cb96-55"></a><span class="kw">boxplot</span>(</span>
+<span id="cb96-56"><a href="model-suite.html#cb96-56"></a>  sim_affected_qual_byStage_lst, </span>
+<span id="cb96-57"><a href="model-suite.html#cb96-57"></a>  <span class="dt">outline =</span> F, </span>
+<span id="cb96-58"><a href="model-suite.html#cb96-58"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
+<span id="cb96-59"><a href="model-suite.html#cb96-59"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
+<span id="cb96-60"><a href="model-suite.html#cb96-60"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
+<span id="cb96-61"><a href="model-suite.html#cb96-61"></a>)</span>
+<span id="cb96-62"><a href="model-suite.html#cb96-62"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb96-63"><a href="model-suite.html#cb96-63"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>), <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb96-64"><a href="model-suite.html#cb96-64"></a><span class="kw">axis</span>(</span>
+<span id="cb96-65"><a href="model-suite.html#cb96-65"></a>  <span class="dt">side=</span><span class="dv">1</span>, </span>
+<span id="cb96-66"><a href="model-suite.html#cb96-66"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>,        </span>
+<span id="cb96-67"><a href="model-suite.html#cb96-67"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
+<span id="cb96-68"><a href="model-suite.html#cb96-68"></a>  <span class="dt">tick =</span> F, </span>
+<span id="cb96-69"><a href="model-suite.html#cb96-69"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
+<span id="cb96-70"><a href="model-suite.html#cb96-70"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
+<span id="cb96-71"><a href="model-suite.html#cb96-71"></a><span class="kw">title</span>(<span class="st">&quot;Affected sample quality by stage and simulation&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:look-sim-qual"></span>
 <img src="Static/figures/look-sim-qual-1.png" alt="sample quality by simulation run" width="960" />
 <p class="caption">
-Figure 5.3: sample quality by simulation run
+Figure 5.7: sample quality by simulation run
 </p>
 </div>
 <p>We see some variability in sample quality in the smaller analysis stages.
 This may lead observers to be overly optimistic, or overly pessimistic,
 in the early accrual stages.</p>
 </div>
-<div id="run-simulations" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> Run simulations</h2>
-<p>As these make take a while to run, and space to store,
+<div id="run-simulations" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Run simulations</h2>
+<p>As these make take a while to run,
 we will save the results of each similation to a different
-object and store to disk.</p>
+object and store to disk. These can be easily read from disk
+when needed for analysis.</p>
 <p>The simulation saves results to the file system and
 only needs to be run once. The simulation takes <span class="math inline">\(\approx\)</span> 8 minutes
 per iteration, or 4 hours of run time on a laptop.
 (Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6)</p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="model-suite.html#cb89-1"></a><span class="co"># Get stage from SIZE</span></span>
-<span id="cb89-2"><a href="model-suite.html#cb89-2"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>, SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb89-3"><a href="model-suite.html#cb89-3"></a></span>
-<span id="cb89-4"><a href="model-suite.html#cb89-4"></a><span class="cf">for</span> (SIMno <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx)) {</span>
-<span id="cb89-5"><a href="model-suite.html#cb89-5"></a>  start_time &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</span>
-<span id="cb89-6"><a href="model-suite.html#cb89-6"></a></span>
-<span id="cb89-7"><a href="model-suite.html#cb89-7"></a>  <span class="kw">cat</span>(<span class="st">&quot;Running simulation &quot;</span>, SIMno, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb89-8"><a href="model-suite.html#cb89-8"></a></span>
-<span id="cb89-9"><a href="model-suite.html#cb89-9"></a>  sim_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">levels</span>(stage_vec)), <span class="cf">function</span>(STGno) {</span>
-<span id="cb89-10"><a href="model-suite.html#cb89-10"></a>    Stage_rows_vec &lt;-<span class="st"> </span><span class="kw">which</span>(stage_vec <span class="op">%in%</span><span class="st"> </span><span class="kw">levels</span>(stage_vec)[<span class="dv">1</span><span class="op">:</span>STGno])</span>
-<span id="cb89-11"><a href="model-suite.html#cb89-11"></a>    <span class="co">#cat(&quot;Stage &quot;, STGno, &quot;- analyzing&quot;, length(Stage_rows_vec), &quot;paired samples.\n&quot;)</span></span>
-<span id="cb89-12"><a href="model-suite.html#cb89-12"></a></span>
-<span id="cb89-13"><a href="model-suite.html#cb89-13"></a>    sim_stage_samples_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb89-14"><a href="model-suite.html#cb89-14"></a>      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],</span>
-<span id="cb89-15"><a href="model-suite.html#cb89-15"></a>      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]</span>
-<span id="cb89-16"><a href="model-suite.html#cb89-16"></a>    )</span>
-<span id="cb89-17"><a href="model-suite.html#cb89-17"></a>    sim_stage_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_samples_vec, ]</span>
-<span id="cb89-18"><a href="model-suite.html#cb89-18"></a>    sim_stage_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_samples_vec]</span>
-<span id="cb89-19"><a href="model-suite.html#cb89-19"></a>    <span class="kw">print</span>(<span class="kw">table</span>(sim_stage_group_vec))</span>
-<span id="cb89-20"><a href="model-suite.html#cb89-20"></a></span>
-<span id="cb89-21"><a href="model-suite.html#cb89-21"></a>    sim_stage_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span>CV_REP, <span class="cf">function</span>(CV) {</span>
-<span id="cb89-22"><a href="model-suite.html#cb89-22"></a>      cv_fit &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb89-23"><a href="model-suite.html#cb89-23"></a>        <span class="dt">x =</span> sim_stage_lcpm_mtx,</span>
-<span id="cb89-24"><a href="model-suite.html#cb89-24"></a>        <span class="dt">y =</span> sim_stage_group_vec,</span>
-<span id="cb89-25"><a href="model-suite.html#cb89-25"></a>        <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
-<span id="cb89-26"><a href="model-suite.html#cb89-26"></a>        <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
-<span id="cb89-27"><a href="model-suite.html#cb89-27"></a>        <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
-<span id="cb89-28"><a href="model-suite.html#cb89-28"></a>        <span class="dt">keep =</span> T,</span>
-<span id="cb89-29"><a href="model-suite.html#cb89-29"></a>        <span class="dt">nlambda =</span> <span class="dv">30</span></span>
-<span id="cb89-30"><a href="model-suite.html#cb89-30"></a>      )</span>
-<span id="cb89-31"><a href="model-suite.html#cb89-31"></a>      ndx_1se &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se)</span>
-<span id="cb89-32"><a href="model-suite.html#cb89-32"></a></span>
-<span id="cb89-33"><a href="model-suite.html#cb89-33"></a>      nzero_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_1se]</span>
-<span id="cb89-34"><a href="model-suite.html#cb89-34"></a>      cvm_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_1se]</span>
-<span id="cb89-35"><a href="model-suite.html#cb89-35"></a></span>
-<span id="cb89-36"><a href="model-suite.html#cb89-36"></a>      <span class="co"># oof error</span></span>
-<span id="cb89-37"><a href="model-suite.html#cb89-37"></a>      oofPred_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb89-38"><a href="model-suite.html#cb89-38"></a>        cv_fit<span class="op">$</span>fit.preval[, ndx_1se] <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;HCC&quot;</span>, <span class="st">&quot;Control&quot;</span></span>
-<span id="cb89-39"><a href="model-suite.html#cb89-39"></a>      )</span>
-<span id="cb89-40"><a href="model-suite.html#cb89-40"></a>      oofPred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(oofPred_1se_vec <span class="op">!=</span><span class="st"> </span>sim_stage_group_vec)</span>
-<span id="cb89-41"><a href="model-suite.html#cb89-41"></a></span>
-<span id="cb89-42"><a href="model-suite.html#cb89-42"></a>      <span class="co"># test error</span></span>
-<span id="cb89-43"><a href="model-suite.html#cb89-43"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
-<span id="cb89-44"><a href="model-suite.html#cb89-44"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
-<span id="cb89-45"><a href="model-suite.html#cb89-45"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
-<span id="cb89-46"><a href="model-suite.html#cb89-46"></a></span>
-<span id="cb89-47"><a href="model-suite.html#cb89-47"></a>      test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb89-48"><a href="model-suite.html#cb89-48"></a>       cv_fit,</span>
-<span id="cb89-49"><a href="model-suite.html#cb89-49"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
-<span id="cb89-50"><a href="model-suite.html#cb89-50"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
-<span id="cb89-51"><a href="model-suite.html#cb89-51"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
-<span id="cb89-52"><a href="model-suite.html#cb89-52"></a>      )</span>
-<span id="cb89-53"><a href="model-suite.html#cb89-53"></a>      test_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
-<span id="cb89-54"><a href="model-suite.html#cb89-54"></a></span>
-<span id="cb89-55"><a href="model-suite.html#cb89-55"></a>      <span class="co"># genes</span></span>
-<span id="cb89-56"><a href="model-suite.html#cb89-56"></a>      coef_1se &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb89-57"><a href="model-suite.html#cb89-57"></a>        cv_fit,</span>
-<span id="cb89-58"><a href="model-suite.html#cb89-58"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
-<span id="cb89-59"><a href="model-suite.html#cb89-59"></a>      )</span>
-<span id="cb89-60"><a href="model-suite.html#cb89-60"></a>      genes &lt;-<span class="st"> </span>coef_1se<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_1se<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb89-61"><a href="model-suite.html#cb89-61"></a></span>
-<span id="cb89-62"><a href="model-suite.html#cb89-62"></a>      <span class="kw">list</span>(<span class="dt">p =</span> nzero_1se, <span class="dt">cv_error =</span> cvm_1se, <span class="dt">oof_error =</span> oofPred_1se_error, </span>
-<span id="cb89-63"><a href="model-suite.html#cb89-63"></a>           <span class="dt">test_error=</span>test_1se_error, <span class="dt">genes =</span> genes)</span>
-<span id="cb89-64"><a href="model-suite.html#cb89-64"></a>    })</span>
-<span id="cb89-65"><a href="model-suite.html#cb89-65"></a>    sim_stage_cv_lst</span>
-<span id="cb89-66"><a href="model-suite.html#cb89-66"></a>  })</span>
-<span id="cb89-67"><a href="model-suite.html#cb89-67"></a></span>
-<span id="cb89-68"><a href="model-suite.html#cb89-68"></a>  <span class="co"># save  sim_cv_lst</span></span>
-<span id="cb89-69"><a href="model-suite.html#cb89-69"></a>  fName &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;sim_&quot;</span>, SIMno, <span class="st">&quot;_cv_lst&quot;</span>)</span>
-<span id="cb89-70"><a href="model-suite.html#cb89-70"></a>  <span class="kw">assign</span>(fName, sim_cv_lst)</span>
-<span id="cb89-71"><a href="model-suite.html#cb89-71"></a>  <span class="kw">save</span>(<span class="dt">list =</span> fName, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>, fName))</span>
-<span id="cb89-72"><a href="model-suite.html#cb89-72"></a></span>
-<span id="cb89-73"><a href="model-suite.html#cb89-73"></a>  <span class="kw">message</span>(<span class="st">&quot;simulation time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">&quot;s&quot;</span>)</span>
-<span id="cb89-74"><a href="model-suite.html#cb89-74"></a>}</span></code></pre></div>
+<!-- RUN ONCE - THEN GET FROM MEMORY -->
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="model-suite.html#cb97-1"></a>start_time &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</span>
+<span id="cb97-2"><a href="model-suite.html#cb97-2"></a></span>
+<span id="cb97-3"><a href="model-suite.html#cb97-3"></a><span class="co"># Get stage from SIZE</span></span>
+<span id="cb97-4"><a href="model-suite.html#cb97-4"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>, SIZE), <span class="dt">include.lowest =</span> T)</span>
+<span id="cb97-5"><a href="model-suite.html#cb97-5"></a></span>
+<span id="cb97-6"><a href="model-suite.html#cb97-6"></a><span class="cf">for</span> (SIMno <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx)) {</span>
+<span id="cb97-7"><a href="model-suite.html#cb97-7"></a></span>
+<span id="cb97-8"><a href="model-suite.html#cb97-8"></a>  <span class="co">#cat(&quot;Running simulation &quot;, SIMno, &quot;\n&quot;)</span></span>
+<span id="cb97-9"><a href="model-suite.html#cb97-9"></a></span>
+<span id="cb97-10"><a href="model-suite.html#cb97-10"></a>  sim_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">levels</span>(stage_vec)), <span class="cf">function</span>(STGno) {</span>
+<span id="cb97-11"><a href="model-suite.html#cb97-11"></a>    Stage_rows_vec &lt;-<span class="st"> </span><span class="kw">which</span>(stage_vec <span class="op">%in%</span><span class="st"> </span><span class="kw">levels</span>(stage_vec)[<span class="dv">1</span><span class="op">:</span>STGno])</span>
+<span id="cb97-12"><a href="model-suite.html#cb97-12"></a>    <span class="co">#cat(&quot;Stage &quot;, STGno, &quot;- analyzing&quot;, length(Stage_rows_vec), &quot;paired samples.\n&quot;)</span></span>
+<span id="cb97-13"><a href="model-suite.html#cb97-13"></a></span>
+<span id="cb97-14"><a href="model-suite.html#cb97-14"></a>    sim_stage_samples_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb97-15"><a href="model-suite.html#cb97-15"></a>      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],</span>
+<span id="cb97-16"><a href="model-suite.html#cb97-16"></a>      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]</span>
+<span id="cb97-17"><a href="model-suite.html#cb97-17"></a>    )</span>
+<span id="cb97-18"><a href="model-suite.html#cb97-18"></a>    sim_stage_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_samples_vec, ]</span>
+<span id="cb97-19"><a href="model-suite.html#cb97-19"></a>    sim_stage_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_samples_vec]</span>
+<span id="cb97-20"><a href="model-suite.html#cb97-20"></a>    <span class="co">#print(table(sim_stage_group_vec))</span></span>
+<span id="cb97-21"><a href="model-suite.html#cb97-21"></a></span>
+<span id="cb97-22"><a href="model-suite.html#cb97-22"></a>    sim_stage_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span>CV_REP, <span class="cf">function</span>(CV) {</span>
+<span id="cb97-23"><a href="model-suite.html#cb97-23"></a>      cv_fit &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb97-24"><a href="model-suite.html#cb97-24"></a>        <span class="dt">x =</span> sim_stage_lcpm_mtx,</span>
+<span id="cb97-25"><a href="model-suite.html#cb97-25"></a>        <span class="dt">y =</span> sim_stage_group_vec,</span>
+<span id="cb97-26"><a href="model-suite.html#cb97-26"></a>        <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb97-27"><a href="model-suite.html#cb97-27"></a>        <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb97-28"><a href="model-suite.html#cb97-28"></a>        <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
+<span id="cb97-29"><a href="model-suite.html#cb97-29"></a>        <span class="dt">keep =</span> T,</span>
+<span id="cb97-30"><a href="model-suite.html#cb97-30"></a>        <span class="dt">nlambda =</span> <span class="dv">30</span></span>
+<span id="cb97-31"><a href="model-suite.html#cb97-31"></a>      )</span>
+<span id="cb97-32"><a href="model-suite.html#cb97-32"></a></span>
+<span id="cb97-33"><a href="model-suite.html#cb97-33"></a>      <span class="co"># Extract 1se metrics from cv_fit</span></span>
+<span id="cb97-34"><a href="model-suite.html#cb97-34"></a>      <span class="co">#######################</span></span>
+<span id="cb97-35"><a href="model-suite.html#cb97-35"></a>      ndx_1se &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se)</span>
+<span id="cb97-36"><a href="model-suite.html#cb97-36"></a></span>
+<span id="cb97-37"><a href="model-suite.html#cb97-37"></a>      nzero_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_1se]</span>
+<span id="cb97-38"><a href="model-suite.html#cb97-38"></a>      cvm_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_1se]</span>
+<span id="cb97-39"><a href="model-suite.html#cb97-39"></a></span>
+<span id="cb97-40"><a href="model-suite.html#cb97-40"></a>      <span class="co"># test error</span></span>
+<span id="cb97-41"><a href="model-suite.html#cb97-41"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
+<span id="cb97-42"><a href="model-suite.html#cb97-42"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
+<span id="cb97-43"><a href="model-suite.html#cb97-43"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
+<span id="cb97-44"><a href="model-suite.html#cb97-44"></a></span>
+<span id="cb97-45"><a href="model-suite.html#cb97-45"></a>      test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
+<span id="cb97-46"><a href="model-suite.html#cb97-46"></a>       cv_fit,</span>
+<span id="cb97-47"><a href="model-suite.html#cb97-47"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
+<span id="cb97-48"><a href="model-suite.html#cb97-48"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
+<span id="cb97-49"><a href="model-suite.html#cb97-49"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb97-50"><a href="model-suite.html#cb97-50"></a>      )</span>
+<span id="cb97-51"><a href="model-suite.html#cb97-51"></a>      test_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
+<span id="cb97-52"><a href="model-suite.html#cb97-52"></a></span>
+<span id="cb97-53"><a href="model-suite.html#cb97-53"></a>      <span class="co"># genes</span></span>
+<span id="cb97-54"><a href="model-suite.html#cb97-54"></a>      coef_1se &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb97-55"><a href="model-suite.html#cb97-55"></a>        cv_fit,</span>
+<span id="cb97-56"><a href="model-suite.html#cb97-56"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
+<span id="cb97-57"><a href="model-suite.html#cb97-57"></a>      )</span>
+<span id="cb97-58"><a href="model-suite.html#cb97-58"></a>      genes_1se &lt;-<span class="st"> </span>coef_1se<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_1se<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb97-59"><a href="model-suite.html#cb97-59"></a></span>
+<span id="cb97-60"><a href="model-suite.html#cb97-60"></a>      <span class="co"># Extract min metrics from cv_fit</span></span>
+<span id="cb97-61"><a href="model-suite.html#cb97-61"></a>      <span class="co">#######################</span></span>
+<span id="cb97-62"><a href="model-suite.html#cb97-62"></a>      ndx_min &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min)</span>
+<span id="cb97-63"><a href="model-suite.html#cb97-63"></a></span>
+<span id="cb97-64"><a href="model-suite.html#cb97-64"></a>      nzero_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_min]</span>
+<span id="cb97-65"><a href="model-suite.html#cb97-65"></a>      cvm_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_min]</span>
+<span id="cb97-66"><a href="model-suite.html#cb97-66"></a></span>
+<span id="cb97-67"><a href="model-suite.html#cb97-67"></a>      <span class="co"># test error</span></span>
+<span id="cb97-68"><a href="model-suite.html#cb97-68"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
+<span id="cb97-69"><a href="model-suite.html#cb97-69"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
+<span id="cb97-70"><a href="model-suite.html#cb97-70"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
+<span id="cb97-71"><a href="model-suite.html#cb97-71"></a></span>
+<span id="cb97-72"><a href="model-suite.html#cb97-72"></a>      test_pred_min_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
+<span id="cb97-73"><a href="model-suite.html#cb97-73"></a>       cv_fit,</span>
+<span id="cb97-74"><a href="model-suite.html#cb97-74"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
+<span id="cb97-75"><a href="model-suite.html#cb97-75"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.min&quot;</span>,</span>
+<span id="cb97-76"><a href="model-suite.html#cb97-76"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb97-77"><a href="model-suite.html#cb97-77"></a>      )</span>
+<span id="cb97-78"><a href="model-suite.html#cb97-78"></a>      test_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
+<span id="cb97-79"><a href="model-suite.html#cb97-79"></a></span>
+<span id="cb97-80"><a href="model-suite.html#cb97-80"></a>      <span class="co"># genes</span></span>
+<span id="cb97-81"><a href="model-suite.html#cb97-81"></a>      coef_min &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb97-82"><a href="model-suite.html#cb97-82"></a>        cv_fit,</span>
+<span id="cb97-83"><a href="model-suite.html#cb97-83"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
+<span id="cb97-84"><a href="model-suite.html#cb97-84"></a>      )</span>
+<span id="cb97-85"><a href="model-suite.html#cb97-85"></a>      genes_min &lt;-<span class="st"> </span>coef_min<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_min<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb97-86"><a href="model-suite.html#cb97-86"></a></span>
+<span id="cb97-87"><a href="model-suite.html#cb97-87"></a>      <span class="co"># return cv_fit summary metrics</span></span>
+<span id="cb97-88"><a href="model-suite.html#cb97-88"></a>      <span class="kw">list</span>(</span>
+<span id="cb97-89"><a href="model-suite.html#cb97-89"></a>       <span class="dt">p_1se =</span> nzero_1se, </span>
+<span id="cb97-90"><a href="model-suite.html#cb97-90"></a>       <span class="dt">p_min =</span> nzero_min, </span>
+<span id="cb97-91"><a href="model-suite.html#cb97-91"></a>       <span class="dt">cv_1se =</span> cvm_1se, </span>
+<span id="cb97-92"><a href="model-suite.html#cb97-92"></a>       <span class="dt">cv_min =</span> cvm_min, </span>
+<span id="cb97-93"><a href="model-suite.html#cb97-93"></a>       <span class="dt">test_1se=</span>test_1se_error, </span>
+<span id="cb97-94"><a href="model-suite.html#cb97-94"></a>       <span class="dt">test_min=</span>test_min_error, </span>
+<span id="cb97-95"><a href="model-suite.html#cb97-95"></a>       <span class="dt">genes_1se =</span> genes_1se,</span>
+<span id="cb97-96"><a href="model-suite.html#cb97-96"></a>       <span class="dt">genes_min =</span> genes_min)</span>
+<span id="cb97-97"><a href="model-suite.html#cb97-97"></a>    })</span>
+<span id="cb97-98"><a href="model-suite.html#cb97-98"></a>    sim_stage_cv_lst</span>
+<span id="cb97-99"><a href="model-suite.html#cb97-99"></a>  })</span>
+<span id="cb97-100"><a href="model-suite.html#cb97-100"></a></span>
+<span id="cb97-101"><a href="model-suite.html#cb97-101"></a>  <span class="co"># save  sim_cv_lst</span></span>
+<span id="cb97-102"><a href="model-suite.html#cb97-102"></a>  fName &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;sim_&quot;</span>, SIMno, <span class="st">&quot;_cv_lst&quot;</span>)</span>
+<span id="cb97-103"><a href="model-suite.html#cb97-103"></a>  <span class="kw">assign</span>(fName, sim_cv_lst)</span>
+<span id="cb97-104"><a href="model-suite.html#cb97-104"></a>  <span class="kw">save</span>(<span class="dt">list =</span> fName, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>, fName))</span>
+<span id="cb97-105"><a href="model-suite.html#cb97-105"></a></span>
+<span id="cb97-106"><a href="model-suite.html#cb97-106"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="model-suite.html#cb98-1"></a>  <span class="kw">message</span>(<span class="st">&quot;simulation time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">&quot;s&quot;</span>)</span></code></pre></div>
+</div>
+<div id="simulation-results" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Simulation results</h2>
+<p>The results are
+* error: cv, oof, test<br />
+- examine relationship to each other and with respect to sample size<br />
+* genes:<br />
+- how variable are the selected gene lists, both in terms of composition and size</p>
+<p>Recall the we have <span class="math inline">\(30\)</span> randomly selected sets of HCC and Control samples,
+analyzed in inreasing sizes of <span class="math inline">\(25, 50, 100, 200, 300\)</span>, with
+<span class="math inline">\(30\)</span> repeated cross-validated lasso fits:</p>
+<ul>
+<li><p>Sample sizes: SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span></p></li>
+<li><p>Number of CV Replicates: CV_REP = <span class="math inline">\(30\)</span></p></li>
+</ul>
+<p>First we extract simluation results and store into one big table:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="model-suite.html#cb99-1"></a>sim_files_vec &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&#39;RData&#39;</span>, <span class="st">&#39;^sim_&#39;</span>)</span>
+<span id="cb99-2"><a href="model-suite.html#cb99-2"></a></span>
+<span id="cb99-3"><a href="model-suite.html#cb99-3"></a></span>
+<span id="cb99-4"><a href="model-suite.html#cb99-4"></a><span class="co"># define extraction methods</span></span>
+<span id="cb99-5"><a href="model-suite.html#cb99-5"></a></span>
+<span id="cb99-6"><a href="model-suite.html#cb99-6"></a><span class="co"># Each sumulation is a list of cv results </span></span>
+<span id="cb99-7"><a href="model-suite.html#cb99-7"></a><span class="co">## nested in a list of replicates</span></span>
+<span id="cb99-8"><a href="model-suite.html#cb99-8"></a><span class="co">##############################################</span></span>
+<span id="cb99-9"><a href="model-suite.html#cb99-9"></a></span>
+<span id="cb99-10"><a href="model-suite.html#cb99-10"></a><span class="co"># cvList2frm_f makes a frame out of the inner list</span></span>
+<span id="cb99-11"><a href="model-suite.html#cb99-11"></a>cvList2frm_f &lt;-<span class="st"> </span><span class="cf">function</span>(cv_lst) {</span>
+<span id="cb99-12"><a href="model-suite.html#cb99-12"></a> frm1 &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(cv_lst, <span class="cf">function</span>(x) x)))</span>
+<span id="cb99-13"><a href="model-suite.html#cb99-13"></a> frm2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb99-14"><a href="model-suite.html#cb99-14"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">1</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">2</span>]]),</span>
+<span id="cb99-15"><a href="model-suite.html#cb99-15"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">3</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">4</span>]]),</span>
+<span id="cb99-16"><a href="model-suite.html#cb99-16"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">5</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">6</span>]]),</span>
+<span id="cb99-17"><a href="model-suite.html#cb99-17"></a>  frm1[<span class="dv">7</span>], frm1[<span class="dv">8</span>])</span>
+<span id="cb99-18"><a href="model-suite.html#cb99-18"></a>  <span class="kw">names</span>(frm2) &lt;-<span class="st"> </span><span class="kw">names</span>(frm1)</span>
+<span id="cb99-19"><a href="model-suite.html#cb99-19"></a>  <span class="kw">data.frame</span>(<span class="dt">Rep=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(frm2), frm2)}</span>
+<span id="cb99-20"><a href="model-suite.html#cb99-20"></a></span>
+<span id="cb99-21"><a href="model-suite.html#cb99-21"></a><span class="co"># cv_lst_to_frm loop over replicates, concatenating the inner list frames</span></span>
+<span id="cb99-22"><a href="model-suite.html#cb99-22"></a>cv_lst_to_frm &lt;-<span class="st"> </span><span class="cf">function</span>(sim_cv_lst) {</span>
+<span id="cb99-23"><a href="model-suite.html#cb99-23"></a> <span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_cv_lst),</span>
+<span id="cb99-24"><a href="model-suite.html#cb99-24"></a>  <span class="cf">function</span>(JJ) {</span>
+<span id="cb99-25"><a href="model-suite.html#cb99-25"></a>    siz_frm &lt;-<span class="st"> </span><span class="kw">cvList2frm_f</span>(sim_cv_lst[[JJ]])</span>
+<span id="cb99-26"><a href="model-suite.html#cb99-26"></a>    <span class="kw">data.frame</span>(<span class="dt">Size=</span>SIZE[JJ], siz_frm)</span>
+<span id="cb99-27"><a href="model-suite.html#cb99-27"></a>  }))</span>
+<span id="cb99-28"><a href="model-suite.html#cb99-28"></a>}</span>
+<span id="cb99-29"><a href="model-suite.html#cb99-29"></a></span>
+<span id="cb99-30"><a href="model-suite.html#cb99-30"></a><span class="co"># we loop across simulations to combine all results into one big table</span></span>
+<span id="cb99-31"><a href="model-suite.html#cb99-31"></a>sim_results_frm &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_files_vec),</span>
+<span id="cb99-32"><a href="model-suite.html#cb99-32"></a> <span class="cf">function</span>(SIM_NO) {</span>
+<span id="cb99-33"><a href="model-suite.html#cb99-33"></a>  <span class="kw">load</span>(<span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&#39;RData&#39;</span>, sim_files_vec[SIM_NO]))</span>
+<span id="cb99-34"><a href="model-suite.html#cb99-34"></a>  <span class="kw">assign</span>(<span class="st">&#39;sim_cv_lst&#39;</span>, <span class="kw">get</span>(sim_files_vec[SIM_NO]))</span>
+<span id="cb99-35"><a href="model-suite.html#cb99-35"></a>  <span class="kw">rm</span>(<span class="dt">list=</span>sim_files_vec[SIM_NO])</span>
+<span id="cb99-36"><a href="model-suite.html#cb99-36"></a>  </span>
+<span id="cb99-37"><a href="model-suite.html#cb99-37"></a>  <span class="kw">data.frame</span>(<span class="dt">SimNo=</span><span class="kw">paste0</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="kw">formatC</span>(SIM_NO,<span class="dt">width =</span> <span class="dv">2</span>,<span class="dt">flag =</span> <span class="dv">0</span>)), <span class="kw">cv_lst_to_frm</span>(sim_cv_lst))</span>
+<span id="cb99-38"><a href="model-suite.html#cb99-38"></a>} </span>
+<span id="cb99-39"><a href="model-suite.html#cb99-39"></a>)) </span></code></pre></div>
+<!-- 
+Have a table of simulation results - `sim_results_frm`:
+-->
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="model-suite.html#cb100-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(<span class="kw">with</span>(sim_results_frm, <span class="kw">table</span>(SimNo, Size))),</span>
+<span id="cb100-2"><a href="model-suite.html#cb100-2"></a>  <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - N Sim =&quot;</span>, SIM)) <span class="op">%&gt;%</span></span>
+<span id="cb100-3"><a href="model-suite.html#cb100-3"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:sum-table">Table 5.4: </span>Simulation Results - N Sim = 30
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+25
+</th>
+<th style="text-align:right;">
+50
+</th>
+<th style="text-align:right;">
+100
+</th>
+<th style="text-align:right;">
+200
+</th>
+<th style="text-align:right;">
+300
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_02
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_03
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_04
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_05
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_06
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+30
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="model-suite.html#cb101-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim_results_frm) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(genes_1se, genes_min)),</span>
+<span id="cb101-2"><a href="model-suite.html#cb101-2"></a>    <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - not showing genes column&quot;</span>),</span>
+<span id="cb101-3"><a href="model-suite.html#cb101-3"></a>    <span class="dt">digits=</span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb101-4"><a href="model-suite.html#cb101-4"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:sum-table">Table 5.4: </span>Simulation Results - not showing genes column
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SimNo
+</th>
+<th style="text-align:right;">
+Size
+</th>
+<th style="text-align:right;">
+Rep
+</th>
+<th style="text-align:right;">
+p_1se
+</th>
+<th style="text-align:right;">
+p_min
+</th>
+<th style="text-align:right;">
+cv_1se
+</th>
+<th style="text-align:right;">
+cv_min
+</th>
+<th style="text-align:right;">
+test_1se
+</th>
+<th style="text-align:right;">
+test_min
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+<td style="text-align:right;">
+0.26
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+0.22
+</td>
+<td style="text-align:right;">
+0.22
+</td>
+<td style="text-align:right;">
+0.29
+</td>
+<td style="text-align:right;">
+0.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+0.34
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+0.36
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+<td style="text-align:right;">
+0.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+0.26
+</td>
+<td style="text-align:right;">
+0.22
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sim_01
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+0.36
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+</tbody>
+</table>
+<p>First look at results (<em>for one simulation.</em>)</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="model-suite.html#cb102-1"></a>SIM &lt;-<span class="st"> &quot;Sim_01&quot;</span></span>
+<span id="cb102-2"><a href="model-suite.html#cb102-2"></a></span>
+<span id="cb102-3"><a href="model-suite.html#cb102-3"></a><span class="cf">for</span>(SIM <span class="cf">in</span> <span class="kw">unique</span>(sim_results_frm<span class="op">$</span>SimNo)){</span>
+<span id="cb102-4"><a href="model-suite.html#cb102-4"></a></span>
+<span id="cb102-5"><a href="model-suite.html#cb102-5"></a>somNo_results_frm &lt;-<span class="st"> </span>sim_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(SimNo<span class="op">==</span>SIM)</span>
+<span id="cb102-6"><a href="model-suite.html#cb102-6"></a></span>
+<span id="cb102-7"><a href="model-suite.html#cb102-7"></a><span class="co"># 1se</span></span>
+<span id="cb102-8"><a href="model-suite.html#cb102-8"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb102-9"><a href="model-suite.html#cb102-9"></a><span class="cf">for</span>(VAR <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;p_1se&quot;</span>, <span class="st">&quot;cv_1se&quot;</span>, <span class="st">&quot;test_1se&quot;</span>)){</span>
+<span id="cb102-10"><a href="model-suite.html#cb102-10"></a>   var_lst &lt;-<span class="st"> </span><span class="kw">split</span>(somNo_results_frm[, VAR], somNo_results_frm<span class="op">$</span>Size)</span>
+<span id="cb102-11"><a href="model-suite.html#cb102-11"></a>   <span class="kw">names</span>(var_lst) &lt;-<span class="st"> </span>SIZE</span>
+<span id="cb102-12"><a href="model-suite.html#cb102-12"></a>   <span class="kw">boxplot</span>(var_lst, <span class="dt">main=</span>VAR, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="st">&#39;p_&#39;</span>, VAR), <span class="dv">250</span>, <span class="fl">0.6</span>)))</span>
+<span id="cb102-13"><a href="model-suite.html#cb102-13"></a>}</span>
+<span id="cb102-14"><a href="model-suite.html#cb102-14"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&quot;Sim =&quot;</span>, SIM))</span>
+<span id="cb102-15"><a href="model-suite.html#cb102-15"></a></span>
+<span id="cb102-16"><a href="model-suite.html#cb102-16"></a><span class="co"># min</span></span>
+<span id="cb102-17"><a href="model-suite.html#cb102-17"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb102-18"><a href="model-suite.html#cb102-18"></a><span class="cf">for</span>(VAR <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&quot;p_min&quot;</span>, <span class="st">&quot;cv_min&quot;</span>, <span class="st">&quot;test_min&quot;</span>)){</span>
+<span id="cb102-19"><a href="model-suite.html#cb102-19"></a>   var_lst &lt;-<span class="st"> </span><span class="kw">split</span>(somNo_results_frm[, VAR], somNo_results_frm<span class="op">$</span>Size)</span>
+<span id="cb102-20"><a href="model-suite.html#cb102-20"></a>   <span class="kw">names</span>(var_lst) &lt;-<span class="st"> </span>SIZE</span>
+<span id="cb102-21"><a href="model-suite.html#cb102-21"></a>   <span class="kw">boxplot</span>(var_lst, <span class="dt">main=</span>VAR, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">ifelse</span>(<span class="kw">grepl</span>(<span class="st">&#39;p_&#39;</span>, VAR), <span class="dv">250</span>, <span class="fl">0.6</span>)))</span>
+<span id="cb102-22"><a href="model-suite.html#cb102-22"></a>}</span>
+<span id="cb102-23"><a href="model-suite.html#cb102-23"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&quot;Sim =&quot;</span>, SIM))</span>
+<span id="cb102-24"><a href="model-suite.html#cb102-24"></a></span>
+<span id="cb102-25"><a href="model-suite.html#cb102-25"></a>DONT.NEED.THIS &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb102-26"><a href="model-suite.html#cb102-26"></a><span class="co"># 1se</span></span>
+<span id="cb102-27"><a href="model-suite.html#cb102-27"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb102-28"><a href="model-suite.html#cb102-28"></a><span class="cf">for</span>(SZ <span class="cf">in</span> SIZE[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]) {</span>
+<span id="cb102-29"><a href="model-suite.html#cb102-29"></a>  <span class="kw">boxplot</span>(somNo_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Size<span class="op">==</span>SZ) </span>
+<span id="cb102-30"><a href="model-suite.html#cb102-30"></a>    <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&quot;cv_1se&quot;</span>, <span class="st">&quot;test_1se&quot;</span>),</span>
+<span id="cb102-31"><a href="model-suite.html#cb102-31"></a>    <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb102-32"><a href="model-suite.html#cb102-32"></a>   <span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">at=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;cvi_1se&quot;</span>, <span class="st">&quot;test_1se&quot;</span>))</span>
+<span id="cb102-33"><a href="model-suite.html#cb102-33"></a>   <span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;Size =&#39;</span>, SZ))</span>
+<span id="cb102-34"><a href="model-suite.html#cb102-34"></a>}</span>
+<span id="cb102-35"><a href="model-suite.html#cb102-35"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&quot;Sim =&quot;</span>, SIM))</span>
+<span id="cb102-36"><a href="model-suite.html#cb102-36"></a></span>
+<span id="cb102-37"><a href="model-suite.html#cb102-37"></a><span class="co"># min</span></span>
+<span id="cb102-38"><a href="model-suite.html#cb102-38"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb102-39"><a href="model-suite.html#cb102-39"></a><span class="cf">for</span>(SZ <span class="cf">in</span> SIZE[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]) {</span>
+<span id="cb102-40"><a href="model-suite.html#cb102-40"></a>  <span class="kw">boxplot</span>(somNo_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Size<span class="op">==</span>SZ) </span>
+<span id="cb102-41"><a href="model-suite.html#cb102-41"></a>    <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&quot;cv_min&quot;</span>, <span class="st">&quot;test_min&quot;</span>),</span>
+<span id="cb102-42"><a href="model-suite.html#cb102-42"></a>    <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb102-43"><a href="model-suite.html#cb102-43"></a>   <span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">at=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;cvi_min&quot;</span>, <span class="st">&quot;test_min&quot;</span>))</span>
+<span id="cb102-44"><a href="model-suite.html#cb102-44"></a>   <span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;Size =&#39;</span>, SZ))</span>
+<span id="cb102-45"><a href="model-suite.html#cb102-45"></a>}</span>
+<span id="cb102-46"><a href="model-suite.html#cb102-46"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&quot;Sim =&quot;</span>, SIM))</span>
+<span id="cb102-47"><a href="model-suite.html#cb102-47"></a>}<span class="co">#DONT.NEED.THIS</span></span>
+<span id="cb102-48"><a href="model-suite.html#cb102-48"></a></span>
+<span id="cb102-49"><a href="model-suite.html#cb102-49"></a>} <span class="co"># for(SIM</span></span></code></pre></div>
+<div class="figure"><span id="fig:simRes-Sim1-1se1"></span>
+<img src="Static/figures/simRes-Sim1-1se-1.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.8: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se2"></span>
+<img src="Static/figures/simRes-Sim1-1se-2.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.9: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se3"></span>
+<img src="Static/figures/simRes-Sim1-1se-3.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.10: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se4"></span>
+<img src="Static/figures/simRes-Sim1-1se-4.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.11: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se5"></span>
+<img src="Static/figures/simRes-Sim1-1se-5.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.12: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se6"></span>
+<img src="Static/figures/simRes-Sim1-1se-6.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.13: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se7"></span>
+<img src="Static/figures/simRes-Sim1-1se-7.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.14: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se8"></span>
+<img src="Static/figures/simRes-Sim1-1se-8.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.15: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se9"></span>
+<img src="Static/figures/simRes-Sim1-1se-9.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.16: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se10"></span>
+<img src="Static/figures/simRes-Sim1-1se-10.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.17: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se11"></span>
+<img src="Static/figures/simRes-Sim1-1se-11.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.18: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se12"></span>
+<img src="Static/figures/simRes-Sim1-1se-12.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.19: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se13"></span>
+<img src="Static/figures/simRes-Sim1-1se-13.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.20: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se14"></span>
+<img src="Static/figures/simRes-Sim1-1se-14.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.21: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se15"></span>
+<img src="Static/figures/simRes-Sim1-1se-15.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.22: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se16"></span>
+<img src="Static/figures/simRes-Sim1-1se-16.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.23: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se17"></span>
+<img src="Static/figures/simRes-Sim1-1se-17.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.24: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se18"></span>
+<img src="Static/figures/simRes-Sim1-1se-18.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.25: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se19"></span>
+<img src="Static/figures/simRes-Sim1-1se-19.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.26: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se20"></span>
+<img src="Static/figures/simRes-Sim1-1se-20.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.27: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se21"></span>
+<img src="Static/figures/simRes-Sim1-1se-21.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.28: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se22"></span>
+<img src="Static/figures/simRes-Sim1-1se-22.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.29: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se23"></span>
+<img src="Static/figures/simRes-Sim1-1se-23.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.30: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se24"></span>
+<img src="Static/figures/simRes-Sim1-1se-24.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.31: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se25"></span>
+<img src="Static/figures/simRes-Sim1-1se-25.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.32: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se26"></span>
+<img src="Static/figures/simRes-Sim1-1se-26.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.33: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se27"></span>
+<img src="Static/figures/simRes-Sim1-1se-27.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.34: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se28"></span>
+<img src="Static/figures/simRes-Sim1-1se-28.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.35: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se29"></span>
+<img src="Static/figures/simRes-Sim1-1se-29.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.36: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se30"></span>
+<img src="Static/figures/simRes-Sim1-1se-30.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.37: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se31"></span>
+<img src="Static/figures/simRes-Sim1-1se-31.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.38: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se32"></span>
+<img src="Static/figures/simRes-Sim1-1se-32.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.39: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se33"></span>
+<img src="Static/figures/simRes-Sim1-1se-33.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.40: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se34"></span>
+<img src="Static/figures/simRes-Sim1-1se-34.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.41: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se35"></span>
+<img src="Static/figures/simRes-Sim1-1se-35.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.42: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se36"></span>
+<img src="Static/figures/simRes-Sim1-1se-36.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.43: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se37"></span>
+<img src="Static/figures/simRes-Sim1-1se-37.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.44: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se38"></span>
+<img src="Static/figures/simRes-Sim1-1se-38.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.45: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se39"></span>
+<img src="Static/figures/simRes-Sim1-1se-39.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.46: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se40"></span>
+<img src="Static/figures/simRes-Sim1-1se-40.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.47: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se41"></span>
+<img src="Static/figures/simRes-Sim1-1se-41.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.48: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se42"></span>
+<img src="Static/figures/simRes-Sim1-1se-42.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.49: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se43"></span>
+<img src="Static/figures/simRes-Sim1-1se-43.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.50: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se44"></span>
+<img src="Static/figures/simRes-Sim1-1se-44.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.51: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se45"></span>
+<img src="Static/figures/simRes-Sim1-1se-45.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.52: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se46"></span>
+<img src="Static/figures/simRes-Sim1-1se-46.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.53: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se47"></span>
+<img src="Static/figures/simRes-Sim1-1se-47.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.54: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se48"></span>
+<img src="Static/figures/simRes-Sim1-1se-48.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.55: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se49"></span>
+<img src="Static/figures/simRes-Sim1-1se-49.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.56: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se50"></span>
+<img src="Static/figures/simRes-Sim1-1se-50.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.57: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se51"></span>
+<img src="Static/figures/simRes-Sim1-1se-51.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.58: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se52"></span>
+<img src="Static/figures/simRes-Sim1-1se-52.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.59: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se53"></span>
+<img src="Static/figures/simRes-Sim1-1se-53.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.60: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se54"></span>
+<img src="Static/figures/simRes-Sim1-1se-54.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.61: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se55"></span>
+<img src="Static/figures/simRes-Sim1-1se-55.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.62: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se56"></span>
+<img src="Static/figures/simRes-Sim1-1se-56.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.63: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se57"></span>
+<img src="Static/figures/simRes-Sim1-1se-57.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.64: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se58"></span>
+<img src="Static/figures/simRes-Sim1-1se-58.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.65: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se59"></span>
+<img src="Static/figures/simRes-Sim1-1se-59.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.66: Look at 1se results for Sim 1
+</p>
+</div>
+<div class="figure"><span id="fig:simRes-Sim1-1se60"></span>
+<img src="Static/figures/simRes-Sim1-1se-60.png" alt="Look at 1se results for Sim 1" width="960" />
+<p class="caption">
+Figure 5.67: Look at 1se results for Sim 1
+</p>
+</div>
 
 </div>
 </div>

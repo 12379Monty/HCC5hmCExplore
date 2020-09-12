@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
+  <title>Section 2 Classification Analysis in the n &lt;&lt; p Context | DNA Hydroxymethylation in Hepatocellular Carcinoma</title>
   <meta name="description" content="Data from Cai et al. (2019) paper are explored" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta property="og:title" content="Section 2 Classification Analysis in the n &lt;&lt; p Context | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 2 Modeling - Background | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
+  <meta name="twitter:title" content="Section 2 Classification Analysis in the n &lt;&lt; p Context | DNA Hydroxymethylation in Hepatocellular Carcinoma" />
   
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-09" />
+<meta name="date" content="2020-09-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,20 +164,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Classification Analysis in the <code>n &lt;&lt; p</code> Context</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1</b> caret for model evaluation</a></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#the-glmnet-r-package"><i class="fa fa-check"></i><b>2.2</b> The <code>glmnet</code> R package</a>
 <ul>
 <li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
+<li class="chapter" data-level="2.3" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="2.4" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-sub"><i class="fa fa-check"></i><b>2.4</b> Lasso vs Best Subset</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> 5hmc Data Preprocessing</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
 <li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
@@ -193,12 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cv-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> CV analysis setup</a></li>
+<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cross-validation-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> Cross-validation analysis setup</a></li>
 <li class="chapter" data-level="4.2" data-path="explore-sparsity.html"><a href="explore-sparsity.html#fit-and-compare-models"><i class="fa fa-check"></i><b>4.2</b> Fit and compare models</a>
 <ul>
 <li class="chapter" data-level="4.2.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#logistic-regression-in-glmnet"><i class="fa fa-check"></i><b>4.2.1</b> Logistic regression in <code>glmnet</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#relaxed-lasso-and-blended-mix"><i class="fa fa-check"></i><b>4.3</b> Relaxed lasso and blended mix</a></li>
+<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#the-relaxed-lasso-and-blended-mix-models"><i class="fa fa-check"></i><b>4.3</b> The relaxed lasso and blended mix models</a></li>
 <li class="chapter" data-level="4.4" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examination-of-sensitivity-vs-specificity"><i class="fa fa-check"></i><b>4.4</b> Examination of sensitivity vs specificity</a>
 <ul>
 <li class="chapter" data-level="4.4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#training-data-out-of-fold-roc-curves"><i class="fa fa-check"></i><b>4.4.1</b> Training data out-of-fold ROC curves</a></li>
@@ -207,12 +204,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.6" data-path="explore-sparsity.html"><a href="explore-sparsity.html#compare-coefficient-profiles"><i class="fa fa-check"></i><b>4.6</b> Compare coefficient profiles</a></li>
 <li class="chapter" data-level="4.7" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examine-feature-selection"><i class="fa fa-check"></i><b>4.7</b> Examine feature selection</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Does Size Matter?</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a></li>
-<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.2</b> Simulation Design</a></li>
-<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.3</b> Setup simulation</a></li>
-<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.4</b> Run simulations</a></li>
+<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a>
+<ul>
+<li class="chapter" data-level="" data-path="model-suite.html"><a href="model-suite.html#get-quality-scores"><i class="fa fa-check"></i>Get quality scores</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#selected-feature-list-stability"><i class="fa fa-check"></i><b>5.2</b> Selected feature list stability</a></li>
+<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.3</b> Simulation Design</a></li>
+<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.4</b> Setup simulation</a></li>
+<li class="chapter" data-level="5.5" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.5</b> Run simulations</a></li>
+<li class="chapter" data-level="5.6" data-path="model-suite.html"><a href="model-suite.html#simulation-results"><i class="fa fa-check"></i><b>5.6</b> Simulation results</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a></li>
 <li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
@@ -238,7 +240,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="modeling-background" class="section level1" number="2">
-<h1><span class="header-section-number">Section 2</span> Modeling - Background</h1>
+<h1><span class="header-section-number">Section 2</span> Classification Analysis in the <code>n &lt;&lt; p</code> Context</h1>
 <p>Refer to <a href="https://hcc-5hmc-analysis.netlify.app/">first pass study</a> for
 relevant exploratory data analyis results.</p>
 <!--
@@ -253,22 +255,26 @@ from the GSE112679 data set.
 in [0, 1], where 1 is perfectly good classification and 0 is perfectly bad.
 
 -->
-<div id="predictive-modeling-for-genomic-data" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Predictive modeling for genomic data</h2>
 <p>The main challenge in calibrating predictive models to genomic data is that
 there are many more features than there are example cases to fit to;
 the now classic <span class="math inline">\(n &lt;&lt; p\)</span> problem.
 In this scenario, fitting methods tend to over fit. The problem
-can be addressed by selecting variables, regularizing the fit or both.
+can be addressed by selecting variables, regularizing the fit or both.</p>
 <!--
 See the Trevor Hastie talk: 
 [Statistical Learning with Big Data - Trevor Hastie](https://web.stanford.edu/~hastie/TALKS/SLBD_new.pdf)
 for a good discussion of this problem and potential solutions.
---></p>
-<div id="caret-for-model-evaluation" class="section level3" number="2.1.1">
-<h3><span class="header-section-number">2.1.1</span> caret for model evaluation</h3>
+-->
+<p>In this report, we use genomic data to illustrate analyses of regularized regression
+models in the <code>n &lt;&lt; p</code> context. Much of the analysis focuses on lasso models fitted
+and analyzed using tools from the <code>glmnet</code> R package.</p>
+<p>Before providing some background on that glmnet package and the
+models that it supports, we briefly describe another R package
+which is an essential tool for anyone who is doing predicitive analytics in R - <code>caret</code> R pacakge.</p>
+<div id="caret-for-model-evaluation" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> caret for model evaluation</h2>
 <p><a href="https://topepo.github.io/caret/index.html">The <code>caret</code> Package</a>
-provide a set of functions that streamline the process for fitting and
+provides a rich set of functions that streamline the process for fitting and
 evaluating a large number of predictive models in parallel. The package contains tools for:</p>
 <ul>
 <li>data splitting<br />
@@ -321,19 +327,20 @@ including some <code>deep learning</code> methods, <code>Simulated Annealing Fea
 and <code>Genetic Algorithms</code>.
 Many other methods found <a href="https://topepo.github.io/caret/available-models.html">here</a>
 are also worth investigating.</p>
-<p>We only mention <code>caret</code> here because it is an extremely useful tool for
-anyone interested in comparing many predictive models. We have done that
-in the past and have found that regularized regression models perform
-as well as any in the context of classification based on genomic scale data
-and will focus on the particular set of tools for fitting and analyzing
-regularized regression models provided by the <code>glmnet</code> R package.</p>
+<p>We mention <code>caret</code> here because it is an extremely useful tool for
+anyone interested in exploring and comparing the performance of
+many predictive models which could be applied to a given predictive
+analysis context. We have gone through this exercise with a number
+of genomic scale, RNA-Seq data sets in the past and have found
+that in this context regularized regression models perform
+as well as any. For this report, we will only consider regularized classification
+models and will focus on the particular set of tools for fitting and analyzing
+these models provided by the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>]</span>.</p>
 </div>
-</div>
-<div id="glmnet" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> glmnet</h2>
-<p>In this investigation we will focus on models that can be
-analyzed with the the <code>glmnet</code> R package <span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>]</span>. Several
-factors favor this choice:</p>
+<div id="the-glmnet-r-package" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> The <code>glmnet</code> R package</h2>
+<p>Several factors favor using the <code>glmnet</code> R package to analyze
+classification models fitted to genomic scale data:</p>
 <ul>
 <li><p>the glmnet package is a well supported package providing
 extensive functionality for regularized regression and classification models.</p></li>
@@ -376,8 +383,9 @@ for example, the <em>elastic net with <span class="math inline">\(\alpha = 1 - \
 performs much like the lasso, but removes any degeneracies and wild behavior caused
 by extreme correlations</em>.</p>
 </div>
-<div id="signal-to-noise-ratio" class="section level3 unnumbered" number="">
-<h3>Signal-to-noise Ratio</h3>
+</div>
+<div id="signal-to-noise" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Signal-to-noise Ratio</h2>
 <p>A key characteristic of classification problems is the
 prevailing signal-to-noise ratio (SNR) of the problem at hand.</p>
 <p>To define SNR, let <span class="math inline">\((x_0, y_0) \in \mathbb{R}^p \times \mathbb{R}\)</span>
@@ -407,15 +415,15 @@ coefficient of variation:</p>
 Simonson et al. (2018) <span class="citation">[<a href="references.html#ref-Simonsen:2018aa" role="doc-biblioref">13</a>]</span> and
 Rapaport et al. (2013) <span class="citation">[<a href="references.html#ref-Rapaport:2013aa" role="doc-biblioref">14</a>]</span> for SNR in RNA-Seq</p>
 </div>
-<div id="lasso-vs-best-subset" class="section level3 unnumbered" number="">
-<h3>Lasso vs Best Subset</h3>
+<div id="lasso-vs-best-sub" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Lasso vs Best Subset</h2>
 <p>Best subset selection finds the subset of k predictors that
 produces the best fit in terms of squared error, solving the nonconvex problem:</p>
-<p><span class="math display" id="eq:best-sub">\[\begin{equation}
+<p><span class="math display" id="eq:bestSub">\[\begin{equation}
  \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k
  \tag{2.1}
 \end{equation}\]</span></p>
-<p>The lasso solves a covex relaxation of <a href="modeling-background.html#eq:best-sub">(2.1)</a> where we replace the
+<p>The lasso solves a covex relaxation of the above where we replace the
 <span class="math inline">\(l_0\)</span> norm by the <span class="math inline">\(l_1\)</span> norm, namely</p>
 <p><span class="math display" id="eq:lasso">\[\begin{equation}
 
@@ -473,7 +481,6 @@ Simon, Friedman, and Hastie (2013) and
 Hastie, Tibshirani, and Tibshirani (2017)
 (<span class="citation">[<a href="references.html#ref-Friedman:2010aa" role="doc-biblioref">6</a>–<a href="references.html#ref-Simon:2013aa" role="doc-biblioref">10</a>]</span>).</p>
 
-</div>
 </div>
 </div>
             </section>

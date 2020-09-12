@@ -24,7 +24,7 @@
 <meta name="author" content="Francois Collin" />
 
 
-<meta name="date" content="2020-09-09" />
+<meta name="date" content="2020-09-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,20 +164,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Modeling - Background</a>
+<li class="chapter" data-level="2" data-path="modeling-background.html"><a href="modeling-background.html"><i class="fa fa-check"></i><b>2</b> Classification Analysis in the <code>n &lt;&lt; p</code> Context</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#predictive-modeling-for-genomic-data"><i class="fa fa-check"></i><b>2.1</b> Predictive modeling for genomic data</a>
-<ul>
-<li class="chapter" data-level="2.1.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1.1</b> caret for model evaluation</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#glmnet"><i class="fa fa-check"></i><b>2.2</b> glmnet</a>
+<li class="chapter" data-level="2.1" data-path="modeling-background.html"><a href="modeling-background.html#caret-for-model-evaluation"><i class="fa fa-check"></i><b>2.1</b> caret for model evaluation</a></li>
+<li class="chapter" data-level="2.2" data-path="modeling-background.html"><a href="modeling-background.html#the-glmnet-r-package"><i class="fa fa-check"></i><b>2.2</b> The <code>glmnet</code> R package</a>
 <ul>
 <li><a href="modeling-background.html#alpha-hyper-parameter"><strong>alpha</strong> hyper-parameter</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise-ratio"><i class="fa fa-check"></i>Signal-to-noise Ratio</a></li>
-<li class="chapter" data-level="" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-subset"><i class="fa fa-check"></i>Lasso vs Best Subset</a></li>
 </ul></li>
+<li class="chapter" data-level="2.3" data-path="modeling-background.html"><a href="modeling-background.html#signal-to-noise"><i class="fa fa-check"></i><b>2.3</b> Signal-to-noise Ratio</a></li>
+<li class="chapter" data-level="2.4" data-path="modeling-background.html"><a href="modeling-background.html#lasso-vs-best-sub"><i class="fa fa-check"></i><b>2.4</b> Lasso vs Best Subset</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> Preprocessing</a>
+<li class="chapter" data-level="3" data-path="preproc.html"><a href="preproc.html"><i class="fa fa-check"></i><b>3</b> 5hmc Data Preprocessing</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="preproc.html"><a href="preproc.html#load-the-data"><i class="fa fa-check"></i><b>3.1</b> Load the data</a></li>
 <li class="chapter" data-level="3.2" data-path="preproc.html"><a href="preproc.html#dra"><i class="fa fa-check"></i><b>3.2</b> Differential representation analysis</a>
@@ -193,12 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="explore-sparsity.html"><a href="explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> The bet on sparsity</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cv-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> CV analysis setup</a></li>
+<li class="chapter" data-level="4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#cross-validation-analysis-setup"><i class="fa fa-check"></i><b>4.1</b> Cross-validation analysis setup</a></li>
 <li class="chapter" data-level="4.2" data-path="explore-sparsity.html"><a href="explore-sparsity.html#fit-and-compare-models"><i class="fa fa-check"></i><b>4.2</b> Fit and compare models</a>
 <ul>
 <li class="chapter" data-level="4.2.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#logistic-regression-in-glmnet"><i class="fa fa-check"></i><b>4.2.1</b> Logistic regression in <code>glmnet</code></a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#relaxed-lasso-and-blended-mix"><i class="fa fa-check"></i><b>4.3</b> Relaxed lasso and blended mix</a></li>
+<li class="chapter" data-level="4.3" data-path="explore-sparsity.html"><a href="explore-sparsity.html#the-relaxed-lasso-and-blended-mix-models"><i class="fa fa-check"></i><b>4.3</b> The relaxed lasso and blended mix models</a></li>
 <li class="chapter" data-level="4.4" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examination-of-sensitivity-vs-specificity"><i class="fa fa-check"></i><b>4.4</b> Examination of sensitivity vs specificity</a>
 <ul>
 <li class="chapter" data-level="4.4.1" data-path="explore-sparsity.html"><a href="explore-sparsity.html#training-data-out-of-fold-roc-curves"><i class="fa fa-check"></i><b>4.4.1</b> Training data out-of-fold ROC curves</a></li>
@@ -207,12 +204,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.6" data-path="explore-sparsity.html"><a href="explore-sparsity.html#compare-coefficient-profiles"><i class="fa fa-check"></i><b>4.6</b> Compare coefficient profiles</a></li>
 <li class="chapter" data-level="4.7" data-path="explore-sparsity.html"><a href="explore-sparsity.html#examine-feature-selection"><i class="fa fa-check"></i><b>4.7</b> Examine feature selection</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Fitted Model Suite</a>
+<li class="chapter" data-level="5" data-path="model-suite.html"><a href="model-suite.html"><i class="fa fa-check"></i><b>5</b> Does Size Matter?</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a></li>
-<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.2</b> Simulation Design</a></li>
-<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.3</b> Setup simulation</a></li>
-<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.4</b> Run simulations</a></li>
+<li class="chapter" data-level="5.1" data-path="model-suite.html"><a href="model-suite.html#sample-quality-scores"><i class="fa fa-check"></i><b>5.1</b> Sample quality scores</a>
+<ul>
+<li class="chapter" data-level="" data-path="model-suite.html"><a href="model-suite.html#get-quality-scores"><i class="fa fa-check"></i>Get quality scores</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="model-suite.html"><a href="model-suite.html#selected-feature-list-stability"><i class="fa fa-check"></i><b>5.2</b> Selected feature list stability</a></li>
+<li class="chapter" data-level="5.3" data-path="model-suite.html"><a href="model-suite.html#simulation-design"><i class="fa fa-check"></i><b>5.3</b> Simulation Design</a></li>
+<li class="chapter" data-level="5.4" data-path="model-suite.html"><a href="model-suite.html#setup-simulation"><i class="fa fa-check"></i><b>5.4</b> Setup simulation</a></li>
+<li class="chapter" data-level="5.5" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.5</b> Run simulations</a></li>
+<li class="chapter" data-level="5.6" data-path="model-suite.html"><a href="model-suite.html#simulation-results"><i class="fa fa-check"></i><b>5.6</b> Simulation results</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a></li>
 <li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
@@ -240,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DNA Hydroxymethylation in Hepatocellular Carcinoma</h1>
 <p class="author"><em>Francois Collin</em></p>
-<p class="date"><em>2020-09-09</em></p>
+<p class="date"><em>2020-09-11</em></p>
 </div>
 <div id="index" class="section level1 unnumbered" number="">
 <h1>Preamble</h1>

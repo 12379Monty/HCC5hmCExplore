@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.8)  9 SEP 2020 07:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.9.8)  11 SEP 2020 10:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -585,41 +585,33 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 LaTeX Warning: Reference `modeling-background' on page 8 undefined on input lin
 e 210.
 
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 211.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 211.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 211.
 
-LaTeX Warning: Reference `preproc' on page 8 undefined on input line 213.
+LaTeX Warning: Reference `preproc' on page 8 undefined on input line 214.
 
 
 LaTeX Warning: Reference `explore-sparsity' on page 8 undefined on input line 2
-16.
+17.
 
 
-LaTeX Warning: Reference `model-suite' on page 8 undefined on input line 219.
+LaTeX Warning: Reference `model-suite' on page 8 undefined on input line 220.
 
 
 LaTeX Warning: Reference `variable-importance' on page 8 undefined on input lin
-e 222.
+e 223.
 
 
-LaTeX Warning: Reference `conclusions' on page 8 undefined on input line 224.
+LaTeX Warning: Reference `conclusions' on page 8 undefined on input line 225.
 
 [8]
 Chapter 2.
-
-Underfull \hbox (badness 10000) in paragraph at lines 252--254
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 254--256
-
- []
-
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <24.88> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 229.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 236.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 236.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 236.
 
 Underfull \hbox (badness 10000) in paragraph at lines 256--258
 
@@ -630,25 +622,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--260
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 260--262
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 262--264
+
+ []
+
 [9
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 281--283
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 283--285
-
- []
-
-
-Underfull \hbox (badness 1092) in paragraph at lines 285--287
-[]\T1/lmr/m/n/10 stepQDA - Quadratic Dis-crim-i-nant Anal-y-sis with Step-wise 
-Fea-ture
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 285--287
 
  []
@@ -656,6 +642,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 285--287
 
 Underfull \hbox (badness 10000) in paragraph at lines 287--289
 
+ []
+
+
+Underfull \hbox (badness 1092) in paragraph at lines 289--291
+[]\T1/lmr/m/n/10 stepQDA - Quadratic Dis-crim-i-nant Anal-y-sis with Step-wise 
+Fea-ture
  []
 
 
@@ -688,22 +680,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 299--301
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 301--303
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 303--305
+
+ []
+
 [10] [11] [12]
-
-LaTeX Warning: Reference `eq:best-sub' on page 13 undefined on input line 440.
-
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.444 
+l.448 
        
 Here is how much of TeX's memory you used:
- 12390 strings out of 482799
- 176392 string characters out of 5954081
- 434066 words of memory out of 5000000
- 27489 multiletter control sequences out of 15000+600000
- 600477 words of font info for 76 fonts, out of 8000000 for 9000
+ 12392 strings out of 482799
+ 176401 string characters out of 5954081
+ 433066 words of memory out of 5000000
+ 27491 multiletter control sequences out of 15000+600000
+ 601116 words of font info for 78 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 43i,7n,37p,908b,375s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,7n,37p,908b,379s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 !  ==> Fatal error occurred, no output PDF file produced!
