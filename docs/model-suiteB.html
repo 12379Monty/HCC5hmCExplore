@@ -216,20 +216,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="model-suite.html"><a href="model-suite.html#run-simulations"><i class="fa fa-check"></i><b>5.5</b> Run simulations</a></li>
 <li class="chapter" data-level="5.6" data-path="model-suite.html"><a href="model-suite.html#simulation-results"><i class="fa fa-check"></i><b>5.6</b> Simulation results</a>
 <ul>
-<li class="chapter" data-level="" data-path="model-suite.html"><a href="model-suite.html#simulation-results-errors-by-run"><i class="fa fa-check"></i>Simulation Results: Errors By Run</a></li>
-<li class="chapter" data-level="" data-path="model-suite.html"><a href="model-suite.html#simulation-results-model-size-by-run"><i class="fa fa-check"></i>Simulation Results: Model Size By Run</a></li>
+<li class="chapter" data-level="5.6.1" data-path="model-suite.html"><a href="model-suite.html#simulation-results-1"><i class="fa fa-check"></i><b>5.6.1</b> Simulation Results</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="model-suiteB.html"><a href="model-suiteB.html"><i class="fa fa-check"></i><b>6</b> Does Size Matter? - Continued</a>
 <ul>
-<li class="chapter" data-level="" data-path="model-suiteB.html"><a href="model-suiteB.html#get-quality-scores-1"><i class="fa fa-check"></i>Get quality scores</a></li>
 <li class="chapter" data-level="6.1" data-path="model-suiteB.html"><a href="model-suiteB.html#selected-feature-list-stability-1"><i class="fa fa-check"></i><b>6.1</b> Selected feature list stability</a></li>
-<li class="chapter" data-level="6.2" data-path="model-suiteB.html"><a href="model-suiteB.html#simulation-design-1"><i class="fa fa-check"></i><b>6.2</b> Simulation Design</a></li>
-<li class="chapter" data-level="6.3" data-path="model-suiteB.html"><a href="model-suiteB.html#setup-simulation-1"><i class="fa fa-check"></i><b>6.3</b> Setup simulation</a></li>
-<li class="chapter" data-level="6.4" data-path="model-suiteB.html"><a href="model-suiteB.html#run-simulations-1"><i class="fa fa-check"></i><b>6.4</b> Run simulations</a>
+<li class="chapter" data-level="6.2" data-path="model-suiteB.html"><a href="model-suiteB.html#run-simulations---enet"><i class="fa fa-check"></i><b>6.2</b> Run simulations - enet</a></li>
+<li class="chapter" data-level="6.3" data-path="model-suiteB.html"><a href="model-suiteB.html#simulation-results-2"><i class="fa fa-check"></i><b>6.3</b> Simulation results</a>
 <ul>
-<li class="chapter" data-level="" data-path="model-suiteB.html"><a href="model-suiteB.html#simulation-results-errors-by-run-1"><i class="fa fa-check"></i>Simulation Results: Errors By Run</a></li>
-<li class="chapter" data-level="" data-path="model-suiteB.html"><a href="model-suiteB.html#simulation-results-model-size-by-run-1"><i class="fa fa-check"></i>Simulation Results: Model Size By Run</a></li>
+<li class="chapter" data-level="6.3.1" data-path="model-suiteB.html"><a href="model-suiteB.html#simulation-results-3"><i class="fa fa-check"></i><b>6.3.1</b> Simulation Results</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>7</b> Variable importance</a></li>
@@ -662,65 +658,11 @@ setting, and the sensitivity could be increased substantially at no false negati
 cost.  This is definitely over-fitting the data set.  For the purpose
 of computing sample quality scores - what do these differences mean? 
 -->
-<div id="get-quality-scores-1" class="section level3 unnumbered" number="">
-<h3>Get quality scores</h3>
-<p>To compute quality scores, we will use the out-of-fold predicted probabilities.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="model-suiteB.html#cb109-1"></a><span class="co"># get qual scores</span></span>
-<span id="cb109-2"><a href="model-suiteB.html#cb109-2"></a></span>
-<span id="cb109-3"><a href="model-suiteB.html#cb109-3"></a>y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>)</span>
-<span id="cb109-4"><a href="model-suiteB.html#cb109-4"></a><span class="co"># 1se</span></span>
-<span id="cb109-5"><a href="model-suiteB.html#cb109-5"></a>p &lt;-<span class="st"> </span>enetAll_predResp_1se_vec</span>
-<span id="cb109-6"><a href="model-suiteB.html#cb109-6"></a>sample_1se_qual_vec &lt;-<span class="st"> </span>p<span class="op">^</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">^</span>(<span class="dv">1</span><span class="op">-</span>y)</span>
-<span id="cb109-7"><a href="model-suiteB.html#cb109-7"></a></span>
-<span id="cb109-8"><a href="model-suiteB.html#cb109-8"></a><span class="co"># min</span></span>
-<span id="cb109-9"><a href="model-suiteB.html#cb109-9"></a>p &lt;-<span class="st"> </span>enetAll_predResp_min_vec</span>
-<span id="cb109-10"><a href="model-suiteB.html#cb109-10"></a>sample_min_qual_vec &lt;-<span class="st"> </span>p<span class="op">^</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">^</span>(<span class="dv">1</span><span class="op">-</span>y)</span></code></pre></div>
-<p>We can examine quality scores as a function of classification bin.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="model-suiteB.html#cb110-1"></a>y &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(all_group_vec <span class="op">==</span><span class="st"> &#39;HCC&#39;</span>)</span>
-<span id="cb110-2"><a href="model-suiteB.html#cb110-2"></a></span>
-<span id="cb110-3"><a href="model-suiteB.html#cb110-3"></a><span class="co"># 1se</span></span>
-<span id="cb110-4"><a href="model-suiteB.html#cb110-4"></a>enetAll_1se_conf_vec &lt;-<span class="st"> </span><span class="kw">paste</span>(</span>
-<span id="cb110-5"><a href="model-suiteB.html#cb110-5"></a> y, </span>
-<span id="cb110-6"><a href="model-suiteB.html#cb110-6"></a> <span class="kw">as.numeric</span>(enetAll_predClass_1se_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
-<span id="cb110-7"><a href="model-suiteB.html#cb110-7"></a> <span class="dt">sep =</span> <span class="st">&#39;:&#39;</span></span>
-<span id="cb110-8"><a href="model-suiteB.html#cb110-8"></a>)</span>
-<span id="cb110-9"><a href="model-suiteB.html#cb110-9"></a></span>
-<span id="cb110-10"><a href="model-suiteB.html#cb110-10"></a><span class="co"># min</span></span>
-<span id="cb110-11"><a href="model-suiteB.html#cb110-11"></a>enetAll_min_conf_vec &lt;-<span class="st"> </span><span class="kw">paste</span>(</span>
-<span id="cb110-12"><a href="model-suiteB.html#cb110-12"></a> y, </span>
-<span id="cb110-13"><a href="model-suiteB.html#cb110-13"></a> <span class="kw">as.numeric</span>(enetAll_predClass_min_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
-<span id="cb110-14"><a href="model-suiteB.html#cb110-14"></a> <span class="dt">sep =</span> <span class="st">&#39;:&#39;</span></span>
-<span id="cb110-15"><a href="model-suiteB.html#cb110-15"></a>)</span>
-<span id="cb110-16"><a href="model-suiteB.html#cb110-16"></a></span>
-<span id="cb110-17"><a href="model-suiteB.html#cb110-17"></a></span>
-<span id="cb110-18"><a href="model-suiteB.html#cb110-18"></a>tmp &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb110-19"><a href="model-suiteB.html#cb110-19"></a> <span class="kw">split</span>(sample_1se_qual_vec, enetAll_1se_conf_vec), </span>
-<span id="cb110-20"><a href="model-suiteB.html#cb110-20"></a> <span class="kw">split</span>(sample_min_qual_vec, enetAll_min_conf_vec)</span>
-<span id="cb110-21"><a href="model-suiteB.html#cb110-21"></a>)</span>
-<span id="cb110-22"><a href="model-suiteB.html#cb110-22"></a></span>
-<span id="cb110-23"><a href="model-suiteB.html#cb110-23"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
-<span id="cb110-24"><a href="model-suiteB.html#cb110-24"></a>gplots<span class="op">::</span><span class="kw">boxplot2</span>(<span class="kw">split</span>(sample_1se_qual_vec, enetAll_1se_conf_vec), </span>
-<span id="cb110-25"><a href="model-suiteB.html#cb110-25"></a>  <span class="dt">outline=</span>F, <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb110-26"><a href="model-suiteB.html#cb110-26"></a><span class="kw">title</span>(<span class="st">&#39;1se Model&#39;</span>)</span>
-<span id="cb110-27"><a href="model-suiteB.html#cb110-27"></a></span>
-<span id="cb110-28"><a href="model-suiteB.html#cb110-28"></a>gplots<span class="op">::</span><span class="kw">boxplot2</span>(<span class="kw">split</span>(sample_min_qual_vec, enetAll_min_conf_vec), </span>
-<span id="cb110-29"><a href="model-suiteB.html#cb110-29"></a>  <span class="dt">outline=</span>F, <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb110-30"><a href="model-suiteB.html#cb110-30"></a><span class="kw">title</span>(<span class="st">&#39;min lambda Model&#39;</span>)</span>
-<span id="cb110-31"><a href="model-suiteB.html#cb110-31"></a></span>
-<span id="cb110-32"><a href="model-suiteB.html#cb110-32"></a></span>
-<span id="cb110-33"><a href="model-suiteB.html#cb110-33"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Classification - Truth:Predicted&#39;</span>)</span>
-<span id="cb110-34"><a href="model-suiteB.html#cb110-34"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Quality vs Classification Outcome&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:enet-plot-qual-conf"></span>
-<img src="Static/figures/enet-plot-qual-conf-1.png" alt="quality scores by classification - HCC=1" width="768" />
-<p class="caption">
-Figure 6.4: quality scores by classification - HCC=1
-</p>
-</div>
-<p>We will use the minimum lambda model to provide
-the fitted probabilities used to compute quality scores,
-but we could have used either one.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="model-suiteB.html#cb111-1"></a>sample_qual_vec &lt;-<span class="st"> </span>sample_min_qual_vec</span></code></pre></div>
-</div>
+<!-- SKIP THIS - can use lasso scores 
+### Get quality scores {-}
+
+To compute quality scores, we will use the out-of-fold predicted probabilities.
+-->
 <div id="selected-feature-list-stability-1" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Selected feature list stability</h2>
 <p>Before moving on to the simulation, let’s examine gene selection stability on the
@@ -732,33 +674,33 @@ selected by the minimum lambda models had an IQR of
 while the one standard error rule models had an IQR of
 <span class="math inline">\(174-215\)</span>.</p>
 <p>Let’s examine the stability of the gene lists across cv replicates.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="model-suiteB.html#cb112-1"></a><span class="co"># 1se</span></span>
-<span id="cb112-2"><a href="model-suiteB.html#cb112-2"></a>enetAll_coef_1se_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_enetAll_lst, <span class="cf">function</span>(cv_fit){</span>
-<span id="cb112-3"><a href="model-suiteB.html#cb112-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb112-4"><a href="model-suiteB.html#cb112-4"></a> cv_fit,</span>
-<span id="cb112-5"><a href="model-suiteB.html#cb112-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
-<span id="cb112-6"><a href="model-suiteB.html#cb112-6"></a> )</span>
-<span id="cb112-7"><a href="model-suiteB.html#cb112-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb112-8"><a href="model-suiteB.html#cb112-8"></a> })</span>
-<span id="cb112-9"><a href="model-suiteB.html#cb112-9"></a></span>
-<span id="cb112-10"><a href="model-suiteB.html#cb112-10"></a><span class="co"># put into matrix</span></span>
-<span id="cb112-11"><a href="model-suiteB.html#cb112-11"></a>enetAll_coef_1se_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, enetAll_coef_1se_lst)</span>
-<span id="cb112-12"><a href="model-suiteB.html#cb112-12"></a>enetAll_coef_1se_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(enetAll_coef_1se_lst, </span>
-<span id="cb112-13"><a href="model-suiteB.html#cb112-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(enetAll_coef_1se_all, LL)</span>
-<span id="cb112-14"><a href="model-suiteB.html#cb112-14"></a>)</span>
-<span id="cb112-15"><a href="model-suiteB.html#cb112-15"></a><span class="kw">rownames</span>(enetAll_coef_1se_mtx) &lt;-<span class="st"> </span>enetAll_coef_1se_all</span>
-<span id="cb112-16"><a href="model-suiteB.html#cb112-16"></a></span>
-<span id="cb112-17"><a href="model-suiteB.html#cb112-17"></a>genes_by_rep_1se_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(enetAll_coef_1se_mtx))</span>
-<span id="cb112-18"><a href="model-suiteB.html#cb112-18"></a><span class="kw">barplot</span>(</span>
-<span id="cb112-19"><a href="model-suiteB.html#cb112-19"></a> genes_by_rep_1se_tbl,</span>
-<span id="cb112-20"><a href="model-suiteB.html#cb112-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
-<span id="cb112-21"><a href="model-suiteB.html#cb112-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
-<span id="cb112-22"><a href="model-suiteB.html#cb112-22"></a></span>
-<span id="cb112-23"><a href="model-suiteB.html#cb112-23"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="model-suiteB.html#cb109-1"></a><span class="co"># 1se</span></span>
+<span id="cb109-2"><a href="model-suiteB.html#cb109-2"></a>enetAll_coef_1se_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_enetAll_lst, <span class="cf">function</span>(cv_fit){</span>
+<span id="cb109-3"><a href="model-suiteB.html#cb109-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb109-4"><a href="model-suiteB.html#cb109-4"></a> cv_fit,</span>
+<span id="cb109-5"><a href="model-suiteB.html#cb109-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
+<span id="cb109-6"><a href="model-suiteB.html#cb109-6"></a> )</span>
+<span id="cb109-7"><a href="model-suiteB.html#cb109-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb109-8"><a href="model-suiteB.html#cb109-8"></a> })</span>
+<span id="cb109-9"><a href="model-suiteB.html#cb109-9"></a></span>
+<span id="cb109-10"><a href="model-suiteB.html#cb109-10"></a><span class="co"># put into matrix</span></span>
+<span id="cb109-11"><a href="model-suiteB.html#cb109-11"></a>enetAll_coef_1se_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, enetAll_coef_1se_lst)</span>
+<span id="cb109-12"><a href="model-suiteB.html#cb109-12"></a>enetAll_coef_1se_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(enetAll_coef_1se_lst, </span>
+<span id="cb109-13"><a href="model-suiteB.html#cb109-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(enetAll_coef_1se_all, LL)</span>
+<span id="cb109-14"><a href="model-suiteB.html#cb109-14"></a>)</span>
+<span id="cb109-15"><a href="model-suiteB.html#cb109-15"></a><span class="kw">rownames</span>(enetAll_coef_1se_mtx) &lt;-<span class="st"> </span>enetAll_coef_1se_all</span>
+<span id="cb109-16"><a href="model-suiteB.html#cb109-16"></a></span>
+<span id="cb109-17"><a href="model-suiteB.html#cb109-17"></a>genes_by_rep_1se_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(enetAll_coef_1se_mtx))</span>
+<span id="cb109-18"><a href="model-suiteB.html#cb109-18"></a><span class="kw">barplot</span>(</span>
+<span id="cb109-19"><a href="model-suiteB.html#cb109-19"></a> genes_by_rep_1se_tbl,</span>
+<span id="cb109-20"><a href="model-suiteB.html#cb109-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
+<span id="cb109-21"><a href="model-suiteB.html#cb109-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
+<span id="cb109-22"><a href="model-suiteB.html#cb109-22"></a></span>
+<span id="cb109-23"><a href="model-suiteB.html#cb109-23"></a>)</span></code></pre></div>
 <div class="figure"><span id="fig:enet-feature-list-1se"></span>
 <img src="Static/figures/enet-feature-list-1se-1.png" alt="Feature list stability for one the standard error rule models" width="768" />
 <p class="caption">
-Figure 6.5: Feature list stability for one the standard error rule models
+Figure 6.4: Feature list stability for one the standard error rule models
 </p>
 </div>
 <p>We see that <span class="math inline">\(76\)</span> features are included in every
@@ -767,33 +709,33 @@ cv replicate. These make up between
 and
 <span class="math inline">\(44\)</span>%
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="model-suiteB.html#cb113-1"></a><span class="co"># min</span></span>
-<span id="cb113-2"><a href="model-suiteB.html#cb113-2"></a>enetAll_coef_min_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_enetAll_lst, <span class="cf">function</span>(cv_fit){</span>
-<span id="cb113-3"><a href="model-suiteB.html#cb113-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb113-4"><a href="model-suiteB.html#cb113-4"></a> cv_fit,</span>
-<span id="cb113-5"><a href="model-suiteB.html#cb113-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
-<span id="cb113-6"><a href="model-suiteB.html#cb113-6"></a> )</span>
-<span id="cb113-7"><a href="model-suiteB.html#cb113-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb113-8"><a href="model-suiteB.html#cb113-8"></a> })</span>
-<span id="cb113-9"><a href="model-suiteB.html#cb113-9"></a></span>
-<span id="cb113-10"><a href="model-suiteB.html#cb113-10"></a><span class="co"># put into matrix</span></span>
-<span id="cb113-11"><a href="model-suiteB.html#cb113-11"></a>enetAll_coef_min_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, enetAll_coef_min_lst)</span>
-<span id="cb113-12"><a href="model-suiteB.html#cb113-12"></a>enetAll_coef_min_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(enetAll_coef_min_lst, </span>
-<span id="cb113-13"><a href="model-suiteB.html#cb113-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(enetAll_coef_min_all, LL)</span>
-<span id="cb113-14"><a href="model-suiteB.html#cb113-14"></a>)</span>
-<span id="cb113-15"><a href="model-suiteB.html#cb113-15"></a><span class="kw">rownames</span>(enetAll_coef_min_mtx) &lt;-<span class="st"> </span>enetAll_coef_min_all</span>
-<span id="cb113-16"><a href="model-suiteB.html#cb113-16"></a></span>
-<span id="cb113-17"><a href="model-suiteB.html#cb113-17"></a>genes_by_rep_min_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(enetAll_coef_min_mtx))</span>
-<span id="cb113-18"><a href="model-suiteB.html#cb113-18"></a><span class="kw">barplot</span>(</span>
-<span id="cb113-19"><a href="model-suiteB.html#cb113-19"></a> genes_by_rep_min_tbl,</span>
-<span id="cb113-20"><a href="model-suiteB.html#cb113-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
-<span id="cb113-21"><a href="model-suiteB.html#cb113-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
-<span id="cb113-22"><a href="model-suiteB.html#cb113-22"></a></span>
-<span id="cb113-23"><a href="model-suiteB.html#cb113-23"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="model-suiteB.html#cb110-1"></a><span class="co"># min</span></span>
+<span id="cb110-2"><a href="model-suiteB.html#cb110-2"></a>enetAll_coef_min_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(cv_enetAll_lst, <span class="cf">function</span>(cv_fit){</span>
+<span id="cb110-3"><a href="model-suiteB.html#cb110-3"></a> cv_fit_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb110-4"><a href="model-suiteB.html#cb110-4"></a> cv_fit,</span>
+<span id="cb110-5"><a href="model-suiteB.html#cb110-5"></a> <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
+<span id="cb110-6"><a href="model-suiteB.html#cb110-6"></a> )</span>
+<span id="cb110-7"><a href="model-suiteB.html#cb110-7"></a> cv_fit_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][cv_fit_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb110-8"><a href="model-suiteB.html#cb110-8"></a> })</span>
+<span id="cb110-9"><a href="model-suiteB.html#cb110-9"></a></span>
+<span id="cb110-10"><a href="model-suiteB.html#cb110-10"></a><span class="co"># put into matrix</span></span>
+<span id="cb110-11"><a href="model-suiteB.html#cb110-11"></a>enetAll_coef_min_all &lt;-<span class="st"> </span><span class="kw">Reduce</span>(union, enetAll_coef_min_lst)</span>
+<span id="cb110-12"><a href="model-suiteB.html#cb110-12"></a>enetAll_coef_min_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(enetAll_coef_min_lst, </span>
+<span id="cb110-13"><a href="model-suiteB.html#cb110-13"></a>  <span class="cf">function</span>(LL) <span class="kw">is.element</span>(enetAll_coef_min_all, LL)</span>
+<span id="cb110-14"><a href="model-suiteB.html#cb110-14"></a>)</span>
+<span id="cb110-15"><a href="model-suiteB.html#cb110-15"></a><span class="kw">rownames</span>(enetAll_coef_min_mtx) &lt;-<span class="st"> </span>enetAll_coef_min_all</span>
+<span id="cb110-16"><a href="model-suiteB.html#cb110-16"></a></span>
+<span id="cb110-17"><a href="model-suiteB.html#cb110-17"></a>genes_by_rep_min_tbl &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">rowSums</span>(enetAll_coef_min_mtx))</span>
+<span id="cb110-18"><a href="model-suiteB.html#cb110-18"></a><span class="kw">barplot</span>(</span>
+<span id="cb110-19"><a href="model-suiteB.html#cb110-19"></a> genes_by_rep_min_tbl,</span>
+<span id="cb110-20"><a href="model-suiteB.html#cb110-20"></a> <span class="dt">xlab=</span><span class="st">&#39;Number of Replicates&#39;</span>,</span>
+<span id="cb110-21"><a href="model-suiteB.html#cb110-21"></a> <span class="dt">ylab=</span><span class="st">&#39;Number of features&#39;</span></span>
+<span id="cb110-22"><a href="model-suiteB.html#cb110-22"></a></span>
+<span id="cb110-23"><a href="model-suiteB.html#cb110-23"></a>)</span></code></pre></div>
 <div class="figure"><span id="fig:enet-feature-list-min"></span>
 <img src="Static/figures/enet-feature-list-min-1.png" alt="Feature list stability for minimum lambda models" width="768" />
 <p class="caption">
-Figure 6.6: Feature list stability for minimum lambda models
+Figure 6.5: Feature list stability for minimum lambda models
 </p>
 </div>
 <p>We see that <span class="math inline">\(168\)</span> features are included in every
@@ -804,167 +746,18 @@ and
 (Q1 and Q3) of the cv replicate min feature lists.
 We will consider the genes that are selected in all cv replicates as a
 gene signature produced by each model.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="model-suiteB.html#cb114-1"></a>gene_sign_1se_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(enetAll_coef_1se_mtx)[<span class="kw">rowSums</span>(enetAll_coef_1se_mtx)<span class="op">==</span><span class="dv">30</span>]</span>
-<span id="cb114-2"><a href="model-suiteB.html#cb114-2"></a>gene_sign_min_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(enetAll_coef_min_mtx)[<span class="kw">rowSums</span>(enetAll_coef_min_mtx)<span class="op">==</span><span class="dv">30</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="model-suiteB.html#cb111-1"></a>enet_gene_sign_1se_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(enetAll_coef_1se_mtx)[<span class="kw">rowSums</span>(enetAll_coef_1se_mtx)<span class="op">==</span><span class="dv">30</span>]</span>
+<span id="cb111-2"><a href="model-suiteB.html#cb111-2"></a>enet_gene_sign_min_vec &lt;-<span class="st"> </span><span class="kw">rownames</span>(enetAll_coef_min_mtx)[<span class="kw">rowSums</span>(enetAll_coef_min_mtx)<span class="op">==</span><span class="dv">30</span>]</span></code></pre></div>
 <p>76 out of
 76 of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.</p>
-</div>
-<div id="simulation-design-1" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Simulation Design</h2>
+<p>&lt;– USE SAME DESIGN AS lasso
+## Simulation Design</p>
 <p>We are now ready to run the simulations.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="model-suiteB.html#cb115-1"></a> SIM &lt;-<span class="st"> </span><span class="dv">30</span></span>
-<span id="cb115-2"><a href="model-suiteB.html#cb115-2"></a> SIZE &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>)</span>
-<span id="cb115-3"><a href="model-suiteB.html#cb115-3"></a> CV_REP &lt;-<span class="st"> </span><span class="dv">30</span></span></code></pre></div>
-<p>Simluation parameters:</p>
-<ul>
-<li><p>Number of simulations : SIM = <span class="math inline">\(30\)</span></p></li>
-<li><p>Sample sizes: SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span></p></li>
-<li><p>Number of CV Replicates: CV_REP = <span class="math inline">\(30\)</span></p></li>
-</ul>
-<p>We will repeat the simulation process SIM = <span class="math inline">\(30\)</span> times.
-For each simulation iteration, we will select <span class="math inline">\(300\)</span> Control and
-<span class="math inline">\(300\)</span> HCC samples at random. Models will be fitted and analyzed
-to balanced subsets of SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span>, in a <code>Matryoshka doll</code> manner to
-emulate a typical sample accrual process. Note that in this accural process
-there is no time effect - the accrual process is completely randomized. In practice,
-there could be significant time effects. For example, the first 25 HCC samples could come
-from Center A, while the next 25 could come from Center B. And
-affected and control samples could be acquired from different clinics
-or in different time interevals. In other words,
-there is no batch effect or shared variability in our simulation,
-while these are almost always present in real data, including
-batch effects that are associated with class labels - controls being in
-different batches than affected samples is an all too common occurence,
-for example. One should be especially watchful of potential batch effects
-when dealing with blood samples as blood is notoriously finicky in
-character [<span class="citation">[<a href="references.html#ref-Huang:2017aa" role="doc-biblioref">16</a>]</span>; <span class="citation">[<a href="references.html#ref-Permenter:2015aa" role="doc-biblioref">17</a>]</span>;].
-Presented with results that look impressively good based on a small data set,
-one should definitely be skeptical of the promise of future equally good results.</p>
-<p>For a given simulation and a given sample size, we will obtain
-CV_REP = <span class="math inline">\(30\)</span> cross-validated enet fits. From these fits,
-we can obtain <span class="math inline">\(30\)</span> out-of-fold assessments of classification accuracy
-to get a sense if its variability. From each cv replicate, we also obtain
-an estimated model size and a set of selected features. We will want
-to examine how these stabilize as the sample size increases.</p>
-<p>Note that we limit the simulations to a maximum of sample size of 300 in
-order to to have simulations with low overlap. With 300
-randomly selected HCC samples, the expected overlap between two randomly
-selected sets of HCC samples is <span class="math inline">\(29.2\)</span>%.
-For Controls the expected overlap is <span class="math inline">\(14.9\)</span>%.</p>
+<p>–&gt;</p>
 </div>
-<div id="setup-simulation-1" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Setup simulation</h2>
-<p>To setup the simulation, we only need two master tables: one for the selection of Controls
-and one for the selection of HCC samples.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="model-suiteB.html#cb116-1"></a>all_control_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>]) </span>
-<span id="cb116-2"><a href="model-suiteB.html#cb116-2"></a>all_affected_vec &lt;-<span class="st"> </span><span class="kw">names</span>(all_group_vec[all_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>])  </span></code></pre></div>
-<p>We have <span class="math inline">\(778\)</span> control sample IDs stored in <code>all_control_vec</code>
-and <span class="math inline">\(555\)</span> affected sample IDs stored in <code>all_affected_vec</code>.
-To create a suite of random samples from these, we only need to randomly select indices from
-each vector.</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="model-suiteB.html#cb117-1"></a><span class="kw">set.seed</span>(<span class="dv">12379</span>)</span>
-<span id="cb117-2"><a href="model-suiteB.html#cb117-2"></a></span>
-<span id="cb117-3"><a href="model-suiteB.html#cb117-3"></a>sim_control_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb117-4"><a href="model-suiteB.html#cb117-4"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
-<span id="cb117-5"><a href="model-suiteB.html#cb117-5"></a> <span class="cf">function</span>(dummy) </span>
-<span id="cb117-6"><a href="model-suiteB.html#cb117-6"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_control_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
-<span id="cb117-7"><a href="model-suiteB.html#cb117-7"></a>)</span>
-<span id="cb117-8"><a href="model-suiteB.html#cb117-8"></a></span>
-<span id="cb117-9"><a href="model-suiteB.html#cb117-9"></a></span>
-<span id="cb117-10"><a href="model-suiteB.html#cb117-10"></a>sim_affected_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb117-11"><a href="model-suiteB.html#cb117-11"></a> <span class="dv">1</span><span class="op">:</span>SIM, </span>
-<span id="cb117-12"><a href="model-suiteB.html#cb117-12"></a> <span class="cf">function</span>(dummy) </span>
-<span id="cb117-13"><a href="model-suiteB.html#cb117-13"></a>   <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(all_affected_vec), <span class="dt">size =</span>  <span class="kw">max</span>(SIZE))</span>
-<span id="cb117-14"><a href="model-suiteB.html#cb117-14"></a>)</span></code></pre></div>
-<p>Each simulation is specified by a given column of the simulation design matrices:
-<code>sim_control_mtx</code> and <code>sim_affected_mtx</code>, each with domensions <span class="math inline">\(300, 30\)</span>.
-Within each simulation, we can run the analyses of size <span class="math inline">\(25, 50, 100, 200, 300\)</span> by simply selecting
-samples specified in the appropriate rows of each design matrix.</p>
-<p>We can examine how much variability we have in the quality scores of the selected samples.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="model-suiteB.html#cb118-1"></a>all_control_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_control_vec]</span>
-<span id="cb118-2"><a href="model-suiteB.html#cb118-2"></a>sim_control_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb118-3"><a href="model-suiteB.html#cb118-3"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_mtx), </span>
-<span id="cb118-4"><a href="model-suiteB.html#cb118-4"></a>  <span class="cf">function</span>(CC) all_control_qual_vec[sim_control_mtx[,CC]]</span>
-<span id="cb118-5"><a href="model-suiteB.html#cb118-5"></a> )</span>
-<span id="cb118-6"><a href="model-suiteB.html#cb118-6"></a></span>
-<span id="cb118-7"><a href="model-suiteB.html#cb118-7"></a>all_affected_qual_vec &lt;-<span class="st"> </span>sample_qual_vec[all_affected_vec]</span>
-<span id="cb118-8"><a href="model-suiteB.html#cb118-8"></a>sim_affected_qual_mtx &lt;-<span class="st"> </span><span class="kw">sapply</span>(</span>
-<span id="cb118-9"><a href="model-suiteB.html#cb118-9"></a>  <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_mtx),  </span>
-<span id="cb118-10"><a href="model-suiteB.html#cb118-10"></a>  <span class="cf">function</span>(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]</span>
-<span id="cb118-11"><a href="model-suiteB.html#cb118-11"></a> )</span>
-<span id="cb118-12"><a href="model-suiteB.html#cb118-12"></a></span>
-<span id="cb118-13"><a href="model-suiteB.html#cb118-13"></a><span class="co"># Get stage from SIZE </span></span>
-<span id="cb118-14"><a href="model-suiteB.html#cb118-14"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb118-15"><a href="model-suiteB.html#cb118-15"></a></span>
-<span id="cb118-16"><a href="model-suiteB.html#cb118-16"></a>sim_control_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
-<span id="cb118-17"><a href="model-suiteB.html#cb118-17"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx), </span>
-<span id="cb118-18"><a href="model-suiteB.html#cb118-18"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_control_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
-<span id="cb118-19"><a href="model-suiteB.html#cb118-19"></a> )</span>
-<span id="cb118-20"><a href="model-suiteB.html#cb118-20"></a>)</span>
-<span id="cb118-21"><a href="model-suiteB.html#cb118-21"></a></span>
-<span id="cb118-22"><a href="model-suiteB.html#cb118-22"></a>sim_affected_qual_byStage_lst &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;c&#39;</span>, </span>
-<span id="cb118-23"><a href="model-suiteB.html#cb118-23"></a> <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(sim_affected_qual_mtx), </span>
-<span id="cb118-24"><a href="model-suiteB.html#cb118-24"></a>  <span class="cf">function</span>(CC) <span class="kw">c</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,CC], stage_vec),<span class="ot">NA</span>)</span>
-<span id="cb118-25"><a href="model-suiteB.html#cb118-25"></a> )</span>
-<span id="cb118-26"><a href="model-suiteB.html#cb118-26"></a>)</span>
-<span id="cb118-27"><a href="model-suiteB.html#cb118-27"></a></span>
-<span id="cb118-28"><a href="model-suiteB.html#cb118-28"></a><span class="co"># PLOT</span></span>
-<span id="cb118-29"><a href="model-suiteB.html#cb118-29"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
-<span id="cb118-30"><a href="model-suiteB.html#cb118-30"></a><span class="co"># control</span></span>
-<span id="cb118-31"><a href="model-suiteB.html#cb118-31"></a><span class="kw">boxplot</span>(</span>
-<span id="cb118-32"><a href="model-suiteB.html#cb118-32"></a>  sim_control_qual_byStage_lst, </span>
-<span id="cb118-33"><a href="model-suiteB.html#cb118-33"></a>  <span class="dt">outline =</span> F, </span>
-<span id="cb118-34"><a href="model-suiteB.html#cb118-34"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
-<span id="cb118-35"><a href="model-suiteB.html#cb118-35"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
-<span id="cb118-36"><a href="model-suiteB.html#cb118-36"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
-<span id="cb118-37"><a href="model-suiteB.html#cb118-37"></a>)</span>
-<span id="cb118-38"><a href="model-suiteB.html#cb118-38"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title =</span> <span class="st">&#39;Stage&#39;</span>, <span class="dt">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb118-39"><a href="model-suiteB.html#cb118-39"></a> <span class="dt">legend =</span> <span class="kw">names</span>(sim_control_qual_byStage_lst[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]), </span>
-<span id="cb118-40"><a href="model-suiteB.html#cb118-40"></a> <span class="dt">text.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,</span>
-<span id="cb118-41"><a href="model-suiteB.html#cb118-41"></a> <span class="dt">bty =</span> <span class="st">&#39;n&#39;</span>, <span class="dt">horiz =</span> F</span>
-<span id="cb118-42"><a href="model-suiteB.html#cb118-42"></a>)</span>
-<span id="cb118-43"><a href="model-suiteB.html#cb118-43"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_control_qual_byStage_lst) <span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
-<span id="cb118-44"><a href="model-suiteB.html#cb118-44"></a><span class="kw">abline</span>(<span class="dt">v =</span> sim_ndx, <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb118-45"><a href="model-suiteB.html#cb118-45"></a><span class="kw">axis</span>(</span>
-<span id="cb118-46"><a href="model-suiteB.html#cb118-46"></a>  <span class="dt">side =</span> <span class="dv">1</span>, </span>
-<span id="cb118-47"><a href="model-suiteB.html#cb118-47"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>, </span>
-<span id="cb118-48"><a href="model-suiteB.html#cb118-48"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
-<span id="cb118-49"><a href="model-suiteB.html#cb118-49"></a>  <span class="dt">tick =</span> F, </span>
-<span id="cb118-50"><a href="model-suiteB.html#cb118-50"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
-<span id="cb118-51"><a href="model-suiteB.html#cb118-51"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
-<span id="cb118-52"><a href="model-suiteB.html#cb118-52"></a><span class="kw">title</span>(<span class="st">&quot;Control sample quality by stage and simulation&quot;</span>)</span>
-<span id="cb118-53"><a href="model-suiteB.html#cb118-53"></a></span>
-<span id="cb118-54"><a href="model-suiteB.html#cb118-54"></a><span class="co"># affected</span></span>
-<span id="cb118-55"><a href="model-suiteB.html#cb118-55"></a><span class="kw">boxplot</span>(</span>
-<span id="cb118-56"><a href="model-suiteB.html#cb118-56"></a>  sim_affected_qual_byStage_lst, </span>
-<span id="cb118-57"><a href="model-suiteB.html#cb118-57"></a>  <span class="dt">outline =</span> F, </span>
-<span id="cb118-58"><a href="model-suiteB.html#cb118-58"></a>  <span class="dt">border =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,</span>
-<span id="cb118-59"><a href="model-suiteB.html#cb118-59"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
-<span id="cb118-60"><a href="model-suiteB.html#cb118-60"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
-<span id="cb118-61"><a href="model-suiteB.html#cb118-61"></a>)</span>
-<span id="cb118-62"><a href="model-suiteB.html#cb118-62"></a>sim_ndx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>)</span>
-<span id="cb118-63"><a href="model-suiteB.html#cb118-63"></a><span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">which</span>(<span class="kw">names</span>(sim_affected_qual_byStage_lst)<span class="op">==</span><span class="st">&#39;&#39;</span>), <span class="dt">col =</span> <span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb118-64"><a href="model-suiteB.html#cb118-64"></a><span class="kw">axis</span>(</span>
-<span id="cb118-65"><a href="model-suiteB.html#cb118-65"></a>  <span class="dt">side=</span><span class="dv">1</span>, </span>
-<span id="cb118-66"><a href="model-suiteB.html#cb118-66"></a>  <span class="dt">at =</span> sim_ndx<span class="dv">-2</span>,        </span>
-<span id="cb118-67"><a href="model-suiteB.html#cb118-67"></a>  <span class="dt">label =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_ndx),</span>
-<span id="cb118-68"><a href="model-suiteB.html#cb118-68"></a>  <span class="dt">tick =</span> F, </span>
-<span id="cb118-69"><a href="model-suiteB.html#cb118-69"></a>  <span class="dt">line =</span> <span class="dv">-1</span>, <span class="dt">las =</span> <span class="dv">2</span>,</span>
-<span id="cb118-70"><a href="model-suiteB.html#cb118-70"></a>  <span class="dt">cex.axis =</span> <span class="fl">0.8</span>)</span>
-<span id="cb118-71"><a href="model-suiteB.html#cb118-71"></a><span class="kw">title</span>(<span class="st">&quot;Affected sample quality by stage and simulation&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:enet-look-sim-qual"></span>
-<img src="Static/figures/enet-look-sim-qual-1.png" alt="sample quality by simulation run" width="960" />
-<p class="caption">
-Figure 6.7: sample quality by simulation run
-</p>
-</div>
-<p>We see some variability in sample quality in the smaller analysis stages.
-This may lead observers to be overly optimistic, or overly pessimistic,
-in the early accrual stages.</p>
-</div>
-<div id="run-simulations-1" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Run simulations</h2>
+<div id="run-simulations---enet" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Run simulations - enet</h2>
 <p>As these make take a while to run,
 we will save the results of each similation to a different
 object and store to disk. These can be easily read from disk
@@ -975,163 +768,179 @@ per iteration, or 4 hours of run time on a laptop.
 (Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6)</p>
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="model-suiteB.html#cb119-1"></a>start_time &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</span>
-<span id="cb119-2"><a href="model-suiteB.html#cb119-2"></a></span>
-<span id="cb119-3"><a href="model-suiteB.html#cb119-3"></a><span class="co"># Get stage from SIZE</span></span>
-<span id="cb119-4"><a href="model-suiteB.html#cb119-4"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>, SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb119-5"><a href="model-suiteB.html#cb119-5"></a></span>
-<span id="cb119-6"><a href="model-suiteB.html#cb119-6"></a><span class="co"># ran in two runs 1:5, 6:ncol</span></span>
-<span id="cb119-7"><a href="model-suiteB.html#cb119-7"></a><span class="cf">for</span> (SIMno <span class="cf">in</span> <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx)) {</span>
-<span id="cb119-8"><a href="model-suiteB.html#cb119-8"></a></span>
-<span id="cb119-9"><a href="model-suiteB.html#cb119-9"></a>  <span class="co">#cat(&quot;Running simulation &quot;, SIMno, &quot;\n&quot;)</span></span>
-<span id="cb119-10"><a href="model-suiteB.html#cb119-10"></a></span>
-<span id="cb119-11"><a href="model-suiteB.html#cb119-11"></a>  sim_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">levels</span>(stage_vec)), <span class="cf">function</span>(STGno) {</span>
-<span id="cb119-12"><a href="model-suiteB.html#cb119-12"></a>    Stage_rows_vec &lt;-<span class="st"> </span><span class="kw">which</span>(stage_vec <span class="op">%in%</span><span class="st"> </span><span class="kw">levels</span>(stage_vec)[<span class="dv">1</span><span class="op">:</span>STGno])</span>
-<span id="cb119-13"><a href="model-suiteB.html#cb119-13"></a>    <span class="co">#cat(&quot;Stage &quot;, STGno, &quot;- analyzing&quot;, length(Stage_rows_vec), &quot;paired samples.\n&quot;)</span></span>
-<span id="cb119-14"><a href="model-suiteB.html#cb119-14"></a></span>
-<span id="cb119-15"><a href="model-suiteB.html#cb119-15"></a>    sim_stage_samples_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb119-16"><a href="model-suiteB.html#cb119-16"></a>      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],</span>
-<span id="cb119-17"><a href="model-suiteB.html#cb119-17"></a>      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]</span>
-<span id="cb119-18"><a href="model-suiteB.html#cb119-18"></a>    )</span>
-<span id="cb119-19"><a href="model-suiteB.html#cb119-19"></a>    sim_stage_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_samples_vec, ]</span>
-<span id="cb119-20"><a href="model-suiteB.html#cb119-20"></a>    sim_stage_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_samples_vec]</span>
-<span id="cb119-21"><a href="model-suiteB.html#cb119-21"></a>    <span class="co">#print(table(sim_stage_group_vec))</span></span>
-<span id="cb119-22"><a href="model-suiteB.html#cb119-22"></a></span>
-<span id="cb119-23"><a href="model-suiteB.html#cb119-23"></a>    sim_stage_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span>CV_REP, <span class="cf">function</span>(CV) {</span>
-<span id="cb119-24"><a href="model-suiteB.html#cb119-24"></a>      cv_fit &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb119-25"><a href="model-suiteB.html#cb119-25"></a>        <span class="dt">x =</span> sim_stage_lcpm_mtx,</span>
-<span id="cb119-26"><a href="model-suiteB.html#cb119-26"></a>        <span class="dt">y =</span> sim_stage_group_vec,</span>
-<span id="cb119-27"><a href="model-suiteB.html#cb119-27"></a>        <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
-<span id="cb119-28"><a href="model-suiteB.html#cb119-28"></a>        <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
-<span id="cb119-29"><a href="model-suiteB.html#cb119-29"></a>        <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
-<span id="cb119-30"><a href="model-suiteB.html#cb119-30"></a>        <span class="dt">keep =</span> T,</span>
-<span id="cb119-31"><a href="model-suiteB.html#cb119-31"></a>        <span class="dt">nlambda =</span> <span class="dv">30</span></span>
-<span id="cb119-32"><a href="model-suiteB.html#cb119-32"></a>      )</span>
-<span id="cb119-33"><a href="model-suiteB.html#cb119-33"></a></span>
-<span id="cb119-34"><a href="model-suiteB.html#cb119-34"></a>      <span class="co"># Extract 1se metrics from cv_fit</span></span>
-<span id="cb119-35"><a href="model-suiteB.html#cb119-35"></a>      <span class="co">#######################</span></span>
-<span id="cb119-36"><a href="model-suiteB.html#cb119-36"></a>      ndx_1se &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se)</span>
-<span id="cb119-37"><a href="model-suiteB.html#cb119-37"></a></span>
-<span id="cb119-38"><a href="model-suiteB.html#cb119-38"></a>      nzero_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_1se]</span>
-<span id="cb119-39"><a href="model-suiteB.html#cb119-39"></a>      cvm_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_1se]</span>
-<span id="cb119-40"><a href="model-suiteB.html#cb119-40"></a></span>
-<span id="cb119-41"><a href="model-suiteB.html#cb119-41"></a>      <span class="co"># test error</span></span>
-<span id="cb119-42"><a href="model-suiteB.html#cb119-42"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
-<span id="cb119-43"><a href="model-suiteB.html#cb119-43"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
-<span id="cb119-44"><a href="model-suiteB.html#cb119-44"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
-<span id="cb119-45"><a href="model-suiteB.html#cb119-45"></a></span>
-<span id="cb119-46"><a href="model-suiteB.html#cb119-46"></a>      test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb119-47"><a href="model-suiteB.html#cb119-47"></a>       cv_fit,</span>
-<span id="cb119-48"><a href="model-suiteB.html#cb119-48"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
-<span id="cb119-49"><a href="model-suiteB.html#cb119-49"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
-<span id="cb119-50"><a href="model-suiteB.html#cb119-50"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
-<span id="cb119-51"><a href="model-suiteB.html#cb119-51"></a>      )</span>
-<span id="cb119-52"><a href="model-suiteB.html#cb119-52"></a>      test_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
-<span id="cb119-53"><a href="model-suiteB.html#cb119-53"></a></span>
-<span id="cb119-54"><a href="model-suiteB.html#cb119-54"></a>      <span class="co"># genes</span></span>
-<span id="cb119-55"><a href="model-suiteB.html#cb119-55"></a>      coef_1se &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb119-56"><a href="model-suiteB.html#cb119-56"></a>        cv_fit,</span>
-<span id="cb119-57"><a href="model-suiteB.html#cb119-57"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
-<span id="cb119-58"><a href="model-suiteB.html#cb119-58"></a>      )</span>
-<span id="cb119-59"><a href="model-suiteB.html#cb119-59"></a>      genes_1se &lt;-<span class="st"> </span>coef_1se<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_1se<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb119-60"><a href="model-suiteB.html#cb119-60"></a></span>
-<span id="cb119-61"><a href="model-suiteB.html#cb119-61"></a>      <span class="co"># Extract min metrics from cv_fit</span></span>
-<span id="cb119-62"><a href="model-suiteB.html#cb119-62"></a>      <span class="co">#######################</span></span>
-<span id="cb119-63"><a href="model-suiteB.html#cb119-63"></a>      ndx_min &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min)</span>
-<span id="cb119-64"><a href="model-suiteB.html#cb119-64"></a></span>
-<span id="cb119-65"><a href="model-suiteB.html#cb119-65"></a>      nzero_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_min]</span>
-<span id="cb119-66"><a href="model-suiteB.html#cb119-66"></a>      cvm_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_min]</span>
-<span id="cb119-67"><a href="model-suiteB.html#cb119-67"></a></span>
-<span id="cb119-68"><a href="model-suiteB.html#cb119-68"></a>      <span class="co"># test error</span></span>
-<span id="cb119-69"><a href="model-suiteB.html#cb119-69"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
-<span id="cb119-70"><a href="model-suiteB.html#cb119-70"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
-<span id="cb119-71"><a href="model-suiteB.html#cb119-71"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
-<span id="cb119-72"><a href="model-suiteB.html#cb119-72"></a></span>
-<span id="cb119-73"><a href="model-suiteB.html#cb119-73"></a>      test_pred_min_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb119-74"><a href="model-suiteB.html#cb119-74"></a>       cv_fit,</span>
-<span id="cb119-75"><a href="model-suiteB.html#cb119-75"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
-<span id="cb119-76"><a href="model-suiteB.html#cb119-76"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.min&quot;</span>,</span>
-<span id="cb119-77"><a href="model-suiteB.html#cb119-77"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
-<span id="cb119-78"><a href="model-suiteB.html#cb119-78"></a>      )</span>
-<span id="cb119-79"><a href="model-suiteB.html#cb119-79"></a>      test_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
-<span id="cb119-80"><a href="model-suiteB.html#cb119-80"></a></span>
-<span id="cb119-81"><a href="model-suiteB.html#cb119-81"></a>      <span class="co"># genes</span></span>
-<span id="cb119-82"><a href="model-suiteB.html#cb119-82"></a>      coef_min &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb119-83"><a href="model-suiteB.html#cb119-83"></a>        cv_fit,</span>
-<span id="cb119-84"><a href="model-suiteB.html#cb119-84"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
-<span id="cb119-85"><a href="model-suiteB.html#cb119-85"></a>      )</span>
-<span id="cb119-86"><a href="model-suiteB.html#cb119-86"></a>      genes_min &lt;-<span class="st"> </span>coef_min<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_min<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
-<span id="cb119-87"><a href="model-suiteB.html#cb119-87"></a></span>
-<span id="cb119-88"><a href="model-suiteB.html#cb119-88"></a>      <span class="co"># return cv_fit summary metrics</span></span>
-<span id="cb119-89"><a href="model-suiteB.html#cb119-89"></a>      <span class="kw">list</span>(</span>
-<span id="cb119-90"><a href="model-suiteB.html#cb119-90"></a>       <span class="dt">p_1se =</span> nzero_1se, </span>
-<span id="cb119-91"><a href="model-suiteB.html#cb119-91"></a>       <span class="dt">p_min =</span> nzero_min, </span>
-<span id="cb119-92"><a href="model-suiteB.html#cb119-92"></a>       <span class="dt">cv_1se =</span> cvm_1se, </span>
-<span id="cb119-93"><a href="model-suiteB.html#cb119-93"></a>       <span class="dt">cv_min =</span> cvm_min, </span>
-<span id="cb119-94"><a href="model-suiteB.html#cb119-94"></a>       <span class="dt">test_1se=</span>test_1se_error, </span>
-<span id="cb119-95"><a href="model-suiteB.html#cb119-95"></a>       <span class="dt">test_min=</span>test_min_error, </span>
-<span id="cb119-96"><a href="model-suiteB.html#cb119-96"></a>       <span class="dt">genes_1se =</span> genes_1se,</span>
-<span id="cb119-97"><a href="model-suiteB.html#cb119-97"></a>       <span class="dt">genes_min =</span> genes_min)</span>
-<span id="cb119-98"><a href="model-suiteB.html#cb119-98"></a>    })</span>
-<span id="cb119-99"><a href="model-suiteB.html#cb119-99"></a>    sim_stage_cv_lst</span>
-<span id="cb119-100"><a href="model-suiteB.html#cb119-100"></a>  })</span>
-<span id="cb119-101"><a href="model-suiteB.html#cb119-101"></a></span>
-<span id="cb119-102"><a href="model-suiteB.html#cb119-102"></a>  <span class="co"># save  sim_cv_lst</span></span>
-<span id="cb119-103"><a href="model-suiteB.html#cb119-103"></a>  fName &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;enet_sim_&quot;</span>, SIMno, <span class="st">&quot;_cv_lst&quot;</span>)</span>
-<span id="cb119-104"><a href="model-suiteB.html#cb119-104"></a>  <span class="kw">assign</span>(fName, sim_cv_lst)</span>
-<span id="cb119-105"><a href="model-suiteB.html#cb119-105"></a>  <span class="kw">save</span>(<span class="dt">list =</span> fName, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>, fName))</span>
-<span id="cb119-106"><a href="model-suiteB.html#cb119-106"></a></span>
-<span id="cb119-107"><a href="model-suiteB.html#cb119-107"></a>}</span>
-<span id="cb119-108"><a href="model-suiteB.html#cb119-108"></a>  <span class="kw">message</span>(<span class="st">&quot;simulation time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="model-suiteB.html#cb120-1"></a><span class="co"># CLEAR CACHE </span></span>
-<span id="cb120-2"><a href="model-suiteB.html#cb120-2"></a></span>
-<span id="cb120-3"><a href="model-suiteB.html#cb120-3"></a>sim_files_vec &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&#39;RData&#39;</span>, <span class="st">&#39;^enet_sim&#39;</span>)</span>
-<span id="cb120-4"><a href="model-suiteB.html#cb120-4"></a></span>
-<span id="cb120-5"><a href="model-suiteB.html#cb120-5"></a></span>
-<span id="cb120-6"><a href="model-suiteB.html#cb120-6"></a><span class="co"># define extraction methods</span></span>
-<span id="cb120-7"><a href="model-suiteB.html#cb120-7"></a></span>
-<span id="cb120-8"><a href="model-suiteB.html#cb120-8"></a><span class="co"># Each sumulation is a list of cv results </span></span>
-<span id="cb120-9"><a href="model-suiteB.html#cb120-9"></a><span class="co">## nested in a list of replicates</span></span>
-<span id="cb120-10"><a href="model-suiteB.html#cb120-10"></a><span class="co">##############################################</span></span>
-<span id="cb120-11"><a href="model-suiteB.html#cb120-11"></a></span>
-<span id="cb120-12"><a href="model-suiteB.html#cb120-12"></a><span class="co"># cvList2frm_f makes a frame out of the inner list</span></span>
-<span id="cb120-13"><a href="model-suiteB.html#cb120-13"></a>cvList2frm_f &lt;-<span class="st"> </span><span class="cf">function</span>(cv_lst) {</span>
-<span id="cb120-14"><a href="model-suiteB.html#cb120-14"></a> frm1 &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(cv_lst, <span class="cf">function</span>(x) x)))</span>
-<span id="cb120-15"><a href="model-suiteB.html#cb120-15"></a> frm2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb120-16"><a href="model-suiteB.html#cb120-16"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">1</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">2</span>]]),</span>
-<span id="cb120-17"><a href="model-suiteB.html#cb120-17"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">3</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">4</span>]]),</span>
-<span id="cb120-18"><a href="model-suiteB.html#cb120-18"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">5</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">6</span>]]),</span>
-<span id="cb120-19"><a href="model-suiteB.html#cb120-19"></a>  frm1[<span class="dv">7</span>], frm1[<span class="dv">8</span>])</span>
-<span id="cb120-20"><a href="model-suiteB.html#cb120-20"></a>  <span class="kw">names</span>(frm2) &lt;-<span class="st"> </span><span class="kw">names</span>(frm1)</span>
-<span id="cb120-21"><a href="model-suiteB.html#cb120-21"></a>  <span class="kw">data.frame</span>(<span class="dt">Rep=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(frm2), frm2)}</span>
-<span id="cb120-22"><a href="model-suiteB.html#cb120-22"></a></span>
-<span id="cb120-23"><a href="model-suiteB.html#cb120-23"></a><span class="co"># cv_lst_to_frm loop over replicates, concatenating the inner list frames</span></span>
-<span id="cb120-24"><a href="model-suiteB.html#cb120-24"></a>cv_lst_to_frm &lt;-<span class="st"> </span><span class="cf">function</span>(sim_cv_lst) {</span>
-<span id="cb120-25"><a href="model-suiteB.html#cb120-25"></a> <span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_cv_lst),</span>
-<span id="cb120-26"><a href="model-suiteB.html#cb120-26"></a>  <span class="cf">function</span>(JJ) {</span>
-<span id="cb120-27"><a href="model-suiteB.html#cb120-27"></a>    siz_frm &lt;-<span class="st"> </span><span class="kw">cvList2frm_f</span>(sim_cv_lst[[JJ]])</span>
-<span id="cb120-28"><a href="model-suiteB.html#cb120-28"></a>    <span class="kw">data.frame</span>(<span class="dt">Size=</span>SIZE[JJ], siz_frm)</span>
-<span id="cb120-29"><a href="model-suiteB.html#cb120-29"></a>  }))</span>
-<span id="cb120-30"><a href="model-suiteB.html#cb120-30"></a>}</span>
-<span id="cb120-31"><a href="model-suiteB.html#cb120-31"></a></span>
-<span id="cb120-32"><a href="model-suiteB.html#cb120-32"></a><span class="co"># we loop across simulations to combine all results into one big table</span></span>
-<span id="cb120-33"><a href="model-suiteB.html#cb120-33"></a>sim_results_frm &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_files_vec),</span>
-<span id="cb120-34"><a href="model-suiteB.html#cb120-34"></a> <span class="cf">function</span>(SIM_NO) {</span>
-<span id="cb120-35"><a href="model-suiteB.html#cb120-35"></a>  <span class="kw">load</span>(<span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&#39;RData&#39;</span>, sim_files_vec[SIM_NO]))</span>
-<span id="cb120-36"><a href="model-suiteB.html#cb120-36"></a>  <span class="kw">assign</span>(<span class="st">&#39;sim_cv_lst&#39;</span>, <span class="kw">get</span>(sim_files_vec[SIM_NO]))</span>
-<span id="cb120-37"><a href="model-suiteB.html#cb120-37"></a>  <span class="kw">rm</span>(<span class="dt">list=</span>sim_files_vec[SIM_NO])</span>
-<span id="cb120-38"><a href="model-suiteB.html#cb120-38"></a>  </span>
-<span id="cb120-39"><a href="model-suiteB.html#cb120-39"></a>  <span class="kw">data.frame</span>(<span class="dt">SimNo=</span><span class="kw">paste0</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="kw">formatC</span>(SIM_NO,<span class="dt">width =</span> <span class="dv">2</span>,<span class="dt">flag =</span> <span class="dv">0</span>)), <span class="kw">cv_lst_to_frm</span>(sim_cv_lst))</span>
-<span id="cb120-40"><a href="model-suiteB.html#cb120-40"></a>} </span>
-<span id="cb120-41"><a href="model-suiteB.html#cb120-41"></a>)) </span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="model-suiteB.html#cb112-1"></a>start_time &lt;-<span class="st"> </span><span class="kw">proc.time</span>()</span>
+<span id="cb112-2"><a href="model-suiteB.html#cb112-2"></a></span>
+<span id="cb112-3"><a href="model-suiteB.html#cb112-3"></a><span class="co"># Get stage from SIZE</span></span>
+<span id="cb112-4"><a href="model-suiteB.html#cb112-4"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>, SIZE), <span class="dt">include.lowest =</span> T)</span>
+<span id="cb112-5"><a href="model-suiteB.html#cb112-5"></a></span>
+<span id="cb112-6"><a href="model-suiteB.html#cb112-6"></a><span class="co"># ran in two runs 1:7, 8:ncol</span></span>
+<span id="cb112-7"><a href="model-suiteB.html#cb112-7"></a><span class="cf">for</span> (SIMno <span class="cf">in</span> <span class="dv">8</span><span class="op">:</span><span class="kw">ncol</span>(sim_control_qual_mtx)) {</span>
+<span id="cb112-8"><a href="model-suiteB.html#cb112-8"></a></span>
+<span id="cb112-9"><a href="model-suiteB.html#cb112-9"></a>  <span class="co">#cat(&quot;Running simulation &quot;, SIMno, &quot;\n&quot;)</span></span>
+<span id="cb112-10"><a href="model-suiteB.html#cb112-10"></a></span>
+<span id="cb112-11"><a href="model-suiteB.html#cb112-11"></a>  sim_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">levels</span>(stage_vec)), <span class="cf">function</span>(STGno) {</span>
+<span id="cb112-12"><a href="model-suiteB.html#cb112-12"></a>    Stage_rows_vec &lt;-<span class="st"> </span><span class="kw">which</span>(stage_vec <span class="op">%in%</span><span class="st"> </span><span class="kw">levels</span>(stage_vec)[<span class="dv">1</span><span class="op">:</span>STGno])</span>
+<span id="cb112-13"><a href="model-suiteB.html#cb112-13"></a>    <span class="co">#cat(&quot;Stage &quot;, STGno, &quot;- analyzing&quot;, length(Stage_rows_vec), &quot;paired samples.\n&quot;)</span></span>
+<span id="cb112-14"><a href="model-suiteB.html#cb112-14"></a></span>
+<span id="cb112-15"><a href="model-suiteB.html#cb112-15"></a>    sim_stage_samples_vec &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb112-16"><a href="model-suiteB.html#cb112-16"></a>      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],</span>
+<span id="cb112-17"><a href="model-suiteB.html#cb112-17"></a>      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]</span>
+<span id="cb112-18"><a href="model-suiteB.html#cb112-18"></a>    )</span>
+<span id="cb112-19"><a href="model-suiteB.html#cb112-19"></a>    sim_stage_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_samples_vec, ]</span>
+<span id="cb112-20"><a href="model-suiteB.html#cb112-20"></a>    sim_stage_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_samples_vec]</span>
+<span id="cb112-21"><a href="model-suiteB.html#cb112-21"></a>    <span class="co">#print(table(sim_stage_group_vec))</span></span>
+<span id="cb112-22"><a href="model-suiteB.html#cb112-22"></a></span>
+<span id="cb112-23"><a href="model-suiteB.html#cb112-23"></a>    sim_stage_cv_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span>CV_REP, <span class="cf">function</span>(CV) {</span>
+<span id="cb112-24"><a href="model-suiteB.html#cb112-24"></a>      cv_fit &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb112-25"><a href="model-suiteB.html#cb112-25"></a>        <span class="dt">x =</span> sim_stage_lcpm_mtx,</span>
+<span id="cb112-26"><a href="model-suiteB.html#cb112-26"></a>        <span class="dt">y =</span> sim_stage_group_vec,</span>
+<span id="cb112-27"><a href="model-suiteB.html#cb112-27"></a>        <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb112-28"><a href="model-suiteB.html#cb112-28"></a>        <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb112-29"><a href="model-suiteB.html#cb112-29"></a>        <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
+<span id="cb112-30"><a href="model-suiteB.html#cb112-30"></a>        <span class="dt">keep =</span> T,</span>
+<span id="cb112-31"><a href="model-suiteB.html#cb112-31"></a>        <span class="dt">nlambda =</span> <span class="dv">30</span></span>
+<span id="cb112-32"><a href="model-suiteB.html#cb112-32"></a>      )</span>
+<span id="cb112-33"><a href="model-suiteB.html#cb112-33"></a></span>
+<span id="cb112-34"><a href="model-suiteB.html#cb112-34"></a>      <span class="co"># Extract 1se metrics from cv_fit</span></span>
+<span id="cb112-35"><a href="model-suiteB.html#cb112-35"></a>      <span class="co">#######################</span></span>
+<span id="cb112-36"><a href="model-suiteB.html#cb112-36"></a>      ndx_1se &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se)</span>
+<span id="cb112-37"><a href="model-suiteB.html#cb112-37"></a></span>
+<span id="cb112-38"><a href="model-suiteB.html#cb112-38"></a>      nzero_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_1se]</span>
+<span id="cb112-39"><a href="model-suiteB.html#cb112-39"></a>      cvm_1se &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_1se]</span>
+<span id="cb112-40"><a href="model-suiteB.html#cb112-40"></a></span>
+<span id="cb112-41"><a href="model-suiteB.html#cb112-41"></a>      <span class="co"># test error</span></span>
+<span id="cb112-42"><a href="model-suiteB.html#cb112-42"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
+<span id="cb112-43"><a href="model-suiteB.html#cb112-43"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
+<span id="cb112-44"><a href="model-suiteB.html#cb112-44"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
+<span id="cb112-45"><a href="model-suiteB.html#cb112-45"></a></span>
+<span id="cb112-46"><a href="model-suiteB.html#cb112-46"></a>      test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
+<span id="cb112-47"><a href="model-suiteB.html#cb112-47"></a>       cv_fit,</span>
+<span id="cb112-48"><a href="model-suiteB.html#cb112-48"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
+<span id="cb112-49"><a href="model-suiteB.html#cb112-49"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
+<span id="cb112-50"><a href="model-suiteB.html#cb112-50"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb112-51"><a href="model-suiteB.html#cb112-51"></a>      )</span>
+<span id="cb112-52"><a href="model-suiteB.html#cb112-52"></a>      test_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
+<span id="cb112-53"><a href="model-suiteB.html#cb112-53"></a></span>
+<span id="cb112-54"><a href="model-suiteB.html#cb112-54"></a>      <span class="co"># genes</span></span>
+<span id="cb112-55"><a href="model-suiteB.html#cb112-55"></a>      coef_1se &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb112-56"><a href="model-suiteB.html#cb112-56"></a>        cv_fit,</span>
+<span id="cb112-57"><a href="model-suiteB.html#cb112-57"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span></span>
+<span id="cb112-58"><a href="model-suiteB.html#cb112-58"></a>      )</span>
+<span id="cb112-59"><a href="model-suiteB.html#cb112-59"></a>      genes_1se &lt;-<span class="st"> </span>coef_1se<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_1se<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb112-60"><a href="model-suiteB.html#cb112-60"></a></span>
+<span id="cb112-61"><a href="model-suiteB.html#cb112-61"></a>      <span class="co"># Extract min metrics from cv_fit</span></span>
+<span id="cb112-62"><a href="model-suiteB.html#cb112-62"></a>      <span class="co">#######################</span></span>
+<span id="cb112-63"><a href="model-suiteB.html#cb112-63"></a>      ndx_min &lt;-<span class="st"> </span><span class="kw">which</span>(cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min)</span>
+<span id="cb112-64"><a href="model-suiteB.html#cb112-64"></a></span>
+<span id="cb112-65"><a href="model-suiteB.html#cb112-65"></a>      nzero_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>nzero[ndx_min]</span>
+<span id="cb112-66"><a href="model-suiteB.html#cb112-66"></a>      cvm_min &lt;-<span class="st"> </span>cv_fit<span class="op">$</span>cvm[ndx_min]</span>
+<span id="cb112-67"><a href="model-suiteB.html#cb112-67"></a></span>
+<span id="cb112-68"><a href="model-suiteB.html#cb112-68"></a>      <span class="co"># test error</span></span>
+<span id="cb112-69"><a href="model-suiteB.html#cb112-69"></a>      sim_stage_test_samples_vec &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rownames</span>(all_lcpm_mtx), sim_stage_samples_vec)</span>
+<span id="cb112-70"><a href="model-suiteB.html#cb112-70"></a>      sim_stage_test_lcpm_mtx &lt;-<span class="st"> </span>all_lcpm_mtx[sim_stage_test_samples_vec,]</span>
+<span id="cb112-71"><a href="model-suiteB.html#cb112-71"></a>      sim_stage_test_group_vec &lt;-<span class="st"> </span>all_group_vec[sim_stage_test_samples_vec]</span>
+<span id="cb112-72"><a href="model-suiteB.html#cb112-72"></a></span>
+<span id="cb112-73"><a href="model-suiteB.html#cb112-73"></a>      test_pred_min_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
+<span id="cb112-74"><a href="model-suiteB.html#cb112-74"></a>       cv_fit,</span>
+<span id="cb112-75"><a href="model-suiteB.html#cb112-75"></a>       <span class="dt">newx=</span>sim_stage_test_lcpm_mtx,</span>
+<span id="cb112-76"><a href="model-suiteB.html#cb112-76"></a>       <span class="dt">s=</span><span class="st">&quot;lambda.min&quot;</span>,</span>
+<span id="cb112-77"><a href="model-suiteB.html#cb112-77"></a>       <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
+<span id="cb112-78"><a href="model-suiteB.html#cb112-78"></a>      )</span>
+<span id="cb112-79"><a href="model-suiteB.html#cb112-79"></a>      test_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>sim_stage_test_group_vec)</span>
+<span id="cb112-80"><a href="model-suiteB.html#cb112-80"></a></span>
+<span id="cb112-81"><a href="model-suiteB.html#cb112-81"></a>      <span class="co"># genes</span></span>
+<span id="cb112-82"><a href="model-suiteB.html#cb112-82"></a>      coef_min &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
+<span id="cb112-83"><a href="model-suiteB.html#cb112-83"></a>        cv_fit,</span>
+<span id="cb112-84"><a href="model-suiteB.html#cb112-84"></a>        <span class="dt">s =</span> <span class="st">&quot;lambda.min&quot;</span></span>
+<span id="cb112-85"><a href="model-suiteB.html#cb112-85"></a>      )</span>
+<span id="cb112-86"><a href="model-suiteB.html#cb112-86"></a>      genes_min &lt;-<span class="st"> </span>coef_min<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][coef_min<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb112-87"><a href="model-suiteB.html#cb112-87"></a></span>
+<span id="cb112-88"><a href="model-suiteB.html#cb112-88"></a>      <span class="co"># return cv_fit summary metrics</span></span>
+<span id="cb112-89"><a href="model-suiteB.html#cb112-89"></a>      <span class="kw">list</span>(</span>
+<span id="cb112-90"><a href="model-suiteB.html#cb112-90"></a>       <span class="dt">p_1se =</span> nzero_1se, </span>
+<span id="cb112-91"><a href="model-suiteB.html#cb112-91"></a>       <span class="dt">p_min =</span> nzero_min, </span>
+<span id="cb112-92"><a href="model-suiteB.html#cb112-92"></a>       <span class="dt">cv_1se =</span> cvm_1se, </span>
+<span id="cb112-93"><a href="model-suiteB.html#cb112-93"></a>       <span class="dt">cv_min =</span> cvm_min, </span>
+<span id="cb112-94"><a href="model-suiteB.html#cb112-94"></a>       <span class="dt">test_1se=</span>test_1se_error, </span>
+<span id="cb112-95"><a href="model-suiteB.html#cb112-95"></a>       <span class="dt">test_min=</span>test_min_error, </span>
+<span id="cb112-96"><a href="model-suiteB.html#cb112-96"></a>       <span class="dt">genes_1se =</span> genes_1se,</span>
+<span id="cb112-97"><a href="model-suiteB.html#cb112-97"></a>       <span class="dt">genes_min =</span> genes_min)</span>
+<span id="cb112-98"><a href="model-suiteB.html#cb112-98"></a>    })</span>
+<span id="cb112-99"><a href="model-suiteB.html#cb112-99"></a>    sim_stage_cv_lst</span>
+<span id="cb112-100"><a href="model-suiteB.html#cb112-100"></a>  })</span>
+<span id="cb112-101"><a href="model-suiteB.html#cb112-101"></a></span>
+<span id="cb112-102"><a href="model-suiteB.html#cb112-102"></a>  <span class="co"># save  sim_cv_lst</span></span>
+<span id="cb112-103"><a href="model-suiteB.html#cb112-103"></a>  fName &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;enet_sim_&quot;</span>, SIMno, <span class="st">&quot;_cv_lst&quot;</span>)</span>
+<span id="cb112-104"><a href="model-suiteB.html#cb112-104"></a>  <span class="kw">assign</span>(fName, sim_cv_lst)</span>
+<span id="cb112-105"><a href="model-suiteB.html#cb112-105"></a>  <span class="kw">save</span>(<span class="dt">list =</span> fName, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>, fName))</span>
+<span id="cb112-106"><a href="model-suiteB.html#cb112-106"></a></span>
+<span id="cb112-107"><a href="model-suiteB.html#cb112-107"></a>}</span>
+<span id="cb112-108"><a href="model-suiteB.html#cb112-108"></a>  <span class="kw">message</span>(<span class="st">&quot;simulation time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">&quot;s&quot;</span>)</span></code></pre></div>
+</div>
+<div id="simulation-results-2" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Simulation results</h2>
+<p>The results are
+* error: cv, oof, test<br />
+- examine relationship to each other and with respect to sample size<br />
+* genes:<br />
+- how variable are the selected gene lists, both in terms of composition and size</p>
+<p>Recall the we have <span class="math inline">\(Sim_01\)</span> randomly selected sets of HCC and Control samples,
+analyzed in inreasing sizes of <span class="math inline">\(25, 50, 100, 200, 300\)</span>, with
+<span class="math inline">\(30\)</span> repeated cross-validated enet fits:</p>
+<ul>
+<li><p>Sample sizes: SIZE = <span class="math inline">\(25, 50, 100, 200, 300\)</span></p></li>
+<li><p>Number of CV Replicates: CV_REP = <span class="math inline">\(30\)</span></p></li>
+</ul>
+<p>First we extract simluation results and store into one big table:</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="model-suiteB.html#cb113-1"></a><span class="co"># CLEAR CACHE </span></span>
+<span id="cb113-2"><a href="model-suiteB.html#cb113-2"></a></span>
+<span id="cb113-3"><a href="model-suiteB.html#cb113-3"></a>sim_files_vec &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&#39;RData&#39;</span>, <span class="st">&#39;^enet_sim&#39;</span>)</span>
+<span id="cb113-4"><a href="model-suiteB.html#cb113-4"></a></span>
+<span id="cb113-5"><a href="model-suiteB.html#cb113-5"></a></span>
+<span id="cb113-6"><a href="model-suiteB.html#cb113-6"></a><span class="co"># define extraction methods</span></span>
+<span id="cb113-7"><a href="model-suiteB.html#cb113-7"></a></span>
+<span id="cb113-8"><a href="model-suiteB.html#cb113-8"></a><span class="co"># Each sumulation is a list of cv results </span></span>
+<span id="cb113-9"><a href="model-suiteB.html#cb113-9"></a><span class="co">## nested in a list of replicates</span></span>
+<span id="cb113-10"><a href="model-suiteB.html#cb113-10"></a><span class="co">##############################################</span></span>
+<span id="cb113-11"><a href="model-suiteB.html#cb113-11"></a></span>
+<span id="cb113-12"><a href="model-suiteB.html#cb113-12"></a><span class="co"># cvList2frm_f makes a frame out of the inner list</span></span>
+<span id="cb113-13"><a href="model-suiteB.html#cb113-13"></a>cvList2frm_f &lt;-<span class="st"> </span><span class="cf">function</span>(cv_lst) {</span>
+<span id="cb113-14"><a href="model-suiteB.html#cb113-14"></a> frm1 &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(cv_lst, <span class="cf">function</span>(x) x)))</span>
+<span id="cb113-15"><a href="model-suiteB.html#cb113-15"></a> frm2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb113-16"><a href="model-suiteB.html#cb113-16"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">1</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">2</span>]]),</span>
+<span id="cb113-17"><a href="model-suiteB.html#cb113-17"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">3</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">4</span>]]),</span>
+<span id="cb113-18"><a href="model-suiteB.html#cb113-18"></a>  <span class="kw">unlist</span>(frm1[[<span class="dv">5</span>]]), <span class="kw">unlist</span>(frm1[[<span class="dv">6</span>]]),</span>
+<span id="cb113-19"><a href="model-suiteB.html#cb113-19"></a>  frm1[<span class="dv">7</span>], frm1[<span class="dv">8</span>])</span>
+<span id="cb113-20"><a href="model-suiteB.html#cb113-20"></a>  <span class="kw">names</span>(frm2) &lt;-<span class="st"> </span><span class="kw">names</span>(frm1)</span>
+<span id="cb113-21"><a href="model-suiteB.html#cb113-21"></a>  <span class="kw">data.frame</span>(<span class="dt">Rep=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(frm2), frm2)}</span>
+<span id="cb113-22"><a href="model-suiteB.html#cb113-22"></a></span>
+<span id="cb113-23"><a href="model-suiteB.html#cb113-23"></a><span class="co"># cv_lst_to_frm loop over replicates, concatenating the inner list frames</span></span>
+<span id="cb113-24"><a href="model-suiteB.html#cb113-24"></a>cv_lst_to_frm &lt;-<span class="st"> </span><span class="cf">function</span>(sim_cv_lst) {</span>
+<span id="cb113-25"><a href="model-suiteB.html#cb113-25"></a> <span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_cv_lst),</span>
+<span id="cb113-26"><a href="model-suiteB.html#cb113-26"></a>  <span class="cf">function</span>(JJ) {</span>
+<span id="cb113-27"><a href="model-suiteB.html#cb113-27"></a>    siz_frm &lt;-<span class="st"> </span><span class="kw">cvList2frm_f</span>(sim_cv_lst[[JJ]])</span>
+<span id="cb113-28"><a href="model-suiteB.html#cb113-28"></a>    <span class="kw">data.frame</span>(<span class="dt">Size=</span>SIZE[JJ], siz_frm)</span>
+<span id="cb113-29"><a href="model-suiteB.html#cb113-29"></a>  }))</span>
+<span id="cb113-30"><a href="model-suiteB.html#cb113-30"></a>}</span>
+<span id="cb113-31"><a href="model-suiteB.html#cb113-31"></a></span>
+<span id="cb113-32"><a href="model-suiteB.html#cb113-32"></a><span class="co"># we loop across simulations to combine all results into one big table</span></span>
+<span id="cb113-33"><a href="model-suiteB.html#cb113-33"></a>sim_results_frm &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;rbind&#39;</span>, <span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(sim_files_vec),</span>
+<span id="cb113-34"><a href="model-suiteB.html#cb113-34"></a> <span class="cf">function</span>(SIM_NO) {</span>
+<span id="cb113-35"><a href="model-suiteB.html#cb113-35"></a>  <span class="kw">load</span>(<span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&#39;RData&#39;</span>, sim_files_vec[SIM_NO]))</span>
+<span id="cb113-36"><a href="model-suiteB.html#cb113-36"></a>  <span class="kw">assign</span>(<span class="st">&#39;sim_cv_lst&#39;</span>, <span class="kw">get</span>(sim_files_vec[SIM_NO]))</span>
+<span id="cb113-37"><a href="model-suiteB.html#cb113-37"></a>  <span class="kw">rm</span>(<span class="dt">list=</span>sim_files_vec[SIM_NO])</span>
+<span id="cb113-38"><a href="model-suiteB.html#cb113-38"></a>  </span>
+<span id="cb113-39"><a href="model-suiteB.html#cb113-39"></a>  <span class="kw">data.frame</span>(<span class="dt">SimNo=</span><span class="kw">paste0</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="kw">formatC</span>(SIM_NO,<span class="dt">width =</span> <span class="dv">2</span>,<span class="dt">flag =</span> <span class="dv">0</span>)), <span class="kw">cv_lst_to_frm</span>(sim_cv_lst))</span>
+<span id="cb113-40"><a href="model-suiteB.html#cb113-40"></a>} </span>
+<span id="cb113-41"><a href="model-suiteB.html#cb113-41"></a>)) </span></code></pre></div>
 <!-- 
 Have a table of simulation results - `sim_results_frm`:
 -->
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="model-suiteB.html#cb121-1"></a><span class="co"># CLEAR CACHE </span></span>
-<span id="cb121-2"><a href="model-suiteB.html#cb121-2"></a> </span>
-<span id="cb121-3"><a href="model-suiteB.html#cb121-3"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(<span class="kw">with</span>(sim_results_frm, <span class="kw">table</span>(SimNo, Size))),</span>
-<span id="cb121-4"><a href="model-suiteB.html#cb121-4"></a>  <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - N Sim =&quot;</span>, SIM)) <span class="op">%&gt;%</span></span>
-<span id="cb121-5"><a href="model-suiteB.html#cb121-5"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="model-suiteB.html#cb114-1"></a><span class="co"># CLEAR CACHE </span></span>
+<span id="cb114-2"><a href="model-suiteB.html#cb114-2"></a> </span>
+<span id="cb114-3"><a href="model-suiteB.html#cb114-3"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(<span class="kw">with</span>(sim_results_frm, <span class="kw">table</span>(SimNo, Size))),</span>
+<span id="cb114-4"><a href="model-suiteB.html#cb114-4"></a>  <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - N Sim =&quot;</span>, SIM)) <span class="op">%&gt;%</span></span>
+<span id="cb114-5"><a href="model-suiteB.html#cb114-5"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:enet-sum-table">Table 6.3: </span>Simulation Results - N Sim = 30
@@ -1280,10 +1089,10 @@ Sim_06
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="model-suiteB.html#cb122-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim_results_frm) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(genes_1se, genes_min)),</span>
-<span id="cb122-2"><a href="model-suiteB.html#cb122-2"></a>    <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - not showing genes column&quot;</span>),</span>
-<span id="cb122-3"><a href="model-suiteB.html#cb122-3"></a>    <span class="dt">digits=</span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
-<span id="cb122-4"><a href="model-suiteB.html#cb122-4"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="model-suiteB.html#cb115-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim_results_frm) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(genes_1se, genes_min)),</span>
+<span id="cb115-2"><a href="model-suiteB.html#cb115-2"></a>    <span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&quot;Simulation Results - not showing genes column&quot;</span>),</span>
+<span id="cb115-3"><a href="model-suiteB.html#cb115-3"></a>    <span class="dt">digits=</span><span class="dv">2</span>) <span class="op">%&gt;%</span></span>
+<span id="cb115-4"><a href="model-suiteB.html#cb115-4"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:enet-sum-table">Table 6.3: </span>Simulation Results - not showing genes column
@@ -1496,284 +1305,284 @@ Sim_01
 </tr>
 </tbody>
 </table>
-<div id="simulation-results-errors-by-run-1" class="section level3 unnumbered" number="">
-<h3>Simulation Results: Errors By Run</h3>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="model-suiteB.html#cb123-1"></a><span class="co"># CLEAR CACHE </span></span>
-<span id="cb123-2"><a href="model-suiteB.html#cb123-2"></a></span>
-<span id="cb123-3"><a href="model-suiteB.html#cb123-3"></a><span class="co"># get full model cv error ref</span></span>
-<span id="cb123-4"><a href="model-suiteB.html#cb123-4"></a>error_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
-<span id="cb123-5"><a href="model-suiteB.html#cb123-5"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
-<span id="cb123-6"><a href="model-suiteB.html#cb123-6"></a>error_1se_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(error_1se_vec, <span class="dt">prob=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)        </span>
-<span id="cb123-7"><a href="model-suiteB.html#cb123-7"></a></span>
-<span id="cb123-8"><a href="model-suiteB.html#cb123-8"></a>error_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
-<span id="cb123-9"><a href="model-suiteB.html#cb123-9"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
-<span id="cb123-10"><a href="model-suiteB.html#cb123-10"></a>error_min_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(error_min_vec, <span class="dt">prob=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)        </span>
-<span id="cb123-11"><a href="model-suiteB.html#cb123-11"></a></span>
-<span id="cb123-12"><a href="model-suiteB.html#cb123-12"></a><span class="co"># Utility objects</span></span>
-<span id="cb123-13"><a href="model-suiteB.html#cb123-13"></a>SIZE0 &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_pad</span>(SIZE, <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>)</span>
-<span id="cb123-14"><a href="model-suiteB.html#cb123-14"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb123-15"><a href="model-suiteB.html#cb123-15"></a></span>
-<span id="cb123-16"><a href="model-suiteB.html#cb123-16"></a></span>
-<span id="cb123-17"><a href="model-suiteB.html#cb123-17"></a><span class="co">#SIM &lt;- &quot;Sim_01&quot;</span></span>
-<span id="cb123-18"><a href="model-suiteB.html#cb123-18"></a></span>
-<span id="cb123-19"><a href="model-suiteB.html#cb123-19"></a><span class="cf">for</span>(SIM <span class="cf">in</span> <span class="kw">unique</span>(sim_results_frm<span class="op">$</span>SimNo)[<span class="dv">1</span>]){</span>
-<span id="cb123-20"><a href="model-suiteB.html#cb123-20"></a></span>
-<span id="cb123-21"><a href="model-suiteB.html#cb123-21"></a>SimNum &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">sub</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="st">&#39;&#39;</span>,SIM))</span>
-<span id="cb123-22"><a href="model-suiteB.html#cb123-22"></a></span>
-<span id="cb123-23"><a href="model-suiteB.html#cb123-23"></a>simNo_results_frm &lt;-<span class="st"> </span>sim_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(SimNo<span class="op">==</span>SIM)</span>
-<span id="cb123-24"><a href="model-suiteB.html#cb123-24"></a></span>
-<span id="cb123-25"><a href="model-suiteB.html#cb123-25"></a></span>
-<span id="cb123-26"><a href="model-suiteB.html#cb123-26"></a><span class="co"># errors</span></span>
-<span id="cb123-27"><a href="model-suiteB.html#cb123-27"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
-<span id="cb123-28"><a href="model-suiteB.html#cb123-28"></a><span class="co">###################</span></span>
-<span id="cb123-29"><a href="model-suiteB.html#cb123-29"></a><span class="co"># 1se</span></span>
-<span id="cb123-30"><a href="model-suiteB.html#cb123-30"></a><span class="co">####################</span></span>
-<span id="cb123-31"><a href="model-suiteB.html#cb123-31"></a>cv_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb123-32"><a href="model-suiteB.html#cb123-32"></a> <span class="kw">split</span>(cv_1se, Size))</span>
-<span id="cb123-33"><a href="model-suiteB.html#cb123-33"></a><span class="kw">names</span>(cv_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(cv_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
-<span id="cb123-34"><a href="model-suiteB.html#cb123-34"></a></span>
-<span id="cb123-35"><a href="model-suiteB.html#cb123-35"></a>test_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb123-36"><a href="model-suiteB.html#cb123-36"></a> <span class="kw">split</span>(test_1se, Size))</span>
-<span id="cb123-37"><a href="model-suiteB.html#cb123-37"></a><span class="kw">names</span>(test_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(test_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
-<span id="cb123-38"><a href="model-suiteB.html#cb123-38"></a></span>
-<span id="cb123-39"><a href="model-suiteB.html#cb123-39"></a>error_1se_lst &lt;-<span class="st"> </span><span class="kw">c</span>(cv_1se_lst, test_1se_lst)</span>
-<span id="cb123-40"><a href="model-suiteB.html#cb123-40"></a>error_1se_lst &lt;-<span class="st"> </span>error_1se_lst[<span class="kw">order</span>(<span class="kw">names</span>(error_1se_lst))]</span>
-<span id="cb123-41"><a href="model-suiteB.html#cb123-41"></a></span>
-<span id="cb123-42"><a href="model-suiteB.html#cb123-42"></a><span class="kw">boxplot</span>(error_1se_lst, </span>
-<span id="cb123-43"><a href="model-suiteB.html#cb123-43"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>), </span>
-<span id="cb123-44"><a href="model-suiteB.html#cb123-44"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">.4</span>),</span>
-<span id="cb123-45"><a href="model-suiteB.html#cb123-45"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb123-46"><a href="model-suiteB.html#cb123-46"></a>)</span>
-<span id="cb123-47"><a href="model-suiteB.html#cb123-47"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
-<span id="cb123-48"><a href="model-suiteB.html#cb123-48"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-49"><a href="model-suiteB.html#cb123-49"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)), </span>
-<span id="cb123-50"><a href="model-suiteB.html#cb123-50"></a>  SIZE0</span>
-<span id="cb123-51"><a href="model-suiteB.html#cb123-51"></a> )</span>
-<span id="cb123-52"><a href="model-suiteB.html#cb123-52"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb123-53"><a href="model-suiteB.html#cb123-53"></a><span class="kw">abline</span>(<span class="dt">h=</span> error_1se_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
-<span id="cb123-54"><a href="model-suiteB.html#cb123-54"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>, </span>
-<span id="cb123-55"><a href="model-suiteB.html#cb123-55"></a>   <span class="co">#title=&#39;1se errors&#39;, title.col = &#39;black&#39;,</span></span>
-<span id="cb123-56"><a href="model-suiteB.html#cb123-56"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb123-57"><a href="model-suiteB.html#cb123-57"></a>   <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&#39;cv error&#39;</span>, <span class="st">&#39;test set&#39;</span>),</span>
-<span id="cb123-58"><a href="model-suiteB.html#cb123-58"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb123-59"><a href="model-suiteB.html#cb123-59"></a> )</span>
-<span id="cb123-60"><a href="model-suiteB.html#cb123-60"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;1se error rates&#39;</span>))</span>
-<span id="cb123-61"><a href="model-suiteB.html#cb123-61"></a></span>
-<span id="cb123-62"><a href="model-suiteB.html#cb123-62"></a><span class="co"># Add qual annotation</span></span>
-<span id="cb123-63"><a href="model-suiteB.html#cb123-63"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb123-64"><a href="model-suiteB.html#cb123-64"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb123-65"><a href="model-suiteB.html#cb123-65"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb123-66"><a href="model-suiteB.html#cb123-66"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-67"><a href="model-suiteB.html#cb123-67"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)),</span>
-<span id="cb123-68"><a href="model-suiteB.html#cb123-68"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb123-69"><a href="model-suiteB.html#cb123-69"></a> )</span>
-<span id="cb123-70"><a href="model-suiteB.html#cb123-70"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb123-71"><a href="model-suiteB.html#cb123-71"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-72"><a href="model-suiteB.html#cb123-72"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)),</span>
-<span id="cb123-73"><a href="model-suiteB.html#cb123-73"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb123-74"><a href="model-suiteB.html#cb123-74"></a> )</span>
-<span id="cb123-75"><a href="model-suiteB.html#cb123-75"></a></span>
-<span id="cb123-76"><a href="model-suiteB.html#cb123-76"></a></span>
-<span id="cb123-77"><a href="model-suiteB.html#cb123-77"></a><span class="co"># min</span></span>
-<span id="cb123-78"><a href="model-suiteB.html#cb123-78"></a><span class="co">####################</span></span>
-<span id="cb123-79"><a href="model-suiteB.html#cb123-79"></a>cv_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb123-80"><a href="model-suiteB.html#cb123-80"></a> <span class="kw">split</span>(cv_min, Size))</span>
-<span id="cb123-81"><a href="model-suiteB.html#cb123-81"></a><span class="kw">names</span>(cv_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(cv_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
-<span id="cb123-82"><a href="model-suiteB.html#cb123-82"></a></span>
-<span id="cb123-83"><a href="model-suiteB.html#cb123-83"></a>test_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb123-84"><a href="model-suiteB.html#cb123-84"></a> <span class="kw">split</span>(test_min, Size))</span>
-<span id="cb123-85"><a href="model-suiteB.html#cb123-85"></a><span class="kw">names</span>(test_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(test_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
-<span id="cb123-86"><a href="model-suiteB.html#cb123-86"></a></span>
-<span id="cb123-87"><a href="model-suiteB.html#cb123-87"></a>error_min_lst &lt;-<span class="st"> </span><span class="kw">c</span>(cv_min_lst, test_min_lst)</span>
-<span id="cb123-88"><a href="model-suiteB.html#cb123-88"></a>error_min_lst &lt;-<span class="st"> </span>error_min_lst[<span class="kw">order</span>(<span class="kw">names</span>(error_min_lst))]</span>
-<span id="cb123-89"><a href="model-suiteB.html#cb123-89"></a></span>
-<span id="cb123-90"><a href="model-suiteB.html#cb123-90"></a><span class="kw">boxplot</span>(error_min_lst, </span>
-<span id="cb123-91"><a href="model-suiteB.html#cb123-91"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>), </span>
-<span id="cb123-92"><a href="model-suiteB.html#cb123-92"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">.4</span>),</span>
-<span id="cb123-93"><a href="model-suiteB.html#cb123-93"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb123-94"><a href="model-suiteB.html#cb123-94"></a>)</span>
-<span id="cb123-95"><a href="model-suiteB.html#cb123-95"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
-<span id="cb123-96"><a href="model-suiteB.html#cb123-96"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-97"><a href="model-suiteB.html#cb123-97"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)), </span>
-<span id="cb123-98"><a href="model-suiteB.html#cb123-98"></a>  SIZE0</span>
-<span id="cb123-99"><a href="model-suiteB.html#cb123-99"></a> )</span>
-<span id="cb123-100"><a href="model-suiteB.html#cb123-100"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb123-101"><a href="model-suiteB.html#cb123-101"></a><span class="kw">abline</span>(<span class="dt">h=</span> error_min_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
-<span id="cb123-102"><a href="model-suiteB.html#cb123-102"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>, </span>
-<span id="cb123-103"><a href="model-suiteB.html#cb123-103"></a>   <span class="co">#title=&#39;min errors&#39;, title.col = &#39;black&#39;,</span></span>
-<span id="cb123-104"><a href="model-suiteB.html#cb123-104"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb123-105"><a href="model-suiteB.html#cb123-105"></a>   <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&#39;cv error&#39;</span>, <span class="st">&#39;test set&#39;</span>),</span>
-<span id="cb123-106"><a href="model-suiteB.html#cb123-106"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb123-107"><a href="model-suiteB.html#cb123-107"></a> )</span>
-<span id="cb123-108"><a href="model-suiteB.html#cb123-108"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;min error rates&#39;</span>))</span>
-<span id="cb123-109"><a href="model-suiteB.html#cb123-109"></a></span>
-<span id="cb123-110"><a href="model-suiteB.html#cb123-110"></a><span class="co"># Add qual annotation</span></span>
-<span id="cb123-111"><a href="model-suiteB.html#cb123-111"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb123-112"><a href="model-suiteB.html#cb123-112"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb123-113"><a href="model-suiteB.html#cb123-113"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb123-114"><a href="model-suiteB.html#cb123-114"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-115"><a href="model-suiteB.html#cb123-115"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)),</span>
-<span id="cb123-116"><a href="model-suiteB.html#cb123-116"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb123-117"><a href="model-suiteB.html#cb123-117"></a> )</span>
-<span id="cb123-118"><a href="model-suiteB.html#cb123-118"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb123-119"><a href="model-suiteB.html#cb123-119"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb123-120"><a href="model-suiteB.html#cb123-120"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)),</span>
-<span id="cb123-121"><a href="model-suiteB.html#cb123-121"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb123-122"><a href="model-suiteB.html#cb123-122"></a> )</span>
-<span id="cb123-123"><a href="model-suiteB.html#cb123-123"></a></span>
-<span id="cb123-124"><a href="model-suiteB.html#cb123-124"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&#39;Sim =&#39;</span>,  SIM))</span>
-<span id="cb123-125"><a href="model-suiteB.html#cb123-125"></a></span>
-<span id="cb123-126"><a href="model-suiteB.html#cb123-126"></a>} <span class="co"># for(SIM</span></span></code></pre></div>
+<div id="simulation-results-3" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Simulation Results</h3>
+<p>First examine results for one simulation run.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="model-suiteB.html#cb116-1"></a><span class="co"># get full model cv error ref</span></span>
+<span id="cb116-2"><a href="model-suiteB.html#cb116-2"></a>error_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
+<span id="cb116-3"><a href="model-suiteB.html#cb116-3"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
+<span id="cb116-4"><a href="model-suiteB.html#cb116-4"></a>error_1se_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(error_1se_vec, <span class="dt">prob=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)        </span>
+<span id="cb116-5"><a href="model-suiteB.html#cb116-5"></a></span>
+<span id="cb116-6"><a href="model-suiteB.html#cb116-6"></a>error_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
+<span id="cb116-7"><a href="model-suiteB.html#cb116-7"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>cvm[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
+<span id="cb116-8"><a href="model-suiteB.html#cb116-8"></a>error_min_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(error_min_vec, <span class="dt">prob=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)        </span>
+<span id="cb116-9"><a href="model-suiteB.html#cb116-9"></a></span>
+<span id="cb116-10"><a href="model-suiteB.html#cb116-10"></a><span class="co"># Utility objects</span></span>
+<span id="cb116-11"><a href="model-suiteB.html#cb116-11"></a>SIZE0 &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_pad</span>(SIZE, <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>)</span>
+<span id="cb116-12"><a href="model-suiteB.html#cb116-12"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
+<span id="cb116-13"><a href="model-suiteB.html#cb116-13"></a></span>
+<span id="cb116-14"><a href="model-suiteB.html#cb116-14"></a></span>
+<span id="cb116-15"><a href="model-suiteB.html#cb116-15"></a><span class="co">#SIM &lt;- &quot;Sim_01&quot;</span></span>
+<span id="cb116-16"><a href="model-suiteB.html#cb116-16"></a></span>
+<span id="cb116-17"><a href="model-suiteB.html#cb116-17"></a><span class="cf">for</span>(SIM <span class="cf">in</span> <span class="kw">unique</span>(sim_results_frm<span class="op">$</span>SimNo)[<span class="dv">1</span>]){</span>
+<span id="cb116-18"><a href="model-suiteB.html#cb116-18"></a></span>
+<span id="cb116-19"><a href="model-suiteB.html#cb116-19"></a>SimNum &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">sub</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="st">&#39;&#39;</span>,SIM))</span>
+<span id="cb116-20"><a href="model-suiteB.html#cb116-20"></a></span>
+<span id="cb116-21"><a href="model-suiteB.html#cb116-21"></a>simNo_results_frm &lt;-<span class="st"> </span>sim_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(SimNo<span class="op">==</span>SIM)</span>
+<span id="cb116-22"><a href="model-suiteB.html#cb116-22"></a></span>
+<span id="cb116-23"><a href="model-suiteB.html#cb116-23"></a></span>
+<span id="cb116-24"><a href="model-suiteB.html#cb116-24"></a><span class="co"># errors</span></span>
+<span id="cb116-25"><a href="model-suiteB.html#cb116-25"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb116-26"><a href="model-suiteB.html#cb116-26"></a><span class="co">###################</span></span>
+<span id="cb116-27"><a href="model-suiteB.html#cb116-27"></a><span class="co"># 1se</span></span>
+<span id="cb116-28"><a href="model-suiteB.html#cb116-28"></a><span class="co">####################</span></span>
+<span id="cb116-29"><a href="model-suiteB.html#cb116-29"></a>cv_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb116-30"><a href="model-suiteB.html#cb116-30"></a> <span class="kw">split</span>(cv_1se, Size))</span>
+<span id="cb116-31"><a href="model-suiteB.html#cb116-31"></a><span class="kw">names</span>(cv_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(cv_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
+<span id="cb116-32"><a href="model-suiteB.html#cb116-32"></a></span>
+<span id="cb116-33"><a href="model-suiteB.html#cb116-33"></a>test_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb116-34"><a href="model-suiteB.html#cb116-34"></a> <span class="kw">split</span>(test_1se, Size))</span>
+<span id="cb116-35"><a href="model-suiteB.html#cb116-35"></a><span class="kw">names</span>(test_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(test_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
+<span id="cb116-36"><a href="model-suiteB.html#cb116-36"></a></span>
+<span id="cb116-37"><a href="model-suiteB.html#cb116-37"></a>error_1se_lst &lt;-<span class="st"> </span><span class="kw">c</span>(cv_1se_lst, test_1se_lst)</span>
+<span id="cb116-38"><a href="model-suiteB.html#cb116-38"></a>error_1se_lst &lt;-<span class="st"> </span>error_1se_lst[<span class="kw">order</span>(<span class="kw">names</span>(error_1se_lst))]</span>
+<span id="cb116-39"><a href="model-suiteB.html#cb116-39"></a></span>
+<span id="cb116-40"><a href="model-suiteB.html#cb116-40"></a><span class="kw">boxplot</span>(error_1se_lst, </span>
+<span id="cb116-41"><a href="model-suiteB.html#cb116-41"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>), </span>
+<span id="cb116-42"><a href="model-suiteB.html#cb116-42"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">.4</span>),</span>
+<span id="cb116-43"><a href="model-suiteB.html#cb116-43"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb116-44"><a href="model-suiteB.html#cb116-44"></a>)</span>
+<span id="cb116-45"><a href="model-suiteB.html#cb116-45"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
+<span id="cb116-46"><a href="model-suiteB.html#cb116-46"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-47"><a href="model-suiteB.html#cb116-47"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)), </span>
+<span id="cb116-48"><a href="model-suiteB.html#cb116-48"></a>  SIZE0</span>
+<span id="cb116-49"><a href="model-suiteB.html#cb116-49"></a> )</span>
+<span id="cb116-50"><a href="model-suiteB.html#cb116-50"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb116-51"><a href="model-suiteB.html#cb116-51"></a><span class="kw">abline</span>(<span class="dt">h=</span> error_1se_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb116-52"><a href="model-suiteB.html#cb116-52"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>, </span>
+<span id="cb116-53"><a href="model-suiteB.html#cb116-53"></a>   <span class="co">#title=&#39;1se errors&#39;, title.col = &#39;black&#39;,</span></span>
+<span id="cb116-54"><a href="model-suiteB.html#cb116-54"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
+<span id="cb116-55"><a href="model-suiteB.html#cb116-55"></a>   <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&#39;cv error&#39;</span>, <span class="st">&#39;test set&#39;</span>),</span>
+<span id="cb116-56"><a href="model-suiteB.html#cb116-56"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb116-57"><a href="model-suiteB.html#cb116-57"></a> )</span>
+<span id="cb116-58"><a href="model-suiteB.html#cb116-58"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;1se error rates&#39;</span>))</span>
+<span id="cb116-59"><a href="model-suiteB.html#cb116-59"></a></span>
+<span id="cb116-60"><a href="model-suiteB.html#cb116-60"></a>SKIP  &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb116-61"><a href="model-suiteB.html#cb116-61"></a><span class="co"># Add qual annotation</span></span>
+<span id="cb116-62"><a href="model-suiteB.html#cb116-62"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb116-63"><a href="model-suiteB.html#cb116-63"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb116-64"><a href="model-suiteB.html#cb116-64"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb116-65"><a href="model-suiteB.html#cb116-65"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-66"><a href="model-suiteB.html#cb116-66"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)),</span>
+<span id="cb116-67"><a href="model-suiteB.html#cb116-67"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb116-68"><a href="model-suiteB.html#cb116-68"></a> )</span>
+<span id="cb116-69"><a href="model-suiteB.html#cb116-69"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb116-70"><a href="model-suiteB.html#cb116-70"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-71"><a href="model-suiteB.html#cb116-71"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_1se_lst)),</span>
+<span id="cb116-72"><a href="model-suiteB.html#cb116-72"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb116-73"><a href="model-suiteB.html#cb116-73"></a> )</span>
+<span id="cb116-74"><a href="model-suiteB.html#cb116-74"></a>}<span class="co">#SKIP</span></span>
+<span id="cb116-75"><a href="model-suiteB.html#cb116-75"></a></span>
+<span id="cb116-76"><a href="model-suiteB.html#cb116-76"></a><span class="co"># min</span></span>
+<span id="cb116-77"><a href="model-suiteB.html#cb116-77"></a><span class="co">####################</span></span>
+<span id="cb116-78"><a href="model-suiteB.html#cb116-78"></a>cv_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb116-79"><a href="model-suiteB.html#cb116-79"></a> <span class="kw">split</span>(cv_min, Size))</span>
+<span id="cb116-80"><a href="model-suiteB.html#cb116-80"></a><span class="kw">names</span>(cv_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(cv_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
+<span id="cb116-81"><a href="model-suiteB.html#cb116-81"></a></span>
+<span id="cb116-82"><a href="model-suiteB.html#cb116-82"></a>test_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb116-83"><a href="model-suiteB.html#cb116-83"></a> <span class="kw">split</span>(test_min, Size))</span>
+<span id="cb116-84"><a href="model-suiteB.html#cb116-84"></a><span class="kw">names</span>(test_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(test_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_cv&#39;</span>)</span>
+<span id="cb116-85"><a href="model-suiteB.html#cb116-85"></a></span>
+<span id="cb116-86"><a href="model-suiteB.html#cb116-86"></a>error_min_lst &lt;-<span class="st"> </span><span class="kw">c</span>(cv_min_lst, test_min_lst)</span>
+<span id="cb116-87"><a href="model-suiteB.html#cb116-87"></a>error_min_lst &lt;-<span class="st"> </span>error_min_lst[<span class="kw">order</span>(<span class="kw">names</span>(error_min_lst))]</span>
+<span id="cb116-88"><a href="model-suiteB.html#cb116-88"></a></span>
+<span id="cb116-89"><a href="model-suiteB.html#cb116-89"></a><span class="kw">boxplot</span>(error_min_lst, </span>
+<span id="cb116-90"><a href="model-suiteB.html#cb116-90"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>), </span>
+<span id="cb116-91"><a href="model-suiteB.html#cb116-91"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">.4</span>),</span>
+<span id="cb116-92"><a href="model-suiteB.html#cb116-92"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb116-93"><a href="model-suiteB.html#cb116-93"></a>)</span>
+<span id="cb116-94"><a href="model-suiteB.html#cb116-94"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
+<span id="cb116-95"><a href="model-suiteB.html#cb116-95"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-96"><a href="model-suiteB.html#cb116-96"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)), </span>
+<span id="cb116-97"><a href="model-suiteB.html#cb116-97"></a>  SIZE0</span>
+<span id="cb116-98"><a href="model-suiteB.html#cb116-98"></a> )</span>
+<span id="cb116-99"><a href="model-suiteB.html#cb116-99"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb116-100"><a href="model-suiteB.html#cb116-100"></a><span class="kw">abline</span>(<span class="dt">h=</span> error_min_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb116-101"><a href="model-suiteB.html#cb116-101"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>, </span>
+<span id="cb116-102"><a href="model-suiteB.html#cb116-102"></a>   <span class="co">#title=&#39;min errors&#39;, title.col = &#39;black&#39;,</span></span>
+<span id="cb116-103"><a href="model-suiteB.html#cb116-103"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
+<span id="cb116-104"><a href="model-suiteB.html#cb116-104"></a>   <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&#39;cv error&#39;</span>, <span class="st">&#39;test set&#39;</span>),</span>
+<span id="cb116-105"><a href="model-suiteB.html#cb116-105"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb116-106"><a href="model-suiteB.html#cb116-106"></a> )</span>
+<span id="cb116-107"><a href="model-suiteB.html#cb116-107"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;min error rates&#39;</span>))</span>
+<span id="cb116-108"><a href="model-suiteB.html#cb116-108"></a></span>
+<span id="cb116-109"><a href="model-suiteB.html#cb116-109"></a>SKIP  &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb116-110"><a href="model-suiteB.html#cb116-110"></a><span class="co"># Add qual annotation</span></span>
+<span id="cb116-111"><a href="model-suiteB.html#cb116-111"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb116-112"><a href="model-suiteB.html#cb116-112"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb116-113"><a href="model-suiteB.html#cb116-113"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb116-114"><a href="model-suiteB.html#cb116-114"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-115"><a href="model-suiteB.html#cb116-115"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)),</span>
+<span id="cb116-116"><a href="model-suiteB.html#cb116-116"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb116-117"><a href="model-suiteB.html#cb116-117"></a> )</span>
+<span id="cb116-118"><a href="model-suiteB.html#cb116-118"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb116-119"><a href="model-suiteB.html#cb116-119"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb116-120"><a href="model-suiteB.html#cb116-120"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_cv&#39;</span>),<span class="kw">names</span>(error_min_lst)),</span>
+<span id="cb116-121"><a href="model-suiteB.html#cb116-121"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb116-122"><a href="model-suiteB.html#cb116-122"></a> )</span>
+<span id="cb116-123"><a href="model-suiteB.html#cb116-123"></a>}<span class="co">#SKIP</span></span>
+<span id="cb116-124"><a href="model-suiteB.html#cb116-124"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&#39;Sim =&#39;</span>,  SIM))</span>
+<span id="cb116-125"><a href="model-suiteB.html#cb116-125"></a></span>
+<span id="cb116-126"><a href="model-suiteB.html#cb116-126"></a>} <span class="co"># for(SIM</span></span></code></pre></div>
 <div class="figure"><span id="fig:enet-simRes-errors-bySim"></span>
-<img src="Static/figures/enet-simRes-errors-bySim-1.png" alt="Errors by Sample Size and Quality" width="960" />
+<img src="Static/figures/enet-simRes-errors-bySim-1.png" alt="enet Model Errors by Sample Size" width="960" />
 <p class="caption">
-Figure 6.8: Errors by Sample Size and Quality
+Figure 6.6: enet Model Errors by Sample Size
 </p>
 </div>
-</div>
-<div id="simulation-results-model-size-by-run-1" class="section level3 unnumbered" number="">
-<h3>Simulation Results: Model Size By Run</h3>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="model-suiteB.html#cb124-1"></a><span class="co"># CLEAR CACHE </span></span>
-<span id="cb124-2"><a href="model-suiteB.html#cb124-2"></a></span>
-<span id="cb124-3"><a href="model-suiteB.html#cb124-3"></a><span class="co"># get full model nzero ref</span></span>
-<span id="cb124-4"><a href="model-suiteB.html#cb124-4"></a>nzero_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
-<span id="cb124-5"><a href="model-suiteB.html#cb124-5"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
-<span id="cb124-6"><a href="model-suiteB.html#cb124-6"></a>nzero_1se_q1q3 &lt;-<span class="st"> </span><span class="kw">quantile</span>(nzero_1se_vec, <span class="dt">prob=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)<span class="op">/</span><span class="dv">4</span>)</span>
-<span id="cb124-7"><a href="model-suiteB.html#cb124-7"></a></span>
-<span id="cb124-8"><a href="model-suiteB.html#cb124-8"></a>nzero_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
-<span id="cb124-9"><a href="model-suiteB.html#cb124-9"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
-<span id="cb124-10"><a href="model-suiteB.html#cb124-10"></a>nzero_min_q1q3 &lt;-<span class="st"> </span><span class="kw">quantile</span>(nzero_min_vec, <span class="dt">prob=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)<span class="op">/</span><span class="dv">4</span>)</span>
-<span id="cb124-11"><a href="model-suiteB.html#cb124-11"></a></span>
-<span id="cb124-12"><a href="model-suiteB.html#cb124-12"></a><span class="co"># Utility objects</span></span>
-<span id="cb124-13"><a href="model-suiteB.html#cb124-13"></a>SIZE0 &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_pad</span>(SIZE, <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>)</span>
-<span id="cb124-14"><a href="model-suiteB.html#cb124-14"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
-<span id="cb124-15"><a href="model-suiteB.html#cb124-15"></a></span>
-<span id="cb124-16"><a href="model-suiteB.html#cb124-16"></a></span>
-<span id="cb124-17"><a href="model-suiteB.html#cb124-17"></a><span class="co">#SIM &lt;- &quot;Sim_01&quot;</span></span>
-<span id="cb124-18"><a href="model-suiteB.html#cb124-18"></a></span>
-<span id="cb124-19"><a href="model-suiteB.html#cb124-19"></a><span class="cf">for</span>(SIM <span class="cf">in</span> <span class="kw">unique</span>(sim_results_frm<span class="op">$</span>SimNo)[<span class="dv">1</span>]){</span>
-<span id="cb124-20"><a href="model-suiteB.html#cb124-20"></a></span>
-<span id="cb124-21"><a href="model-suiteB.html#cb124-21"></a>SimNum &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">sub</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="st">&#39;&#39;</span>,SIM))</span>
-<span id="cb124-22"><a href="model-suiteB.html#cb124-22"></a></span>
-<span id="cb124-23"><a href="model-suiteB.html#cb124-23"></a>simNo_results_frm &lt;-<span class="st"> </span>sim_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(SimNo<span class="op">==</span>SIM)</span>
-<span id="cb124-24"><a href="model-suiteB.html#cb124-24"></a></span>
-<span id="cb124-25"><a href="model-suiteB.html#cb124-25"></a></span>
-<span id="cb124-26"><a href="model-suiteB.html#cb124-26"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
-<span id="cb124-27"><a href="model-suiteB.html#cb124-27"></a><span class="co">###################</span></span>
-<span id="cb124-28"><a href="model-suiteB.html#cb124-28"></a><span class="co"># 1se</span></span>
-<span id="cb124-29"><a href="model-suiteB.html#cb124-29"></a><span class="co">####################</span></span>
-<span id="cb124-30"><a href="model-suiteB.html#cb124-30"></a><span class="co"># selected feature counts</span></span>
-<span id="cb124-31"><a href="model-suiteB.html#cb124-31"></a>p_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb124-32"><a href="model-suiteB.html#cb124-32"></a> <span class="kw">split</span>(p_1se, Size))</span>
-<span id="cb124-33"><a href="model-suiteB.html#cb124-33"></a><span class="kw">names</span>(p_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(p_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_p&#39;</span>)</span>
-<span id="cb124-34"><a href="model-suiteB.html#cb124-34"></a></span>
-<span id="cb124-35"><a href="model-suiteB.html#cb124-35"></a><span class="co"># get selected features that are part of gene_sign_1se_vec</span></span>
-<span id="cb124-36"><a href="model-suiteB.html#cb124-36"></a><span class="co"># - the signature selected genes</span></span>
-<span id="cb124-37"><a href="model-suiteB.html#cb124-37"></a>sign_genes_1se_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(simNo_results_frm), <span class="cf">function</span>(RR)</span>
-<span id="cb124-38"><a href="model-suiteB.html#cb124-38"></a>    <span class="kw">intersect</span>(<span class="kw">unlist</span>(simNo_results_frm[RR, <span class="st">&#39;genes_1se&#39;</span>]), gene_sign_1se_vec))</span>
-<span id="cb124-39"><a href="model-suiteB.html#cb124-39"></a></span>
-<span id="cb124-40"><a href="model-suiteB.html#cb124-40"></a>sign_p_1se_lst &lt;-<span class="st"> </span><span class="kw">split</span>(<span class="kw">sapply</span>(sign_genes_1se_lst, length), simNo_results_frm<span class="op">$</span>Size)</span>
-<span id="cb124-41"><a href="model-suiteB.html#cb124-41"></a><span class="kw">names</span>(sign_p_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(sign_p_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_signP&#39;</span>)</span>
-<span id="cb124-42"><a href="model-suiteB.html#cb124-42"></a></span>
-<span id="cb124-43"><a href="model-suiteB.html#cb124-43"></a></span>
-<span id="cb124-44"><a href="model-suiteB.html#cb124-44"></a>p_singP_1se_lst &lt;-<span class="st"> </span><span class="kw">c</span>(p_1se_lst, sign_p_1se_lst)</span>
-<span id="cb124-45"><a href="model-suiteB.html#cb124-45"></a>p_singP_1se_lst &lt;-<span class="st"> </span>p_singP_1se_lst[<span class="kw">order</span>(<span class="kw">names</span>(p_singP_1se_lst))]</span>
-<span id="cb124-46"><a href="model-suiteB.html#cb124-46"></a></span>
-<span id="cb124-47"><a href="model-suiteB.html#cb124-47"></a><span class="kw">boxplot</span>(p_singP_1se_lst,</span>
-<span id="cb124-48"><a href="model-suiteB.html#cb124-48"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb124-49"><a href="model-suiteB.html#cb124-49"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
-<span id="cb124-50"><a href="model-suiteB.html#cb124-50"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb124-51"><a href="model-suiteB.html#cb124-51"></a>)</span>
-<span id="cb124-52"><a href="model-suiteB.html#cb124-52"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
-<span id="cb124-53"><a href="model-suiteB.html#cb124-53"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-54"><a href="model-suiteB.html#cb124-54"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
-<span id="cb124-55"><a href="model-suiteB.html#cb124-55"></a>  SIZE0</span>
-<span id="cb124-56"><a href="model-suiteB.html#cb124-56"></a> )</span>
-<span id="cb124-57"><a href="model-suiteB.html#cb124-57"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb124-58"><a href="model-suiteB.html#cb124-58"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_1se_q1q3, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
-<span id="cb124-59"><a href="model-suiteB.html#cb124-59"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
-<span id="cb124-60"><a href="model-suiteB.html#cb124-60"></a>   <span class="co">#title=&#39;1se errors&#39;, title.col = &#39;black&#39;,</span></span>
-<span id="cb124-61"><a href="model-suiteB.html#cb124-61"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>
-<span id="cb124-62"><a href="model-suiteB.html#cb124-62"></a>   <span class="dt">legend=</span> <span class="kw">c</span>(<span class="st">&#39;selected genes&#39;</span>,<span class="st">&#39;signature genes&#39;</span>),</span>
-<span id="cb124-63"><a href="model-suiteB.html#cb124-63"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb124-64"><a href="model-suiteB.html#cb124-64"></a> )</span>
-<span id="cb124-65"><a href="model-suiteB.html#cb124-65"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;1se - selected gene counts&#39;</span>))</span>
-<span id="cb124-66"><a href="model-suiteB.html#cb124-66"></a><span class="co"># Add qual annotation</span></span>
-<span id="cb124-67"><a href="model-suiteB.html#cb124-67"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb124-68"><a href="model-suiteB.html#cb124-68"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb124-69"><a href="model-suiteB.html#cb124-69"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb124-70"><a href="model-suiteB.html#cb124-70"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-71"><a href="model-suiteB.html#cb124-71"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
-<span id="cb124-72"><a href="model-suiteB.html#cb124-72"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb124-73"><a href="model-suiteB.html#cb124-73"></a> )</span>
-<span id="cb124-74"><a href="model-suiteB.html#cb124-74"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb124-75"><a href="model-suiteB.html#cb124-75"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-76"><a href="model-suiteB.html#cb124-76"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
-<span id="cb124-77"><a href="model-suiteB.html#cb124-77"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb124-78"><a href="model-suiteB.html#cb124-78"></a> )</span>
-<span id="cb124-79"><a href="model-suiteB.html#cb124-79"></a></span>
-<span id="cb124-80"><a href="model-suiteB.html#cb124-80"></a></span>
-<span id="cb124-81"><a href="model-suiteB.html#cb124-81"></a><span class="co">###################</span></span>
-<span id="cb124-82"><a href="model-suiteB.html#cb124-82"></a><span class="co"># min</span></span>
-<span id="cb124-83"><a href="model-suiteB.html#cb124-83"></a><span class="co">####################</span></span>
-<span id="cb124-84"><a href="model-suiteB.html#cb124-84"></a><span class="co"># selected feature counts</span></span>
-<span id="cb124-85"><a href="model-suiteB.html#cb124-85"></a>p_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
-<span id="cb124-86"><a href="model-suiteB.html#cb124-86"></a> <span class="kw">split</span>(p_min, Size))</span>
-<span id="cb124-87"><a href="model-suiteB.html#cb124-87"></a><span class="kw">names</span>(p_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(p_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_p&#39;</span>)</span>
-<span id="cb124-88"><a href="model-suiteB.html#cb124-88"></a></span>
-<span id="cb124-89"><a href="model-suiteB.html#cb124-89"></a><span class="co"># get selected features that are part of gene_sign_min_vec</span></span>
-<span id="cb124-90"><a href="model-suiteB.html#cb124-90"></a><span class="co"># - the signature selected genes</span></span>
-<span id="cb124-91"><a href="model-suiteB.html#cb124-91"></a>sign_genes_min_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(simNo_results_frm), <span class="cf">function</span>(RR)</span>
-<span id="cb124-92"><a href="model-suiteB.html#cb124-92"></a>    <span class="kw">intersect</span>(<span class="kw">unlist</span>(simNo_results_frm[RR, <span class="st">&#39;genes_min&#39;</span>]), gene_sign_min_vec))</span>
-<span id="cb124-93"><a href="model-suiteB.html#cb124-93"></a></span>
-<span id="cb124-94"><a href="model-suiteB.html#cb124-94"></a>sign_p_min_lst &lt;-<span class="st"> </span><span class="kw">split</span>(<span class="kw">sapply</span>(sign_genes_min_lst, length), simNo_results_frm<span class="op">$</span>Size)</span>
-<span id="cb124-95"><a href="model-suiteB.html#cb124-95"></a><span class="kw">names</span>(sign_p_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(sign_p_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_signP&#39;</span>)</span>
-<span id="cb124-96"><a href="model-suiteB.html#cb124-96"></a></span>
-<span id="cb124-97"><a href="model-suiteB.html#cb124-97"></a></span>
-<span id="cb124-98"><a href="model-suiteB.html#cb124-98"></a>p_singP_min_lst &lt;-<span class="st"> </span><span class="kw">c</span>(p_min_lst, sign_p_min_lst)</span>
-<span id="cb124-99"><a href="model-suiteB.html#cb124-99"></a>p_singP_min_lst &lt;-<span class="st"> </span>p_singP_min_lst[<span class="kw">order</span>(<span class="kw">names</span>(p_singP_min_lst))]</span>
-<span id="cb124-100"><a href="model-suiteB.html#cb124-100"></a></span>
-<span id="cb124-101"><a href="model-suiteB.html#cb124-101"></a><span class="kw">boxplot</span>(p_singP_min_lst,</span>
-<span id="cb124-102"><a href="model-suiteB.html#cb124-102"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb124-103"><a href="model-suiteB.html#cb124-103"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
-<span id="cb124-104"><a href="model-suiteB.html#cb124-104"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb124-105"><a href="model-suiteB.html#cb124-105"></a>)</span>
-<span id="cb124-106"><a href="model-suiteB.html#cb124-106"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
-<span id="cb124-107"><a href="model-suiteB.html#cb124-107"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-108"><a href="model-suiteB.html#cb124-108"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
-<span id="cb124-109"><a href="model-suiteB.html#cb124-109"></a>  SIZE0</span>
-<span id="cb124-110"><a href="model-suiteB.html#cb124-110"></a> )</span>
-<span id="cb124-111"><a href="model-suiteB.html#cb124-111"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb124-112"><a href="model-suiteB.html#cb124-112"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_min_q1q3, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
-<span id="cb124-113"><a href="model-suiteB.html#cb124-113"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
-<span id="cb124-114"><a href="model-suiteB.html#cb124-114"></a>   <span class="co">#title=&#39;min errors&#39;, title.col = &#39;black&#39;,</span></span>
-<span id="cb124-115"><a href="model-suiteB.html#cb124-115"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>
-<span id="cb124-116"><a href="model-suiteB.html#cb124-116"></a>   <span class="dt">legend=</span> <span class="kw">c</span>(<span class="st">&#39;selected genes&#39;</span>,<span class="st">&#39;signature genes&#39;</span>),</span>
-<span id="cb124-117"><a href="model-suiteB.html#cb124-117"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
-<span id="cb124-118"><a href="model-suiteB.html#cb124-118"></a> )</span>
-<span id="cb124-119"><a href="model-suiteB.html#cb124-119"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;min - selected gene counts&#39;</span>))</span>
-<span id="cb124-120"><a href="model-suiteB.html#cb124-120"></a><span class="co"># Add qual annotation</span></span>
-<span id="cb124-121"><a href="model-suiteB.html#cb124-121"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb124-122"><a href="model-suiteB.html#cb124-122"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
-<span id="cb124-123"><a href="model-suiteB.html#cb124-123"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb124-124"><a href="model-suiteB.html#cb124-124"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-125"><a href="model-suiteB.html#cb124-125"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
-<span id="cb124-126"><a href="model-suiteB.html#cb124-126"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb124-127"><a href="model-suiteB.html#cb124-127"></a> )</span>
-<span id="cb124-128"><a href="model-suiteB.html#cb124-128"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb124-129"><a href="model-suiteB.html#cb124-129"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
-<span id="cb124-130"><a href="model-suiteB.html#cb124-130"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
-<span id="cb124-131"><a href="model-suiteB.html#cb124-131"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
-<span id="cb124-132"><a href="model-suiteB.html#cb124-132"></a> )</span>
-<span id="cb124-133"><a href="model-suiteB.html#cb124-133"></a></span>
-<span id="cb124-134"><a href="model-suiteB.html#cb124-134"></a></span>
-<span id="cb124-135"><a href="model-suiteB.html#cb124-135"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&#39;Sim =&#39;</span>,  SIM))</span>
-<span id="cb124-136"><a href="model-suiteB.html#cb124-136"></a></span>
-<span id="cb124-137"><a href="model-suiteB.html#cb124-137"></a>} <span class="co"># for(SIM</span></span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="model-suiteB.html#cb117-1"></a><span class="co"># get full model nzero ref</span></span>
+<span id="cb117-2"><a href="model-suiteB.html#cb117-2"></a>nzero_1se_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
+<span id="cb117-3"><a href="model-suiteB.html#cb117-3"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
+<span id="cb117-4"><a href="model-suiteB.html#cb117-4"></a>nzero_1se_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(nzero_1se_vec, <span class="dt">prob=</span><span class="kw">c</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">4</span>)</span>
+<span id="cb117-5"><a href="model-suiteB.html#cb117-5"></a></span>
+<span id="cb117-6"><a href="model-suiteB.html#cb117-6"></a>nzero_min_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(cv_enetAll_lst,</span>
+<span id="cb117-7"><a href="model-suiteB.html#cb117-7"></a> <span class="cf">function</span>(cv_fit) cv_fit<span class="op">$</span>nzero[cv_fit<span class="op">$</span>lambda <span class="op">==</span><span class="st"> </span>cv_fit<span class="op">$</span>lambda.min])</span>
+<span id="cb117-8"><a href="model-suiteB.html#cb117-8"></a>nzero_min_q2 &lt;-<span class="st"> </span><span class="kw">quantile</span>(nzero_min_vec, <span class="dt">prob=</span><span class="kw">c</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">4</span>)</span>
+<span id="cb117-9"><a href="model-suiteB.html#cb117-9"></a></span>
+<span id="cb117-10"><a href="model-suiteB.html#cb117-10"></a><span class="co"># Utility objects</span></span>
+<span id="cb117-11"><a href="model-suiteB.html#cb117-11"></a>SIZE0 &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_pad</span>(SIZE, <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>)</span>
+<span id="cb117-12"><a href="model-suiteB.html#cb117-12"></a>stage_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(sim_control_qual_mtx), <span class="kw">c</span>(<span class="dv">0</span>,SIZE), <span class="dt">include.lowest =</span> T)</span>
+<span id="cb117-13"><a href="model-suiteB.html#cb117-13"></a></span>
+<span id="cb117-14"><a href="model-suiteB.html#cb117-14"></a></span>
+<span id="cb117-15"><a href="model-suiteB.html#cb117-15"></a><span class="co">#SIM &lt;- &quot;Sim_01&quot;</span></span>
+<span id="cb117-16"><a href="model-suiteB.html#cb117-16"></a></span>
+<span id="cb117-17"><a href="model-suiteB.html#cb117-17"></a><span class="cf">for</span>(SIM <span class="cf">in</span> <span class="kw">unique</span>(sim_results_frm<span class="op">$</span>SimNo)[<span class="dv">1</span>]){</span>
+<span id="cb117-18"><a href="model-suiteB.html#cb117-18"></a></span>
+<span id="cb117-19"><a href="model-suiteB.html#cb117-19"></a>SimNum &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">sub</span>(<span class="st">&#39;Sim_&#39;</span>,<span class="st">&#39;&#39;</span>,SIM))</span>
+<span id="cb117-20"><a href="model-suiteB.html#cb117-20"></a></span>
+<span id="cb117-21"><a href="model-suiteB.html#cb117-21"></a>simNo_results_frm &lt;-<span class="st"> </span>sim_results_frm <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(SimNo<span class="op">==</span>SIM)</span>
+<span id="cb117-22"><a href="model-suiteB.html#cb117-22"></a></span>
+<span id="cb117-23"><a href="model-suiteB.html#cb117-23"></a></span>
+<span id="cb117-24"><a href="model-suiteB.html#cb117-24"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb117-25"><a href="model-suiteB.html#cb117-25"></a><span class="co">###################</span></span>
+<span id="cb117-26"><a href="model-suiteB.html#cb117-26"></a><span class="co"># 1se</span></span>
+<span id="cb117-27"><a href="model-suiteB.html#cb117-27"></a><span class="co">####################</span></span>
+<span id="cb117-28"><a href="model-suiteB.html#cb117-28"></a><span class="co"># selected feature counts</span></span>
+<span id="cb117-29"><a href="model-suiteB.html#cb117-29"></a>p_1se_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb117-30"><a href="model-suiteB.html#cb117-30"></a> <span class="kw">split</span>(p_1se, Size))</span>
+<span id="cb117-31"><a href="model-suiteB.html#cb117-31"></a><span class="kw">names</span>(p_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(p_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_p&#39;</span>)</span>
+<span id="cb117-32"><a href="model-suiteB.html#cb117-32"></a></span>
+<span id="cb117-33"><a href="model-suiteB.html#cb117-33"></a><span class="co"># get selected features that are part of enet_gene_sign_1se_vec</span></span>
+<span id="cb117-34"><a href="model-suiteB.html#cb117-34"></a><span class="co"># - the signature selected genes</span></span>
+<span id="cb117-35"><a href="model-suiteB.html#cb117-35"></a>sign_genes_1se_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(simNo_results_frm), <span class="cf">function</span>(RR)</span>
+<span id="cb117-36"><a href="model-suiteB.html#cb117-36"></a>    <span class="kw">intersect</span>(<span class="kw">unlist</span>(simNo_results_frm[RR, <span class="st">&#39;genes_1se&#39;</span>]), enet_gene_sign_1se_vec))</span>
+<span id="cb117-37"><a href="model-suiteB.html#cb117-37"></a></span>
+<span id="cb117-38"><a href="model-suiteB.html#cb117-38"></a>sign_p_1se_lst &lt;-<span class="st"> </span><span class="kw">split</span>(<span class="kw">sapply</span>(sign_genes_1se_lst, length), simNo_results_frm<span class="op">$</span>Size)</span>
+<span id="cb117-39"><a href="model-suiteB.html#cb117-39"></a><span class="kw">names</span>(sign_p_1se_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(sign_p_1se_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_signP&#39;</span>)</span>
+<span id="cb117-40"><a href="model-suiteB.html#cb117-40"></a></span>
+<span id="cb117-41"><a href="model-suiteB.html#cb117-41"></a></span>
+<span id="cb117-42"><a href="model-suiteB.html#cb117-42"></a>p_singP_1se_lst &lt;-<span class="st"> </span><span class="kw">c</span>(p_1se_lst, sign_p_1se_lst)</span>
+<span id="cb117-43"><a href="model-suiteB.html#cb117-43"></a>p_singP_1se_lst &lt;-<span class="st"> </span>p_singP_1se_lst[<span class="kw">order</span>(<span class="kw">names</span>(p_singP_1se_lst))]</span>
+<span id="cb117-44"><a href="model-suiteB.html#cb117-44"></a></span>
+<span id="cb117-45"><a href="model-suiteB.html#cb117-45"></a><span class="kw">boxplot</span>(p_singP_1se_lst,</span>
+<span id="cb117-46"><a href="model-suiteB.html#cb117-46"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
+<span id="cb117-47"><a href="model-suiteB.html#cb117-47"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
+<span id="cb117-48"><a href="model-suiteB.html#cb117-48"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb117-49"><a href="model-suiteB.html#cb117-49"></a>)</span>
+<span id="cb117-50"><a href="model-suiteB.html#cb117-50"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
+<span id="cb117-51"><a href="model-suiteB.html#cb117-51"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-52"><a href="model-suiteB.html#cb117-52"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
+<span id="cb117-53"><a href="model-suiteB.html#cb117-53"></a>  SIZE0</span>
+<span id="cb117-54"><a href="model-suiteB.html#cb117-54"></a> )</span>
+<span id="cb117-55"><a href="model-suiteB.html#cb117-55"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb117-56"><a href="model-suiteB.html#cb117-56"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_1se_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb117-57"><a href="model-suiteB.html#cb117-57"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
+<span id="cb117-58"><a href="model-suiteB.html#cb117-58"></a>   <span class="co">#title=&#39;1se errors&#39;, title.col = &#39;black&#39;,</span></span>
+<span id="cb117-59"><a href="model-suiteB.html#cb117-59"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>
+<span id="cb117-60"><a href="model-suiteB.html#cb117-60"></a>   <span class="dt">legend=</span> <span class="kw">c</span>(<span class="st">&#39;selected genes&#39;</span>,<span class="st">&#39;signature genes&#39;</span>),</span>
+<span id="cb117-61"><a href="model-suiteB.html#cb117-61"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb117-62"><a href="model-suiteB.html#cb117-62"></a> )</span>
+<span id="cb117-63"><a href="model-suiteB.html#cb117-63"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;1se - selected gene counts&#39;</span>))</span>
+<span id="cb117-64"><a href="model-suiteB.html#cb117-64"></a></span>
+<span id="cb117-65"><a href="model-suiteB.html#cb117-65"></a>SKIP  &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb117-66"><a href="model-suiteB.html#cb117-66"></a><span class="co"># Add qual annotation</span></span>
+<span id="cb117-67"><a href="model-suiteB.html#cb117-67"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb117-68"><a href="model-suiteB.html#cb117-68"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb117-69"><a href="model-suiteB.html#cb117-69"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb117-70"><a href="model-suiteB.html#cb117-70"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-71"><a href="model-suiteB.html#cb117-71"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
+<span id="cb117-72"><a href="model-suiteB.html#cb117-72"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb117-73"><a href="model-suiteB.html#cb117-73"></a> )</span>
+<span id="cb117-74"><a href="model-suiteB.html#cb117-74"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb117-75"><a href="model-suiteB.html#cb117-75"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-76"><a href="model-suiteB.html#cb117-76"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst)),</span>
+<span id="cb117-77"><a href="model-suiteB.html#cb117-77"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb117-78"><a href="model-suiteB.html#cb117-78"></a> )</span>
+<span id="cb117-79"><a href="model-suiteB.html#cb117-79"></a>}<span class="co">#SKIP</span></span>
+<span id="cb117-80"><a href="model-suiteB.html#cb117-80"></a></span>
+<span id="cb117-81"><a href="model-suiteB.html#cb117-81"></a><span class="co">###################</span></span>
+<span id="cb117-82"><a href="model-suiteB.html#cb117-82"></a><span class="co"># min</span></span>
+<span id="cb117-83"><a href="model-suiteB.html#cb117-83"></a><span class="co">####################</span></span>
+<span id="cb117-84"><a href="model-suiteB.html#cb117-84"></a><span class="co"># selected feature counts</span></span>
+<span id="cb117-85"><a href="model-suiteB.html#cb117-85"></a>p_min_lst &lt;-<span class="st"> </span><span class="kw">with</span>(simNo_results_frm,</span>
+<span id="cb117-86"><a href="model-suiteB.html#cb117-86"></a> <span class="kw">split</span>(p_min, Size))</span>
+<span id="cb117-87"><a href="model-suiteB.html#cb117-87"></a><span class="kw">names</span>(p_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(p_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_p&#39;</span>)</span>
+<span id="cb117-88"><a href="model-suiteB.html#cb117-88"></a></span>
+<span id="cb117-89"><a href="model-suiteB.html#cb117-89"></a><span class="co"># get selected features that are part of enet_gene_sign_min_vec</span></span>
+<span id="cb117-90"><a href="model-suiteB.html#cb117-90"></a><span class="co"># - the signature selected genes</span></span>
+<span id="cb117-91"><a href="model-suiteB.html#cb117-91"></a>sign_genes_min_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(simNo_results_frm), <span class="cf">function</span>(RR)</span>
+<span id="cb117-92"><a href="model-suiteB.html#cb117-92"></a>    <span class="kw">intersect</span>(<span class="kw">unlist</span>(simNo_results_frm[RR, <span class="st">&#39;genes_min&#39;</span>]), enet_gene_sign_min_vec))</span>
+<span id="cb117-93"><a href="model-suiteB.html#cb117-93"></a></span>
+<span id="cb117-94"><a href="model-suiteB.html#cb117-94"></a>sign_p_min_lst &lt;-<span class="st"> </span><span class="kw">split</span>(<span class="kw">sapply</span>(sign_genes_min_lst, length), simNo_results_frm<span class="op">$</span>Size)</span>
+<span id="cb117-95"><a href="model-suiteB.html#cb117-95"></a><span class="kw">names</span>(sign_p_min_lst) &lt;-<span class="st"> </span><span class="kw">paste0</span>(stringr<span class="op">::</span><span class="kw">str_pad</span>(<span class="kw">names</span>(sign_p_min_lst), <span class="dt">width=</span><span class="dv">3</span>, <span class="dt">pad=</span><span class="st">&#39;0&#39;</span>),<span class="st">&#39;_signP&#39;</span>)</span>
+<span id="cb117-96"><a href="model-suiteB.html#cb117-96"></a></span>
+<span id="cb117-97"><a href="model-suiteB.html#cb117-97"></a></span>
+<span id="cb117-98"><a href="model-suiteB.html#cb117-98"></a>p_singP_min_lst &lt;-<span class="st"> </span><span class="kw">c</span>(p_min_lst, sign_p_min_lst)</span>
+<span id="cb117-99"><a href="model-suiteB.html#cb117-99"></a>p_singP_min_lst &lt;-<span class="st"> </span>p_singP_min_lst[<span class="kw">order</span>(<span class="kw">names</span>(p_singP_min_lst))]</span>
+<span id="cb117-100"><a href="model-suiteB.html#cb117-100"></a></span>
+<span id="cb117-101"><a href="model-suiteB.html#cb117-101"></a><span class="kw">boxplot</span>(p_singP_min_lst,</span>
+<span id="cb117-102"><a href="model-suiteB.html#cb117-102"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
+<span id="cb117-103"><a href="model-suiteB.html#cb117-103"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
+<span id="cb117-104"><a href="model-suiteB.html#cb117-104"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb117-105"><a href="model-suiteB.html#cb117-105"></a>)</span>
+<span id="cb117-106"><a href="model-suiteB.html#cb117-106"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
+<span id="cb117-107"><a href="model-suiteB.html#cb117-107"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-108"><a href="model-suiteB.html#cb117-108"></a>  <span class="dt">at =</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
+<span id="cb117-109"><a href="model-suiteB.html#cb117-109"></a>  SIZE0</span>
+<span id="cb117-110"><a href="model-suiteB.html#cb117-110"></a> )</span>
+<span id="cb117-111"><a href="model-suiteB.html#cb117-111"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
+<span id="cb117-112"><a href="model-suiteB.html#cb117-112"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_min_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb117-113"><a href="model-suiteB.html#cb117-113"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
+<span id="cb117-114"><a href="model-suiteB.html#cb117-114"></a>   <span class="co">#title=&#39;min errors&#39;, title.col = &#39;black&#39;,</span></span>
+<span id="cb117-115"><a href="model-suiteB.html#cb117-115"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>
+<span id="cb117-116"><a href="model-suiteB.html#cb117-116"></a>   <span class="dt">legend=</span> <span class="kw">c</span>(<span class="st">&#39;selected genes&#39;</span>,<span class="st">&#39;signature genes&#39;</span>),</span>
+<span id="cb117-117"><a href="model-suiteB.html#cb117-117"></a>   <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
+<span id="cb117-118"><a href="model-suiteB.html#cb117-118"></a> )</span>
+<span id="cb117-119"><a href="model-suiteB.html#cb117-119"></a><span class="kw">title</span>(<span class="kw">paste</span>(<span class="st">&#39;min - selected gene counts&#39;</span>))</span>
+<span id="cb117-120"><a href="model-suiteB.html#cb117-120"></a></span>
+<span id="cb117-121"><a href="model-suiteB.html#cb117-121"></a>SKIP  &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb117-122"><a href="model-suiteB.html#cb117-122"></a><span class="co"># Add qual annotation</span></span>
+<span id="cb117-123"><a href="model-suiteB.html#cb117-123"></a>control_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_control_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb117-124"><a href="model-suiteB.html#cb117-124"></a>affected_qual_vec &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(sim_affected_qual_mtx[,SimNum], stage_vec), median)</span>
+<span id="cb117-125"><a href="model-suiteB.html#cb117-125"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb117-126"><a href="model-suiteB.html#cb117-126"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-127"><a href="model-suiteB.html#cb117-127"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
+<span id="cb117-128"><a href="model-suiteB.html#cb117-128"></a>  <span class="kw">round</span>(control_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb117-129"><a href="model-suiteB.html#cb117-129"></a> )</span>
+<span id="cb117-130"><a href="model-suiteB.html#cb117-130"></a>LL &lt;-<span class="st"> </span>LL <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb117-131"><a href="model-suiteB.html#cb117-131"></a><span class="kw">axis</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">tick=</span>F, <span class="dt">line =</span> LL,</span>
+<span id="cb117-132"><a href="model-suiteB.html#cb117-132"></a>  <span class="dt">at =</span>  <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst)),</span>
+<span id="cb117-133"><a href="model-suiteB.html#cb117-133"></a>  <span class="kw">round</span>(affected_qual_vec, <span class="dv">2</span>)</span>
+<span id="cb117-134"><a href="model-suiteB.html#cb117-134"></a> )</span>
+<span id="cb117-135"><a href="model-suiteB.html#cb117-135"></a>}<span class="co">#SKIP</span></span>
+<span id="cb117-136"><a href="model-suiteB.html#cb117-136"></a></span>
+<span id="cb117-137"><a href="model-suiteB.html#cb117-137"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="kw">paste</span>(<span class="st">&#39;Sim =&#39;</span>,  SIM))</span>
+<span id="cb117-138"><a href="model-suiteB.html#cb117-138"></a></span>
+<span id="cb117-139"><a href="model-suiteB.html#cb117-139"></a>} <span class="co"># for(SIM</span></span></code></pre></div>
 <div class="figure"><span id="fig:enet-simRes-features-bySim"></span>
-<img src="Static/figures/enet-simRes-features-bySim-1.png" alt="Selected Features by Sample Size and Quality" width="960" />
+<img src="Static/figures/enet-simRes-features-bySim-1.png" alt="enet Models Selected Features by Sample Size" width="960" />
 <p class="caption">
-Figure 6.9: Selected Features by Sample Size and Quality
+Figure 6.7: enet Models Selected Features by Sample Size
 </p>
 </div>
 

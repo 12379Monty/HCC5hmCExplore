@@ -497,13 +497,13 @@ gene signature produced by each model.
 
 ```{r minVs1seGenes}
 
-gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
-gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
+lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
+lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
 
 ```
 
-`r length(intersect(gene_sign_1se_vec, gene_sign_min_vec))` out of
-`r length(gene_sign_1se_vec)` of the genes in the 1se model gene signature
+`r length(intersect(lasso_gene_sign_1se_vec, lasso_gene_sign_min_vec))` out of
+`r length(lasso_gene_sign_1se_vec)` of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.
 
 ## Simulation Design
@@ -687,7 +687,6 @@ in the early accrual stages.
 
 
 
-
 ## Run simulations
 
 
@@ -814,32 +813,6 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 
 ```
 
-```{r DEBUG, eval=F, echo=F}
-### REMOVE oof errors.  cv errors are the same!
-sim_files_vec <- list.files('RData', '^sim_')
-
-# we loop across simulations to combine all results into one big table
-for(SIM_NO in 1:length(sim_files_vec)) {
-
-  load(file=file.path('RData', sim_files_vec[SIM_NO]))
-  assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
-  rm(list=sim_files_vec[SIM_NO])
-
-  tmp <- sim_cv_lst
-  for(L1 in 1:length(sim_cv_lst))
-   for(L2 in 1:length(sim_cv_lst[[L1]]))
-   { tmp[[L1]][[L2]]$oof_1se <- NULL
-     tmp[[L1]][[L2]]$oof_min <- NULL
-    }
-
-  sim_cv_lst <- tmp
-  assign(sim_files_vec[SIM_NO], sim_cv_lst)
-  save(list=sim_files_vec[SIM_NO], file=file.path("RData",sim_files_vec[SIM_NO]))
-
-}
-
-
-
 
 ```{r sim-time, cache=T, dependson='run-sim', eval=F}
   message("simulation time: ", round((proc.time() - start_time)[3], 2), "s")
@@ -927,9 +900,11 @@ knitr::kable(head(sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
 ```
 
 
-### Simulation Results:  Errors By Run {-}
+### Simulation Results
 
-```{r simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Errors by Sample Size and Quality'}
+First examine results for one simulation run.
+
+```{r lsso-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 
 # get full model cv error ref
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -990,6 +965,7 @@ legend('topright',
  )
 title(paste('1se error rates'))
 
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -1003,7 +979,7 @@ axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 # min
 ####################
@@ -1038,6 +1014,7 @@ legend('topright',
  )
 title(paste('min error rates'))
 
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -1051,25 +1028,24 @@ axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
 
 ```
 
-### Simulation Results:  Model Size By Run {-}
 
-```{r simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Selected Features by Sample Size and Quality'}
+```{r lasso-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 
 # get full model nzero ref
 nzero_1se_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
-nzero_1se_q1q3 <- quantile(nzero_1se_vec, prob=c(1,3)/4)
+nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
 nzero_min_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
-nzero_min_q1q3 <- quantile(nzero_min_vec, prob=c(1,3)/4)
+nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
@@ -1094,10 +1070,10 @@ p_1se_lst <- with(simNo_results_frm,
  split(p_1se, Size))
 names(p_1se_lst) <- paste0(stringr::str_pad(names(p_1se_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of gene_sign_1se_vec
+# get selected features that are part of lasso_gene_sign_1se_vec
 # - the signature selected genes
 sign_genes_1se_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), gene_sign_1se_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), lasso_gene_sign_1se_vec))
 
 sign_p_1se_lst <- split(sapply(sign_genes_1se_lst, length), simNo_results_frm$Size)
 names(sign_p_1se_lst) <- paste0(stringr::str_pad(names(sign_p_1se_lst), width=3, pad='0'),'_signP')
@@ -1117,7 +1093,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_1se_q1q3, col = 'red')
+abline(h= nzero_1se_q2, col = 'red')
 legend('topright',
    #title='1se errors', title.col = 'black',
    text.col = c('blue', 'green'),
@@ -1125,6 +1101,8 @@ legend('topright',
    bty='n'
  )
 title(paste('1se - selected gene counts'))
+
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -1138,7 +1116,7 @@ axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 ###################
 # min
@@ -1148,10 +1126,10 @@ p_min_lst <- with(simNo_results_frm,
  split(p_min, Size))
 names(p_min_lst) <- paste0(stringr::str_pad(names(p_min_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of gene_sign_min_vec
+# get selected features that are part of lasso_gene_sign_min_vec
 # - the signature selected genes
 sign_genes_min_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_min']), gene_sign_min_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_min']), lasso_gene_sign_min_vec))
 
 sign_p_min_lst <- split(sapply(sign_genes_min_lst, length), simNo_results_frm$Size)
 names(sign_p_min_lst) <- paste0(stringr::str_pad(names(sign_p_min_lst), width=3, pad='0'),'_signP')
@@ -1171,7 +1149,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_min_q1q3, col = 'red')
+abline(h= nzero_min_q2, col = 'red')
 legend('topright',
    #title='min errors', title.col = 'black',
    text.col = c('blue', 'green'),
@@ -1179,6 +1157,8 @@ legend('topright',
    bty='n'
  )
 title(paste('min - selected gene counts'))
+
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -1192,7 +1172,7 @@ axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
