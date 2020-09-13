@@ -817,9 +817,6 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 ```
 
 
-```{r sim-time, cache=T, dependson='run-sim', eval=F}
-  message("simulation time: ", round((proc.time() - start_time)[3], 2), "s")
-```
 
 ## Simulation results
 
@@ -841,7 +838,7 @@ $`r CV_REP`$ repeated cross-validated lasso fits:
 
 First we extract simluation results and store into one big table:
 
-```{r extract-sim-results, cache=T, cache.vars='lasso_sim_results_frm'}
+```{r extract-sim-results, cache=T, cache.vars='run-sim'}
 
 sim_files_vec <- list.files('RData', '^sim_')
 

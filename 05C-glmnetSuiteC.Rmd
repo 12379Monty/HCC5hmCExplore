@@ -1,377 +1,29 @@
-#  Sample size investigation - Continued {#model-suiteB}
+#  Sample size investigation - Continued {#model-suiteC}
 
 Repeat the analyses from Section \@ref(model-suite), but using
-the elastic net as classfication model.  
+shuffled labels for the fitting set.  
 
 
-<!-- RUN ONCE -->
-```{r enet-fit-all, cache=T, cache.vars=c('cv_enetAll_lst'), eval=F}
 
-set.seed(1)
+## Run simulations - shuffled label lasso
 
-start_time <-  proc.time()
 
-cv_enetAll_lst <- lapply(1:30, function(REP) {
-glmnet::cv.glmnet(
- x = all_lcpm_mtx,
- y = factor(all_group_vec,levels = c('Control', 'HCC')),
- alpha = 0.5,
- family = 'binomial',
- type.measure  =  "class",
- keep = T,
- nlambda = 100
-)
-}
-)
+To shuffle the labels we can simply swap rows in `sim_stage_lcpm_mtx`
+between affected and control samples for each simulation.
 
-message("enetAll time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
-
-<!-- enet-fit-all takes a while - save results -->
-<!-- DO THIS ONCE -->
-```{r save-cv_enetAll_lst, cache=T, dependson='enet-fit-all', cache.vars='', echo=F, eval=F}
- save(list='cv_enetAll_lst', file=file.path("RData",'cv_enetAll_lst'))
-```
-```{r load-cv_enetAll_lst, cache=F, echo=F}
- load(file=file.path("RData",'cv_enetAll_lst'))
-```
-
-Examine the fits.
-
-```{r enet-plot-enetAll, cache=T, dependson='enet-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv enet models fitted to all samples'}
-### CLEAR CACHE
-plot(
- log(cv_enetAll_lst[[1]]$lambda),
- cv_enetAll_lst[[1]]$cvm,
- lwd=2,
- xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
-)
-
-for(JJ in 2:length(cv_enetAll_lst))
- lines(
-  log(cv_enetAll_lst[[JJ]]$lambda),
-  cv_enetAll_lst[[JJ]]$cvm,
-  lwd=2
-)
-
-```
-
-These cv curves are remarkably consistent meaning that the determination of the size or sparsity
-of the model through cross validation is fairly precise:
-
-<!-- DONT CACHE THIS ??? -->
-
-```{r model-size-enetAll, cache=T, dependson='enet-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv enet models'}
-
-library(magrittr)
-
-par(mfrow=c(1,2), mar=c(3,4, 2, 1))
-
-# nzero
-nzero_1se_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
-
-nzero_min_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
-
-boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
-
-# error
-error_1se_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
-
-error_min_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
-
-boxplot(
- list(`1se`=error_1se_vec, min = error_min_vec), 
- ylab=cv_enetAll_lst[[1]]$name,
- ylim=c(0.06, .10)
-)
-
-# tabular format
-tmp <- data.frame(rbind(
- `features_1se` = summary(nzero_1se_vec),
- features_min = summary(nzero_min_vec),
- `features:min-1se` = summary(nzero_min_vec - nzero_1se_vec),
- `cv_error_1se` = summary(100*error_1se_vec),
- cv_error_min = summary(100*error_min_vec),
- `cv_error:1se-min` = summary(100*(error_1se_vec-error_min_vec))
-))
-
-knitr::kable(tmp %>% dplyr::select(-Mean),
-  caption = "Number of selected features",
-  digits=1) %>%
-   kableExtra::kable_styling(full_width = F)
-
-
-```
-
-The number of features selected by the minimum lambda model is larger
-than the number selected by the "one standard error" rule by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$ and results on
-a median reduction in cv error rates of 
-$`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
-
-The cv error rates observed in this set are comparable to the 
-rates oberved in the enet models fitted to the training sample set
-which consisted of 80% of the samples in this set.  See Table \@ref(tab:printErrors).
-It's not clear at this point whether the minimum lambda model is better than
-the  "one standard error" rule  model.  We would need and external validation
-set to make this determination.  We can compare the two sets
-of out-of-fold predicted values, averaged across cv replicates, to see if
-there is a meaningful difference between the two.
-
-
-```{r enet-get-sample-pred, cache=T, dependson='enet-fit-all', cache.vars=c('enetAll_predResp_1se_vec','enetAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
-
-# predicted probs - 1se
-enetAll_predResp_1se_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
-  ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
-  logistic_f(cv_fit$fit.preval[,ndx_1se])
- })
-enetAll_predResp_1se_vec <- rowMeans(enetAll_predResp_1se_mtx)
-
-# predicted probs - min
-enetAll_predResp_min_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
-  ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
-  logistic_f(cv_fit$fit.preval[,ndx_min])
- })
-enetAll_predResp_min_vec <- rowMeans(enetAll_predResp_min_mtx)
-
-# plot
-par(mfrow=c(1,2), mar=c(5,5,2,1))
-tmp <- c(
- `1se` = split(enetAll_predResp_1se_vec, all_group_vec),
- min = split(enetAll_predResp_min_vec, all_group_vec)
-)
-names(tmp) <- sub('\\.', '\n', names(tmp))
-
-boxplot(
- tmp,
- ylab='Predicted oof probability',
- border=c('green', 'red'),
- xaxt='n'
-)
-axis(side=1, at=1:length(tmp), tick=F, names(tmp))
-
-
-# compare the two
-plot(
- x = enetAll_predResp_1se_vec, xlab='1se model oof Prob',
- y = enetAll_predResp_min_vec, ylab='min lambda model oof Prob',
- col = ifelse(all_group_vec == 'HCC', 'red', 'green')
-)
- 
-# Add referecne lines at 10% false positive
-thres_1se <- quantile(enetAll_predResp_1se_vec[all_group_vec == 'Control'], prob=.9)
-thres_min <- quantile(enetAll_predResp_min_vec[all_group_vec == 'Control'], prob=.9)
-abline(v = thres_1se, h = thres_min, col='grey')
-
-```
-
-<!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
-We see that the minimum lambda models provide a better fit to the data,
-which is to be expected as the minimum lambda models have more estimated
-parameters than the one standard error rule models.  
--->
-
-We see that there isn't a big difference in out-of-fold predicted
-probabilities between the one-standard-error rule ans minimum lamda models.
-One way to quantify
-the difference in classification errors is to classify samples
-according to each vector of predicted probabilities, setting
-the thresholds to achieve a fixed false positive rate, 10% say.
-These thresholds are indicated by the grey lines in the scatter plot
-on the right side of Figure \@ref(fig:get-sample-pred).  
-
-<!-- APPLIED TO THE FITTED VALUES
-We note
-that althouth predicted probability distributions are quite different
-for the two models, the the class predictions at a 10% false discovery threshold
-are largely in agreement.
--->
-
-```{r enet-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('enetAll_predClass_1se_vec','enetAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
-
-enetAll_predClass_1se_vec <- ifelse(
- enetAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
-
-enetAll_predClass_min_vec <- ifelse(
- enetAll_predResp_min_vec > thres_min, 'HCC', 'Control')
-
-tmp <- cbind(
- table(truth=all_group_vec, `1se-pred`=enetAll_predClass_1se_vec),
- table(truth=all_group_vec, `min-pred`=enetAll_predClass_min_vec)
-) 
-# Hack for printing
-colnames(tmp) <- c('1se-Control', '1se-HCC', 'min-Control', 'min-HCC')
-
-knitr::kable(tmp,
-  caption = "Classifications: rows are truth",
-  digits=1) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
-
-When we fix the false positive rate at 10%, the `1se` model makes 39 false
-negative calls whereas the minimum lambda model makes 32.  A difference
-of $`r round(100*(39-32)/555, 1)`$%
-
-
-<!-- APPLIED TO THE FITTED PROBABILITIES
-We see that the min lambda model, makes no false negative calls at a 90% sensitivity
-setting, and the sensitivity could be increased substantially at no false negative
-cost.  This is definitely over-fitting the data set.  For the purpose
-of computing sample quality scores - what do these differences mean? 
--->
-
-<!-- SKIP THIS - can use lasso scores 
-### Get quality scores {-}
-
-To compute quality scores, we will use the out-of-fold predicted probabilities.
--->
-
-
-## Selected feature list stability 
-
-Before moving on to the simulation, let's examine gene selection stability on the
-full data set.  We have two sets of sellected features - one for the 
-one standard deviation rile model, and one for the mimimum lambda model.
-We saw in Table \@ref(tab:model-size-enetAll) that the number of features
-selected by the minimum lambda models had an IQR of
-$`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
-while the one standard error rule models had an IQR of
-$`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
-
-Let's examine the stability of the gene lists across cv replicates.
-
-```{r enet-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','enetAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
-### CLEAR CACHE
-
-
-# 1se
-enetAll_coef_1se_lst <- lapply(cv_enetAll_lst, function(cv_fit){
- cv_fit_coef <- coef(
- cv_fit,
- s = "lambda.1se"
- )
- cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
- })
-
-# put into matrix
-enetAll_coef_1se_all <- Reduce(union, enetAll_coef_1se_lst)
-enetAll_coef_1se_mtx <- sapply(enetAll_coef_1se_lst, 
-  function(LL) is.element(enetAll_coef_1se_all, LL)
-)
-rownames(enetAll_coef_1se_mtx) <- enetAll_coef_1se_all
-
-genes_by_rep_1se_tbl <- table(rowSums(enetAll_coef_1se_mtx))
-barplot(
- genes_by_rep_1se_tbl,
- xlab='Number of Replicates',
- ylab='Number of features'
-
-)
-
-
-```
-
-We see that $`r genes_by_rep_1se_tbl['30']`$ features are included in every
-cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(enetAll_coef_1se_mtx), 1/4)*100,0)`$%
-and
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(enetAll_coef_1se_mtx), 3/4)*100,0)`$%
-(Q1 and Q3) of the cv replicate one standard error rule models feature lists.
-
-
-```{r enet-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','enetAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
-### CLEAR CACHE
-
-
-# min
-enetAll_coef_min_lst <- lapply(cv_enetAll_lst, function(cv_fit){
- cv_fit_coef <- coef(
- cv_fit,
- s = "lambda.min"
- )
- cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
- })
-
-# put into matrix
-enetAll_coef_min_all <- Reduce(union, enetAll_coef_min_lst)
-enetAll_coef_min_mtx <- sapply(enetAll_coef_min_lst, 
-  function(LL) is.element(enetAll_coef_min_all, LL)
-)
-rownames(enetAll_coef_min_mtx) <- enetAll_coef_min_all
-
-genes_by_rep_min_tbl <- table(rowSums(enetAll_coef_min_mtx))
-barplot(
- genes_by_rep_min_tbl,
- xlab='Number of Replicates',
- ylab='Number of features'
-
-)
-
-
-```
-
-We see that $`r genes_by_rep_min_tbl['30']`$ features are included in every
-cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(enetAll_coef_min_mtx), 1/4)*100,0)`$%
-and
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(enetAll_coef_min_mtx), 3/4)*100,0)`$%
-(Q1 and Q3) of the cv replicate min feature lists.
-We will consider the genes that are selected in all cv replicates as a 
-gene signature produced by each model.
-
-
-```{r enet-minVs1seGenes}
-
-enet_gene_sign_1se_vec <- rownames(enetAll_coef_1se_mtx)[rowSums(enetAll_coef_1se_mtx)==30]
-enet_gene_sign_min_vec <- rownames(enetAll_coef_min_mtx)[rowSums(enetAll_coef_min_mtx)==30]
-
-```
-
-`r length(intersect(enet_gene_sign_1se_vec, enet_gene_sign_min_vec))` out of
-`r length(enet_gene_sign_1se_vec)` of the genes in the 1se model gene signature
-are contained in the min lambda model gene signature.
-
-<!-- USE SAME DESIGN AS lasso
-## Simulation Design
-
-We are now ready to run the simulations.
-
--->
-
-## Run simulations - enet
-
-
-As these make take a while to run, 
-we will save the results of each similation to a different
-object and store to disk.  These can be easily read from disk
-when needed for analysis.
-
-
-The simulation saves results to the file system and
-only needs to be run once.  The simulation takes $\approx$ 8 minutes
-per iteration, or 4 hours of run time on a laptop.
-(Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r enet-run-sim, cache=T, cache.vars='start_time', eval=T}
+```{r shuffled-run-sim, cache=T, cache.vars='start_time', eval=T}
 ### CLEAR CACHE
 start_time <- proc.time()
 
 # Get stage from SIZE
-stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0, SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_control_mtx), c(0, SIZE), include.lowest = T)
 
 # ran in two runs 1:7, 8:ncol
-for (SIMno in 8:ncol(sim_control_qual_mtx)) {
+for (SIMno in 1:ncol(sim_control_mtx)) {
 
-  #cat("Running simulation ", SIMno, "\n")
+  cat("Running simulation ", SIMno, "\n")
 
   sim_cv_lst <- lapply(1:length(levels(stage_vec)), function(STGno) {
     Stage_rows_vec <- which(stage_vec %in% levels(stage_vec)[1:STGno])
@@ -381,13 +33,28 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
       all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],
       all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]
     )
+
     sim_stage_lcpm_mtx <- all_lcpm_mtx[sim_stage_samples_vec, ]
     sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
+
+    Control_rows <- which(sim_stage_group_vec == 'Control')
+    Affected_rows <- which(sim_stage_group_vec == 'HCC')
+
+    swap_Control_ndx <- Control_rows[1:round(length(Control_rows)/2)]
+    swap_Affected_ndx <- Affected_rows[1:round(length(Affected_rows)/2)]
+
+    swap_Control_lcpm_mtx <- sim_stage_lcpm_mtx[swap_Control_ndx,]
+    swap_Affected_lcpm_mtx <- sim_stage_lcpm_mtx[swap_Affected_ndx,]
+
+    swap_stage_lcpm_mtx <- sim_stage_lcpm_mtx
+    swap_stage_lcpm_mtx[swap_Control_ndx, ]  <- swap_Affected_lcpm_mtx
+    swap_stage_lcpm_mtx[swap_Affected_ndx, ] <- swap_Control_lcpm_mtx
+   
     #print(table(sim_stage_group_vec))
 
     sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
       cv_fit <- glmnet::cv.glmnet(
-        x = sim_stage_lcpm_mtx,
+        x = swap_stage_lcpm_mtx,
         y = sim_stage_group_vec,
         alpha = 1,
         family = "binomial",
@@ -465,7 +132,7 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
   })
 
   # save  sim_cv_lst
-  fName <- paste0("enet_sim_", SIMno, "_cv_lst")
+  fName <- paste0("shuffledLasso_sim_", SIMno, "_cv_lst")
   assign(fName, sim_cv_lst)
   save(list = fName, file=file.path("RData", fName))
 
@@ -475,15 +142,15 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
 ```
 
 
-## enet Simulation results
+## shuffledLasso Simulation results
 
 <!--
 First we extract simluation results and store into one big table:
 -->
-```{r enet-extract-sim-results, cache=T, cache.vars='enet-run-sim', include=F}
+```{r shuffledLasso-extract-sim-results, cache=T, cache.vars='shuffledLasso-run-sim', include=F}
 # CLEAR CACHE 
 
-sim_files_vec <- list.files('RData', '^enet_sim')
+sim_files_vec <- list.files('RData', '^shuffledLasso_sim')
 
 
 # define extraction methods
@@ -513,7 +180,7 @@ cv_lst_to_frm <- function(sim_cv_lst) {
 }
 
 # we loop across simulations to combine all results into one big table
-enet_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
+shuffledLasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
  function(SIM_NO) {
   load(file=file.path('RData', sim_files_vec[SIM_NO]))
   assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
@@ -526,18 +193,18 @@ enet_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
 ```
 
 <!-- 
-Have a table of simulation results - `enet_sim_results_frm`:
+Have a table of simulation results - `shuffledLasso_sim_results_frm`:
 -->
 
-```{r enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
+```{r shuffledLasso-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
 
 # CLEAR CACHE 
  
-knitr::kable(head(with(enet_sim_results_frm, table(SimNo, Size))),
+knitr::kable(head(with(shuffledLasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
    kableExtra::kable_styling(full_width = F)
 
-knitr::kable(head(enet_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
+knitr::kable(head(shuffledLasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
     caption = paste("Simulation Results - not showing genes column"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
@@ -545,35 +212,35 @@ knitr::kable(head(enet_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_mi
 ```
 
 
-### enet Simulation Results Look at one simulation
+### shuffledLasso Simulation Results Look at one simulation
 
 
 First examine results for one simulation run.
 
-```{r enet-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
+```{r shuffledLasso-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='shuffledLasso Model Errors by Sample Size'}
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_control_mtx), c(0,SIZE), include.lowest = T)
 
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(enet_sim_results_frm$SimNo)[1]){
+for(SIM in unique(shuffledLasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- enet_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 # errors
@@ -683,15 +350,15 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 ```
 
 
-```{r enet-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
+```{r shuffledLasso-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='shuffledLasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
 # get full model nzero ref
-nzero_1se_vec <- sapply(cv_enetAll_lst,
+nzero_1se_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
-nzero_min_vec <- sapply(cv_enetAll_lst,
+nzero_min_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
@@ -702,11 +369,11 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(enet_sim_results_frm$SimNo)[1]){
+for(SIM in unique(shuffledLasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- enet_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
@@ -718,10 +385,10 @@ p_1se_lst <- with(simNo_results_frm,
  split(p_1se, Size))
 names(p_1se_lst) <- paste0(stringr::str_pad(names(p_1se_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of enet_gene_sign_1se_vec
+# get selected features that are part of shuffledLasso_gene_sign_1se_vec
 # - the signature selected genes
 sign_genes_1se_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), enet_gene_sign_1se_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), shuffledLasso_gene_sign_1se_vec))
 
 sign_p_1se_lst <- split(sapply(sign_genes_1se_lst, length), simNo_results_frm$Size)
 names(sign_p_1se_lst) <- paste0(stringr::str_pad(names(sign_p_1se_lst), width=3, pad='0'),'_signP')
@@ -774,10 +441,10 @@ p_min_lst <- with(simNo_results_frm,
  split(p_min, Size))
 names(p_min_lst) <- paste0(stringr::str_pad(names(p_min_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of enet_gene_sign_min_vec
+# get selected features that are part of shuffledLasso_gene_sign_min_vec
 # - the signature selected genes
 sign_genes_min_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_min']), enet_gene_sign_min_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_min']), shuffledLasso_gene_sign_min_vec))
 
 sign_p_min_lst <- split(sapply(sign_genes_min_lst, length), simNo_results_frm$Size)
 names(sign_p_min_lst) <- paste0(stringr::str_pad(names(sign_p_min_lst), width=3, pad='0'),'_signP')
@@ -831,15 +498,15 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ### Summarize results across simulation runs.
 
-```{r enet-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
+```{r shuffledLasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='shuffledLasso Model Errors by Sample Size'}
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(cv_shuffledLassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -850,24 +517,24 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 # 1se
 #########################################
 ## cv
-cv_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+cv_1se_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_1se_lst <- with(sizeVal_results_frm, split(cv_1se, SimNo))
  sapply(sizeVal_cv_1se_lst, median)
 })
 names(cv_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+test_1se_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_1se_lst <- with(sizeVal_results_frm, split(test_1se, SimNo))
  sapply(sizeVal_test_1se_lst, median)
 })
 names(test_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_1se_Bysize_lst <- c(cv_1se_Bysize_lst, test_1se_Bysize_lst)
@@ -905,24 +572,24 @@ title(paste('one se lambda - error rates'))
 # min
 #########################################
 ## cv
-cv_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+cv_min_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_min_lst <- with(sizeVal_results_frm, split(cv_min, SimNo))
  sapply(sizeVal_cv_min_lst, median)
 })
 names(cv_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+test_min_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_min_lst <- with(sizeVal_results_frm, split(test_min, SimNo))
  sapply(sizeVal_test_min_lst, median)
 })
 names(test_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_min_Bysize_lst <- c(cv_min_Bysize_lst, test_min_Bysize_lst)
@@ -957,24 +624,24 @@ legend('topright',
 title(paste('min lambda - error rates'))
 
 
-mtext(side=3, outer=T, cex=1.25, paste('enet fit error rates summarized across simulations'))
+mtext(side=3, outer=T, cex=1.25, paste('shuffledLasso fit error rates summarized across simulations'))
 
 ```
 
-```{r print-enet-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='enet Model Errors by Sample Size'}
+```{r print-shuffledLasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='shuffledLasso Model Errors by Sample Size'}
 ### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
 knitr::kable(error_1se_Bysize_sum_frm,
-    caption = paste("1se lambda enet error rates by sample size across simulations"),
+    caption = paste("1se lambda shuffledLasso error rates by sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
 error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
 knitr::kable(error_min_Bysize_sum_frm,
-    caption = paste("min lambda enet error rates by sample size across simulations"),
+    caption = paste("min lambda shuffledLasso error rates by sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
@@ -983,7 +650,7 @@ knitr::kable(error_min_Bysize_sum_frm,
 
 Now look at feature selection.
 
-```{r enet-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
+```{r shuffledLasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='shuffledLasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
 # Utility objects
@@ -993,23 +660,23 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 # 1se
 #########################################
 # selected features
-p_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+p_1se_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_1se_lst <- with(sizeVal_results_frm, split(p_1se, SimNo))
  sapply(sizeVal_p_1se_lst, median)
 })
 names(p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+sign_p_1se_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_1se_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
-    intersect(unlist(sizeVal_results_frm[RR, 'genes_1se']), enet_gene_sign_1se_vec))
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_1se']), shuffledLasso_gene_sign_1se_vec))
 
  sizeVal_sign_p_1se_lst <- split(sapply(sizeVal_sign_genes_1se_lst, length),
     sizeVal_results_frm$SimNo)
@@ -1017,7 +684,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_1se_lst, median)
 })
 names(sign_p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_1se_Bysize_lst <- c(p_1se_Bysize_lst, sign_p_1se_Bysize_lst)
@@ -1055,23 +722,23 @@ title(paste('one se lamdba - selected gene counts'))
 # min
 #########################################
 # selected features
-p_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+p_min_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_min_lst <- with(sizeVal_results_frm, split(p_min, SimNo))
  sapply(sizeVal_p_min_lst, median)
 })
 names(p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+sign_p_min_Bysize_lst <- lapply(unique(shuffledLasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- shuffledLasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_min_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
-    intersect(unlist(sizeVal_results_frm[RR, 'genes_min']), enet_gene_sign_min_vec))
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_min']), shuffledLasso_gene_sign_min_vec))
 
  sizeVal_sign_p_min_lst <- split(sapply(sizeVal_sign_genes_min_lst, length),
     sizeVal_results_frm$SimNo)
@@ -1079,7 +746,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_min_lst, median)
 })
 names(sign_p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(shuffledLasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_min_Bysize_lst <- c(p_min_Bysize_lst, sign_p_min_Bysize_lst)
@@ -1113,19 +780,19 @@ legend('topleft',
  )
 title(paste('min lambda - selected gene counts'))
 
-mtext(side=3, outer=T, cex=1.25, paste('enet fit feature selection summarized across simulations'))
+mtext(side=3, outer=T, cex=1.25, paste('shuffledLasso fit feature selection summarized across simulations'))
 
 
 ```
 
 
-```{r print-enet-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='enet Models Selected Features by Sample Size'}
+```{r print-shuffledLasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='shuffledLasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
 knitr::kable(p_sing_1se_Bysize_sum_frm,
-    caption = paste("1se lambda enet feature selection sample size across simulations"),
+    caption = paste("1se lambda shuffledLasso feature selection sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
@@ -1133,12 +800,10 @@ knitr::kable(p_sing_1se_Bysize_sum_frm,
 p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
 knitr::kable(p_sing_min_Bysize_sum_frm,
-    caption = paste("min lambda enet feature selection sample size across simulations"),
+    caption = paste("min lambda shuffledLasso feature selection sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
 
 ```
-
-
 
