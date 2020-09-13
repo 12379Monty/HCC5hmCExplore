@@ -1804,7 +1804,7 @@ Figure 5.8: lasso Model Errors by Sample Size
 <span id="cb102-44"><a href="model-suite.html#cb102-44"></a></span>
 <span id="cb102-45"><a href="model-suite.html#cb102-45"></a><span class="kw">boxplot</span>(p_singP_1se_lst,</span>
 <span id="cb102-46"><a href="model-suite.html#cb102-46"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb102-47"><a href="model-suite.html#cb102-47"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
+<span id="cb102-47"><a href="model-suite.html#cb102-47"></a>  <span class="co">#ylim=c(0, 300),</span></span>
 <span id="cb102-48"><a href="model-suite.html#cb102-48"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb102-49"><a href="model-suite.html#cb102-49"></a>)</span>
 <span id="cb102-50"><a href="model-suite.html#cb102-50"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
@@ -1813,7 +1813,7 @@ Figure 5.8: lasso Model Errors by Sample Size
 <span id="cb102-53"><a href="model-suite.html#cb102-53"></a>  SIZE0</span>
 <span id="cb102-54"><a href="model-suite.html#cb102-54"></a> )</span>
 <span id="cb102-55"><a href="model-suite.html#cb102-55"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_1se_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb102-56"><a href="model-suite.html#cb102-56"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_1se_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb102-56"><a href="model-suite.html#cb102-56"></a><span class="co">#abline(h= nzero_1se_q2, col = &#39;red&#39;)</span></span>
 <span id="cb102-57"><a href="model-suite.html#cb102-57"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
 <span id="cb102-58"><a href="model-suite.html#cb102-58"></a>   <span class="co">#title=&#39;1se errors&#39;, title.col = &#39;black&#39;,</span></span>
 <span id="cb102-59"><a href="model-suite.html#cb102-59"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>
@@ -1860,7 +1860,7 @@ Figure 5.8: lasso Model Errors by Sample Size
 <span id="cb102-100"><a href="model-suite.html#cb102-100"></a></span>
 <span id="cb102-101"><a href="model-suite.html#cb102-101"></a><span class="kw">boxplot</span>(p_singP_min_lst,</span>
 <span id="cb102-102"><a href="model-suite.html#cb102-102"></a>  <span class="dt">border=</span><span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;green&#39;</span>),</span>
-<span id="cb102-103"><a href="model-suite.html#cb102-103"></a>  <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">300</span>),</span>
+<span id="cb102-103"><a href="model-suite.html#cb102-103"></a>  <span class="co">#ylim=c(0, 300),</span></span>
 <span id="cb102-104"><a href="model-suite.html#cb102-104"></a>  <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb102-105"><a href="model-suite.html#cb102-105"></a>)</span>
 <span id="cb102-106"><a href="model-suite.html#cb102-106"></a>LL &lt;-<span class="st"> </span><span class="dv">-1</span></span>
@@ -1869,7 +1869,7 @@ Figure 5.8: lasso Model Errors by Sample Size
 <span id="cb102-109"><a href="model-suite.html#cb102-109"></a>  SIZE0</span>
 <span id="cb102-110"><a href="model-suite.html#cb102-110"></a> )</span>
 <span id="cb102-111"><a href="model-suite.html#cb102-111"></a><span class="kw">abline</span>(<span class="dt">v=</span> <span class="kw">match</span>(<span class="kw">paste0</span>(SIZE0,<span class="st">&#39;_p&#39;</span>),<span class="kw">names</span>(p_singP_min_lst))[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dt">col=</span><span class="st">&#39;grey&#39;</span>)</span>
-<span id="cb102-112"><a href="model-suite.html#cb102-112"></a><span class="kw">abline</span>(<span class="dt">h=</span> nzero_min_q2, <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb102-112"><a href="model-suite.html#cb102-112"></a><span class="co">#abline(h= nzero_min_q2, col = &#39;red&#39;)</span></span>
 <span id="cb102-113"><a href="model-suite.html#cb102-113"></a><span class="kw">legend</span>(<span class="st">&#39;topright&#39;</span>,</span>
 <span id="cb102-114"><a href="model-suite.html#cb102-114"></a>   <span class="co">#title=&#39;min errors&#39;, title.col = &#39;black&#39;,</span></span>
 <span id="cb102-115"><a href="model-suite.html#cb102-115"></a>   <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&#39;blue&#39;</span>, <span class="st">&#39;green&#39;</span>),</span>

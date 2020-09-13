@@ -974,23 +974,25 @@ List of 3
  $ eval      : symbol F
 
   |                                                                              |...................................................................   |  96%
-   inline R code fragments
+  ordinary text without R code
 
 
 label: enet-extract-sim-results (with options) 
-List of 2
+List of 3
  $ cache     : symbol T
  $ cache.vars: chr "sim_results_frm"
+ $ include   : symbol F
 
   |                                                                              |....................................................................  |  97%
   ordinary text without R code
 
 
 label: enet-sum-table (with options) 
-List of 3
+List of 4
  $ cache     : symbol T
  $ cache.vars: chr ""
  $ fig.cap   : chr "Simution results table"
+ $ include   : symbol F
 
   |                                                                              |..................................................................... |  98%
   ordinary text without R code
@@ -1022,7 +1024,7 @@ List of 5
 
 output file: HCC5hmCExplore.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//Rtmp5zPr4z/rmarkdown-str1111656b19919.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --include-in-header header.html --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpeOfaiA/rmarkdown-str1114b44fe81f3.html --mathjax --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmd/lua/latex-div.lua --include-in-header header.html --filter /usr/local/bin/pandoc-citeproc 
 
 Output created: docs/index.html
 [1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"

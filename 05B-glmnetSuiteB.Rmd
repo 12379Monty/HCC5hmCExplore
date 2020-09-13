@@ -336,7 +336,7 @@ enet_gene_sign_min_vec <- rownames(enetAll_coef_min_mtx)[rowSums(enetAll_coef_mi
 `r length(enet_gene_sign_1se_vec)` of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.
 
-<-- USE SAME DESIGN AS lasso
+<!-- USE SAME DESIGN AS lasso
 ## Simulation Design
 
 We are now ready to run the simulations.
@@ -474,25 +474,10 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
 
 ## Simulation results
 
-The results are 
-* error: cv, oof, test  
-    - examine relationship to each other and with respect to sample size  
-* genes:  
-    - how variable are the selected gene lists, both in terms of composition and size
-
-Recall the we have $`r SIM`$ randomly selected sets of HCC and Control samples,
-analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
-$`r CV_REP`$ repeated cross-validated enet fits:
-
-
-* Sample sizes: SIZE = $`r SIZE`$
-
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
-
-
+<!--
 First we extract simluation results and store into one big table:
-
-```{r enet-extract-sim-results, cache=T, cache.vars='sim_results_frm'}
+-->
+```{r enet-extract-sim-results, cache=T, cache.vars='sim_results_frm', include=F}
 # CLEAR CACHE 
 
 sim_files_vec <- list.files('RData', '^enet_sim')
@@ -541,7 +526,7 @@ sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
 Have a table of simulation results - `sim_results_frm`:
 -->
 
-```{r enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+```{r enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
 # CLEAR CACHE 
  
 knitr::kable(head(with(sim_results_frm, table(SimNo, Size))),
@@ -740,7 +725,7 @@ p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
 
 boxplot(p_singP_1se_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -749,7 +734,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_1se_q2, col = 'red')
+#abline(h= nzero_1se_q2, col = 'red')
 legend('topright',
    #title='1se errors', title.col = 'black',
    text.col = c('blue', 'green'),
@@ -796,7 +781,7 @@ p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
 
 boxplot(p_singP_min_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -805,7 +790,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_min_q2, col = 'red')
+#abline(h= nzero_min_q2, col = 'red')
 legend('topright',
    #title='min errors', title.col = 'black',
    text.col = c('blue', 'green'),

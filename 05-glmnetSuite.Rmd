@@ -1084,7 +1084,7 @@ p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
 
 boxplot(p_singP_1se_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -1093,7 +1093,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_1se_q2, col = 'red')
+#abline(h= nzero_1se_q2, col = 'red')
 legend('topright',
    #title='1se errors', title.col = 'black',
    text.col = c('blue', 'green'),
@@ -1140,7 +1140,7 @@ p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
 
 boxplot(p_singP_min_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -1149,7 +1149,7 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_min_q2, col = 'red')
+#abline(h= nzero_min_q2, col = 'red')
 legend('topright',
    #title='min errors', title.col = 'black',
    text.col = c('blue', 'green'),
