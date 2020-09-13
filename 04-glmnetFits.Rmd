@@ -1476,6 +1476,8 @@ by extreme correlations*.
 To see how this plays out in this dataset, we can look at feature expression
 heat maps.  
 
+Reader notes:  
+
 ```
 Heat maps are rarely useful other than to display the obvious.
 Here too heat maps fail to yield any insights, or confirmation

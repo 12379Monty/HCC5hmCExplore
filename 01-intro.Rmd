@@ -97,7 +97,7 @@ that discriminate between early stage HCC and control samples.
 * In Section \@ref(model-suite) we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.  
 
-* In Section \@ref(variable-importance) look at the question of assessing variable importance.
+* In Section \@ref(variable-importance) we look at the question of assessing variable importance.
 
 * Concluding remarks are in Section \@ref(conclusions).
 

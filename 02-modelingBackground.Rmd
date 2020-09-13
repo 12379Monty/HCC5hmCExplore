@@ -1,7 +1,9 @@
 # Classification Analysis in the `n << p` Context {#modeling-background}
 
+<!--
 Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
 relevant exploratory data  analyis results.
+-->
 
 <!--
 In the section we look at  some models fitted to discriminate between

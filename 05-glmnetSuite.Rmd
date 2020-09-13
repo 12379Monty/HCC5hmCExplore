@@ -64,11 +64,20 @@ when interpreting empirical findings, especially in the absence of solid
 biological underpinnings.  
 
 
-## Sample quality scores
+## Full data set fit
 
-To get sample quality scores, fit a lasso model to all samples in the
-analysis data set, extract predicted probabilities and
-convert them to quality scores. 
+We begin by fitting a model to the entire data set in order to:
+
+* obtain a baseline clssification performance against which to judge the performance
+obtained from the fits to smaller sample sets,
+
+* obtain sample quality scores which can be used to explain variability
+in the performance of model fitted to data sets of a fixed size, and
+
+* produce a *full model* gene signature which can be used to evaluate
+the stability of selected features in models fitted to data sets of diffferent
+sizes.
+
 
 First assemble the data set.  This entails simply re-combining the
 train and test data.
@@ -101,7 +110,7 @@ Now fit the losso model through cross-validation.
 Note that the results of a cv fit are random due to the
 random allocation of samples to folds.  We can reduce this
 varibility by properly averaging results over repeated cv fits.
-Here we will obtain samplle quality scores by averaging results
+Here we will obtain sample quality scores by averaging results
 over 30 cv runs.
 
 
@@ -159,7 +168,7 @@ for(JJ in 2:length(cv_lassoAll_lst))
 ```
 
 These cv curves are remarkably consistent meaning that the determination of the size or sparsity
-of the model through cross validation is fairly precise:
+of the model fitted through cross validation to the full data set is fairly precise:
 
 <!-- DONT CACHE THIS ??? -->
 
@@ -176,7 +185,7 @@ nzero_1se_vec <- sapply(cv_lassoAll_lst,
 nzero_min_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 
-boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
+boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Selected Features")
 
 # error
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -209,16 +218,24 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
 
 ```
 
-The number of features selected by the minimum lambda model is larger
-than the number selected by the "one standard error" rule by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$ and results on
-a median reduction in cv error rates of 
+The number of features selected by the minimum lambda models are larger
+than the number selected by the "one standard error" rule models by a median
+of $`r median(nzero_min_vec-nzero_1se_vec)`$.
+The cv error rates obtained from the minimum lambda models are lower
+then  "one standard error" rule models error rates by a median of
 $`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
 
 The cv error rates observed in this set are comparable to the 
 rates oberved in the lasso models fitted to the training sample set
-which consisted of 80% of the samples in this set.  See Table \@ref(tab:printErrors).
-It's not clear at this point whether the minimum lambda model is better than
+which consisted of 80% of the samples in this set.  In other words,
+there is no obvious gain in performance in moving from 
+a data set with 
+$`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')`$ samples
+to a data set with
+$`r paste(round(table(group = all_group_vec)), collapse=' vs ')`$ samples.
+See Table \@ref(tab:printErrors).  
+
+It's not clear at this point whether the minimum lambda model is truly better than
 the  "one standard error" rule  model.  We would need and external validation
 set to make this determination.  We can compare the two sets
 of out-of-fold predicted values, averaged across cv replicates, to see if
@@ -279,7 +296,7 @@ parameters than the one standard error rule models.
 -->
 
 We see that there isn't a big difference in out-of-fold predicted
-probabilities between the one-standard-error rule ans minimum lamda models.
+probabilities between the one-standard-error rule and the minimum lamda models.
 One way to quantify
 the difference in classification errors is to classify samples
 according to each vector of predicted probabilities, setting
@@ -316,8 +333,8 @@ knitr::kable(tmp,
 
 ```
 
-When we fix the false positive rate at 10%, the `1se` model makes 39 false
-negative calls whereas the minimum lambda model makes 32.  A difference
+When we fix the false positive rate at 10% (ie. the control samples error rates are fixed), 
+the `1se` model makes 39 false negative calls whereas the minimum lambda model makes 32.  A difference
 of $`r round(100*(39-32)/555, 1)`$%
 
 
@@ -328,7 +345,7 @@ cost.  This is definitely over-fitting the data set.  For the purpose
 of computing sample quality scores - what do these differences mean? 
 -->
 
-### Get quality scores {-}
+### Get sample quality scores {-}
 
 To compute quality scores, we will use the out-of-fold predicted probabilities.
 
@@ -352,7 +369,7 @@ sample_min_qual_vec <- p^y*(1-p)^(1-y)
 We can examine quality scores as a function of classification bin.
 
 
-```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - HCC=1'}
+```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - Control=0, HCC=1'}
 
 y <- as.numeric(all_group_vec == 'HCC')
 
@@ -376,22 +393,34 @@ tmp <- c(
  split(sample_min_qual_vec, lassoAll_min_conf_vec)
 )
 
-par(mfrow=c(1,2), oma=c(2,0,2,0))
+par(mfrow=c(1,2), mar=c(4,3,3,2), oma=c(2,2,2,0))
 gplots::boxplot2(split(sample_1se_qual_vec, lassoAll_1se_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
+  outline=F, ylab = '', 
+  border=c('green', 'green', 'red', 'red'),
+  ylim=c(0,1))
 title('1se Model')
 
 gplots::boxplot2(split(sample_min_qual_vec, lassoAll_min_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
+  outline=F, ylab = '',
+  border=c('green', 'green', 'red', 'red'),
+  ylim=c(0,1))
 title('min lambda Model')
 
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
+mtext(side=2, outer=T, cex=1.5, 'Quality Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
 
 
 ```
 
+This figure shows that for false positive cases (0:1 or classifying a
+control as an affected case), the algorithm is *less certain* of its predicted
+outcome than for the fals negative cases (1:0 or classifying an affected case as a control).
+ie. the misclassified HCC samples are quite similar to Controls, whereas there
+is more ambiguity in the misclassified Control samples.
+
+ 
 We will use the minimum lambda model to provide
 the fitted probabilities used to compute quality scores,
 but we could have used either one.
@@ -408,7 +437,7 @@ sample_qual_vec <- sample_min_qual_vec
 
 Before moving on to the simulation, let's examine gene selection stability on the
 full data set.  We have two sets of sellected features - one for the 
-one standard deviation rile model, and one for the mimimum lambda model.
+one standard deviation rule model, and one for the mimimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
 $`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
@@ -606,8 +635,9 @@ Within each simulation, we can run the analyses of size $`r SIZE`$ by simply sel
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
+Here we show results for the smalle sample sizes where variability will be the greatest.
 
-```{r look-sim-qual, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run'}
+```{r look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run', eval=F, echo=F}
 ### CLEAR CACHE
 
 all_control_qual_vec <- sample_qual_vec[all_control_vec]
@@ -684,24 +714,64 @@ title("Affected sample quality by stage and simulation")
 
 ```
 
-We see some variability in sample quality in the smaller analysis stages.
-This may lead observers to be overly optimistic, or overly pessimistic,
-in the early accrual stages.  
+```{r look-sim-qual_0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run for size = 50 '}
+### CLEAR CACHE
 
+all_control_qual_vec <- sample_qual_vec[all_control_vec]
+sim_control_qual_mtx <- sapply(
+  1:ncol(sim_control_mtx), 
+  function(CC) all_control_qual_vec[sim_control_mtx[,CC]]
+ )
+
+all_affected_qual_vec <- sample_qual_vec[all_affected_vec]
+sim_affected_qual_mtx <- sapply(
+  1:ncol(sim_affected_mtx),  
+  function(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]
+ )
+
+# ONLY LOOK AT SAMPLE SIZE == 50
+NN <- 50
+
+# PLOT
+par(mfrow=c(2,1), mar = c(2,5,2,1))
+# control
+boxplot(
+  sim_control_qual_mtx[1:NN,],
+  outline = T, 
+  ylab = 'Quality Score',
+  xaxt = 'n'
+)
+title("Control sample quality across simulations")
+
+# affected
+boxplot(
+  sim_affected_qual_mtx[1:NN,],
+  outline = T, 
+  ylab = 'Quality Score'
+)
+title("Affected sample quality across simulations")
+
+```
+
+In this figure, we are summarizing the quality measures of 50 samples per group acress
+30 simulations, or random selections of control and affected samples.
+We see significant variability in sample quality, especially in the affected cases.
+This may lead an unwary observer to be overly optimistic, or overly pessimistic,
+in the early accrual stages of a study.
 
 
 ## Run simulations
 
 
-As these make take a while to run, 
+As these take a while to run, 
 we will save the results of each similation to a different
 object and store to disk.  These can be easily read from disk
 when needed for analysis.
 
 
-The simulation saves results to the file system and
-only needs to be run once.  The simulation takes $\approx$ 8 minutes
-per iteration, or 4 hours of run time on a laptop.
+The simulation results are saved to the file system and
+only needs to be run once.  The simulation takes $\approx$ 8 to 10 minutes
+per iteration, or 4 to 5 hours of run time on a laptop.
 (Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6)
 
@@ -820,13 +890,7 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 
 ## Simulation results
 
-The results are 
-* error: cv, oof, test  
-    - examine relationship to each other and with respect to sample size  
-* genes:  
-    - how variable are the selected gene lists, both in terms of composition and size
-
-Recall the we have $`r SIM`$ randomly selected sets of HCC and Control samples,
+Recall the we have $`r SIM`$ simulations, or randomly selected sets of HCC and Control samples,
 analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
 $`r CV_REP`$ repeated cross-validated lasso fits:
 
@@ -836,10 +900,10 @@ $`r CV_REP`$ repeated cross-validated lasso fits:
 * Number of CV Replicates:  CV_REP = $`r CV_REP`$
 
 
-First we extract simluation results and store into one big table:
+First we extract simluation results and store into one big table (only showing the top of table shere):
 
-```{r extract-sim-results, cache=T, cache.vars='run-sim'}
-
+```{r extract-sim-results, cache=T, cache.vars='lasso_sim_results_frm'}
+### CLEAR CACHE
 sim_files_vec <- list.files('RData', '^sim_')
 
 
@@ -887,6 +951,7 @@ Have a table of simulation results - `lasso_sim_results_frm`:
 -->
 
 ```{r sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+### CLEAR CACHE
  
 knitr::kable(head(with(lasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
@@ -900,11 +965,16 @@ knitr::kable(head(lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_m
 ```
 
 
-### Simulation Results - Look at one simulation
+### Simulation Results - look at one simulation
 
-First examine results for one simulation run.
+First examine results for one simulation run.  In the figures that follow,
+each boxplot summarized 30 repreated cross validation runs performed on a 
+fixed random selection of Control and Affeced samples.  Recall that as
+we move from 25 to 50, etc., the sample sets are growing to emulate an
+accrual of samples over time.
 
 ```{r lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+### CLEAR CACHE
 
 # get full model cv error ref
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -1035,8 +1105,18 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ```
 
+In this one simulation, we see:
+
+* model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
+
+* CV error rates tend to be pessimistic, expecially for the small sample sizes.  This is odd
+and may be related to sample quality.  
+
+* There isn't much to chose from between the one standard error and the minimum lambda models.  The
+latter may show lower propensity to produce optimistic cv error rates.  
 
 ```{r lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
 # get full model nzero ref
 nzero_1se_vec <- sapply(cv_lassoAll_lst,
@@ -1180,10 +1260,26 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ```
 
+In this one simulation, we see:
+
+* The selected number of features in the smaller sample size analyses
+are low, with few feaures belonging to the core signature identified in the
+full data set.  
+
+* As the sample size increases the number of features selected in the minimum 
+lambda model remains variable, but the number of core signature features
+selected in the samples of sizes 200 and 300 is stable and between 40 and 50.  
+
 
 ### Summarize results across simulation runs.
 
+Now look acoss all simulations.  In the figures that follow, each boxplot
+summarizes the results of 30 simulations.  For a give sample size and a 
+given simulation, each data point is the median across 30 repeated cv runs.
+
+
 ```{r lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+### CLEAR CACHE
 
 # get full model cv error ref
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -1198,6 +1294,7 @@ error_min_q2 <- quantile(error_min_vec, prob=1/2)
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 ## cv
@@ -1313,6 +1410,7 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across 
 ```
 
 ```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size'}
+### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
@@ -1334,11 +1432,13 @@ knitr::kable(error_min_Bysize_sum_frm,
 Now look at feature selection.
 
 ```{r lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 # selected features
@@ -1469,6 +1569,7 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 
 
 ```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
 
@@ -1486,6 +1587,5 @@ knitr::kable(p_sing_min_Bysize_sum_frm,
    kableExtra::kable_styling(full_width = F)
 
 ```
-
 
 
