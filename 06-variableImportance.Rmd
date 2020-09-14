@@ -114,7 +114,7 @@ sel_features_lst
 ```
 
 
-For each selected feature, run 10 cv fits with 10 lambda values, and compute the 
+For each selected feature, run 10 cv fits with 30 lambda values, and compute the 
 min lambda error.
 
 
