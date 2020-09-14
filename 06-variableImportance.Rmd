@@ -13,7 +13,7 @@ It is also possible for a feature to be frequently selected in bootstrap samples
 still not un-important.  In a sense, this measure of importance is really a measure
 of `single importance`.  We should therefore also have a measure of `group importance`.
 
-For this exercise, wr will use the min lambda error assessment as it has
+For this exercise, we will use the min lambda error assessment as it has
 lower variability across repeated cv fits.
 
 ```{r getCoefMtx, cache=T, cache.vars=c('lassoAll_coefVal_lse_mtx')}
@@ -70,7 +70,7 @@ lassoAll_coefVal_lse_mtx[is.na(lassoAll_coefVal_lse_mtx)] <- 0
 
 # order by selection frequencey
 feature_freq_vec <- rowSums(abs(lassoAll_coefVal_lse_mtx) > 0)
-table(feature_freq_vec)
+#table(feature_freq_vec)
 
 feature_o <- order(feature_freq_vec)
 
@@ -102,13 +102,13 @@ selection frequency blocks
 ```{r selFreq, commnent=''}
 
 selFreq_bin_vec <- cut(feature_freq_vec, c(0,10, 15, 20, 25, 29,30))
-table(selFreq_bin_vec)
+#table(selFreq_bin_vec)
 
 set.seed(1)
 sel_features_lst <- lapply(split(feature_freq_vec, selFreq_bin_vec),
   function(FF) sample(FF, size=5))
 
-cat("List of selected features to assess:\n")
+cat("List of features to assess picked by frequency of lasso selection:\n")
 sel_features_lst
 
 ```

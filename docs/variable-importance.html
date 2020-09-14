@@ -221,7 +221,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.7" data-path="model-suite.html"><a href="model-suite.html#effect-of-sample-quality"><i class="fa fa-check"></i><b>5.7</b> Effect of sample quality</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a></li>
+<li class="chapter" data-level="6" data-path="variable-importance.html"><a href="variable-importance.html"><i class="fa fa-check"></i><b>6</b> Variable importance</a>
+<ul>
+<li class="chapter" data-level="" data-path="variable-importance.html"><a href="variable-importance.html#in-progess"><i class="fa fa-check"></i>IN PROGESS</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="conclusions.html"><a href="conclusions.html"><i class="fa fa-check"></i><b>7</b> Conclusions</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="appendix-1.html"><a href="appendix-1.html"><i class="fa fa-check"></i>Appendix 1 - Sample size in elastic net fits</a>
@@ -267,7 +270,7 @@ for a feature to have a large coefficient and be un-important, in our sense of t
 It is also possible for a feature to be frequently selected in bootstrap samples, and
 still not un-important. In a sense, this measure of importance is really a measure
 of <code>single importance</code>. We should therefore also have a measure of <code>group importance</code>.</p>
-<p>For this exercise, wr will use the min lambda error assessment as it has
+<p>For this exercise, we will use the min lambda error assessment as it has
 lower variability across repeated cv fits.</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="variable-importance.html#cb107-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb107-2"><a href="variable-importance.html#cb107-2"></a></span>
@@ -316,31 +319,27 @@ lower variability across repeated cv fits.</p>
 <span id="cb107-45"><a href="variable-importance.html#cb107-45"></a>lassoAll_coefVal_lse_mtx[<span class="kw">is.na</span>(lassoAll_coefVal_lse_mtx)] &lt;-<span class="st"> </span><span class="dv">0</span></span></code></pre></div>
 <div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="variable-importance.html#cb108-1"></a><span class="co"># order by selection frequencey</span></span>
 <span id="cb108-2"><a href="variable-importance.html#cb108-2"></a>feature_freq_vec &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">abs</span>(lassoAll_coefVal_lse_mtx) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb108-3"><a href="variable-importance.html#cb108-3"></a><span class="kw">table</span>(feature_freq_vec)</span></code></pre></div>
-<pre><code>## feature_freq_vec
-##   1   2   3   4   5   6   7   8   9  10  11  12  13  15  16  17  18  19  20  21 
-##  10  17  18  14  46   5   9   1   8  18   6  10  18  11   1   1   8   1  10   7 
-##  22  23  24  26  28  29  30 
-##   1   1  12   7  11  29 106</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="variable-importance.html#cb110-1"></a>feature_o &lt;-<span class="st"> </span><span class="kw">order</span>(feature_freq_vec)</span>
-<span id="cb110-2"><a href="variable-importance.html#cb110-2"></a></span>
-<span id="cb110-3"><a href="variable-importance.html#cb110-3"></a><span class="kw">boxplot</span>(</span>
-<span id="cb110-4"><a href="variable-importance.html#cb110-4"></a>   <span class="kw">t</span>(lassoAll_coefVal_lse_mtx)[,feature_o], </span>
-<span id="cb110-5"><a href="variable-importance.html#cb110-5"></a>   <span class="dt">ylab=</span><span class="st">&#39;Coefficient&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;Frequency of selection&#39;</span>,</span>
-<span id="cb110-6"><a href="variable-importance.html#cb110-6"></a>   <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, </span>
-<span id="cb110-7"><a href="variable-importance.html#cb110-7"></a>   <span class="dt">outline=</span>F)</span>
-<span id="cb110-8"><a href="variable-importance.html#cb110-8"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="dv">0</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</span>
-<span id="cb110-9"><a href="variable-importance.html#cb110-9"></a><span class="kw">axis</span>(</span>
-<span id="cb110-10"><a href="variable-importance.html#cb110-10"></a> <span class="dt">side=</span><span class="dv">1</span>, </span>
-<span id="cb110-11"><a href="variable-importance.html#cb110-11"></a> <span class="dt">at=</span><span class="kw">match</span>(<span class="kw">unique</span>(feature_freq_vec), <span class="kw">sort</span>(feature_freq_vec)),</span>
-<span id="cb110-12"><a href="variable-importance.html#cb110-12"></a> <span class="kw">unique</span>(feature_freq_vec))</span></code></pre></div>
+<span id="cb108-3"><a href="variable-importance.html#cb108-3"></a><span class="co">#table(feature_freq_vec)</span></span>
+<span id="cb108-4"><a href="variable-importance.html#cb108-4"></a></span>
+<span id="cb108-5"><a href="variable-importance.html#cb108-5"></a>feature_o &lt;-<span class="st"> </span><span class="kw">order</span>(feature_freq_vec)</span>
+<span id="cb108-6"><a href="variable-importance.html#cb108-6"></a></span>
+<span id="cb108-7"><a href="variable-importance.html#cb108-7"></a><span class="kw">boxplot</span>(</span>
+<span id="cb108-8"><a href="variable-importance.html#cb108-8"></a>   <span class="kw">t</span>(lassoAll_coefVal_lse_mtx)[,feature_o], </span>
+<span id="cb108-9"><a href="variable-importance.html#cb108-9"></a>   <span class="dt">ylab=</span><span class="st">&#39;Coefficient&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;Frequency of selection&#39;</span>,</span>
+<span id="cb108-10"><a href="variable-importance.html#cb108-10"></a>   <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, </span>
+<span id="cb108-11"><a href="variable-importance.html#cb108-11"></a>   <span class="dt">outline=</span>F)</span>
+<span id="cb108-12"><a href="variable-importance.html#cb108-12"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="dv">0</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</span>
+<span id="cb108-13"><a href="variable-importance.html#cb108-13"></a><span class="kw">axis</span>(</span>
+<span id="cb108-14"><a href="variable-importance.html#cb108-14"></a> <span class="dt">side=</span><span class="dv">1</span>, </span>
+<span id="cb108-15"><a href="variable-importance.html#cb108-15"></a> <span class="dt">at=</span><span class="kw">match</span>(<span class="kw">unique</span>(feature_freq_vec), <span class="kw">sort</span>(feature_freq_vec)),</span>
+<span id="cb108-16"><a href="variable-importance.html#cb108-16"></a> <span class="kw">unique</span>(feature_freq_vec))</span></code></pre></div>
 <div class="figure"><span id="fig:varOccurence"></span>
 <img src="Static/figures/varOccurence-1.png" alt="one-standard-error rule lasso feature selection" width="672" />
 <p class="caption">
 Figure 6.1: one-standard-error rule lasso feature selection
 </p>
 </div>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="variable-importance.html#cb111-1"></a> <span class="co">#title(&quot;one-standard-error rule lasso feature selection&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="variable-importance.html#cb109-1"></a> <span class="co">#title(&quot;one-standard-error rule lasso feature selection&quot;)</span></span></code></pre></div>
 <p>As we suspected, features with large absolute regularized coefficients tend to
 be selected more frequently across repreated cross validated fits. So essntially,
 the Cai et al. frequecny filter is essentially a size of coefficient filter.</p>
@@ -349,18 +348,16 @@ error rate when each variable is excluded from the fit. We will us cv error rate
 the one-standard-error rule lasso models for this assessment. As this computation
 will be pretty costly, we will select 30 features from different
 selection frequency blocks</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="variable-importance.html#cb112-1"></a>selFreq_bin_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(feature_freq_vec, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">29</span>,<span class="dv">30</span>))</span>
-<span id="cb112-2"><a href="variable-importance.html#cb112-2"></a><span class="kw">table</span>(selFreq_bin_vec)</span></code></pre></div>
-<pre><code>## selFreq_bin_vec
-##  (0,10] (10,15] (15,20] (20,25] (25,29] (29,30] 
-##     146      45      21      21      47     106</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="variable-importance.html#cb114-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb114-2"><a href="variable-importance.html#cb114-2"></a>sel_features_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">split</span>(feature_freq_vec, selFreq_bin_vec),</span>
-<span id="cb114-3"><a href="variable-importance.html#cb114-3"></a>  <span class="cf">function</span>(FF) <span class="kw">sample</span>(FF, <span class="dt">size=</span><span class="dv">5</span>))</span>
-<span id="cb114-4"><a href="variable-importance.html#cb114-4"></a></span>
-<span id="cb114-5"><a href="variable-importance.html#cb114-5"></a><span class="kw">cat</span>(<span class="st">&quot;List of selected features to assess:</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## List of selected features to assess:</code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="variable-importance.html#cb116-1"></a>sel_features_lst</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="variable-importance.html#cb110-1"></a>selFreq_bin_vec &lt;-<span class="st"> </span><span class="kw">cut</span>(feature_freq_vec, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">29</span>,<span class="dv">30</span>))</span>
+<span id="cb110-2"><a href="variable-importance.html#cb110-2"></a><span class="co">#table(selFreq_bin_vec)</span></span>
+<span id="cb110-3"><a href="variable-importance.html#cb110-3"></a></span>
+<span id="cb110-4"><a href="variable-importance.html#cb110-4"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb110-5"><a href="variable-importance.html#cb110-5"></a>sel_features_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">split</span>(feature_freq_vec, selFreq_bin_vec),</span>
+<span id="cb110-6"><a href="variable-importance.html#cb110-6"></a>  <span class="cf">function</span>(FF) <span class="kw">sample</span>(FF, <span class="dt">size=</span><span class="dv">5</span>))</span>
+<span id="cb110-7"><a href="variable-importance.html#cb110-7"></a></span>
+<span id="cb110-8"><a href="variable-importance.html#cb110-8"></a><span class="kw">cat</span>(<span class="st">&quot;List of features to assess picked by frequency of lasso selection:</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## List of features to assess picked by frequency of lasso selection:</code></pre>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="variable-importance.html#cb112-1"></a>sel_features_lst</span></code></pre></div>
 <pre><code>## $`(0,10]`
 ##   TRH PRR19 TUBA8  RHOH CCBL2 
 ##     3     2     6     9     5 
@@ -384,38 +381,41 @@ selection frequency blocks</p>
 ## $`(29,30]`
 ## JAKMIP2   CEP83    NEK3    TDP2 C5orf47 
 ##      30      30      30      30      30</code></pre>
-<p>For each selected feature, run 10 cv fits with 10 lambda values, and compute the
+<p>For each selected feature, run 10 cv fits with 30 lambda values, and compute the
 min lambda error.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="variable-importance.html#cb118-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb118-2"><a href="variable-importance.html#cb118-2"></a></span>
-<span id="cb118-3"><a href="variable-importance.html#cb118-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
-<span id="cb118-4"><a href="variable-importance.html#cb118-4"></a></span>
-<span id="cb118-5"><a href="variable-importance.html#cb118-5"></a>cv_lassoLOO_lst  &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">as.vector</span>(<span class="kw">sapply</span>(sel_features_lst, names)),</span>
-<span id="cb118-6"><a href="variable-importance.html#cb118-6"></a> <span class="cf">function</span>(FF) {</span>
-<span id="cb118-7"><a href="variable-importance.html#cb118-7"></a>  FF_ndx &lt;-<span class="st"> </span><span class="kw">match</span>(FF, <span class="kw">colnames</span>(all_lcpm_mtx))</span>
-<span id="cb118-8"><a href="variable-importance.html#cb118-8"></a></span>
-<span id="cb118-9"><a href="variable-importance.html#cb118-9"></a>  cv_lassoMFF_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="cf">function</span>(REP) {</span>
-<span id="cb118-10"><a href="variable-importance.html#cb118-10"></a>  glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb118-11"><a href="variable-importance.html#cb118-11"></a>   <span class="dt">x =</span> all_lcpm_mtx[,<span class="op">-</span>FF_ndx],</span>
-<span id="cb118-12"><a href="variable-importance.html#cb118-12"></a>   <span class="dt">y =</span> <span class="kw">factor</span>(all_group_vec,<span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;Control&#39;</span>, <span class="st">&#39;HCC&#39;</span>)),</span>
-<span id="cb118-13"><a href="variable-importance.html#cb118-13"></a>   <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
-<span id="cb118-14"><a href="variable-importance.html#cb118-14"></a>   <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
-<span id="cb118-15"><a href="variable-importance.html#cb118-15"></a>   <span class="dt">type.measure  =</span>  <span class="st">&quot;class&quot;</span>,</span>
-<span id="cb118-16"><a href="variable-importance.html#cb118-16"></a>   <span class="dt">keep =</span> F,</span>
-<span id="cb118-17"><a href="variable-importance.html#cb118-17"></a>   <span class="dt">nlambda =</span> <span class="dv">10</span></span>
-<span id="cb118-18"><a href="variable-importance.html#cb118-18"></a>   )</span>
-<span id="cb118-19"><a href="variable-importance.html#cb118-19"></a>  })</span>
-<span id="cb118-20"><a href="variable-importance.html#cb118-20"></a> </span>
-<span id="cb118-21"><a href="variable-importance.html#cb118-21"></a>  <span class="kw">cbind</span>(</span>
-<span id="cb118-22"><a href="variable-importance.html#cb118-22"></a> <span class="st">`</span><span class="dt">1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">sapply</span>(cv_lassoMFF_lst, <span class="cf">function</span>(LL) </span>
-<span id="cb118-23"><a href="variable-importance.html#cb118-23"></a>          LL<span class="op">$</span>cvm[LL<span class="op">$</span>lambda<span class="op">==</span>LL<span class="op">$</span>lambda<span class="fl">.1</span>se]),</span>
-<span id="cb118-24"><a href="variable-importance.html#cb118-24"></a>  <span class="st">`</span><span class="dt">min</span><span class="st">`</span> =<span class="st"> </span><span class="kw">sapply</span>(cv_lassoMFF_lst, <span class="cf">function</span>(LL)</span>
-<span id="cb118-25"><a href="variable-importance.html#cb118-25"></a>          LL<span class="op">$</span>cvm[LL<span class="op">$</span>lambda<span class="op">==</span>LL<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
-<span id="cb118-26"><a href="variable-importance.html#cb118-26"></a>  )</span>
-<span id="cb118-27"><a href="variable-importance.html#cb118-27"></a>  })</span>
-<span id="cb118-28"><a href="variable-importance.html#cb118-28"></a></span>
-<span id="cb118-29"><a href="variable-importance.html#cb118-29"></a>   <span class="kw">save</span>(<span class="dt">list=</span><span class="st">&#39;cv_lassoMFF_lst&#39;</span>, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>,<span class="st">&#39;cv_lassoMFF_lst&#39;</span>))</span></code></pre></div>
+<div id="in-progess" class="section level2 unnumbered" number="">
+<h2>IN PROGESS</h2>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="variable-importance.html#cb114-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb114-2"><a href="variable-importance.html#cb114-2"></a></span>
+<span id="cb114-3"><a href="variable-importance.html#cb114-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
+<span id="cb114-4"><a href="variable-importance.html#cb114-4"></a></span>
+<span id="cb114-5"><a href="variable-importance.html#cb114-5"></a>cv_lassoLOO_lst  &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">as.vector</span>(<span class="kw">sapply</span>(sel_features_lst, names)),</span>
+<span id="cb114-6"><a href="variable-importance.html#cb114-6"></a> <span class="cf">function</span>(FF) {</span>
+<span id="cb114-7"><a href="variable-importance.html#cb114-7"></a>  FF_ndx &lt;-<span class="st"> </span><span class="kw">match</span>(FF, <span class="kw">colnames</span>(all_lcpm_mtx))</span>
+<span id="cb114-8"><a href="variable-importance.html#cb114-8"></a></span>
+<span id="cb114-9"><a href="variable-importance.html#cb114-9"></a>  cv_lassoMFF_lst &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="cf">function</span>(REP) {</span>
+<span id="cb114-10"><a href="variable-importance.html#cb114-10"></a>  glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb114-11"><a href="variable-importance.html#cb114-11"></a>   <span class="dt">x =</span> all_lcpm_mtx[,<span class="op">-</span>FF_ndx],</span>
+<span id="cb114-12"><a href="variable-importance.html#cb114-12"></a>   <span class="dt">y =</span> <span class="kw">factor</span>(all_group_vec,<span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;Control&#39;</span>, <span class="st">&#39;HCC&#39;</span>)),</span>
+<span id="cb114-13"><a href="variable-importance.html#cb114-13"></a>   <span class="dt">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb114-14"><a href="variable-importance.html#cb114-14"></a>   <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>,</span>
+<span id="cb114-15"><a href="variable-importance.html#cb114-15"></a>   <span class="dt">type.measure  =</span>  <span class="st">&quot;class&quot;</span>,</span>
+<span id="cb114-16"><a href="variable-importance.html#cb114-16"></a>   <span class="dt">keep =</span> F,</span>
+<span id="cb114-17"><a href="variable-importance.html#cb114-17"></a>   <span class="dt">nlambda =</span> <span class="dv">10</span></span>
+<span id="cb114-18"><a href="variable-importance.html#cb114-18"></a>   )</span>
+<span id="cb114-19"><a href="variable-importance.html#cb114-19"></a>  })</span>
+<span id="cb114-20"><a href="variable-importance.html#cb114-20"></a> </span>
+<span id="cb114-21"><a href="variable-importance.html#cb114-21"></a>  <span class="kw">cbind</span>(</span>
+<span id="cb114-22"><a href="variable-importance.html#cb114-22"></a> <span class="st">`</span><span class="dt">1se</span><span class="st">`</span> =<span class="st"> </span><span class="kw">sapply</span>(cv_lassoMFF_lst, <span class="cf">function</span>(LL) </span>
+<span id="cb114-23"><a href="variable-importance.html#cb114-23"></a>          LL<span class="op">$</span>cvm[LL<span class="op">$</span>lambda<span class="op">==</span>LL<span class="op">$</span>lambda<span class="fl">.1</span>se]),</span>
+<span id="cb114-24"><a href="variable-importance.html#cb114-24"></a>  <span class="st">`</span><span class="dt">min</span><span class="st">`</span> =<span class="st"> </span><span class="kw">sapply</span>(cv_lassoMFF_lst, <span class="cf">function</span>(LL)</span>
+<span id="cb114-25"><a href="variable-importance.html#cb114-25"></a>          LL<span class="op">$</span>cvm[LL<span class="op">$</span>lambda<span class="op">==</span>LL<span class="op">$</span>lambda<span class="fl">.1</span>se])</span>
+<span id="cb114-26"><a href="variable-importance.html#cb114-26"></a>  )</span>
+<span id="cb114-27"><a href="variable-importance.html#cb114-27"></a>  })</span>
+<span id="cb114-28"><a href="variable-importance.html#cb114-28"></a></span>
+<span id="cb114-29"><a href="variable-importance.html#cb114-29"></a>   <span class="kw">save</span>(<span class="dt">list=</span><span class="st">&#39;cv_lassoMFF_lst&#39;</span>, <span class="dt">file=</span><span class="kw">file.path</span>(<span class="st">&quot;RData&quot;</span>,<span class="st">&#39;cv_lassoMFF_lst&#39;</span>))</span></code></pre></div>
 
+</div>
 </div>
             </section>
 
