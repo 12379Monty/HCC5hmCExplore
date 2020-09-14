@@ -6,9 +6,10 @@ language:
     chapter_name: "Section "
 rmd_files: ["index.Rmd","01-intro.Rmd", "02-modelingBackground.Rmd",
    "03-preprocessing.Rmd", "04-glmnetFits.Rmd", "05-glmnetSuite.Rmd",
-   "06-variableImportance.Rmd", "07-summary.Rmd", "08-references.Rmd"]
+    "07-summary.Rmd", "08-references.Rmd"]
 ### see https://community.rstudio.com/t/bookdown-pdf-generation/12359
 repo: https://github.com/12379Monty/HCC5hmCExplore
 
+### "06-variableImportance.Rmd", leave feature out doesnt work!!!
 ### 05B-glmnetSuiteB.Rmd  - included as appendix afer refs - see 08-references.Rmd 
 ### "00-glmnetFits2.Rmd"

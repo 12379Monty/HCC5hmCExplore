@@ -363,7 +363,7 @@ per iteration, or 4 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r enet-run-sim, cache=T, cache.vars='start_time', eval=T}
+```{r enet-run-sim, cache=T, cache.vars='start_time', eval=F}
 ### CLEAR CACHE
 start_time <- proc.time()
 
