@@ -1,16 +1,16 @@
---2020-09-06 20:30:29--  http://mirror.ctan.org/
+--2020-09-14 10:05:21--  http://mirror.ctan.org/
 Resolving mirror.ctan.org (mirror.ctan.org)... 5.35.249.60
 Connecting to mirror.ctan.org (mirror.ctan.org)|5.35.249.60|:80... connected.
 HTTP request sent, awaiting response... 302 Found
-Location: http://ctan.math.washington.edu/tex-archive/ [following]
---2020-09-06 20:30:29--  http://ctan.math.washington.edu/tex-archive/
-Resolving ctan.math.washington.edu (ctan.math.washington.edu)... 128.95.224.254
-Connecting to ctan.math.washington.edu (ctan.math.washington.edu)|128.95.224.254|:80... connected.
+Location: http://ctan.mirrors.hoobly.com/ [following]
+--2020-09-14 10:05:21--  http://ctan.mirrors.hoobly.com/
+Resolving ctan.mirrors.hoobly.com (ctan.mirrors.hoobly.com)... 69.64.41.166
+Connecting to ctan.mirrors.hoobly.com (ctan.mirrors.hoobly.com)|69.64.41.166|:80... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 10366 (10K) [text/html]
 Saving to: '/dev/null'
 
-     0K ..........                                            100% 2.14M=0.005s
+     0K ..........                                            100% 2.16K=4.7s
 
-2020-09-06 20:30:30 (2.14 MB/s) - '/dev/null' saved [10366/10366]
+2020-09-14 10:05:26 (2.16 KB/s) - '/dev/null' saved [10366/10366]
 

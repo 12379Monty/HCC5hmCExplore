@@ -1601,7 +1601,7 @@ focus on the performance of the small sample fits where variability is the
 greatest, and the context where investigators should be most aware of the
 effect of sample selection over and beyond sample size concerns.
 
-```{r small-sample-qual, cache=T, cache.vars=c('vars-to-keep'), fig.cap='figure caption'}
+```{r small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample quality vs classifier performance'}
 
 control_samp25_qual_vec <- apply(sim_control_qual_mtx[1:25, ], 2, median)
 affected_samp25_qual_vec <- apply(sim_affected_qual_mtx[1:25, ], 2, median)

@@ -1,7 +1,8 @@
 --- 
 title: "DNA Hydroxymethylation in Hepatocellular Carcinoma"
 author: "Francois Collin"
-date: "`r Sys.Date()`"
+#date: "`r Sys.Date()`"
+date: 2020
 site: bookdown::bookdown_site
 ### see https://community.rstudio.com/t/bookdown-pdf-generation/12359
 knit: "bookdown::render_book"  
@@ -57,7 +58,7 @@ col_vec <- KellyColors.vec
  options(knitr.table.format = 'html')
 
  # specify for pdf
- #options(knitr.table.format = 'latex')
+ options(knitr.table.format = 'latex')
   
 
 ```
@@ -164,7 +165,9 @@ that discriminate between early stage HCC and control samples.
 * In Section \@ref(model-suite) we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.  
 
-* In Section \@ref(variable-importance) look at the question of assessing variable importance.
+<!-- LEAVE FEATURE OUT IS NOT INFORMATIVE
+* In Section \@ref(variable-importance) we look at the question of assessing variable importance.
+-->
 
 * Concluding remarks are in Section \@ref(conclusions).
 
@@ -173,8 +176,10 @@ investigate the effect of sample size on model performance.
 
 # Classification Analysis in the `n << p` Context {#modeling-background}
 
+<!--
 Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
 relevant exploratory data  analyis results.
+-->
 
 <!--
 In the section we look at  some models fitted to discriminate between
@@ -2779,6 +2784,8 @@ by extreme correlations*.
 To see how this plays out in this dataset, we can look at feature expression
 heat maps.  
 
+Reader notes:  
+
 ```
 Heat maps are rarely useful other than to display the obvious.
 Here too heat maps fail to yield any insights, or confirmation
@@ -2849,7 +2856,7 @@ enet_coef_frm <- data.frame(
 
 <!--chapter:end:04-glmnetFits.Rmd-->
 
-# Does Size Matter? {#model-suite}
+# Sample size investigation {#model-suite}
 
 We now examine the results of fitting a suite of lasso models to
 investigate the effect of sample size on 
@@ -2915,11 +2922,20 @@ when interpreting empirical findings, especially in the absence of solid
 biological underpinnings.  
 
 
-## Sample quality scores
+## Full data set fit
 
-To get sample quality scores, fit a lasso model to all samples in the
-analysis data set, extract predicted probabilities and
-convert them to quality scores. 
+We begin by fitting a model to the entire data set in order to:
+
+* obtain a baseline clssification performance against which to judge the performance
+obtained from the fits to smaller sample sets,
+
+* obtain sample quality scores which can be used to explain variability
+in the performance of model fitted to data sets of a fixed size, and
+
+* produce a *full model* gene signature which can be used to evaluate
+the stability of selected features in models fitted to data sets of diffferent
+sizes.
+
 
 First assemble the data set.  This entails simply re-combining the
 train and test data.
@@ -2952,11 +2968,11 @@ Now fit the losso model through cross-validation.
 Note that the results of a cv fit are random due to the
 random allocation of samples to folds.  We can reduce this
 varibility by properly averaging results over repeated cv fits.
-Here we will obtain samplle quality scores by averaging results
+Here we will obtain sample quality scores by averaging results
 over 30 cv runs.
 
 
-```{r lasso-fit-all, cache=T, cache.vars=c('cv_lassoAll_lst')}
+```{r lasso-fit-all, cache=T, cache.vars=c('cv_lassoAll_lst'), eval=F}
 
 set.seed(1)
 
@@ -2979,6 +2995,16 @@ message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
 
 ```
 
+<!-- lasso-fit-all takes a while - save results -->
+<!-- DO THIS ONCE -->
+```{r save-cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
+ save(list='cv_lassoAll_lst', file=file.path("RData",'cv_lassoAll_lst'))
+```
+```{r load-cv_lassoAll_lst, cache=F, echo=F}
+ load(file=file.path("RData",'cv_lassoAll_lst'))
+```
+
+
 Examine the fits.
 
 ```{r plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
@@ -3000,7 +3026,7 @@ for(JJ in 2:length(cv_lassoAll_lst))
 ```
 
 These cv curves are remarkably consistent meaning that the determination of the size or sparsity
-of the model through cross validation is fairly precise:
+of the model fitted through cross validation to the full data set is fairly precise:
 
 <!-- DONT CACHE THIS ??? -->
 
@@ -3017,7 +3043,7 @@ nzero_1se_vec <- sapply(cv_lassoAll_lst,
 nzero_min_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 
-boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
+boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Selected Features")
 
 # error
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -3050,16 +3076,24 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
 
 ```
 
-The number of features selected by the minimum lambda model is larger
-than the number selected by the "one standard error" rule by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$ and results on
-a median reduction in cv error rates of 
+The number of features selected by the minimum lambda models are larger
+than the number selected by the "one standard error" rule models by a median
+of $`r median(nzero_min_vec-nzero_1se_vec)`$.
+The cv error rates obtained from the minimum lambda models are lower
+then  "one standard error" rule models error rates by a median of
 $`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
 
 The cv error rates observed in this set are comparable to the 
 rates oberved in the lasso models fitted to the training sample set
-which consisted of 80% of the samples in this set.  See Table \@ref(tab:printErrors).
-It's not clear at this point whether the minimum lambda model is better than
+which consisted of 80% of the samples in this set.  In other words,
+there is no obvious gain in performance in moving from 
+a data set with 
+$`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')`$ samples
+to a data set with
+$`r paste(round(table(group = all_group_vec)), collapse=' vs ')`$ samples.
+See Table \@ref(tab:printErrors).  
+
+It's not clear at this point whether the minimum lambda model is truly better than
 the  "one standard error" rule  model.  We would need and external validation
 set to make this determination.  We can compare the two sets
 of out-of-fold predicted values, averaged across cv replicates, to see if
@@ -3120,7 +3154,7 @@ parameters than the one standard error rule models.
 -->
 
 We see that there isn't a big difference in out-of-fold predicted
-probabilities between the one-standard-error rule ans minimum lamda models.
+probabilities between the one-standard-error rule and the minimum lamda models.
 One way to quantify
 the difference in classification errors is to classify samples
 according to each vector of predicted probabilities, setting
@@ -3157,8 +3191,8 @@ knitr::kable(tmp,
 
 ```
 
-When we fix the false positive rate at 10%, the `1se` model makes 39 false
-negative calls whereas the minimum lambda model makes 32.  A difference
+When we fix the false positive rate at 10% (ie. the control samples error rates are fixed), 
+the `1se` model makes 39 false negative calls whereas the minimum lambda model makes 32.  A difference
 of $`r round(100*(39-32)/555, 1)`$%
 
 
@@ -3169,7 +3203,7 @@ cost.  This is definitely over-fitting the data set.  For the purpose
 of computing sample quality scores - what do these differences mean? 
 -->
 
-### Get quality scores {-}
+### Get sample quality scores {-}
 
 To compute quality scores, we will use the out-of-fold predicted probabilities.
 
@@ -3193,7 +3227,7 @@ sample_min_qual_vec <- p^y*(1-p)^(1-y)
 We can examine quality scores as a function of classification bin.
 
 
-```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - HCC=1'}
+```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - Control=0, HCC=1'}
 
 y <- as.numeric(all_group_vec == 'HCC')
 
@@ -3217,22 +3251,34 @@ tmp <- c(
  split(sample_min_qual_vec, lassoAll_min_conf_vec)
 )
 
-par(mfrow=c(1,2), oma=c(2,0,2,0))
+par(mfrow=c(1,2), mar=c(4,3,3,2), oma=c(2,2,2,0))
 gplots::boxplot2(split(sample_1se_qual_vec, lassoAll_1se_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
+  outline=F, ylab = '', 
+  border=c('green', 'green', 'red', 'red'),
+  ylim=c(0,1))
 title('1se Model')
 
 gplots::boxplot2(split(sample_min_qual_vec, lassoAll_min_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
+  outline=F, ylab = '',
+  border=c('green', 'green', 'red', 'red'),
+  ylim=c(0,1))
 title('min lambda Model')
 
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
+mtext(side=2, outer=T, cex=1.5, 'Quality Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
 
 
 ```
 
+This figure shows that for false positive cases (0:1 or classifying a
+control as an affected case), the algorithm is *less certain* of its predicted
+outcome than for the fals negative cases (1:0 or classifying an affected case as a control).
+ie. the misclassified HCC samples are quite similar to Controls, whereas there
+is more ambiguity in the misclassified Control samples.
+
+ 
 We will use the minimum lambda model to provide
 the fitted probabilities used to compute quality scores,
 but we could have used either one.
@@ -3249,7 +3295,7 @@ sample_qual_vec <- sample_min_qual_vec
 
 Before moving on to the simulation, let's examine gene selection stability on the
 full data set.  We have two sets of sellected features - one for the 
-one standard deviation rile model, and one for the mimimum lambda model.
+one standard deviation rule model, and one for the mimimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
 $`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
@@ -3258,7 +3304,8 @@ $`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one the standard error rule models"}
+```{r feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+### CLEAR CACHE
 
 
 # 1se
@@ -3297,6 +3344,7 @@ $`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/
 
 
 ```{r feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+### CLEAR CACHE
 
 
 # min
@@ -3338,13 +3386,13 @@ gene signature produced by each model.
 
 ```{r minVs1seGenes}
 
-gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
-gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
+lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
+lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
 
 ```
 
-`r length(intersect(gene_sign_1se_vec, gene_sign_min_vec))` out of
-`r length(gene_sign_1se_vec)` of the genes in the 1se model gene signature
+`r length(intersect(lasso_gene_sign_1se_vec, lasso_gene_sign_min_vec))` out of
+`r length(lasso_gene_sign_1se_vec)` of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.
 
 ## Simulation Design
@@ -3445,8 +3493,10 @@ Within each simulation, we can run the analyses of size $`r SIZE`$ by simply sel
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
+Here we show results for the smalle sample sizes where variability will be the greatest.
 
-```{r look-sim-qual, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run'}
+```{r look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run', eval=F, echo=F}
+### CLEAR CACHE
 
 all_control_qual_vec <- sample_qual_vec[all_control_vec]
 sim_control_qual_mtx <- sapply(
@@ -3522,25 +3572,64 @@ title("Affected sample quality by stage and simulation")
 
 ```
 
-We see some variability in sample quality in the smaller analysis stages.
-This may lead observers to be overly optimistic, or overly pessimistic,
-in the early accrual stages.  
+```{r look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run for size = 50 '}
+### CLEAR CACHE
 
+all_control_qual_vec <- sample_qual_vec[all_control_vec]
+sim_control_qual_mtx <- sapply(
+  1:ncol(sim_control_mtx), 
+  function(CC) all_control_qual_vec[sim_control_mtx[,CC]]
+ )
 
+all_affected_qual_vec <- sample_qual_vec[all_affected_vec]
+sim_affected_qual_mtx <- sapply(
+  1:ncol(sim_affected_mtx),  
+  function(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]
+ )
+
+# ONLY LOOK AT SAMPLE SIZE == 50
+NN <- 50
+
+# PLOT
+par(mfrow=c(2,1), mar = c(2,5,2,1))
+# control
+boxplot(
+  sim_control_qual_mtx[1:NN,],
+  outline = T, 
+  ylab = 'Quality Score',
+  xaxt = 'n'
+)
+title("Control sample quality across simulations")
+
+# affected
+boxplot(
+  sim_affected_qual_mtx[1:NN,],
+  outline = T, 
+  ylab = 'Quality Score'
+)
+title("Affected sample quality across simulations")
+
+```
+
+In this figure, we are summarizing the quality measures of 50 samples per group acress
+30 simulations, or random selections of control and affected samples.
+We see significant variability in sample quality, especially in the affected cases.
+This may lead an unwary observer to be overly optimistic, or overly pessimistic,
+in the early accrual stages of a study.
 
 
 ## Run simulations
 
 
-As these make take a while to run, 
+As these take a while to run, 
 we will save the results of each similation to a different
 object and store to disk.  These can be easily read from disk
 when needed for analysis.
 
 
-The simulation saves results to the file system and
-only needs to be run once.  The simulation takes $\approx$ 8 minutes
-per iteration, or 4 hours of run time on a laptop.
+The simulation results are saved to the file system and
+only needs to be run once.  The simulation takes $\approx$ 8 to 10 minutes
+per iteration, or 4 to 5 hours of run time on a laptop.
 (Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6)
 
@@ -3655,46 +3744,11 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 
 ```
 
-```{r DEBUG, eval=F, echo=F}
-### REMOVE oof errors.  cv errors are the same!
-sim_files_vec <- list.files('RData', '^sim_')
 
-# we loop across simulations to combine all results into one big table
-for(SIM_NO in 1:length(sim_files_vec)) {
-
-  load(file=file.path('RData', sim_files_vec[SIM_NO]))
-  assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
-  rm(list=sim_files_vec[SIM_NO])
-
-  tmp <- sim_cv_lst
-  for(L1 in 1:length(sim_cv_lst))
-   for(L2 in 1:length(sim_cv_lst[[L1]]))
-   { tmp[[L1]][[L2]]$oof_1se <- NULL
-     tmp[[L1]][[L2]]$oof_min <- NULL
-    }
-
-  sim_cv_lst <- tmp
-  assign(sim_files_vec[SIM_NO], sim_cv_lst)
-  save(list=sim_files_vec[SIM_NO], file=file.path("RData",sim_files_vec[SIM_NO]))
-
-}
-
-
-
-
-```{r sim-time, cache=T, dependson='run-sim', eval=F}
-  message("simulation time: ", round((proc.time() - start_time)[3], 2), "s")
-```
 
 ## Simulation results
 
-The results are 
-* error: cv, oof, test  
-    - examine relationship to each other and with respect to sample size  
-* genes:  
-    - how variable are the selected gene lists, both in terms of composition and size
-
-Recall the we have $`r SIM`$ randomly selected sets of HCC and Control samples,
+Recall the we have $`r SIM`$ simulations, or randomly selected sets of HCC and Control samples,
 analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
 $`r CV_REP`$ repeated cross-validated lasso fits:
 
@@ -3704,10 +3758,10 @@ $`r CV_REP`$ repeated cross-validated lasso fits:
 * Number of CV Replicates:  CV_REP = $`r CV_REP`$
 
 
-First we extract simluation results and store into one big table:
+First we extract simluation results and store into one big table (only showing the top of table shere):
 
-```{r extract-sim-results, cache=T, cache.vars='sim_results_frm'}
-
+```{r extract-sim-results, cache=T, cache.vars='lasso_sim_results_frm'}
+### CLEAR CACHE
 sim_files_vec <- list.files('RData', '^sim_')
 
 
@@ -3738,7 +3792,7 @@ cv_lst_to_frm <- function(sim_cv_lst) {
 }
 
 # we loop across simulations to combine all results into one big table
-sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
+lasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
  function(SIM_NO) {
   load(file=file.path('RData', sim_files_vec[SIM_NO]))
   assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
@@ -3751,16 +3805,17 @@ sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
 ```
 
 <!-- 
-Have a table of simulation results - `sim_results_frm`:
+Have a table of simulation results - `lasso_sim_results_frm`:
 -->
 
 ```{r sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+### CLEAR CACHE
  
-knitr::kable(head(with(sim_results_frm, table(SimNo, Size))),
+knitr::kable(head(with(lasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
    kableExtra::kable_styling(full_width = F)
 
-knitr::kable(head(sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
+knitr::kable(head(lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
     caption = paste("Simulation Results - not showing genes column"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
@@ -3768,9 +3823,16 @@ knitr::kable(head(sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
 ```
 
 
-### Simulation Results:  Errors By Run {-}
+### Simulation Results - look at one simulation
 
-```{r simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Errors by Sample Size and Quality'}
+First examine results for one simulation run.  In the figures that follow,
+each boxplot summarized 30 repreated cross validation runs performed on a 
+fixed random selection of Control and Affeced samples.  Recall that as
+we move from 25 to 50, etc., the sample sets are growing to emulate an
+accrual of samples over time.
+
+```{r lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+### CLEAR CACHE
 
 # get full model cv error ref
 error_1se_vec <- sapply(cv_lassoAll_lst,
@@ -3788,11 +3850,11 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 # errors
@@ -3829,8 +3891,9 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('1se error rates'))
+title(paste('one se lambda - error rates'))
 
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -3844,7 +3907,7 @@ axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 # min
 ####################
@@ -3877,8 +3940,9 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('min error rates'))
+title(paste('min lambda - error rates'))
 
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -3892,25 +3956,34 @@ axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
 
 ```
 
-### Simulation Results:  Model Size By Run {-}
+In this one simulation, we see:
 
-```{r simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Selected Features by Sample Size and Quality'}
+* Model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
+
+* CV error rates tend to be pessimistic, expecially for the small sample sizes.  This is odd
+and may be related to sample quality.  
+
+* There isn't much to chose from between the one standard error and the minimum lambda models.  The
+latter may show lower propensity to produce optimistic cv error rates.  
+
+```{r lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
 # get full model nzero ref
 nzero_1se_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
-nzero_1se_q1q3 <- quantile(nzero_1se_vec, prob=c(1,3)/4)
+nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
 nzero_min_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
-nzero_min_q1q3 <- quantile(nzero_min_vec, prob=c(1,3)/4)
+nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
@@ -3919,11 +3992,11 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(sim_results_frm$SimNo)){
+for(SIM in unique(lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
@@ -3935,10 +4008,10 @@ p_1se_lst <- with(simNo_results_frm,
  split(p_1se, Size))
 names(p_1se_lst) <- paste0(stringr::str_pad(names(p_1se_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of gene_sign_1se_vec
+# get selected features that are part of lasso_gene_sign_1se_vec
 # - the signature selected genes
 sign_genes_1se_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), gene_sign_1se_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), lasso_gene_sign_1se_vec))
 
 sign_p_1se_lst <- split(sapply(sign_genes_1se_lst, length), simNo_results_frm$Size)
 names(sign_p_1se_lst) <- paste0(stringr::str_pad(names(sign_p_1se_lst), width=3, pad='0'),'_signP')
@@ -3949,7 +4022,7 @@ p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
 
 boxplot(p_singP_1se_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -3958,14 +4031,16 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_1se_q1q3, col = 'red')
-legend('topright',
+#abline(h= nzero_1se_q2, col = 'red')
+legend('topleft',
    #title='1se errors', title.col = 'black',
    text.col = c('blue', 'green'),
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('1se - selected gene counts'))
+title(paste('one se lambda - selected gene counts'))
+
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -3979,7 +4054,7 @@ axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 ###################
 # min
@@ -3989,10 +4064,10 @@ p_min_lst <- with(simNo_results_frm,
  split(p_min, Size))
 names(p_min_lst) <- paste0(stringr::str_pad(names(p_min_lst), width=3, pad='0'),'_p')
 
-# get selected features that are part of gene_sign_min_vec
+# get selected features that are part of lasso_gene_sign_min_vec
 # - the signature selected genes
 sign_genes_min_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_min']), gene_sign_min_vec))
+    intersect(unlist(simNo_results_frm[RR, 'genes_min']), lasso_gene_sign_min_vec))
 
 sign_p_min_lst <- split(sapply(sign_genes_min_lst, length), simNo_results_frm$Size)
 names(sign_p_min_lst) <- paste0(stringr::str_pad(names(sign_p_min_lst), width=3, pad='0'),'_signP')
@@ -4003,7 +4078,7 @@ p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
 
 boxplot(p_singP_min_lst,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
 LL <- -1
@@ -4012,14 +4087,16 @@ axis(side=1, tick=F, line = LL,
   SIZE0
  )
 abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_min_q1q3, col = 'red')
-legend('topright',
+#abline(h= nzero_min_q2, col = 'red')
+legend('topleft',
    #title='min errors', title.col = 'black',
    text.col = c('blue', 'green'),
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('min - selected gene counts'))
+title(paste('min lambda - selected gene counts'))
+
+SKIP  <- function() {
 # Add qual annotation
 control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
 affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
@@ -4033,7 +4110,7 @@ axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
   round(affected_qual_vec, 2)
  )
-
+}#SKIP
 
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
@@ -4041,850 +4118,33 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ```
 
+In this one simulation, we see:
+
+* The selected number of features in the smaller sample size analyses
+are low, with few feaures belonging to the core signature identified in the
+full data set.  
+
+* As the sample size increases the number of features selected in the minimum 
+lambda model remains variable, but the number of core signature features
+selected in the samples of sizes 200 and 300 is stable and between 40 and 50.  
 
 
-<!--chapter:end:05-glmnetSuite.Rmd-->
+### Summarize results across simulation runs.
 
-# Does Size Matter? - Continued {#model-suiteB}
+Now look acoss all simulations.  In the figures that follow, each boxplot
+summarizes the results of 30 simulations.  For a give sample size and a 
+given simulation, each data point is the median across 30 repeated cv runs.
 
-Repeat the analyses from Section \@ref(model-suite), but using
-the elastic net as classfication model.  
 
-
-<!-- RUN ONCE -->
-```{r enet-fit-all, cache=T, cache.vars=c('cv_enetAll_lst'), eval=F}
-
-set.seed(1)
-
-start_time <-  proc.time()
-
-cv_enetAll_lst <- lapply(1:30, function(REP) {
-glmnet::cv.glmnet(
- x = all_lcpm_mtx,
- y = factor(all_group_vec,levels = c('Control', 'HCC')),
- alpha = 0.5,
- family = 'binomial',
- type.measure  =  "class",
- keep = T,
- nlambda = 100
-)
-}
-)
-
-message("enetAll time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
-
-<!-- net-fit-all takes a while - save results -->
-<!-- DO THIS ONCE -->
-```{r save-cv_enetAll_lst, cache=T, dependson='enet-fit-all', cache.vars='', echo=F, eval=F}
- save(list='cv_enetAll_lst', file=file.path("RData",'cv_enetAll_lst'))
-```
-```{r load-cv_enetAll_lst, cache=T, dependson='enet-fit-all', cache.vars='', echo=F}
- load(file=file.path("RData",'cv_enetAll_lst'))
-```
-
-Examine the fits.
-
-```{r enet-plot-enetAll, cache=T, dependson='enet-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv enet models fitted to all samples'}
+```{r lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 ### CLEAR CACHE
-plot(
- log(cv_enetAll_lst[[1]]$lambda),
- cv_enetAll_lst[[1]]$cvm,
- lwd=2,
- xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
-)
-
-for(JJ in 2:length(cv_enetAll_lst))
- lines(
-  log(cv_enetAll_lst[[JJ]]$lambda),
-  cv_enetAll_lst[[JJ]]$cvm,
-  lwd=2
-)
-
-```
-
-These cv curves are remarkably consistent meaning that the determination of the size or sparsity
-of the model through cross validation is fairly precise:
-
-<!-- DONT CACHE THIS ??? -->
-
-```{r model-size-enetAll, cache=T, dependson='enet-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv enet models'}
-
-library(magrittr)
-
-par(mfrow=c(1,2), mar=c(3,4, 2, 1))
-
-# nzero
-nzero_1se_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
-
-nzero_min_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
-
-boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
-
-# error
-error_1se_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
-
-error_min_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
-
-boxplot(
- list(`1se`=error_1se_vec, min = error_min_vec), 
- ylab=cv_enetAll_lst[[1]]$name,
- ylim=c(0.06, .10)
-)
-
-# tabular format
-tmp <- data.frame(rbind(
- `features_1se` = summary(nzero_1se_vec),
- features_min = summary(nzero_min_vec),
- `features:min-1se` = summary(nzero_min_vec - nzero_1se_vec),
- `cv_error_1se` = summary(100*error_1se_vec),
- cv_error_min = summary(100*error_min_vec),
- `cv_error:1se-min` = summary(100*(error_1se_vec-error_min_vec))
-))
-
-knitr::kable(tmp %>% dplyr::select(-Mean),
-  caption = "Number of selected features",
-  digits=1) %>%
-   kableExtra::kable_styling(full_width = F)
-
-
-```
-
-The number of features selected by the minimum lambda model is larger
-than the number selected by the "one standard error" rule by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$ and results on
-a median reduction in cv error rates of 
-$`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
-
-The cv error rates observed in this set are comparable to the 
-rates oberved in the enet models fitted to the training sample set
-which consisted of 80% of the samples in this set.  See Table \@ref(tab:printErrors).
-It's not clear at this point whether the minimum lambda model is better than
-the  "one standard error" rule  model.  We would need and external validation
-set to make this determination.  We can compare the two sets
-of out-of-fold predicted values, averaged across cv replicates, to see if
-there is a meaningful difference between the two.
-
-
-```{r enet-get-sample-pred, cache=T, dependson='enet-fit-all', cache.vars=c('enetAll_predResp_1se_vec','enetAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
-
-# predicted probs - 1se
-enetAll_predResp_1se_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
-  ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
-  logistic_f(cv_fit$fit.preval[,ndx_1se])
- })
-enetAll_predResp_1se_vec <- rowMeans(enetAll_predResp_1se_mtx)
-
-# predicted probs - min
-enetAll_predResp_min_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
-  ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
-  logistic_f(cv_fit$fit.preval[,ndx_min])
- })
-enetAll_predResp_min_vec <- rowMeans(enetAll_predResp_min_mtx)
-
-# plot
-par(mfrow=c(1,2), mar=c(5,5,2,1))
-tmp <- c(
- `1se` = split(enetAll_predResp_1se_vec, all_group_vec),
- min = split(enetAll_predResp_min_vec, all_group_vec)
-)
-names(tmp) <- sub('\\.', '\n', names(tmp))
-
-boxplot(
- tmp,
- ylab='Predicted oof probability',
- border=c('green', 'red'),
- xaxt='n'
-)
-axis(side=1, at=1:length(tmp), tick=F, names(tmp))
-
-
-# compare the two
-plot(
- x = enetAll_predResp_1se_vec, xlab='1se model oof Prob',
- y = enetAll_predResp_min_vec, ylab='min lambda model oof Prob',
- col = ifelse(all_group_vec == 'HCC', 'red', 'green')
-)
- 
-# Add referecne lines at 10% false positive
-thres_1se <- quantile(enetAll_predResp_1se_vec[all_group_vec == 'Control'], prob=.9)
-thres_min <- quantile(enetAll_predResp_min_vec[all_group_vec == 'Control'], prob=.9)
-abline(v = thres_1se, h = thres_min, col='grey')
-
-```
-
-<!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
-We see that the minimum lambda models provide a better fit to the data,
-which is to be expected as the minimum lambda models have more estimated
-parameters than the one standard error rule models.  
--->
-
-We see that there isn't a big difference in out-of-fold predicted
-probabilities between the one-standard-error rule ans minimum lamda models.
-One way to quantify
-the difference in classification errors is to classify samples
-according to each vector of predicted probabilities, setting
-the thresholds to achieve a fixed false positive rate, 10% say.
-These thresholds are indicated by the grey lines in the scatter plot
-on the right side of Figure \@ref(fig:get-sample-pred).  
-
-<!-- APPLIED TO THE FITTED VALUES
-We note
-that althouth predicted probability distributions are quite different
-for the two models, the the class predictions at a 10% false discovery threshold
-are largely in agreement.
--->
-
-```{r enet-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('enetAll_predClass_1se_vec','enetAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
-
-enetAll_predClass_1se_vec <- ifelse(
- enetAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
-
-enetAll_predClass_min_vec <- ifelse(
- enetAll_predResp_min_vec > thres_min, 'HCC', 'Control')
-
-tmp <- cbind(
- table(truth=all_group_vec, `1se-pred`=enetAll_predClass_1se_vec),
- table(truth=all_group_vec, `min-pred`=enetAll_predClass_min_vec)
-) 
-# Hack for printing
-colnames(tmp) <- c('1se-Control', '1se-HCC', 'min-Control', 'min-HCC')
-
-knitr::kable(tmp,
-  caption = "Classifications: rows are truth",
-  digits=1) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
-
-When we fix the false positive rate at 10%, the `1se` model makes 39 false
-negative calls whereas the minimum lambda model makes 32.  A difference
-of $`r round(100*(39-32)/555, 1)`$%
-
-
-<!-- APPLIED TO THE FITTED PROBABILITIES
-We see that the min lambda model, makes no false negative calls at a 90% sensitivity
-setting, and the sensitivity could be increased substantially at no false negative
-cost.  This is definitely over-fitting the data set.  For the purpose
-of computing sample quality scores - what do these differences mean? 
--->
-
-### Get quality scores {-}
-
-To compute quality scores, we will use the out-of-fold predicted probabilities.
-
-```{r enet-get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
-# get qual scores
-
-y <- as.numeric(all_group_vec == 'HCC')
-# 1se
-p <- enetAll_predResp_1se_vec
-sample_1se_qual_vec <- p^y*(1-p)^(1-y)
-
-# min
-p <- enetAll_predResp_min_vec
-sample_min_qual_vec <- p^y*(1-p)^(1-y)
-
-```
-
-
-
-
-We can examine quality scores as a function of classification bin.
-
-
-```{r enet-plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - HCC=1'}
-
-y <- as.numeric(all_group_vec == 'HCC')
-
-# 1se
-enetAll_1se_conf_vec <- paste(
- y, 
- as.numeric(enetAll_predClass_1se_vec=='HCC'),
- sep = ':'
-)
-
-# min
-enetAll_min_conf_vec <- paste(
- y, 
- as.numeric(enetAll_predClass_min_vec=='HCC'),
- sep = ':'
-)
-
-
-tmp <- c(
- split(sample_1se_qual_vec, enetAll_1se_conf_vec), 
- split(sample_min_qual_vec, enetAll_min_conf_vec)
-)
-
-par(mfrow=c(1,2), oma=c(2,0,2,0))
-gplots::boxplot2(split(sample_1se_qual_vec, enetAll_1se_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
-title('1se Model')
-
-gplots::boxplot2(split(sample_min_qual_vec, enetAll_min_conf_vec), 
-  outline=F, ylab = 'Quality Score', ylim=c(0,1))
-title('min lambda Model')
-
-
-mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
-mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
-
-
-```
-
-We will use the minimum lambda model to provide
-the fitted probabilities used to compute quality scores,
-but we could have used either one.
-
-```{r enet-sample-qual}
-
-sample_qual_vec <- sample_min_qual_vec
-
-
-```
-
-
-## Selected feature list stability 
-
-Before moving on to the simulation, let's examine gene selection stability on the
-full data set.  We have two sets of sellected features - one for the 
-one standard deviation rile model, and one for the mimimum lambda model.
-We saw in Table \@ref(tab:model-size-enetAll) that the number of features
-selected by the minimum lambda models had an IQR of
-$`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
-while the one standard error rule models had an IQR of
-$`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
-
-Let's examine the stability of the gene lists across cv replicates.
-
-```{r enet-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','enetAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one the standard error rule models"}
-
-
-# 1se
-enetAll_coef_1se_lst <- lapply(cv_enetAll_lst, function(cv_fit){
- cv_fit_coef <- coef(
- cv_fit,
- s = "lambda.1se"
- )
- cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
- })
-
-# put into matrix
-enetAll_coef_1se_all <- Reduce(union, enetAll_coef_1se_lst)
-enetAll_coef_1se_mtx <- sapply(enetAll_coef_1se_lst, 
-  function(LL) is.element(enetAll_coef_1se_all, LL)
-)
-rownames(enetAll_coef_1se_mtx) <- enetAll_coef_1se_all
-
-genes_by_rep_1se_tbl <- table(rowSums(enetAll_coef_1se_mtx))
-barplot(
- genes_by_rep_1se_tbl,
- xlab='Number of Replicates',
- ylab='Number of features'
-
-)
-
-
-```
-
-We see that $`r genes_by_rep_1se_tbl['30']`$ features are included in every
-cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(enetAll_coef_1se_mtx), 1/4)*100,0)`$%
-and
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(enetAll_coef_1se_mtx), 3/4)*100,0)`$%
-(Q1 and Q3) of the cv replicate one standard error rule models feature lists.
-
-
-```{r enet-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','enetAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
-
-
-# min
-enetAll_coef_min_lst <- lapply(cv_enetAll_lst, function(cv_fit){
- cv_fit_coef <- coef(
- cv_fit,
- s = "lambda.min"
- )
- cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
- })
-
-# put into matrix
-enetAll_coef_min_all <- Reduce(union, enetAll_coef_min_lst)
-enetAll_coef_min_mtx <- sapply(enetAll_coef_min_lst, 
-  function(LL) is.element(enetAll_coef_min_all, LL)
-)
-rownames(enetAll_coef_min_mtx) <- enetAll_coef_min_all
-
-genes_by_rep_min_tbl <- table(rowSums(enetAll_coef_min_mtx))
-barplot(
- genes_by_rep_min_tbl,
- xlab='Number of Replicates',
- ylab='Number of features'
-
-)
-
-
-```
-
-We see that $`r genes_by_rep_min_tbl['30']`$ features are included in every
-cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(enetAll_coef_min_mtx), 1/4)*100,0)`$%
-and
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(enetAll_coef_min_mtx), 3/4)*100,0)`$%
-(Q1 and Q3) of the cv replicate min feature lists.
-We will consider the genes that are selected in all cv replicates as a 
-gene signature produced by each model.
-
-
-```{r enet-minVs1seGenes}
-
-gene_sign_1se_vec <- rownames(enetAll_coef_1se_mtx)[rowSums(enetAll_coef_1se_mtx)==30]
-gene_sign_min_vec <- rownames(enetAll_coef_min_mtx)[rowSums(enetAll_coef_min_mtx)==30]
-
-```
-
-`r length(intersect(gene_sign_1se_vec, gene_sign_min_vec))` out of
-`r length(gene_sign_1se_vec)` of the genes in the 1se model gene signature
-are contained in the min lambda model gene signature.
-
-## Simulation Design
-
-We are now ready to run the simulations.
-
-```{r enet-simParms, cahce=F}
- SIM <- 30
- SIZE <- c(25, 50, 100, 200, 300)
- CV_REP <- 30
-
-```
-
-Simluation parameters:  
-
-* Number of simulations : SIM = $`r SIM`$
-
-* Sample sizes: SIZE = $`r SIZE`$  
-
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
-
-
-We will repeat the simulation process SIM = $`r SIM`$ times.
-For each simulation iteration, we will select $`r max(SIZE)`$ Control and 
-$`r max(SIZE)`$ HCC samples at random.  Models will be fitted and analyzed
-to balanced subsets of SIZE = $`r SIZE`$, in a `Matryoshka doll` manner to
-emulate a typical sample accrual process.  Note that in this accural process
-there is no time effect - the accrual process is completely randomized.  In practice,
-there could be significant time effects.  For example, the first 25 HCC samples could come
-from Center A, while the next 25 could come from Center B.  And 
-affected and control samples could be acquired from different clinics
-or in different time interevals.  In other words,
-there is no batch effect or shared variability in our simulation,
-while these are almost always present in real data, including 
-batch effects that are associated with class labels - controls being in
-different batches than affected samples is an all too common occurence,
-for example.  One should be especially watchful of potential batch effects
-when dealing with blood samples as blood is notoriously finicky in
-character [@Huang:2017aa; @Permenter:2015aa;].
-Presented with results that look impressively good based on a small data set,
-one should definitely be skeptical of the promise of future equally good results.
-
-For a given simulation and a given sample size, we will obtain
-CV_REP = $`r CV_REP`$ cross-validated enet fits.  From these fits,
-we can obtain $`r CV_REP`$ out-of-fold assessments of classification accuracy 
-to get a sense if its variability. From each cv replicate, we also obtain
-an estimated model size and a set of selected features.  We will want
-to examine how these stabilize as the sample size increases.
-
-Note that we limit the simulations to a maximum of sample size of 300 in 
-order to to have simulations with low overlap.  With 300
-randomly selected HCC samples, the expected overlap between two randomly
-selected sets of HCC samples is $`r round(100*(300/sum(all_group_vec=='HCC'))^2,1)`$%.
-For Controls the expected overlap is $`r round(100*(300/sum(all_group_vec=='Control'))^2,1)`$%. 
-
-
-## Setup simulation 
-
-To setup the simulation, we only need two master tables: one for the selection of Controls
-and one for the selection of HCC samples.
-
-```{r enet-get-all-vec, cache=T, cache.vars=c('all_control_vec', 'all_affected_vec')}
-
-all_control_vec <- names(all_group_vec[all_group_vec=='Control']) 
-all_affected_vec <- names(all_group_vec[all_group_vec=='HCC'])  
-
-```
-
-We have $`r length(all_control_vec)`$ control sample IDs stored in `all_control_vec`
-and $`r length(all_affected_vec)`$ affected sample IDs stored in `all_affected_vec`.
-To create a suite of random samples from these, we only need to randomly select indices from
-each vector.
-
-  
-```{r enet-getSimTable, cache=T, cache.vars=c('sim_control_mtx', 'sim_affected_mtx')}
-
-set.seed(12379)
-
-sim_control_mtx <- sapply(
- 1:SIM, 
- function(dummy) 
-   sample(1:length(all_control_vec), size =  max(SIZE))
-)
-
-
-sim_affected_mtx <- sapply(
- 1:SIM, 
- function(dummy) 
-   sample(1:length(all_affected_vec), size =  max(SIZE))
-)
-
-
-```
-
-Each simulation is specified by a given column of the simulation design matrices:
-`sim_control_mtx` and `sim_affected_mtx`, each with domensions $`r dim(sim_affected_mtx)`$.
-Within each simulation, we can run the analyses of size $`r SIZE`$ by simply selecting
-samples specified in the appropriate rows of each design matrix.
-
-We can examine how much variability we have in the quality scores of the selected samples.
-
-```{r enet-look-sim-qual, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run'}
-
-all_control_qual_vec <- sample_qual_vec[all_control_vec]
-sim_control_qual_mtx <- sapply(
-  1:ncol(sim_control_mtx), 
-  function(CC) all_control_qual_vec[sim_control_mtx[,CC]]
- )
-
-all_affected_qual_vec <- sample_qual_vec[all_affected_vec]
-sim_affected_qual_mtx <- sapply(
-  1:ncol(sim_affected_mtx),  
-  function(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]
- )
-
-# Get stage from SIZE 
-stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
-
-sim_control_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_control_qual_mtx), 
-  function(CC) c(split(sim_control_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-sim_affected_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_affected_qual_mtx), 
-  function(CC) c(split(sim_affected_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-# PLOT
-par(mfrow=c(2,1), mar = c(2,5,2,1))
-# control
-boxplot(
-  sim_control_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Quality Score',
-  xaxt = 'n'
-)
-legend('bottomright', title = 'Stage', ncol = 2,
- legend = names(sim_control_qual_byStage_lst[1:5]), 
- text.col = 1:5,
- bty = 'n', horiz = F
-)
-sim_ndx <- which(names(sim_control_qual_byStage_lst) =='')
-abline(v = sim_ndx, col = 'grey')
-axis(
-  side = 1, 
-  at = sim_ndx-2, 
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("Control sample quality by stage and simulation")
-
-# affected
-boxplot(
-  sim_affected_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Quality Score',
-  xaxt = 'n'
-)
-sim_ndx <- which(names(sim_affected_qual_byStage_lst)=='')
-abline(v = which(names(sim_affected_qual_byStage_lst)==''), col = 'grey')
-axis(
-  side=1, 
-  at = sim_ndx-2,        
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("Affected sample quality by stage and simulation")
-
-```
-
-We see some variability in sample quality in the smaller analysis stages.
-This may lead observers to be overly optimistic, or overly pessimistic,
-in the early accrual stages.  
-
-
-
-
-## Run simulations
-
-
-As these make take a while to run, 
-we will save the results of each similation to a different
-object and store to disk.  These can be easily read from disk
-when needed for analysis.
-
-
-The simulation saves results to the file system and
-only needs to be run once.  The simulation takes $\approx$ 8 minutes
-per iteration, or 4 hours of run time on a laptop.
-(Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Mojave 10.14.6)
-
-<!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r enet-run-sim, cache=T, cache.vars='start_time', eval=T}
-start_time <- proc.time()
-
-# Get stage from SIZE
-stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0, SIZE), include.lowest = T)
-
-# ran in two runs 1:5, 6:ncol
-for (SIMno in 6:ncol(sim_control_qual_mtx)) {
-
-  #cat("Running simulation ", SIMno, "\n")
-
-  sim_cv_lst <- lapply(1:length(levels(stage_vec)), function(STGno) {
-    Stage_rows_vec <- which(stage_vec %in% levels(stage_vec)[1:STGno])
-    #cat("Stage ", STGno, "- analyzing", length(Stage_rows_vec), "paired samples.\n")
-
-    sim_stage_samples_vec <- c(
-      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],
-      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]
-    )
-    sim_stage_lcpm_mtx <- all_lcpm_mtx[sim_stage_samples_vec, ]
-    sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
-    #print(table(sim_stage_group_vec))
-
-    sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
-      cv_fit <- glmnet::cv.glmnet(
-        x = sim_stage_lcpm_mtx,
-        y = sim_stage_group_vec,
-        alpha = 1,
-        family = "binomial",
-        type.measure = "class",
-        keep = T,
-        nlambda = 30
-      )
-
-      # Extract 1se metrics from cv_fit
-      #######################
-      ndx_1se <- which(cv_fit$lambda == cv_fit$lambda.1se)
-
-      nzero_1se <- cv_fit$nzero[ndx_1se]
-      cvm_1se <- cv_fit$cvm[ndx_1se]
-
-      # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
-      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
-
-      test_pred_1se_vec <- predict(
-       cv_fit,
-       newx=sim_stage_test_lcpm_mtx,
-       s="lambda.1se",
-       type="class"
-      )
-      test_1se_error <- mean(test_pred_1se_vec != sim_stage_test_group_vec)
-
-      # genes
-      coef_1se <- coef(
-        cv_fit,
-        s = "lambda.1se"
-      )
-      genes_1se <- coef_1se@Dimnames[[1]][coef_1se@i[-1]]
-
-      # Extract min metrics from cv_fit
-      #######################
-      ndx_min <- which(cv_fit$lambda == cv_fit$lambda.min)
-
-      nzero_min <- cv_fit$nzero[ndx_min]
-      cvm_min <- cv_fit$cvm[ndx_min]
-
-      # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
-      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
-
-      test_pred_min_vec <- predict(
-       cv_fit,
-       newx=sim_stage_test_lcpm_mtx,
-       s="lambda.min",
-       type="class"
-      )
-      test_min_error <- mean(test_pred_min_vec != sim_stage_test_group_vec)
-
-      # genes
-      coef_min <- coef(
-        cv_fit,
-        s = "lambda.min"
-      )
-      genes_min <- coef_min@Dimnames[[1]][coef_min@i[-1]]
-
-      # return cv_fit summary metrics
-      list(
-       p_1se = nzero_1se, 
-       p_min = nzero_min, 
-       cv_1se = cvm_1se, 
-       cv_min = cvm_min, 
-       test_1se=test_1se_error, 
-       test_min=test_min_error, 
-       genes_1se = genes_1se,
-       genes_min = genes_min)
-    })
-    sim_stage_cv_lst
-  })
-
-  # save  sim_cv_lst
-  fName <- paste0("enet_sim_", SIMno, "_cv_lst")
-  assign(fName, sim_cv_lst)
-  save(list = fName, file=file.path("RData", fName))
-
-}
-  message("simulation time: ", round((proc.time() - start_time)[3], 2), "s")
-
-```
-
-```{r enet-DEBUG, eval=F, echo=F}
-### REMOVE oof errors.  cv errors are the same!
-sim_files_vec <- list.files('RData', '^enet_sim_')
-
-# we loop across simulations to combine all results into one big table
-for(SIM_NO in 1:length(sim_files_vec)) {
-
-  load(file=file.path('RData', sim_files_vec[SIM_NO]))
-  assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
-  rm(list=sim_files_vec[SIM_NO])
-
-  tmp <- sim_cv_lst
-  for(L1 in 1:length(sim_cv_lst))
-   for(L2 in 1:length(sim_cv_lst[[L1]]))
-   { tmp[[L1]][[L2]]$oof_1se <- NULL
-     tmp[[L1]][[L2]]$oof_min <- NULL
-    }
-
-  sim_cv_lst <- tmp
-  assign(sim_files_vec[SIM_NO], sim_cv_lst)
-  save(list=sim_files_vec[SIM_NO], file=file.path("RData",sim_files_vec[SIM_NO]))
-
-}
-
-
-
-
-
-## Simulation results
-
-The results are 
-* error: cv, oof, test  
-    - examine relationship to each other and with respect to sample size  
-* genes:  
-    - how variable are the selected gene lists, both in terms of composition and size
-
-Recall the we have $`r SIM`$ randomly selected sets of HCC and Control samples,
-analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
-$`r CV_REP`$ repeated cross-validated enet fits:
-
-
-* Sample sizes: SIZE = $`r SIZE`$
-
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
-
-
-First we extract simluation results and store into one big table:
-
-```{r enet-extract-sim-results, cache=T, cache.vars='sim_results_frm'}
-# CLEAR CACHE 
-
-sim_files_vec <- list.files('RData', '^enet_sim')
-
-
-# define extraction methods
-
-# Each sumulation is a list of cv results 
-## nested in a list of replicates
-##############################################
-
-# cvList2frm_f makes a frame out of the inner list
-cvList2frm_f <- function(cv_lst) {
- frm1 <- as.data.frame(t(sapply(cv_lst, function(x) x)))
- frm2 <- data.frame(
-  unlist(frm1[[1]]), unlist(frm1[[2]]),
-  unlist(frm1[[3]]), unlist(frm1[[4]]),
-  unlist(frm1[[5]]), unlist(frm1[[6]]),
-  frm1[7], frm1[8])
-  names(frm2) <- names(frm1)
-  data.frame(Rep=1:nrow(frm2), frm2)}
-
-# cv_lst_to_frm loop over replicates, concatenating the inner list frames
-cv_lst_to_frm <- function(sim_cv_lst) {
- do.call('rbind', lapply(1:length(sim_cv_lst),
-  function(JJ) {
-    siz_frm <- cvList2frm_f(sim_cv_lst[[JJ]])
-    data.frame(Size=SIZE[JJ], siz_frm)
-  }))
-}
-
-# we loop across simulations to combine all results into one big table
-sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
- function(SIM_NO) {
-  load(file=file.path('RData', sim_files_vec[SIM_NO]))
-  assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
-  rm(list=sim_files_vec[SIM_NO])
-  
-  data.frame(SimNo=paste0('Sim_',formatC(SIM_NO,width = 2,flag = 0)), cv_lst_to_frm(sim_cv_lst))
-} 
-)) 
-
-```
-
-<!-- 
-Have a table of simulation results - `sim_results_frm`:
--->
-
-```{r enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
-# CLEAR CACHE 
- 
-knitr::kable(head(with(sim_results_frm, table(SimNo, Size))),
-  caption = paste("Simulation Results - N Sim =", SIM)) %>%
-   kableExtra::kable_styling(full_width = F)
-
-knitr::kable(head(sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
-    caption = paste("Simulation Results - not showing genes column"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
-
-
-### Simulation Results:  Errors By Run {-}
-
-```{r enet-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Errors by Sample Size and Quality'}
-# CLEAR CACHE 
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -4892,285 +4152,348 @@ error_min_q2 <- quantile(error_min_vec, prob=1/2)
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
-
-#SIM <- "Sim_01"
-
-for(SIM in unique(sim_results_frm$SimNo)){
-
-SimNum <- as.numeric(sub('Sim_','',SIM))
-
-simNo_results_frm <- sim_results_frm %>% dplyr::filter(SimNo==SIM)
-
-
-# errors
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
-###################
 # 1se
-####################
-cv_1se_lst <- with(simNo_results_frm,
- split(cv_1se, Size))
-names(cv_1se_lst) <- paste0(stringr::str_pad(names(cv_1se_lst), width=3, pad='0'),'_cv')
+#########################################
+## cv
+cv_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_cv_1se_lst <- with(sizeVal_results_frm, split(cv_1se, SimNo))
+ sapply(sizeVal_cv_1se_lst, median)
+})
+names(cv_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
-test_1se_lst <- with(simNo_results_frm,
- split(test_1se, Size))
-names(test_1se_lst) <- paste0(stringr::str_pad(names(test_1se_lst), width=3, pad='0'),'_cv')
+## test
+test_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_test_1se_lst <- with(sizeVal_results_frm, split(test_1se, SimNo))
+ sapply(sizeVal_test_1se_lst, median)
+})
+names(test_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
-error_1se_lst <- c(cv_1se_lst, test_1se_lst)
-error_1se_lst <- error_1se_lst[order(names(error_1se_lst))]
 
-boxplot(error_1se_lst, 
-  border=c('blue','green'), 
-  ylim=c(0.05, .4),
+error_1se_Bysize_lst <- c(cv_1se_Bysize_lst, test_1se_Bysize_lst)
+error_1se_Bysize_lst <- error_1se_Bysize_lst[order(names(error_1se_Bysize_lst))]
+
+boxplot(error_1se_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  ylim=c(0.05, .5),
+  outline=F,
   xaxt='n'
+)
+for(JJ in 1:length(error_1se_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
+   y=error_1se_Bysize_lst[[JJ]],
+   col=ifelse(grepl('cv', names(error_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
 axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)), 
+  at = match(paste0(SIZE0,'_cv'),names(error_1se_Bysize_lst)),
   SIZE0
  )
-abline(v= match(paste0(SIZE0,'_cv'),names(error_1se_lst))[-1] - 0.5, col='grey')
-abline(h= error_1se_q2, col = 'red')
-legend('topright', 
-   #title='1se errors', title.col = 'black',
-   text.col = c('blue','green'),
-   legend = c('cv error', 'test set'),
-   bty='n'
- )
-title(paste('1se error rates'))
-
-# Add qual annotation
-control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
-affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
-  round(control_qual_vec, 2)
- )
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
-  round(affected_qual_vec, 2)
- )
-
-
-# min
-####################
-cv_min_lst <- with(simNo_results_frm,
- split(cv_min, Size))
-names(cv_min_lst) <- paste0(stringr::str_pad(names(cv_min_lst), width=3, pad='0'),'_cv')
-
-test_min_lst <- with(simNo_results_frm,
- split(test_min, Size))
-names(test_min_lst) <- paste0(stringr::str_pad(names(test_min_lst), width=3, pad='0'),'_cv')
-
-error_min_lst <- c(cv_min_lst, test_min_lst)
-error_min_lst <- error_min_lst[order(names(error_min_lst))]
-
-boxplot(error_min_lst, 
-  border=c('blue','green'), 
-  ylim=c(0.05, .4),
-  xaxt='n'
-)
-LL <- -1
-axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)), 
-  SIZE0
- )
-abline(v= match(paste0(SIZE0,'_cv'),names(error_min_lst))[-1] - 0.5, col='grey')
+abline(v= match(paste0(SIZE0,'_cv'),names(error_1se_Bysize_lst))[-1] - 0.5, col='grey')
 abline(h= error_min_q2, col = 'red')
-legend('topright', 
+legend('topright',
    #title='min errors', title.col = 'black',
    text.col = c('blue','green'),
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('min error rates'))
+title(paste('one se lambda - error rates'))
 
-# Add qual annotation
-control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
-affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
-LL <- LL + 1
+
+# min
+#########################################
+## cv
+cv_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_cv_min_lst <- with(sizeVal_results_frm, split(cv_min, SimNo))
+ sapply(sizeVal_cv_min_lst, median)
+})
+names(cv_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
+
+## test
+test_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_test_min_lst <- with(sizeVal_results_frm, split(test_min, SimNo))
+ sapply(sizeVal_test_min_lst, median)
+})
+names(test_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
+
+
+error_min_Bysize_lst <- c(cv_min_Bysize_lst, test_min_Bysize_lst)
+error_min_Bysize_lst <- error_min_Bysize_lst[order(names(error_min_Bysize_lst))]
+
+boxplot(error_min_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  ylim=c(0.05, .5),
+  outline=F,
+  xaxt='n'
+)
+for(JJ in 1:length(error_min_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(error_min_Bysize_lst[[JJ]])), amount=0.25), 
+   y=error_min_Bysize_lst[[JJ]],
+   col=ifelse(grepl('cv', names(error_min_Bysize_lst)[JJ]),'blue', 'green')
+)
+LL <- -1
 axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
-  round(control_qual_vec, 2)
+  at = match(paste0(SIZE0,'_cv'),names(error_min_Bysize_lst)),
+  SIZE0
  )
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
-  round(affected_qual_vec, 2)
+abline(v= match(paste0(SIZE0,'_cv'),names(error_min_Bysize_lst))[-1] - 0.5, col='grey')
+abline(h= error_min_q2, col = 'red')
+legend('topright',
+   #title='min errors', title.col = 'black',
+   text.col = c('blue','green'),
+   legend = c('cv error', 'test set'),
+   bty='n'
  )
+title(paste('min lambda - error rates'))
 
-mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
-} # for(SIM
+mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across simulations'))
 
 ```
 
-### Simulation Results:  Model Size By Run {-}
+```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size'}
+### CLEAR CACHE
 
-```{r enet-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='Selected Features by Sample Size and Quality'}
-# CLEAR CACHE 
+error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(error_1se_Bysize_sum_frm) <- paste0('1se_', colnames(error_1se_Bysize_sum_frm))
 
-# get full model nzero ref
-nzero_1se_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
-nzero_1se_q1q3 <- quantile(nzero_1se_vec, prob=c(1,3)/4)
+error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(error_min_Bysize_sum_frm) <- paste0('min_', colnames(error_min_Bysize_sum_frm))
 
-nzero_min_vec <- sapply(cv_enetAll_lst,
- function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
-nzero_min_q1q3 <- quantile(nzero_min_vec, prob=c(1,3)/4)
+
+knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm),
+      caption = paste("lasso error rates by sample size across simulations"),
+    digits=2) %>%
+   kableExtra::kable_styling(full_width = F)
+
+```
+
+* For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
+optimistic.  
+
+* For lower sample sizes, assess performance is quite variable.
+
+
+Now look at feature selection.
+
+```{r lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
-
-#SIM <- "Sim_01"
-
-for(SIM in unique(sim_results_frm$SimNo)){
-
-SimNum <- as.numeric(sub('Sim_','',SIM))
-
-simNo_results_frm <- sim_results_frm %>% dplyr::filter(SimNo==SIM)
-
-
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
-###################
 # 1se
-####################
-# selected feature counts
-p_1se_lst <- with(simNo_results_frm,
- split(p_1se, Size))
-names(p_1se_lst) <- paste0(stringr::str_pad(names(p_1se_lst), width=3, pad='0'),'_p')
+#########################################
+# selected features
+p_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_p_1se_lst <- with(sizeVal_results_frm, split(p_1se, SimNo))
+ sapply(sizeVal_p_1se_lst, median)
+})
+names(p_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
-# get selected features that are part of gene_sign_1se_vec
-# - the signature selected genes
-sign_genes_1se_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), gene_sign_1se_vec))
+# selected signatue features
+sign_p_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ 
+  
+ sizeVal_sign_genes_1se_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_1se']), lasso_gene_sign_1se_vec))
 
-sign_p_1se_lst <- split(sapply(sign_genes_1se_lst, length), simNo_results_frm$Size)
-names(sign_p_1se_lst) <- paste0(stringr::str_pad(names(sign_p_1se_lst), width=3, pad='0'),'_signP')
+ sizeVal_sign_p_1se_lst <- split(sapply(sizeVal_sign_genes_1se_lst, length),
+    sizeVal_results_frm$SimNo)
+ 
+ sapply(sizeVal_sign_p_1se_lst, median)
+})
+names(sign_p_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
-p_singP_1se_lst <- c(p_1se_lst, sign_p_1se_lst)
-p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
+p_singP_1se_Bysize_lst <- c(p_1se_Bysize_lst, sign_p_1se_Bysize_lst)
+p_singP_1se_Bysize_lst <- p_singP_1se_Bysize_lst[order(names(p_singP_1se_Bysize_lst))]
 
-boxplot(p_singP_1se_lst,
+boxplot(p_singP_1se_Bysize_lst,
+  col=0,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
+for(JJ in 1:length(p_singP_1se_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
+   y=p_singP_1se_Bysize_lst[[JJ]],
+   col=ifelse(grepl('_p', names(p_singP_1se_Bysize_lst)[JJ]),'blue', 'green')
+)
+
 LL <- -1
 axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
+  at = match(paste0(SIZE0,'_p'),names(p_singP_1se_Bysize_lst)),
   SIZE0
  )
-abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_1se_q1q3, col = 'red')
-legend('topright',
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_Bysize_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_1se_q2, col = 'red')
+legend('topleft',
    #title='1se errors', title.col = 'black',
    text.col = c('blue', 'green'),
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('1se - selected gene counts'))
-# Add qual annotation
-control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
-affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
-  round(control_qual_vec, 2)
- )
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
-  round(affected_qual_vec, 2)
- )
+title(paste('one se lamdba - selected gene counts'))
 
 
-###################
 # min
-####################
-# selected feature counts
-p_min_lst <- with(simNo_results_frm,
- split(p_min, Size))
-names(p_min_lst) <- paste0(stringr::str_pad(names(p_min_lst), width=3, pad='0'),'_p')
+#########################################
+# selected features
+p_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_p_min_lst <- with(sizeVal_results_frm, split(p_min, SimNo))
+ sapply(sizeVal_p_min_lst, median)
+})
+names(p_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
-# get selected features that are part of gene_sign_min_vec
-# - the signature selected genes
-sign_genes_min_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
-    intersect(unlist(simNo_results_frm[RR, 'genes_min']), gene_sign_min_vec))
+# selected signatue features
+sign_p_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ 
+  
+ sizeVal_sign_genes_min_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_min']), lasso_gene_sign_min_vec))
 
-sign_p_min_lst <- split(sapply(sign_genes_min_lst, length), simNo_results_frm$Size)
-names(sign_p_min_lst) <- paste0(stringr::str_pad(names(sign_p_min_lst), width=3, pad='0'),'_signP')
+ sizeVal_sign_p_min_lst <- split(sapply(sizeVal_sign_genes_min_lst, length),
+    sizeVal_results_frm$SimNo)
+ 
+ sapply(sizeVal_sign_p_min_lst, median)
+})
+names(sign_p_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
-p_singP_min_lst <- c(p_min_lst, sign_p_min_lst)
-p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
+p_singP_min_Bysize_lst <- c(p_min_Bysize_lst, sign_p_min_Bysize_lst)
+p_singP_min_Bysize_lst <- p_singP_min_Bysize_lst[order(names(p_singP_min_Bysize_lst))]
 
-boxplot(p_singP_min_lst,
+boxplot(p_singP_min_Bysize_lst,
+  col=0,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  #ylim=c(0, 300),
   xaxt='n'
 )
+for(JJ in 1:length(p_singP_min_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(p_singP_min_Bysize_lst[[JJ]])), amount=0.25),
+   y=p_singP_min_Bysize_lst[[JJ]],
+   col=ifelse(grepl('_p', names(p_singP_min_Bysize_lst)[JJ]),'blue', 'green')
+)
+
 LL <- -1
 axis(side=1, tick=F, line = LL,
-  at = match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
+  at = match(paste0(SIZE0,'_p'),names(p_singP_min_Bysize_lst)),
   SIZE0
  )
-abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
-abline(h= nzero_min_q1q3, col = 'red')
-legend('topright',
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_Bysize_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_min_q2, col = 'red')
+legend('topleft',
    #title='min errors', title.col = 'black',
    text.col = c('blue', 'green'),
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('min - selected gene counts'))
-# Add qual annotation
-control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
-affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
-  round(control_qual_vec, 2)
- )
-LL <- LL + 1
-axis(side=1, tick=F, line = LL,
-  at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
-  round(affected_qual_vec, 2)
- )
+title(paste('min lambda - selected gene counts'))
 
+mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized across simulations'))
 
-mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
-
-} # for(SIM
 
 ```
 
 
+```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size'}
+### CLEAR CACHE
 
-<!--chapter:end:05B-glmnetSuiteB.Rmd-->
+p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(p_sing_1se_Bysize_sum_frm) <- paste0('1se_', colnames(p_sing_1se_Bysize_sum_frm))
+ 
+p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(p_sing_min_Bysize_sum_frm) <- paste0('min_', colnames(p_sing_min_Bysize_sum_frm))
 
-# Variable importance  {#variable-importance}
+knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
+    caption = paste("lasso feature selection by sample size across simulations"),
+    digits=2) %>%
+   kableExtra::kable_styling(full_width = F)
 
-Cai et al. [@Cai:2019aa] used the fequency of selection across
-bootstrap replicates to select features form their final model.
-We sus[ect that this simply selects features with large coefficients
-which would correspond the the variable importance metric
-used in the `caret` package.  In this section we measure
-variable importance as the loss in performance when the variable is left out
-of the model.  Depending on the correlation structure, it is quite possible
-for a feature to have a large coefficient and be un-important, in our sense of the word.
-It is also possible for a feature to be frequently selected in bootstrap samples, and
-still not un-important.  In a sense, this measure of importance is really a measure
-of `single importance`.  We should therefore also have a measure of `group importance`.
+```
 
-Other questions ...
+* The number of selected features incerase with sample size.  
+
+*  The number of selected features is quite variable, even for larger sample sizes.
+
+* The number of core signature features among selected features is stable for larger sample
+sizes and represenst 30 to 40% of the selected features (for N=200 and 300 respectively).
+
+## Effect of sample quality
+
+To see the effect of sample quality on classification results, we will
+focus on the performance of the small sample fits where variability is the
+greatest, and the context where investigators should be most aware of the
+effect of sample selection over and beyond sample size concerns.
+
+```{r small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample quality vs classifier performance'}
+
+control_samp25_qual_vec <- apply(sim_control_qual_mtx[1:25, ], 2, median)
+affected_samp25_qual_vec <- apply(sim_affected_qual_mtx[1:25, ], 2, median)
+
+samp25_qual_error_mtx <- cbind(
+   `1se_cv` = error_1se_Bysize_lst[['025_cv']],
+   `1se_test` = error_1se_Bysize_lst[['025_test']],
+   `control_Q` = control_samp25_qual_vec,
+   `affected_Q` = affected_samp25_qual_vec)
+ 
+
+# Correlation panel
+panel.cor <- function(x, y){
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- round(cor(x, y), digits=2)
+    txt <- paste0("R = ", r)
+    cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = 1.5) ###cex.cor * r)
+}
+
+pairs(samp25_qual_error_mtx,
+ lower.panel = panel.cor)
+   
+
+     
+```
+
+We see that although the sample quality effect is not strong, the quality of the
+affected sample cohorts does have a measurable impact on the 1se cv and test set error
+rates (cor = -0.32 and -0.27, respectively).  
 
 
-<!--chapter:end:06-variableImportance.Rmd-->
+<!--chapter:end:05-glmnetSuite.Rmd-->
 
 # Conclusions {#conclusions}
 
@@ -5183,7 +4506,13 @@ Other questions ...
 
 `r if (knitr::is_html_output()) '
 # References {-}
+<div id="refs"></div>
 '`
+
+```{r appendix1, cache=F, child='05B-glmnetSuiteB.Rmd'}
+### CLEAR CACHE
+```
+
 
 <!--chapter:end:08-references.Rmd-->
 

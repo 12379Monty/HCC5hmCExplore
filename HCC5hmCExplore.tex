@@ -219,8 +219,10 @@ The layout of the paper is the following:
 \item
   In Section \ref{model-suite} we examine the results of fitting a suite of models to
   investigate the effect of sample size on model performance.
-\item
-  In Section \ref{variable-importance} we look at the question of assessing variable importance.
+\end{itemize}
+
+\begin{itemize}
+\tightlist
 \item
   Concluding remarks are in Section \ref{conclusions}.
 \end{itemize}
@@ -4606,214 +4608,12 @@ effect of sample selection over and beyond sample size concerns.
 \begin{figure}
 \centering
 \includegraphics{Static/figures/small-sample-qual-1.pdf}
-\caption{\label{fig:small-sample-qual}figure caption}
+\caption{\label{fig:small-sample-qual}sample quality vs classifier performance}
 \end{figure}
 
 We see that although the sample quality effect is not strong, the quality of the
 affected sample cohorts does have a measurable impact on the 1se cv and test set error
 rates (cor = -0.32 and -0.27, respectively).
-
-\hypertarget{variable-importance}{%
-\chapter{Variable importance}\label{variable-importance}}
-
-Cai et al.~{[}\protect\hyperlink{ref-Cai:2019aa}{2}{]} used the fequency of selection across
-bootstrap replicates to select features from their final model.
-We suspect that this simply selects features with large coefficients
-which would correspond the the variable importance metric
-used in the \texttt{caret} package.
-
-In this section we measure variable importance as the loss in performance when the variable is left out
-of the model. Depending on the correlation structure, it is quite possible
-for a feature to have a large coefficient and be un-important, in our sense of the word.
-It is also possible for a feature to be frequently selected in bootstrap samples, and
-still not un-important. In a sense, this measure of importance is really a measure
-of \texttt{single\ importance}. We should therefore also have a measure of \texttt{group\ importance}.
-
-For this exercise, we will use the min lambda error assessment as it has
-lower variability across repeated cv fits.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\#\#\# CLEAR CACHE}
-
-
-\CommentTok{\# min}
-\NormalTok{lassoAll\_coef\_min\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)\{}
-\NormalTok{ cv\_fit\_coef <{-}}\StringTok{ }\KeywordTok{coef}\NormalTok{(}
-\NormalTok{ cv\_fit,}
- \DataTypeTok{s =} \StringTok{"lambda.min"}
-\NormalTok{ )}
-\NormalTok{ cv\_fit\_coef}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][cv\_fit\_coef}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
-\NormalTok{ \})}
-
-
-
-\CommentTok{\# min}
-\NormalTok{lassoAll\_coefVal\_min\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(cv\_lassoAll\_lst, }\ControlFlowTok{function}\NormalTok{(cv\_fit)\{}
-\NormalTok{ cv\_fit\_coef <{-}}\StringTok{ }\KeywordTok{coef}\NormalTok{(}
-\NormalTok{ cv\_fit,}
- \DataTypeTok{s =} \StringTok{"lambda.min"}
-\NormalTok{ )}
-\NormalTok{ coef\_vec <{-}}\StringTok{ }\NormalTok{cv\_fit\_coef}\OperatorTok{@}\NormalTok{x[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
- \KeywordTok{names}\NormalTok{(coef\_vec) <{-}}\StringTok{  }\NormalTok{cv\_fit\_coef}\OperatorTok{@}\NormalTok{Dimnames[[}\DecValTok{1}\NormalTok{]][cv\_fit\_coef}\OperatorTok{@}\NormalTok{i[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
-
-\NormalTok{ coef\_vec}
-\NormalTok{ \})}
-
-
-
-\CommentTok{\# put feature occurence into matrix}
-\NormalTok{lassoAll\_coef\_min\_all <{-}}\StringTok{ }\KeywordTok{Reduce}\NormalTok{(union, lassoAll\_coef\_min\_lst)}
-\NormalTok{lassoAll\_coef\_min\_mtx <{-}}\StringTok{ }\KeywordTok{sapply}\NormalTok{(lassoAll\_coef\_min\_lst, }
-  \ControlFlowTok{function}\NormalTok{(LL) }\KeywordTok{is.element}\NormalTok{(lassoAll\_coef\_min\_all, LL)}
-\NormalTok{)}
-\KeywordTok{rownames}\NormalTok{(lassoAll\_coef\_min\_mtx) <{-}}\StringTok{ }\NormalTok{lassoAll\_coef\_min\_all}
-
-\CommentTok{\# put festures coefficients into matrix}
-\NormalTok{lassoAll\_coefVal\_lse\_mtx <{-}}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}
- \DataTypeTok{nrow=}\KeywordTok{nrow}\NormalTok{(lassoAll\_coef\_min\_mtx), }
- \DataTypeTok{ncol=}\KeywordTok{ncol}\NormalTok{(lassoAll\_coef\_min\_mtx))}
-\KeywordTok{rownames}\NormalTok{(lassoAll\_coefVal\_lse\_mtx) <{-}}\StringTok{ }\KeywordTok{rownames}\NormalTok{(lassoAll\_coef\_min\_mtx)}
-
-\ControlFlowTok{for}\NormalTok{(FF }\ControlFlowTok{in} \KeywordTok{rownames}\NormalTok{(lassoAll\_coefVal\_lse\_mtx))}
-\ControlFlowTok{for}\NormalTok{(SIM }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(lassoAll\_coefVal\_lse\_mtx))}
-\NormalTok{lassoAll\_coefVal\_lse\_mtx[FF, SIM] <{-}}\StringTok{ }\NormalTok{lassoAll\_coefVal\_min\_lst[[SIM]][FF]}
-\NormalTok{lassoAll\_coefVal\_lse\_mtx[}\KeywordTok{is.na}\NormalTok{(lassoAll\_coefVal\_lse\_mtx)] <{-}}\StringTok{ }\DecValTok{0}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# order by selection frequencey}
-\NormalTok{feature\_freq\_vec <{-}}\StringTok{ }\KeywordTok{rowSums}\NormalTok{(}\KeywordTok{abs}\NormalTok{(lassoAll\_coefVal\_lse\_mtx) }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{)}
-\CommentTok{\#table(feature\_freq\_vec)}
-
-\NormalTok{feature\_o <{-}}\StringTok{ }\KeywordTok{order}\NormalTok{(feature\_freq\_vec)}
-
-\KeywordTok{boxplot}\NormalTok{(}
-   \KeywordTok{t}\NormalTok{(lassoAll\_coefVal\_lse\_mtx)[,feature\_o], }
-   \DataTypeTok{ylab=}\StringTok{\textquotesingle{}Coefficient\textquotesingle{}}\NormalTok{, }\DataTypeTok{xlab=}\StringTok{\textquotesingle{}Frequency of selection\textquotesingle{}}\NormalTok{,}
-   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{, }
-   \DataTypeTok{outline=}\NormalTok{F)}
-\KeywordTok{abline}\NormalTok{(}\DataTypeTok{h=}\DecValTok{0}\NormalTok{, }\DataTypeTok{col=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{)}
-\KeywordTok{axis}\NormalTok{(}
- \DataTypeTok{side=}\DecValTok{1}\NormalTok{, }
- \DataTypeTok{at=}\KeywordTok{match}\NormalTok{(}\KeywordTok{unique}\NormalTok{(feature\_freq\_vec), }\KeywordTok{sort}\NormalTok{(feature\_freq\_vec)),}
- \KeywordTok{unique}\NormalTok{(feature\_freq\_vec))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\includegraphics{Static/figures/varOccurence-1.pdf}
-\caption{\label{fig:varOccurence}one-standard-error rule lasso feature selection}
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
- \CommentTok{\#title("one{-}standard{-}error rule lasso feature selection")}
-\end{Highlighting}
-\end{Shaded}
-
-As we suspected, features with large absolute regularized coefficients tend to
-be selected more frequently across repreated cross validated fits. So essntially,
-the Cai et al.~frequecny filter is essentially a size of coefficient filter.
-
-We not turn to this other notion of variable importance: what is the increase in
-error rate when each variable is excluded from the fit. We will us cv error rates in
-the one-standard-error rule lasso models for this assessment. As this computation
-will be pretty costly, we will select 30 features from different
-selection frequency blocks
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{selFreq\_bin\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(feature\_freq\_vec, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{29}\NormalTok{,}\DecValTok{30}\NormalTok{))}
-\CommentTok{\#table(selFreq\_bin\_vec)}
-
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{sel\_features\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\KeywordTok{split}\NormalTok{(feature\_freq\_vec, selFreq\_bin\_vec),}
-  \ControlFlowTok{function}\NormalTok{(FF) }\KeywordTok{sample}\NormalTok{(FF, }\DataTypeTok{size=}\DecValTok{5}\NormalTok{))}
-
-\KeywordTok{cat}\NormalTok{(}\StringTok{"List of features to assess picked by frequency of lasso selection:}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## List of features to assess picked by frequency of lasso selection:
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{sel\_features\_lst}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## $`(0,10]`
-##   TRH PRR19 TUBA8  RHOH CCBL2 
-##     3     2     6     9     5 
-## 
-## $`(10,15]`
-## ARHGAP11B     CDC26    ZNF335   PPP2R1A    TRIM61 
-##        15        12        13        15        15 
-## 
-## $`(15,20]`
-## RP11-136C24.3          PAK2         HERC2        ZBTB17         ABCA5 
-##            20            18            18            20            20 
-## 
-## $`(20,25]`
-##   LMBR1L ATP6V1C2  DEFB132    LPAR3  RALGPS1 
-##       24       21       24       21       24 
-## 
-## $`(25,29]`
-## MEIS2 ADNP2  MSR1 CRYGA ACSL5 
-##    29    26    29    28    29 
-## 
-## $`(29,30]`
-## JAKMIP2   CEP83    NEK3    TDP2 C5orf47 
-##      30      30      30      30      30
-\end{verbatim}
-
-For each selected feature, run 10 cv fits with 30 lambda values, and compute the
-min lambda error.
-
-\hypertarget{in-progess}{%
-\section*{IN PROGESS}\label{in-progess}}
-\addcontentsline{toc}{section}{IN PROGESS}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-
-\NormalTok{start\_time <{-}}\StringTok{  }\KeywordTok{proc.time}\NormalTok{()}
-
-\NormalTok{cv\_lassoLOO\_lst  <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(sel\_features\_lst, names)),}
- \ControlFlowTok{function}\NormalTok{(FF) \{}
-\NormalTok{  FF\_ndx <{-}}\StringTok{ }\KeywordTok{match}\NormalTok{(FF, }\KeywordTok{colnames}\NormalTok{(all\_lcpm\_mtx))}
-
-\NormalTok{  cv\_lassoMFF\_lst <{-}}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(REP) \{}
-\NormalTok{  glmnet}\OperatorTok{::}\KeywordTok{cv.glmnet}\NormalTok{(}
-   \DataTypeTok{x =}\NormalTok{ all\_lcpm\_mtx[,}\OperatorTok{{-}}\NormalTok{FF\_ndx],}
-   \DataTypeTok{y =} \KeywordTok{factor}\NormalTok{(all\_group\_vec,}\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Control\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}HCC\textquotesingle{}}\NormalTok{)),}
-   \DataTypeTok{alpha =} \DecValTok{1}\NormalTok{,}
-   \DataTypeTok{family =} \StringTok{\textquotesingle{}binomial\textquotesingle{}}\NormalTok{,}
-   \DataTypeTok{type.measure  =}  \StringTok{"class"}\NormalTok{,}
-   \DataTypeTok{keep =}\NormalTok{ F,}
-   \DataTypeTok{nlambda =} \DecValTok{10}
-\NormalTok{   )}
-\NormalTok{  \})}
- 
-  \KeywordTok{cbind}\NormalTok{(}
- \StringTok{\textasciigrave{}}\DataTypeTok{1se}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoMFF\_lst, }\ControlFlowTok{function}\NormalTok{(LL) }
-\NormalTok{          LL}\OperatorTok{$}\NormalTok{cvm[LL}\OperatorTok{$}\NormalTok{lambda}\OperatorTok{==}\NormalTok{LL}\OperatorTok{$}\NormalTok{lambda}\FloatTok{.1}\NormalTok{se]),}
-  \StringTok{\textasciigrave{}}\DataTypeTok{min}\StringTok{\textasciigrave{}}\NormalTok{ =}\StringTok{ }\KeywordTok{sapply}\NormalTok{(cv\_lassoMFF\_lst, }\ControlFlowTok{function}\NormalTok{(LL)}
-\NormalTok{          LL}\OperatorTok{$}\NormalTok{cvm[LL}\OperatorTok{$}\NormalTok{lambda}\OperatorTok{==}\NormalTok{LL}\OperatorTok{$}\NormalTok{lambda}\FloatTok{.1}\NormalTok{se])}
-\NormalTok{  )}
-\NormalTok{  \})}
-
-   \KeywordTok{save}\NormalTok{(}\DataTypeTok{list=}\StringTok{\textquotesingle{}cv\_lassoMFF\_lst\textquotesingle{}}\NormalTok{, }\DataTypeTok{file=}\KeywordTok{file.path}\NormalTok{(}\StringTok{"RData"}\NormalTok{,}\StringTok{\textquotesingle{}cv\_lassoMFF\_lst\textquotesingle{}}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 \hypertarget{conclusions}{%
 \chapter{Conclusions}\label{conclusions}}
