@@ -714,7 +714,7 @@ title("Affected sample quality by stage and simulation")
 
 ```
 
-```{r look-sim-qual_0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run for size = 50 '}
+```{r look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample quality by simulation run for size = 50 '}
 ### CLEAR CACHE
 
 all_control_qual_vec <- sample_qual_vec[all_control_vec]
@@ -1107,7 +1107,7 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 In this one simulation, we see:
 
-* model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
+* Model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
 
 * CV error rates tend to be pessimistic, expecially for the small sample sizes.  This is odd
 and may be related to sample quality.  
@@ -1413,20 +1413,23 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across 
 ### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-
-knitr::kable(error_1se_Bysize_sum_frm,
-    caption = paste("1se lambda lasso error rates by sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
+colnames(error_1se_Bysize_sum_frm) <- paste0('1se_', colnames(error_1se_Bysize_sum_frm))
 
 error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(error_min_Bysize_sum_frm) <- paste0('min_', colnames(error_min_Bysize_sum_frm))
 
-knitr::kable(error_min_Bysize_sum_frm,
-    caption = paste("min lambda lasso error rates by sample size across simulations"),
+
+knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm),
+      caption = paste("lasso error rates by sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
 ```
+
+* For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
+optimistic.  
+
+* For lower sample sizes, assess performance is quite variable.
 
 
 Now look at feature selection.
@@ -1572,20 +1575,62 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 ### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-
-knitr::kable(p_sing_1se_Bysize_sum_frm,
-    caption = paste("1se lambda lasso feature selection sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-
+colnames(p_sing_1se_Bysize_sum_frm) <- paste0('1se_', colnames(p_sing_1se_Bysize_sum_frm))
+ 
 p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(p_sing_min_Bysize_sum_frm) <- paste0('min_', colnames(p_sing_min_Bysize_sum_frm))
 
-knitr::kable(p_sing_min_Bysize_sum_frm,
-    caption = paste("min lambda lasso feature selection sample size across simulations"),
+knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
+    caption = paste("lasso feature selection by sample size across simulations"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
 
 ```
 
+* The number of selected features incerase with sample size.  
+
+*  The number of selected features is quite variable, even for larger sample sizes.
+
+* The number of core signature features among selected features is stable for larger sample
+sizes and represenst 30 to 40% of the selected features (for N=200 and 300 respectively).
+
+## Effect of sample quality
+
+To see the effect of sample quality on classification results, we will
+focus on the performance of the small sample fits where variability is the
+greatest, and the context where investigators should be most aware of the
+effect of sample selection over and beyond sample size concerns.
+
+```{r small-sample-qual, cache=T, cache.vars=c('vars-to-keep'), fig.cap='figure caption'}
+
+control_samp25_qual_vec <- apply(sim_control_qual_mtx[1:25, ], 2, median)
+affected_samp25_qual_vec <- apply(sim_affected_qual_mtx[1:25, ], 2, median)
+
+samp25_qual_error_mtx <- cbind(
+   `1se_cv` = error_1se_Bysize_lst[['025_cv']],
+   `1se_test` = error_1se_Bysize_lst[['025_test']],
+   `control_Q` = control_samp25_qual_vec,
+   `affected_Q` = affected_samp25_qual_vec)
+ 
+
+# Correlation panel
+panel.cor <- function(x, y){
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- round(cor(x, y), digits=2)
+    txt <- paste0("R = ", r)
+    cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = 1.5) ###cex.cor * r)
+}
+
+pairs(samp25_qual_error_mtx,
+ lower.panel = panel.cor)
+   
+
+     
+```
+
+We see that although the sample quality effect is not strong, the quality of the
+affected sample cohorts does have a measurable impact on the 1se cv and test set error
+rates (cor = -0.32 and -0.27, respectively).  
 

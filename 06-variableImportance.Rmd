@@ -1,16 +1,158 @@
 # Variable importance  {#variable-importance}
 
 Cai et al. [@Cai:2019aa] used the fequency of selection across
-bootstrap replicates to select features form their final model.
-We sus[ect that this simply selects features with large coefficients
+bootstrap replicates to select features from their final model.
+We suspect that this simply selects features with large coefficients
 which would correspond the the variable importance metric
-used in the `caret` package.  In this section we measure
-variable importance as the loss in performance when the variable is left out
+used in the `caret` package.  
+
+In this section we measure variable importance as the loss in performance when the variable is left out
 of the model.  Depending on the correlation structure, it is quite possible
 for a feature to have a large coefficient and be un-important, in our sense of the word.
 It is also possible for a feature to be frequently selected in bootstrap samples, and
 still not un-important.  In a sense, this measure of importance is really a measure
 of `single importance`.  We should therefore also have a measure of `group importance`.
 
-Other questions ...
+For this exercise, wr will use the min lambda error assessment as it has
+lower variability across repeated cv fits.
+
+```{r getCoefMtx, cache=T, cache.vars=c('lassoAll_coefVal_lse_mtx')}
+### CLEAR CACHE
+
+
+# min
+lassoAll_coef_min_lst <- lapply(cv_lassoAll_lst, function(cv_fit){
+ cv_fit_coef <- coef(
+ cv_fit,
+ s = "lambda.min"
+ )
+ cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
+ })
+
+
+
+# min
+lassoAll_coefVal_min_lst <- lapply(cv_lassoAll_lst, function(cv_fit){
+ cv_fit_coef <- coef(
+ cv_fit,
+ s = "lambda.min"
+ )
+ coef_vec <- cv_fit_coef@x[-1]
+ names(coef_vec) <-  cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
+
+ coef_vec
+ })
+
+
+
+# put feature occurence into matrix
+lassoAll_coef_min_all <- Reduce(union, lassoAll_coef_min_lst)
+lassoAll_coef_min_mtx <- sapply(lassoAll_coef_min_lst, 
+  function(LL) is.element(lassoAll_coef_min_all, LL)
+)
+rownames(lassoAll_coef_min_mtx) <- lassoAll_coef_min_all
+
+# put festures coefficients into matrix
+lassoAll_coefVal_lse_mtx <- matrix(
+ nrow=nrow(lassoAll_coef_min_mtx), 
+ ncol=ncol(lassoAll_coef_min_mtx))
+rownames(lassoAll_coefVal_lse_mtx) <- rownames(lassoAll_coef_min_mtx)
+
+for(FF in rownames(lassoAll_coefVal_lse_mtx))
+for(SIM in 1:ncol(lassoAll_coefVal_lse_mtx))
+lassoAll_coefVal_lse_mtx[FF, SIM] <- lassoAll_coefVal_min_lst[[SIM]][FF]
+lassoAll_coefVal_lse_mtx[is.na(lassoAll_coefVal_lse_mtx)] <- 0
+
+```
+
+
+```{r varOccurence, cache=F, cache.vars=c('variables-to-keep'), fig.cap="one-standard-error rule lasso feature selection"}
+
+# order by selection frequencey
+feature_freq_vec <- rowSums(abs(lassoAll_coefVal_lse_mtx) > 0)
+table(feature_freq_vec)
+
+feature_o <- order(feature_freq_vec)
+
+boxplot(
+   t(lassoAll_coefVal_lse_mtx)[,feature_o], 
+   ylab='Coefficient', xlab='Frequency of selection',
+   xaxt='n', 
+   outline=F)
+abline(h=0, col='red')
+axis(
+ side=1, 
+ at=match(unique(feature_freq_vec), sort(feature_freq_vec)),
+ unique(feature_freq_vec))
+ 
+ #title("one-standard-error rule lasso feature selection")
+
+```
+
+As we suspected, features with large absolute regularized coefficients tend to
+be selected more frequently across repreated cross validated fits.   So essntially,
+the Cai et al. frequecny filter is essentially a size of coefficient filter.
+
+We not turn to this other notion of variable importance: what is the increase in
+error rate when each variable is excluded from the fit.  We will us cv error rates in
+the one-standard-error rule lasso models for this assessment.  As this computation
+will be pretty costly, we will select 30 features from different
+selection frequency blocks
+
+```{r selFreq, commnent=''}
+
+selFreq_bin_vec <- cut(feature_freq_vec, c(0,10, 15, 20, 25, 29,30))
+table(selFreq_bin_vec)
+
+set.seed(1)
+sel_features_lst <- lapply(split(feature_freq_vec, selFreq_bin_vec),
+  function(FF) sample(FF, size=5))
+
+cat("List of selected features to assess:\n")
+sel_features_lst
+
+```
+
+
+For each selected feature, run 10 cv fits with 10 lambda values, and compute the 
+min lambda error.
+
+
+## IN PROGESS {-}
+
+
+```{r leaveOneOut, cache=T, cache.vars='cv_lassoLOO_lst', eval=F}
+
+set.seed(1)
+
+start_time <-  proc.time()
+
+cv_lassoLOO_lst  <- lapply(as.vector(sapply(sel_features_lst, names)),
+ function(FF) {
+  FF_ndx <- match(FF, colnames(all_lcpm_mtx))
+
+  cv_lassoMFF_lst <- lapply(1:10, function(REP) {
+  glmnet::cv.glmnet(
+   x = all_lcpm_mtx[,-FF_ndx],
+   y = factor(all_group_vec,levels = c('Control', 'HCC')),
+   alpha = 1,
+   family = 'binomial',
+   type.measure  =  "class",
+   keep = F,
+   nlambda = 10
+   )
+  })
+ 
+  cbind(
+ `1se` = sapply(cv_lassoMFF_lst, function(LL) 
+          LL$cvm[LL$lambda==LL$lambda.1se]),
+  `min` = sapply(cv_lassoMFF_lst, function(LL)
+          LL$cvm[LL$lambda==LL$lambda.1se])
+  )
+  })
+
+   save(list='cv_lassoMFF_lst', file=file.path("RData",'cv_lassoMFF_lst'))
+
+```
+
 
