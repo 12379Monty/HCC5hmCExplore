@@ -81,21 +81,30 @@ should be collected to make properly informed decisions.  In this
 report we will explore the GSE112679 data to shed some light on
 the relationship between sample size and model performance
 in the context classifying samples based on 5hmC data.
+The same analyses are repeated on Breast Cancer RNA-Seq data 
+to provide a different signal to noise context in which to evaluate
+classification model performance in relation to sample size.
 
-The layout of the paper is the following:  
+The layout of the report is the following:  
 
 * In Section \@ref(modeling-background) we provide background on fitting and
-analyizing predictive models in the `n << p` context and 
+analyzing predictive models in the `n << p` context and 
 give some detail about the primary tool used in this report.
 
-* In Section \@ref(hcc-5hmcseq-preproc) we preprocess the 5hmC data that
+* In Section \@ref(hcc-5hmcseq-preproc) we pre-process the 5hmC data that
 we will use for the classification analysis and perform some light QC analyses.  
 
 * In Section \@ref(hcc-5hmcseq-explore-sparsity) we explore sparse models
-that discriminate between early stage HCC and control samples.
+that discriminate between early stage HCC and control samples based on
+5hmC gene body intensity data.
 
-* In Section \@ref(hcc5-hmcseq-model-suite) we examine the results of fitting a suite of models to
-investigate the effect of sample size on model performance.  
+* In Section \@ref(hcc-5hmcseq-model-suite) we examine the results of fitting a 
+suite of models to the HCC 5hmC data investigate the effect of sample 
+size on model performance.  
+
+* Sections \@ref(brca-rnaseq-preproc), \@ref(brca-rnaseseq-explore-sparsity)
+and \@ref(brca-rnaseq-model-suite) repeat the analyses run on the HCC 5hmC data 
+on breast cancer RNA-Seq data.
 
 <!-- LEAVE FEATURE OUT IS NOT INFORMATIVE
 * In Section \@ref(variable-importance) we look at the question of assessing variable importance.

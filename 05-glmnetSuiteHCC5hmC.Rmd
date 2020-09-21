@@ -14,6 +14,19 @@ It is hypothesized that below a certain threshold,
 sample sizes are too small to provide reliable estimates
 of performance or stable selected feature profiles.  
 
+**Reader Note**
+```
+It's not clear how to display the effect of sample set composition
+on model performance, or that it merits special attention as it
+may be obvious to anyone who is paying attention that not all
+sample points are created equal and that having a substantial
+number of mislabeled or otherwise hard to classify samples
+can throw off estimates of the separability of subgroups
+when sample sizes are small.  
+
+Keep this stuff on consistency for now.
+```
+
 In examining the relationship between sample size and
 model performance, including variability and reliability
 of performance indicators derived from fits, we should bear in
@@ -23,14 +36,16 @@ or otherwise *hard to properly classify* samples, the performance
 of models fitted to such a data set is expected to be negatively impacted.
 
 In the simulations that we run below we will track sample *consistency*
-to examine its impact on fitted model performance.
+to examine its impact on fitted model performance.  We use 
+*consistency* to refer to a measure of how hard it is to
+appropriately classify individual samples.
 Predicted probabilities from fitted model can be transformed into sample
 *consistency* scores: $Q_i = p_i^{y_i}(1-p_i)^{1-y_i}$, where $p_i$ is the
 estimated probability of HCC for sample i and $y_i$ is 1 for HCC samples and
 0 for Controls.  ie. we use the fitted sample contribution to the
 likelihood function as a sample *consistency* score,
-which is $P(HCC)$, the predicted probabilaiy of HCC for HCC samples
-and $1 - P(HCC)$ for Controls.  To derive the sample *consistency scores,
+which is $P(HCC)$, the predicted probability of HCC for HCC samples
+and $1 - P(HCC)$ for Controls.  To derive the sample *consistency* scores,
 we will use the predicted response from a lasso model fitted to the entire data set.
 
 Hard to classify samples will have low *consistency* scores.
@@ -43,7 +58,7 @@ core of the data set in a way that makes it hard to properly classify.
 That could happen if the sample were mislabeled, in which case we could 
 think of this sample as being poor quality of course.
 
-The variability in sample set *consistency* the we get from simple random sampling,
+The variability in sample set *consistency* that we get from simple random sampling,
 as is done in the simulation below, is not expected to adequately reflect
 sample set *consistency* variation encountered in practice when data for a particular
 study are accumulated over extensive time horizons and across varied
@@ -68,24 +83,24 @@ biological underpinnings.
 
 **Reader Note** 
 ``` 
-We still need to domonstrate the effect of sample set composition
-on results.  With random sampling the effects area subtle and not
+We still need to demonstrate the effect of sample set composition
+on results.  With random sampling the effects are subtle and not
 immediately obvious.  We may have to fabricate sample sets with 
-low consistency scores - ie. made up of many hard to classify smaples -
-in order to show this inpact.
+low consistency scores - ie. made up of many hard to classify samples -
+in order to show this impact.
 ```
 ## Full data set fit
 
 We begin by fitting a model to the entire data set in order to:
 
-* obtain a baseline clssification performance against which to judge the performance
+* obtain a baseline classification performance against which to judge the performance
 obtained from the fits to smaller sample sets,
 
 * obtain sample consistency scores which can be used to explain variability
 in the performance of model fitted to data sets of a fixed size, and
 
 * produce a *full model* gene signature which can be used to evaluate
-the stability of selected features in models fitted to data sets of diffferent
+the stability of selected features in models fitted to data sets of different
 sizes.
 
 
@@ -116,10 +131,10 @@ knitr::kable(table(group = all_group_vec),
 
 ```
 
-Now fit the losso model through cross-validation.
+Now fit the lasso model through cross-validation.
 Note that the results of a cv fit are random due to the
 random allocation of samples to folds.  We can reduce this
-varibility by properly averaging results over repeated cv fits.
+variability by properly averaging results over repeated cv fits.
 Here we will obtain sample consistency scores by averaging results
 over 30 cv runs.
 
@@ -230,19 +245,19 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
 
 The number of features selected by the minimum lambda models are larger
 than the number selected by the "one standard error" rule models by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$.
+of `r median(nzero_min_vec-nzero_1se_vec)`.
 The cv error rates obtained from the minimum lambda models are lower
 then  "one standard error" rule models error rates by a median of
-$`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
+`r median(round(100*(error_1se_vec-error_min_vec), 1))`%.  
 
 The cv error rates observed in this set are comparable to the 
-rates oberved in the lasso models fitted to the training sample set
+rates observed in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-$`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')`$ samples
+`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')` samples
 to a data set with
-$`r paste(round(table(group = all_group_vec)), collapse=' vs ')`$ samples.
+`r paste(round(table(group = all_group_vec)), collapse=' vs ')` samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -252,7 +267,7 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r get-sample-pred, cache=T, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
+```{r get-sample-pred, cache=F, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
 # predicted probs - 1se
 lassoAll_predResp_1se_mtx <- sapply(cv_lassoAll_lst, function(cv_fit) { 
@@ -306,7 +321,7 @@ parameters than the one standard error rule models.
 -->
 
 We see that there isn't a big difference in out-of-fold predicted
-probabilities between the one-standard-error rule and the minimum lamda models.
+probabilities between the one-standard-error rule and the minimum lambda models.
 One way to quantify
 the difference in classification errors is to classify samples
 according to each vector of predicted probabilities, setting
@@ -316,8 +331,8 @@ on the right side of Figure \@ref(fig:get-sample-pred).
 
 <!-- APPLIED TO THE FITTED VALUES
 We note
-that althouth predicted probability distributions are quite different
-for the two models, the the class predictions at a 10% false discovery threshold
+that although predicted probability distributions are quite different
+for the two models, the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
@@ -345,7 +360,7 @@ knitr::kable(tmp,
 
 When we fix the false positive rate at 10% (ie. the control samples error rates are fixed), 
 the `1se` model makes 39 false negative calls whereas the minimum lambda model makes 32.  A difference
-of $`r round(100*(39-32)/555, 1)`$%
+of `r round(100*(39-32)/555, 1)`%
 
 
 <!-- APPLIED TO THE FITTED PROBABILITIES
@@ -418,7 +433,7 @@ title('min lambda Model')
 
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
-mtext(side=2, outer=T, cex=1.5, 'Quality Score')
+mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
 
 
@@ -426,7 +441,7 @@ mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
 
 This figure shows that for false positive cases (0:1 or classifying a
 control as an affected case), the algorithm is *less certain* of its predicted
-outcome than for the fals negative cases (1:0 or classifying an affected case as a control).
+outcome than for the false negative cases (1:0 or classifying an affected case as a control).
 ie. the misclassified HCC samples are quite similar to Controls, whereas there
 is more ambiguity in the misclassified Control samples.
 
@@ -446,13 +461,13 @@ sample_qual_vec <- sample_min_qual_vec
 ## Selected feature list stability 
 
 Before moving on to the simulation, let's examine gene selection stability on the
-full data set.  We have two sets of sellected features - one for the 
-one standard deviation rule model, and one for the mimimum lambda model.
+full data set.  We have two sets of selected features - one for the 
+one standard deviation rule model, and one for the minimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
-$`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
+`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`,
 while the one standard error rule models had an IQR of
-$`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
+`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`.
 
 Let's examine the stability of the gene lists across cv replicates.
 
@@ -487,11 +502,11 @@ barplot(
 
 ```
 
-We see that $`r genes_by_rep_1se_tbl['30']`$ features are included in every
+We see that `r genes_by_rep_1se_tbl['30']` features are included in every
 cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`$%
+`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`%
 and
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`$%
+`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`%
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
@@ -526,11 +541,11 @@ barplot(
 
 ```
 
-We see that $`r genes_by_rep_min_tbl['30']`$ features are included in every
+We see that `r genes_by_rep_min_tbl['30']` features are included in every
 cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`$%
+`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`%
 and
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`$%
+`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`%
 (Q1 and Q3) of the cv replicate min feature lists.
 We will consider the genes that are selected in all cv replicates as a 
 gene signature produced by each model.
@@ -560,27 +575,27 @@ We are now ready to run the simulations.
 
 Simluation parameters:  
 
-* Number of simulations : SIM = $`r SIM`$
+* Number of simulations : SIM = `r SIM`
 
-* Sample sizes: SIZE = $`r SIZE`$  
+* Sample sizes: SIZE = `r SIZE`  
 
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
+* Number of CV Replicates:  CV_REP = `r CV_REP`
 
 
-We will repeat the simulation process SIM = $`r SIM`$ times.
-For each simulation iteration, we will select $`r max(SIZE)`$ Control and 
-$`r max(SIZE)`$ HCC samples at random.  Models will be fitted and analyzed
-to balanced subsets of SIZE = $`r SIZE`$, in a `Matryoshka doll` manner to
-emulate a typical sample accrual process.  Note that in this accural process
+We will repeat the simulation process SIM = `r SIM` times.
+For each simulation iteration, we will select `r max(SIZE)` Control and 
+`r max(SIZE)` HCC samples at random.  Models will be fitted and analyzed
+to balanced subsets of SIZE = `r SIZE`, in a `Matryoshka doll` manner to
+emulate a typical sample accrual process.  Note that in this accrual process
 there is no time effect - the accrual process is completely randomized.  In practice,
 there could be significant time effects.  For example, the first 25 HCC samples could come
 from Center A, while the next 25 could come from Center B.  And 
 affected and control samples could be acquired from different clinics
-or in different time interevals.  In other words,
+or in different time intervals.  In other words,
 there is no batch effect or shared variability in our simulation,
 while these are almost always present in real data, including 
 batch effects that are associated with class labels - controls being in
-different batches than affected samples is an all too common occurence,
+different batches than affected samples is an all too common occurrence,
 for example.  One should be especially watchful of potential batch effects
 when dealing with blood samples as blood is notoriously finicky in
 character [@Huang:2017aa; @Permenter:2015aa;].
@@ -588,8 +603,8 @@ Presented with results that look impressively good based on a small data set,
 one should definitely be skeptical of the promise of future equally good results.
 
 For a given simulation and a given sample size, we will obtain
-CV_REP = $`r CV_REP`$ cross-validated lasso fits.  From these fits,
-we can obtain $`r CV_REP`$ out-of-fold assessments of classification accuracy 
+CV_REP = `r CV_REP` cross-validated lasso fits.  From these fits,
+we can obtain `r CV_REP` out-of-fold assessments of classification accuracy 
 to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features.  We will want
 to examine how these stabilize as the sample size increases.
@@ -597,9 +612,19 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected HCC samples, the expected overlap between two randomly
-selected sets of HCC samples is $`r round(100*(300/sum(all_group_vec=='HCC'))^2,1)`$%.
-For Controls the expected overlap is $`r round(100*(300/sum(all_group_vec=='Control'))^2,1)`$%. 
+selected sets of HCC samples is `r round(100*(300/sum(all_group_vec=='HCC'))^2,1)`%.
+For Controls the expected overlap is `r round(100*(300/sum(all_group_vec=='Control'))^2,1)`%. 
 
+**Reader Note**
+```
+We are currently not following individual performance paths
+as a study set grows over time.  We currently simply summarize
+results across simulations.  Exmaining individual paths would
+show how chaotic the assessments of performance can be when
+sample sizes are small.
+
+To Do.
+```
 
 ## Setup simulation 
 
@@ -613,8 +638,8 @@ all_affected_vec <- names(all_group_vec[all_group_vec=='HCC'])
 
 ```
 
-We have $`r length(all_control_vec)`$ control sample IDs stored in `all_control_vec`
-and $`r length(all_affected_vec)`$ affected sample IDs stored in `all_affected_vec`.
+We have `r length(all_control_vec)` control sample IDs stored in `all_control_vec`
+and `r length(all_affected_vec)` affected sample IDs stored in `all_affected_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
@@ -640,12 +665,12 @@ sim_affected_mtx <- sapply(
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`sim_control_mtx` and `sim_affected_mtx`, each with domensions $`r dim(sim_affected_mtx)`$.
-Within each simulation, we can run the analyses of size $`r SIZE`$ by simply selecting
+`sim_control_mtx` and `sim_affected_mtx`, each with dimensions `r dim(sim_affected_mtx)`.
+Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
-Here we show results for the smalle sample sizes where variability will be the greatest.
+Here we show results for the small sample sizes where variability will be the greatest.
 
 ```{r look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
 ### CLEAR CACHE
@@ -763,7 +788,7 @@ title("Affected sample consistency across simulations")
 
 ```
 
-In this figure, we are summarizing the quality measures of 50 samples per group acress
+In this figure, we are summarizing the quality measures of 50 samples per group across
 30 simulations, or random selections of control and affected samples.
 We see significant variability in sample consistency, especially in the affected cases.
 This may lead an unwary observer to be overly optimistic, or overly pessimistic,
@@ -774,7 +799,7 @@ in the early accrual stages of a study.
 
 
 As these take a while to run, 
-we will save the results of each similation to a different
+we will save the results of each simulation to a different
 object and store to disk.  These can be easily read from disk
 when needed for analysis.
 
@@ -900,17 +925,18 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 
 ## Simulation results
 
-Recall the we have $`r SIM`$ simulations, or randomly selected sets of HCC and Control samples,
-analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
-$`r CV_REP`$ repeated cross-validated lasso fits:
+Recall the we have `r SIM` simulations, or randomly selected sets of HCC and Control samples,
+analyzed in increasing sizes of `r paste(SIZE, sep=', ')`, with
+`r CV_REP` repeated cross-validated lasso fits:
 
 
-* Sample sizes: SIZE = $`r SIZE`$
+* Sample sizes: SIZE = `r SIZE`
 
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
+* Number of CV Replicates:  CV_REP = `r CV_REP`
 
 
-First we extract simluation results and store into one big table (only showing the top of table shere):
+First we extract simulation results and store into one big table
+(only showing the top of table here):
 
 ```{r extract-sim-results, cache=T, cache.vars='lasso_sim_results_frm'}
 ### CLEAR CACHE
@@ -978,8 +1004,8 @@ knitr::kable(head(lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_m
 ### Simulation Results - look at one simulation
 
 First examine results for one simulation run.  In the figures that follow,
-each boxplot summarized 30 repreated cross validation runs performed on a 
-fixed random selection of Control and Affeced samples.  Recall that as
+each boxplot summarized 30 repeated cross validation runs performed on a 
+fixed random selection of Control and Affected samples.  Recall that as
 we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
@@ -1119,7 +1145,7 @@ In this one simulation, we see:
 
 * Model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
 
-* CV error rates tend to be pessimistic, expecially for the small sample sizes.  This is odd
+* CV error rates tend to be pessimistic, especially for the small sample sizes.  This is odd
 and may be related to sample consistency.  
 
 * There isn't much to chose from between the one standard error and the minimum lambda models.  The
@@ -1273,7 +1299,7 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 In this one simulation, we see:
 
 * The selected number of features in the smaller sample size analyses
-are low, with few feaures belonging to the core signature identified in the
+are low, with few features belonging to the core signature identified in the
 full data set.  
 
 * As the sample size increases the number of features selected in the minimum 
@@ -1283,7 +1309,7 @@ selected in the samples of sizes 200 and 300 is stable and between 40 and 50.
 
 ### Summarize results across simulation runs.
 
-Now look acoss all simulations.  In the figures that follow, each boxplot
+Now look across all simulations.  In the figures that follow, each boxplot
 summarizes the results of 30 simulations.  For a give sample size and a 
 given simulation, each data point is the median across 30 repeated cv runs.
 
@@ -1419,7 +1445,19 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across 
 
 ```
 
-```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size'}
+<br/>
+
+
+* For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
+optimistic.  
+
+* **For lower sample sizes, assess performance is quite variable**. This
+is key:  with N=25 cases and controls, the estimated classification error
+rate produced by a given cohort can range from below 0.2 to higher than 0.5,
+or basically no indication of discrimination value in the analyzed features.
+
+
+```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
 ### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1435,11 +1473,6 @@ knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm)
    kableExtra::kable_styling(full_width = F)
 
 ```
-
-* For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
-optimistic.  
-
-* For lower sample sizes, assess performance is quite variable.
 
 
 Now look at feature selection.
@@ -1581,7 +1614,7 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 ```
 
 
-```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size'}
+```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
 ### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1597,19 +1630,27 @@ knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
 
 ```
 
-* The number of selected features incerase with sample size.  
+* The number of selected features increase with sample size.  
 
 *  The number of selected features is quite variable, even for larger sample sizes.
 
 * The number of core signature features among selected features is stable for larger sample
-sizes and represenst 30 to 40% of the selected features (for N=200 and 300 respectively).
+sizes and represents 30 to 40% of the selected features (for N=200 and 300 respectively).
 
 ## Effect of sample consistency
 
 To see the effect of sample consistency on classification results, we will
-focus on the performance of the small sample fits where variability is the
+focus on the performance of the small sample fits (N=25) where variability is the
 greatest, and the context where investigators should be most aware of the
 effect of sample selection over and beyond sample size concerns.
+
+In the plot below, 
+
+* control_Q and affected_Q are summary measures of
+sample set consistencies for the control and affected groups in the  different
+cv runs.   
+
+* 1se_cv and 1se_test are the cross-validation and test set error rates, respectively.
 
 ```{r small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance'}
 
@@ -1640,7 +1681,8 @@ pairs(samp25_qual_error_mtx,
      
 ```
 
-We see that although the sample consistency effect is not strong, the quality of the
+We see that although the sample consistency effect is not strong, the consistency of the
 affected sample cohorts does have a measurable impact on the 1se cv and test set error
 rates (cor = -0.32 and -0.27, respectively).  
 
+This plot is somewhat under-whelming.

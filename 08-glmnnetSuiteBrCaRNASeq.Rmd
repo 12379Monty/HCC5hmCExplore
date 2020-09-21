@@ -1,83 +1,9 @@
 # BrCa RNA-Seq: Sample size investigation {#brca-rnaseq-model-suite}
 
-**Reader Note**. Much of the text in this section
-is repetitive of previous section (\@ref(hcc-5hmcseq-model-suite}).
-Rework wording later.
+In this section we repeat the analyses ran on the HCC 5hmC data in
+Section \@ref(hcc-5hmcseq-model-suite) on the breast cancer
+RNA-Seq data set to provide a contrasting SNR regime context.
 
-We now examine the results of fitting a suite of lasso models to
-investigate the effect of sample size on 
-various aspects of model performance:  
-
-* assessed accuracy: out-of-fold estimates of precision and variability vs train set estimates 
-
-* selected feature profile stability - to what extent does the
-feature set implicitly selected by the lasso vary across random
-sampling and what is the effect of sample size.
-
-It is hypothesized that below a certain threshold,
-sample sizes are too small to provide reliable estimates
-of performance or stable selected feature profiles.  
-
-In examining the relationship between sample size and
-model performance, including variability and reliability
-of performance indicators derived from fits, we should bear in
-mind that in addition to sample size, sample composition might 
-also play a factor.  If a training data set contains many outliers
-or otherwise *hard to properly classify* samples, the performance
-of models fitted to such a data set is expected to be negatively impacted.
-
-In the simulations that we run below we will track sample *consistency*
-to examine its impact on fitted model performance.
-Predicted probabilities from fitted model can be transformed into sample
-*consistency* scores: $Q_i = p_i^{y_i}(1-p_i)^{1-y_i}$, where $p_i$ is the
-estimated probability of LumA for sample i and $y_i$ is 1 for LumA samples and
-0 for Others.  ie. we use the fitted sample contribution to the
-likelihood function as a sample *consistency* score,
-which is $P(LumA)$, the predicted probabilaiy of LumA for LumA samples
-and $1 - P(LumA)$ for Others.  To derive the sample *consistency scores,
-we will use the predicted response from a lasso model fitted to the entire data set.
-
-Hard to classify samples will have low *consistency* scores.
-In the results that we discuss below, when we look at variability across repeated 
-random sampling of different sizes, we can use sample *consistency* scores to investigate 
-how much of the variability is due to sample selection.
-Note that *consistency* here is not used to say anything about the sample data quality.
-Low *consistency* here only means that a sample is different from the 
-core of the data set in a way that makes it hard to properly classify.
-That could happen if the sample were mislabeled, in which case we could 
-think of this sample as being poor quality of course.
-
-The variability in sample set *consistency* the we get from simple random sampling,
-as is done in the simulation below, is not expected to adequately reflect
-sample set *consistency* variation encountered in practice when data for a particular
-study are accumulated over extensive time horizons and across varied
-physical settings.  In order to accrue study samples at an acceptable rate,
-it is not uncommon for the study sponsor to work with several clinics, medical centers,
-or other tissue or blood sample provider.
-Or the sponsor may sub-contract the sample acquisition
-task to a third party who may have suppliers distributed across the globe.  This
-is great news for the rate of sample acquisition, but not such great news for 
-the uniformity of consistency of samples.  In such a context, the variability
-in sample set consistency as the data set grows over time would not
-be adequately captured by simple random sampling variability;
-the variability would be more akin to cluster sampling with potential confounding
-batch effects.  The impact that these effects can have on the classification analysis
-results cannot be understated, especially in the context of a new technology that
-is exploiting biological processes that are still not fully understood.  All this
-to make the point that the variability the we are studying here has to be regarded 
-as a lower bound on the variability that is to be expected in practice, and that without
-an external validation data set to verify results, one should be cautious
-when interpreting empirical findings, especially in the absence of solid
-biological underpinnings.  
-
-**Reader Note** 
-``` 
-We still need to domonstrate the effect of sample set composition
-on results.  With random sampling the effects area subtle and not
-immediately obvious.  We may have to fabricate sample sets with 
-low consistency scores - ie. made up of many hard to classify smaples -
-in order to show this inpact.
-```
 ## Full data set fit
 
 We begin by fitting a model to the entire data set in order to:
@@ -96,7 +22,7 @@ sizes.
 First assemble the data set.  This entails simply re-combining the
 train and test data.
 
-```{r get-all-data, cache=T, cache.vars=c('all_geneExpr_mtx', 'all_group_vec')}
+```{r brca-rnaseq-get-all-data, cache=T, cache.vars=c('all_geneExpr_mtx', 'all_group_vec')}
 ### CLEAR CACHE
 
 # combine train and test 
@@ -129,7 +55,7 @@ Here we will obtain sample consistency scores by averaging results
 over 30 cv runs.
 
 
-```{r lasso-fit-all, cache=T, cache.vars=c('BrCa_cv_lassoAll_lst'), eval=F}
+```{r brca-rnaseq-lasso-fit-all, cache=T, cache.vars=c('BrCa_cv_lassoAll_lst'), eval=F}
 
 set.seed(1)
 
@@ -154,17 +80,17 @@ message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
 
 <!-- lasso-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r save-BrCa_cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
+```{r brca-rnaseq-save-BrCa_cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
  save(list='BrCa_cv_lassoAll_lst', file=file.path("RData",'BrCa_cv_lassoAll_lst'))
 ```
-```{r load-BrCa_cv_lassoAll_lst, cache=F, echo=T}
+```{r brca-rnaseq-load-BrCa_cv_lassoAll_lst, cache=F, echo=T}
  load(file=file.path("RData",'BrCa_cv_lassoAll_lst'))
 ```
 
 
 Examine the fits.
 
-```{r plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
+```{r brca-rnaseq-plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
 ### CLEAR CACHE
 plot(
  log(BrCa_cv_lassoAll_lst[[1]]$lambda),
@@ -187,10 +113,9 @@ of the model fitted through cross validation to the full data set is fairly prec
 
 <!-- DONT CACHE THIS ??? -->
 
-```{r model-size-lassoAll, cache=T, dependson='lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
+```{r brca-rnaseq-model-size-lassoAll, cache=T, dependson='lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
 
 library(magrittr)
-u
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
 
 # nzero
@@ -233,21 +158,23 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
 
 ```
 
+<br/>
+
 The number of features selected by the minimum lambda models are larger
 than the number selected by the "one standard error" rule models by a median
-of $`r median(nzero_min_vec-nzero_1se_vec)`$.
+of `r median(nzero_min_vec-nzero_1se_vec)`.
 The cv error rates obtained from the minimum lambda models are lower
 then  "one standard error" rule models error rates by a median of
-$`r median(round(100*(error_1se_vec-error_min_vec), 1))`$%.  
+`r median(round(100*(error_1se_vec-error_min_vec), 1))`%.  
 
 The cv error rates observed in this set are comparable to the 
 rates oberved in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-$`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')`$ samples
+`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')` samples
 to a data set with
-$`r paste(round(table(group = all_group_vec)), collapse=' vs ')`$ samples.
+`r paste(round(table(group = all_group_vec)), collapse=' vs ')` samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -257,7 +184,7 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r get-sample-pred, cache=T, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
+```{r brca-rnaseq-get-sample-pred, cache=F, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
 # predicted probs - 1se
 lassoAll_predResp_1se_mtx <- sapply(BrCa_cv_lassoAll_lst, function(cv_fit) { 
@@ -326,7 +253,7 @@ for the two models, the the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
-```{r get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
+```{r brca-rnaseq-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
 
 ### NOTE THAT HERE MODEL PRODUCES PROB(Other)
 lassoAll_predClass_1se_vec <- ifelse(
@@ -351,7 +278,7 @@ knitr::kable(tmp,
 
 When we fix the false positive rate at 10% (ie. the other samples error rates are fixed), 
 the `1se` model makes 204 false negative calls whereas the 
-minimum lambda model makes 188.  A difference of $`r round(100*(204-188)/(1288+204), 1)`$%
+minimum lambda model makes 188.  A difference of `r round(100*(204-188)/(1288+204), 1)`%
 
 
 <!-- APPLIED TO THE FITTED PROBABILITIES
@@ -365,7 +292,7 @@ of computing sample consistency scores - what do these differences mean?
 
 To compute consistency scores, we will use the out-of-fold predicted probabilities.
 
-```{r get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
+```{r brca-rnaseq-get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
 # get qual scores
 
 y <- as.numeric(all_group_vec == 'LumA')
@@ -385,7 +312,7 @@ sample_min_qual_vec <- p^y*(1-p)^(1-y)
 We can examine consistency scores as a function of classification bin.
 
 
-```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='consistency scores by classification - Other=0, LumA=1'}
+```{r brca-rnaseq-plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='consistency scores by classification - Other=0, LumA=1'}
 
 y <- as.numeric(all_group_vec == 'LumA')
 
@@ -424,24 +351,24 @@ title('min lambda Model')
 
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
-mtext(side=2, outer=T, cex=1.5, 'Quality Score')
+mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
 
 
 ```
 
 This figure shows that for false positive cases (0:1 or classifying a
-other as an LimA case), the algorithm is *less certain* of its predicted
-outcome than for the fals negative cases (1:0 or classifying an LimA case as a other).
-ie. the misclassified LumA samples are quite similar to Others, whereas there
-is more ambiguity in the misclassified Other samples.
+other as an LumA case), the algorithm is *more certain* of its predicted
+outcome than for the false negative cases (1:0 or classifying an LumA case as Other).
+ie. the misclassified Other samples are quite similar to LumA sample, whereas there
+is more ambiguity in the misclassified LumA samples.
 
  
 We will use the minimum lambda model to provide
 the fitted probabilities used to compute consistency scores,
 but we could have used either one.
 
-```{r sample-qual}
+```{r brca-rnaseq-sample-qual}
 
 sample_qual_vec <- sample_min_qual_vec
 
@@ -456,13 +383,13 @@ full data set.  We have two sets of sellected features - one for the
 one standard deviation rule model, and one for the mimimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
-$`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`$,
+`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`,
 while the one standard error rule models had an IQR of
-$`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
+`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`.
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+```{r brca-rnaseq-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
 ### CLEAR CACHE
 
 
@@ -493,15 +420,15 @@ barplot(
 
 ```
 
-We see that $`r genes_by_rep_1se_tbl['30']`$ features are included in every
+We see that `r genes_by_rep_1se_tbl['30']` features are included in every
 cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`$%
+`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`%
 and
-$`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`$%
+`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`%
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
-```{r feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+```{r brca-rnaseq-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
 ### CLEAR CACHE
 
 
@@ -531,17 +458,17 @@ barplot(
 
 ```
 
-We see that $`r genes_by_rep_min_tbl['30']`$ features are included in every
+We see that `r genes_by_rep_min_tbl['30']` features are included in every
 cv replicate.  These make up between 
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`$%
+`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`%
 and
-$`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`$%
+`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`%
 (Q1 and Q3) of the cv replicate min feature lists.
 We will consider the genes that are selected in all cv replicates as a 
 gene signature produced by each model.
 
 
-```{r minVs1seGenes}
+```{r brca-rnaseq-minVs1seGenes}
 
 lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
 lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
@@ -556,7 +483,7 @@ are contained in the min lambda model gene signature.
 
 We are now ready to run the simulations.
 
-```{r simParms, cahce=F}
+```{r brca-rnaseq-simParms, cahce=F}
  SIM <- 30
  SIZE <- c(25, 50, 100, 200, 300)
  CV_REP <- 30
@@ -565,36 +492,23 @@ We are now ready to run the simulations.
 
 Simluation parameters:  
 
-* Number of simulations : SIM = $`r SIM`$
+* Number of simulations : SIM = `r SIM`
 
-* Sample sizes: SIZE = $`r SIZE`$  
+* Sample sizes: SIZE = `r SIZE`  
 
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
+* Number of CV Replicates:  CV_REP = `r CV_REP`
 
 
-We will repeat the simulation process SIM = $`r SIM`$ times.
-For each simulation iteration, we will select $`r max(SIZE)`$ Other and 
-$`r max(SIZE)`$ LumA samples at random.  Models will be fitted and analyzed
-to balanced subsets of SIZE = $`r SIZE`$, in a `Matryoshka doll` manner to
-emulate a typical sample accrual process.  Note that in this accural process
-there is no time effect - the accrual process is completely randomized.  In practice,
-there could be significant time effects.  For example, the first 25 LumA samples could come
-from Center A, while the next 25 could come from Center B.  And 
-LimA and other samples could be acquired from different clinics
-or in different time interevals.  In other words,
-there is no batch effect or shared variability in our simulation,
-while these are almost always present in real data, including 
-batch effects that are associated with class labels - others being in
-different batches than LimA samples is an all too common occurence,
-for example.  One should be especially watchful of potential batch effects
-when dealing with blood samples as blood is notoriously finicky in
-character [@Huang:2017aa; @Permenter:2015aa;].
-Presented with results that look impressively good based on a small data set,
-one should definitely be skeptical of the promise of future equally good results.
+We will repeat the simulation process SIM = `r SIM` times.
+For each simulation iteration, we will select `r max(SIZE)` Other and 
+`r max(SIZE)` LumA samples at random.  Models will be fitted and analyzed
+to balanced subsets of SIZE = `r SIZE`, in a `Matryoshka doll` manner to
+emulate a typical sample accrual process.
+
 
 For a given simulation and a given sample size, we will obtain
-CV_REP = $`r CV_REP`$ cross-validated lasso fits.  From these fits,
-we can obtain $`r CV_REP`$ out-of-fold assessments of classification accuracy 
+CV_REP = `r CV_REP` cross-validated lasso fits.  From these fits,
+we can obtain `r CV_REP` out-of-fold assessments of classification accuracy 
 to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features.  We will want
 to examine how these stabilize as the sample size increases.
@@ -602,8 +516,8 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected LumA samples, the expected overlap between two randomly
-selected sets of LumA samples is $`r round(100*(300/sum(all_group_vec=='LumA'))^2,1)`$%.
-For Others the expected overlap is $`r round(100*(300/sum(all_group_vec=='Other'))^2,1)`$%. 
+selected sets of LumA samples is `r round(100*(300/sum(all_group_vec=='LumA'))^2,1)`%.
+For Others the expected overlap is `r round(100*(300/sum(all_group_vec=='Other'))^2,1)`%. 
 
 
 ## Setup simulation 
@@ -611,20 +525,20 @@ For Others the expected overlap is $`r round(100*(300/sum(all_group_vec=='Other'
 To setup the simulation, we only need two master tables: one for the selection of Others
 and one for the selection of LumA samples.
 
-```{r get-all-vec, cache=T, cache.vars=c('all_other_vec', 'all_LimA_vec')}
+```{r brca-rnaseq-get-all-vec, cache=T, cache.vars=c('all_other_vec', 'all_LumA_vec')}
 
 all_other_vec <- names(all_group_vec[all_group_vec=='Other']) 
-all_LimA_vec <- names(all_group_vec[all_group_vec=='LumA'])  
+all_LumA_vec <- names(all_group_vec[all_group_vec=='LumA'])  
 
 ```
 
-We have $`r length(all_other_vec)`$ other sample IDs stored in `all_other_vec`
-and $`r length(all_LimA_vec)`$ LimA sample IDs stored in `all_LimA_vec`.
+We have `r length(all_other_vec)` other sample IDs stored in `all_other_vec`
+and `r length(all_LumA_vec)` LumA sample IDs stored in `all_LumA_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
   
-```{r getSimTable, cache=T, cache.vars=c('sim_other_mtx', 'sim_LimA_mtx')}
+```{r brca-rnaseq-getSimTable, cache=T, cache.vars=c('sim_other_mtx', 'sim_LumA_mtx')}
 
 set.seed(12379)
 
@@ -635,24 +549,24 @@ sim_other_mtx <- sapply(
 )
 
 
-sim_LimA_mtx <- sapply(
+sim_LumA_mtx <- sapply(
  1:SIM, 
  function(dummy) 
-   sample(1:length(all_LimA_vec), size =  max(SIZE))
+   sample(1:length(all_LumA_vec), size =  max(SIZE))
 )
 
 
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`sim_other_mtx` and `sim_LimA_mtx`, each with domensions $`r dim(sim_LimA_mtx)`$.
-Within each simulation, we can run the analyses of size $`r SIZE`$ by simply selecting
+`sim_other_mtx` and `sim_LumA_mtx`, each with domensions `r dim(sim_LumA_mtx)`.
+Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the consistency scores of the selected samples.
 Here we show results for the smalle sample sizes where variability will be the greatest.
 
-```{r look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LimA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
+```{r brca-rnaseq-look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
 ### CLEAR CACHE
 
 all_other_qual_vec <- sample_qual_vec[all_other_vec]
@@ -661,10 +575,10 @@ sim_other_qual_mtx <- sapply(
   function(CC) all_other_qual_vec[sim_other_mtx[,CC]]
  )
 
-all_LimA_qual_vec <- sample_qual_vec[all_LimA_vec]
-sim_LimA_qual_mtx <- sapply(
-  1:ncol(sim_LimA_mtx),  
-  function(CC) all_LimA_qual_vec[sim_LimA_mtx[,CC]]
+all_LumA_qual_vec <- sample_qual_vec[all_LumA_vec]
+sim_LumA_qual_mtx <- sapply(
+  1:ncol(sim_LumA_mtx),  
+  function(CC) all_LumA_qual_vec[sim_LumA_mtx[,CC]]
  )
 
 # Get stage from SIZE 
@@ -676,9 +590,9 @@ sim_other_qual_byStage_lst <- do.call('c',
  )
 )
 
-sim_LimA_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_LimA_qual_mtx), 
-  function(CC) c(split(sim_LimA_qual_mtx[,CC], stage_vec),NA)
+sim_LumA_qual_byStage_lst <- do.call('c', 
+ lapply(1:ncol(sim_LumA_qual_mtx), 
+  function(CC) c(split(sim_LumA_qual_mtx[,CC], stage_vec),NA)
  )
 )
 
@@ -708,16 +622,16 @@ axis(
   cex.axis = 0.8)
 title("Other sample consistency by stage and simulation")
 
-# LimA
+# LumA
 boxplot(
-  sim_LimA_qual_byStage_lst, 
+  sim_LumA_qual_byStage_lst, 
   outline = F, 
   border = 1:6,
   ylab = 'Quality Score',
   xaxt = 'n'
 )
-sim_ndx <- which(names(sim_LimA_qual_byStage_lst)=='')
-abline(v = which(names(sim_LimA_qual_byStage_lst)==''), col = 'grey')
+sim_ndx <- which(names(sim_LumA_qual_byStage_lst)=='')
+abline(v = which(names(sim_LumA_qual_byStage_lst)==''), col = 'grey')
 axis(
   side=1, 
   at = sim_ndx-2,        
@@ -729,7 +643,7 @@ title("LumA sample consistency by stage and simulation")
 
 ```
 
-```{r look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LimA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
+```{r brca-rnaseq-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
 ### CLEAR CACHE
 
 all_other_qual_vec <- sample_qual_vec[all_other_vec]
@@ -738,10 +652,10 @@ sim_other_qual_mtx <- sapply(
   function(CC) all_other_qual_vec[sim_other_mtx[,CC]]
  )
 
-all_LimA_qual_vec <- sample_qual_vec[all_LimA_vec]
-sim_LimA_qual_mtx <- sapply(
-  1:ncol(sim_LimA_mtx),  
-  function(CC) all_LimA_qual_vec[sim_LimA_mtx[,CC]]
+all_LumA_qual_vec <- sample_qual_vec[all_LumA_vec]
+sim_LumA_qual_mtx <- sapply(
+  1:ncol(sim_LumA_mtx),  
+  function(CC) all_LumA_qual_vec[sim_LumA_mtx[,CC]]
  )
 
 # ONLY LOOK AT SAMPLE SIZE == 50
@@ -758,9 +672,9 @@ boxplot(
 )
 title("Other sample consistency across simulations")
 
-# LimA
+# LumA
 boxplot(
-  sim_LimA_qual_mtx[1:NN,],
+  sim_LumA_qual_mtx[1:NN,],
   outline = T, 
   ylab = 'Quality Score'
 )
@@ -769,8 +683,8 @@ title("LumA sample consistency across simulations")
 ```
 
 In this figure, we are summarizing the consistency measures of 50 samples per group acress
-30 simulations, or random selections of other and LimA samples.
-We see significant variability in sample consistency, especially in the LimA cases.
+30 simulations, or random selections of other and LumA samples.
+We see significant variability in sample consistency, especially in the Other cases.
 This may lead an unwary observer to be overly optimistic, or overly pessimistic,
 in the early accrual stages of a study.
 
@@ -785,13 +699,13 @@ when needed for analysis.
 
 
 The simulation results are saved to the file system and
-only needs to be run once.  The simulation takes $\approx$ 8 to 10 minutes
-per iteration, or 4 to 5 hours of run time on a laptop.
+only needs to be run once.  The simulation takes $\approx$ 14 minutes
+per iteration, or $\approx$ 7 hours of run time on a laptop.
 (Platform: x86_64-apple-darwin17.0 (64-bit)
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r run-sim, cache=T, cache.vars='start_time', eval=F}
+```{r brca-rnaseq-run-sim, cache=T, cache.vars='start_time', eval=F}
 start_time <- proc.time()
 
 # Get stage from SIZE
@@ -807,7 +721,7 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
 
     sim_stage_samples_vec <- c(
       all_other_vec[sim_other_mtx[Stage_rows_vec, SIMno]],
-      all_LimA_vec[sim_LimA_mtx[Stage_rows_vec, SIMno]]
+      all_LumA_vec[sim_LumA_mtx[Stage_rows_vec, SIMno]]
     )
     sim_stage_geneExpr_mtx <- all_geneExpr_mtx[sim_stage_samples_vec, ]
     sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
@@ -905,19 +819,19 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
 
 ## Simulation results
 
-Recall the we have $`r SIM`$ simulations, or randomly selected sets of LumA and Other samples,
-analyzed in inreasing sizes of $`r paste(SIZE, sep=', ')`$, with
-$`r CV_REP`$ repeated cross-validated lasso fits:
+Recall the we have `r SIM` simulations, or randomly selected sets of LumA and Other samples,
+analyzed in inreasing sizes of `r paste(SIZE, sep=', ')`, with
+`r CV_REP` repeated cross-validated lasso fits:
 
 
-* Sample sizes: SIZE = $`r SIZE`$
+* Sample sizes: SIZE = `r SIZE`
 
-* Number of CV Replicates:  CV_REP = $`r CV_REP`$
+* Number of CV Replicates:  CV_REP = `r CV_REP`
 
 
 First we extract simluation results and store into one big table (only showing the top of table shere):
 
-```{r extract-sim-results, cache=T, cache.vars='lasso_brca_sim_results_frm'}
+```{r brca-rnaseq-extract-sim-results, cache=T, cache.vars='lasso_brca_sim_results_frm'}
 
 ### CLEAR CACHE
 brca_sim_files_vec <- list.files('RData', '^brca_sim_')
@@ -966,7 +880,7 @@ lasso_brca_sim_results_frm <- do.call('rbind', lapply(1:length(brca_sim_files_ve
 Have a table of simulation results - `lasso_brca_sim_results_frm`:
 -->
 
-```{r sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+```{r brca-rnaseq-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
 
 ### CLEAR CACHE
  
@@ -990,7 +904,7 @@ fixed random selection of Other and Affeced samples.  Recall that as
 we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
-```{r lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+```{r brca-rnaseq-lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 
 ### CLEAR CACHE
 
@@ -1005,7 +919,7 @@ error_min_q2 <- quantile(error_min_vec, prob=1/2)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(brca_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 
 #SIM <- "Sim_01"
@@ -1055,8 +969,8 @@ title(paste('one se lambda - error rates'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(brca_sim_other_qual_mtx[,SimNum], stage_vec), median)
-LimA_qual_vec <- sapply(split(brca_sim_LimA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
@@ -1065,7 +979,7 @@ axis(side=1, tick=F, line = LL,
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
-  round(LimA_qual_vec, 2)
+  round(LumA_qual_vec, 2)
  )
 }#SKIP
 
@@ -1104,8 +1018,8 @@ title(paste('min lambda - error rates'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(brca_sim_other_qual_mtx[,SimNum], stage_vec), median)
-LimA_qual_vec <- sapply(split(brca_sim_LimA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
@@ -1114,7 +1028,7 @@ axis(side=1, tick=F, line = LL,
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
-  round(LimA_qual_vec, 2)
+  round(LumA_qual_vec, 2)
  )
 }#SKIP
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
@@ -1125,15 +1039,14 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 In this one simulation, we see:
 
-* Model accuracy increases with sample size, with minimal improvement going from N=200 to N=300.  
+* Model accuracy steadily increases with sample size
 
-* CV error rates tend to be pessimistic, expecially for the small sample sizes.  This is odd
-and may be related to sample consistency.  
+* CV error rates tend to be pessimistic, expecially for the small sample sizes
+and more so for the 1se models. 
 
-* There isn't much to chose from between the one standard error and the minimum lambda models.  The
-latter may show lower propensity to produce optimistic cv error rates.  
+* There isn't much to chose from between the one standard error and the minimum lambda models.  
 
-```{r lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+```{r brca-rnaseq-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 
 ### CLEAR CACHE
 
@@ -1148,7 +1061,7 @@ nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(brca_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 
 #SIM <- "Sim_01"
@@ -1203,8 +1116,8 @@ title(paste('one se lambda - selected gene counts'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(brca_sim_other_qual_mtx[,SimNum], stage_vec), median)
-LimA_qual_vec <- sapply(split(brca_sim_LimA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
@@ -1213,7 +1126,7 @@ axis(side=1, tick=F, line = LL,
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
-  round(LimA_qual_vec, 2)
+  round(LumA_qual_vec, 2)
  )
 }#SKIP
 
@@ -1259,8 +1172,8 @@ title(paste('min lambda - selected gene counts'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(brca_sim_other_qual_mtx[,SimNum], stage_vec), median)
-LimA_qual_vec <- sapply(split(brca_sim_LimA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
@@ -1269,7 +1182,7 @@ axis(side=1, tick=F, line = LL,
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
-  round(LimA_qual_vec, 2)
+  round(LumA_qual_vec, 2)
  )
 }#SKIP
 
@@ -1279,6 +1192,13 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ```
 
+Compare with Figures
+\@ref(fig:lasso-simRes-errors-bySim)
+and 
+ \@ref(fig:lasso-simRes-features-bySim)
+for the HCC 5hmC data.
+
+<!-- 
 In this one simulation, we see:
 
 * The selected number of features in the smaller sample size analyses
@@ -1288,7 +1208,7 @@ full data set.
 * As the sample size increases the number of features selected in the minimum 
 lambda model remains variable, but the number of core signature features
 selected in the samples of sizes 200 and 300 is stable and between 40 and 50.  
-
+-->
 
 ### Summarize results across simulation runs.
 
@@ -1297,7 +1217,7 @@ summarizes the results of 30 simulations.  For a give sample size and a
 given simulation, each data point is the median across 30 repeated cv runs.
 
 
-```{r lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+```{r brca-rnaseq-lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 
 ### CLEAR CACHE
 
@@ -1312,7 +1232,7 @@ error_min_q2 <- quantile(error_min_vec, prob=1/2)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(brca_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
@@ -1429,7 +1349,16 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across 
 
 ```
 
-```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size'}
+<br/>
+
+As in the case of the analysis of the HCC 5hmC data, we see that at lower
+samples sizes the assessed performance is quite variable.
+In this example cohorts of N=25 LumA and Other subtype samples
+can yield classification error estimates ranging from less than %10 
+to over 50%.  
+
+
+```{r brca-rnaseq-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
 
 ### CLEAR CACHE
 
@@ -1447,21 +1376,22 @@ knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm)
 
 ```
 
+<!--
 * For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
 optimistic.  
 
 * For lower sample sizes, assess performance is quite variable.
-
+-->
 
 Now look at feature selection.
 
-```{r lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+```{r brca-rnaseq-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 
 ### CLEAR CACHE
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(brca_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
@@ -1592,8 +1522,13 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 
 ```
 
+Compare with Figures
+\@ref(fig:lasso-simRes-errors-overSim)
+and
+\@ref(fig:lasso-simRes-features-OverSim)
+for the HCC 5hmC data.
 
-```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size'}
+```{r brca-rnaseq-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
 
 ### CLEAR CACHE
 
@@ -1610,6 +1545,8 @@ knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
 
 ```
 
+<!--
+
 * The number of selected features incerase with sample size.  
 
 *  The number of selected features is quite variable, even for larger sample sizes.
@@ -1617,24 +1554,29 @@ knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
 * The number of core signature features among selected features is stable for larger sample
 sizes and represenst 30 to 40% of the selected features (for N=200 and 300 respectively).
 
+-->
+
+<!-- SKIP THIS
 ## Effect of sample consistency
+
+**This is a bust ...**
 
 To see the effect of sample consistency on classification results, we will
 focus on the performance of the small sample fits where variability is the
 greatest, and the context where investigators should be most aware of the
 effect of sample selection over and beyond sample size concerns.
-
-```{r small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance'}
+-->
+```{r brca-rnaseq-small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance', eval=F}
 ### CLEAR CACHE
 
-other_samp25_qual_vec <- apply(brca_sim_other_qual_mtx[1:25, ], 2, median)
-LimA_samp25_qual_vec <- apply(brca_sim_LimA_qual_mtx[1:25, ], 2, median)
+other_samp25_qual_vec <- apply(sim_other_qual_mtx[1:25, ], 2, median)
+LumA_samp25_qual_vec <- apply(sim_LumA_qual_mtx[1:25, ], 2, median)
 
 samp25_qual_error_mtx <- cbind(
    `1se_cv` = error_1se_Bysize_lst[['025_cv']],
    `1se_test` = error_1se_Bysize_lst[['025_test']],
    `other_Q` = other_samp25_qual_vec,
-   `LimA_Q` = LimA_samp25_qual_vec)
+   `LumA_Q` = LumA_samp25_qual_vec)
  
 
 # Correlation panel
@@ -1650,11 +1592,11 @@ panel.cor <- function(x, y){
 pairs(samp25_qual_error_mtx,
  lower.panel = panel.cor)
    
-
      
 ```
 
+<!-- for the HCC data we had:
 We see that although the sample consistency effect is not strong, the consistency of the
-LimA sample cohorts does have a measurable impact on the 1se cv and test set error
+LumA sample cohorts does have a measurable impact on the 1se cv and test set error
 rates (cor = -0.32 and -0.27, respectively).  
-
+-->

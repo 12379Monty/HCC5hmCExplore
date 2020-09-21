@@ -2,7 +2,7 @@
 
 <!--
 Refer to [first pass study](https://hcc-5hmc-analysis.netlify.app/) for
-relevant exploratory data  analyis results.
+relevant exploratory data  analysis results.
 -->
 
 <!--
@@ -37,7 +37,7 @@ and analyzed using tools from the `glmnet` R package.
 
 Before providing some background on that glmnet package and the 
 models that it supports, we briefly describe another R package
-which is an essential tool for anyone who is doing predicitive analytics in R - `caret` R pacakge.
+which is an essential tool for anyone who is doing predictive analytics in R - `caret` R package.
 
 
 ## caret for model evaluation
@@ -209,14 +209,14 @@ Rapaport et al. (2013) [@Rapaport:2013aa] for SNR in RNA-Seq
 ## Lasso vs Best Subset  {#lasso-vs-best-sub} 
 
 Best subset selection finds the subset of k predictors that 
-produces the best fit in terms of squared error, solving the nonconvex problem:
+produces the best fit in terms of squared error, solving the non-convex problem:
 
 \begin{equation}
  \min_{\beta \in \mathcal{R}^p} ||Y - X\beta||^2_2 \, \, subject \, to \, \, ||\beta||_0 \leq k
  (\#eq:bestSub)
 \end{equation}
 
-The lasso solves a covex relaxation of the above where we replace the 
+The lasso solves a convex relaxation of the above where we replace the 
 $l_0$ norm by the $l_1$ norm, namely
 
 \begin{equation}

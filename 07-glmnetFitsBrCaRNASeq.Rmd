@@ -1,10 +1,5 @@
 # BrCa RNA-Seq: Exploring Sparsity {#brca-rnaseseq-explore-sparsity}
 
-**Reader Note**. Much of the text in this section
-is repetitive of previous section (\@ref(hcc-5hmcseq-explore-sparsity).
-Rework wording later.
-
-
 In this section we explore various models fitted to 
 the Breast Cancer RNA-Seq data set explored in Section \@ref(brca-rnaseq-preproc).
 We focus our analyses on lasso fits which tend to favor sparse models.
@@ -72,25 +67,6 @@ We consider three models, specified by the value of the
     - elastic net:  $\alpha = 0.5$  - semi sparse model  
 <!-- - lassoC: $\alpha = 1-\epsilon =$ $TICKr 1- EPSTICK - lasso for correlated predictors  -->
 
-Some questions of interest include:  
-
-* How sparse are models enabling good 5hmC classification of LumA vs Other subpype samples?    
-
-<!--
-    - The exploratory analysis done in the preprocessing step
-indicates that differential gene body 5hmC representation effects are small.
-With reasonably large sample sizes we would expect many genes to be selected.
-???
--->
-
-<!-- DROP THIS - havign trouble getting at pure lassoR
-* Does the relaxed lasso improve performance in this case?  
--->
-
-* Does the shrunken relaxed lasso (aka the blended mix) improve performance in this case? 
-
-* Is the degree of sparsity, or the size of the model, a stable feature of the problem and data set?  
-
 In this analysis, we will only evaluate models in terms of 
 model sparsity, stability and performance.  We leave the question
 of significance testing of hypotheses about model parameters
@@ -145,91 +121,11 @@ data for each fold fit.
 
 ## Fit and compare models 
 
-`glmnet` provides cross-validation methods to pick the parameter **lambda** which
-controls to size of the penalty function. The  “one standard error rule” 
-produces a model with fewer predictors  then the minimum cv error model.
-On the training data, this usually results in increased MSE and more 
-biased parameter estimates 
-(see Engebretsen et al. (2019) [@Engebretsen:2019aa] for example).
-The question of iterest though is the performance on unseen data; not on the training data.
-In the analysis below, we compare the cv error rates with out-of-fold and
-test set error rates.  The results show that out-of-fold error rates computed from
-the training data are good indicators of test set error rates, and that
-the one standard error rule models do as well as the minimim cv error models
-for the lasso, which has the best overall performance.
-
-
-
-### Logistic regression in `glmnet`
-
-`glmnet` provides functionality to extract various predicted of fitted values
-from calibrated models.  Note that some folks make a distinction between
-**fitted** or **estimated** values for sample points in the training data 
-versus **predicted** values for sample points that
-are not in the training dataset.  `glmnet` makes no such distinction and the
-`predict` function is used to produce both fitted as well as predicted values.
-When predict is invoked to make predictions for design points that are part 
-of the training dataset, what is returned are fitted values.
-When predict is invoked to make predictions for design points that are not part 
-of the training dataset, what is returned are predicted values.  
-
-For logistic regressions, which is the model fitted in a regularized fashion
-when models are fitted by glmnet with the parameter `family='binomial'`, three
-fitted or predicted values can be extracted at a given design point.
-Suppose our response variable Y is either 0 or 1 (LumA or Other in our case).
-These are specified by the `type` parameter.  `type='resp'` returns
-the fitted or predicted probability of $Y=1$.  `type='class'` returns the fitted or
-predicted class for the design point, which is simply dichotomizing the 
-response: class = 1 if the fitted or predicted probability is greater than 0.5
-(check to make sure class is no the Bayes estimate).  `type='link'` returns
-the fitted or predicted value of the linear predictor $\beta'x$.  The relationship
-between the linear predictor and the response can be derided from  the 
-logistic regression model:
-
-$$P(Y=1|x,\beta) = g^{-1}(\beta'x) = h(\beta'x) = \frac{e^{\beta'x}}{1+e^{\beta'x}}$$
-
-where $g$ is the link function, $g^{-1}$ the mean function.
-The link function is given by:
-
-$$g(y) = h^{-1}(y) = ln(\frac{y}{1-y})$$
-
-This link function is called the *logit* function, and its inverse the *logistic*
-function.
-
-
-```{r brca-rnaseseq-logistic_f}
+```{r brca-rnaseseq-logistic_f, echo=F}
 
 logistic_f <- function(x) exp(x)/(1+exp(x))
 
 ```
-
-We should also point out that the cv error rates quoted in various `glmnet` summaries 
-are computed from out-of-fold predictions.  In other words,
-we cannot recover the `cvm` component of a glmnet fit object by comparing 
-class predictions extracted by invoking `predict()` with paramters `newx = train_data`
-and `type = 'class'` to the true class labels.
-
-`glmnet` fitting functions have a 
-parameter, *keep*, which instructs the fitting function to keep the
-`out-of-fold`, or `prevalidated`, predictions as part of the returned object.  The
-`out-of-fold` predictions are predicted values for the samples in the
-left-out folds, pooled across all cv folds.  For each hyper-parameter
-specification, we get one full set of `out-of-fold` predictions for
-the training set samples.  Performance assessments based on these
-values are usually more generalizable.  The `cvm` component of glmnet fitted
-objects are derived from these `out-of-fold` predictions.
-See Hofling and Tibshirani (2008) [@Hofling:2008aa] 
-for a description of the use of pre-validation in model assessment.  
-
-
-<!--
-Because the `keep=T` option will store predicted values for 
-all models evaluated in the cross-validation process, we will
-limit the number of models tested by setting **nlambda=30**
-when calling the fitting functions.  This has no effect on 
-performance in this data set.
--->
-
 
 ```{r brca-rnaseseq-doMC, include=F}
 
@@ -458,6 +354,8 @@ knitr::kable(t(errors_frm),
 
 ```
 
+<br/>
+
 * lasso and enet, 1se and min lambda, have comparable performance
 on the training data.    
 
@@ -585,6 +483,8 @@ caption = "Relaxed lasso and blended mix error rates"
   kableExtra::kable_styling(full_width = F)
 
 ```
+
+<br/>
 
 The relaxed lasso and blended mix error rates are comparable to the
 regular lasso fit error rate.  We see here too that the reported cv 
@@ -1261,7 +1161,7 @@ for(RR in 1:nrow(missclass_oofProb_mtx))
 points(
  rep(RR, ncol(missclass_oofProb_mtx)), 
  missclass_oofProb_mtx[RR,],
- col=ifelse(train_group_vec[rownames(missclass_oofProb_mtx)[RR]] == '_Other',
+ col=ifelse(train_group_vec[rownames(missclass_oofProb_mtx)[RR]] == 'Other',
   'green', 'red'),
  pch=1:ncol(missclass_oofProb_mtx))
 
@@ -1344,7 +1244,7 @@ for(RR in 1:nrow(missclass_oofProb_mtx))
 points(
  rep(RR, ncol(missclass_oofProb_mtx)), 
  missclass_oofProb_mtx[RR,],
- col=ifelse(test_group_vec[rownames(missclass_oofProb_mtx)[RR]] == '_Other',
+ col=ifelse(test_group_vec[rownames(missclass_oofProb_mtx)[RR]] == 'Other',
   'green', 'red'),
  pch=1:ncol(missclass_oofProb_mtx))
 

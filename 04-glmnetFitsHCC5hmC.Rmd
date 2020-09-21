@@ -72,7 +72,7 @@ With reasonably large sample sizes we would expect many genes to be selected.
 ???
 -->
 
-<!-- DROP THIS - havign trouble getting at pure lassoR
+<!-- DROP THIS - having trouble getting at pure lassoR
 * Does the relaxed lasso improve performance in this case?  
 -->
 
@@ -138,16 +138,20 @@ produces a model with fewer predictors  then the minimum cv error model.
 On the training data, this usually results in increased MSE and more 
 biased parameter estimates 
 (see Engebretsen et al. (2019) [@Engebretsen:2019aa] for example).
-The question of iterest though is the performance on unseen data; not on the training data.
-In the analysis below, we compare the cv error rates with out-of-fold and
-test set error rates.  The results show that out-of-fold error rates computed from
-the training data are good indicators of test set error rates, and that
-the one standard error rule models do as well as the minimim cv error models
+The question of interest though is the performance on unseen data; not on the training data.
+The cv error rates computed and stored in fit results by `glmnet` methods are
+out-of-fold error rates computed from
+the training data.  The results show that these are good indicators of 
+test set error rates, and that
+the one standard error rule models do as well as the minimum cv error models
 for the lasso, which has the best overall performance.
 
 
-
 ### Logistic regression in `glmnet`
+
+It is sometimes necessary to compute cv error rates manually from
+`glmnet` fit results.  This section provides some necessary detail.
+
 
 `glmnet` provides functionality to extract various predicted of fitted values
 from calibrated models.  Note that some folks make a distinction between
@@ -193,7 +197,7 @@ logistic_f <- function(x) exp(x)/(1+exp(x))
 We should also point out that the cv error rates quoted in various `glmnet` summaries 
 are computed from out-of-fold predictions.  In other words,
 we cannot recover the `cvm` component of a glmnet fit object by comparing 
-class predictions extracted by invoking `predict()` with paramters `newx = train_data`
+class predictions extracted by invoking `predict()` with parameters `newx = train_data`
 and `type = 'class'` to the true class labels.
 
 `glmnet` fitting functions have a 
@@ -430,19 +434,21 @@ knitr::kable(t(errors_frm),
 
 ```
 
+<br/>
+
 We see that the lasso and enet models do better than the ridge model.
 The *one standard error rule* (1se) lambda lasso fit is only slightly more parsimonious than the 
 *1se* elastic net fit, but its test set accuracy is better.
 The *min* lambda models have lower test set error rates than
-the more parsinomious *1se* models in the ridge and elastice net case.
+the more parsimonious *1se* models in the ridge and elastic net case.
 (for the lasso, 1se and minimum lambda rules give the same model).
-The mimimum lambda elastic net fit performs as well as the lasso model,
+The minimum lambda elastic net fit performs as well as the lasso model,
 but is much less parsimonious.
 
-Note that the cv estiamtes of misclassification error produced by
+Note that the cv estimates of misclassification error produced by
 the glmnet extraction method are `out-of-fold` estimated error rates.
 In this particular dataset, these estimates of error are
-optimistic in comparison the the test set error rates.
+optimistic in comparison the test set error rates.
 
 
 ## The relaxed lasso and blended mix models
@@ -559,6 +565,8 @@ caption = "Relaxed lasso and blended mix error rates"
   kableExtra::kable_styling(full_width = F)
 
 ```
+
+<br/>
 
 The relaxed lasso and blended mix error rates are comparable to the
 regular lasso fit error rate.  We see here too that the reported cv 
@@ -1318,11 +1326,11 @@ abline(h=0.5)
 The relaxed lasso fit results in essentially dichotomized predicted probability
 distribution - predicted probabilities are very close to 0 or 1.
 
-We see that for design points in the training set, the predicted probabilies from the relaxed lasso
+We see that for design points in the training set, the predicted probabilities from the relaxed lasso
 are  essentially dichotomized to be tightly distributed at the extremes of the
-response range.  For design points in the test set, the predicted probabilies from the relaxed lasso
-are comparable to the lasso model predicted porbabilities.  This seems to indicate over-fitting
-in the relaxed lasso fit.
+response range.  For design points in the test set, the predicted probabilities 
+from the relaxed lasso are comparable to the lasso model predicted probabilities.
+This seems to indicate over-fitting in the relaxed lasso fit.
 
 
 
@@ -1410,7 +1418,7 @@ for(CC in 2:ncol(all_coef_frm)) {
 
 Note that there is little difference between the elastic net and the lasso
 in the selected features, and when the coefficient is zero in one set, it 
-is smaell in the other.  By contrast, the blended fit produces more shrinkage.
+is small in the other.  By contrast, the blended fit produces more shrinkage.
 
 ```{r zreros, fig.cap=''}
 

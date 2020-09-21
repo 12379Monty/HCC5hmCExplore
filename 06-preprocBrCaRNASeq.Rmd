@@ -1,5 +1,16 @@
 # BrCa RNA-Seq: Preprocessing {#brca-rnaseq-preproc}
 
+In this section we examine some RNA-Seq data from a breast cancer study
+to provide a different SNR context from the HCC 5hmC data in which
+to examine the relationship between sample size and model performance.
+For this exercise, we will look at discriminating between breast
+cancer samples of subtype LumA and all other subtypes among ER+/HER2-
+breast cancer samples.  This may
+be a somewhat artificial and uninteresting classification problem,
+but it does provide a binary classification problem with many examples
+in the two subgroups allowing is to run simulations analogous to
+those that were run on the HCC 5hmC data.
+
 <!--
 Reader note:  
 
@@ -75,11 +86,16 @@ was designed to get around github's file size restrictions.  See
 for details.
 
 
+<!--
 **Programming Note**:  
 
 * When the GSE96058 package is attached with the `library(GSE96058)`
 function call, any previously loaded object with the same
 name will mask the corresponding objects lazy-loaded by GSE96058.
+To get around this problem, R data packages should have
+unique object names.
+
+-->
 
 ```{r preprocBreast-loadData, cache=F}
 ### CLEAR CACHE
@@ -103,7 +119,7 @@ detach(package:GSE96058, unload = T )
 
 For this analysis, we will consider ER+/HER2- samples only and
 examine `pam50_subtype = 'LumA' vs 'Other'` as outcome.
-This choice is predicted on the desire to have a fairly
+This choice is predicated on the desire to have a fairly
 balanced binary outcome to work with when we examine the effect
 of sample size on classification performance.
 The outcome in this dataset will be aliased as `group`.
@@ -173,16 +189,7 @@ The resulting data was was post-processed by collapsing on 30,865 unique gene sy
 ^[See [NCBI GEO GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)].
 
 
-Note that before conducting any substantive analyses, the data would normally
-be very carefully examined for any sign of quality variation between groups
-of samples.  This analysis would integrate sample meta data - where and when were
-the blood samples collected - as well as library preparation and sequencing metrics
-in order to detect any sign of processing artifacts that may be present in the dataset.
-
-
-As proper data QC requires an intimate familiarity with the details of
-data collection and processing, such a task cannot be untertaken here.
-We will simply run a *minimal set of QC sanity checks* to make sure that
+We now proceed to run a *minimal set of QC sanity checks* to make sure that
 there are no apparent systematic effects in the data.
 
 
@@ -334,16 +341,10 @@ would be appropriate.   The main analysis steps of the pipeline are:
 * fit linear models and examine DE results
 
 
-We will adapt this pipeline - basically skip the 2nd and 3rd step.
+We will adapt this pipeline to the FPKM data that we have to work with - basically 
+skip the 2nd and 3rd steps in the above pipeline.
 
 ### Remove lowly expressed genes {-}
-
-Genes that are not expressed at a biologically 
-meaningful level in any condition should be discarded to reduce the 
-subset of genes to those that are of interest, and to reduce the number of tests 
-carried out downstream when looking at differential expression.  Carrying
-un-informative genes may also be a hindrance to classification and other
-downtream analyses.  
 
 To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
@@ -489,7 +490,6 @@ axis(side = 4, at = round(median(SampleMedian), 1),
 
 ```
 
-Proceed with MDS plots.
 
 ```{r preprocBreast-plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of gene expression values', echo=T}
 
