@@ -1,0 +1,944 @@
+# BrCa RNA-Seq: Preprocessing {#brca-rnaseq-preproc}
+
+<!--
+Reader note:  
+
+* The most interesting part of this section is Subsection \@ref(snr-regime)
+which tells us where on the SNR spectrum the 5hmC data lies.
+In view of the work by  Hastie et al. (2017) [@Hastie:2017aa]
+summarized in Subsection \@ref(lasso-vs-best-sub), we would expect to
+lasso model, and the relaxed version, to do very well with this
+classifiaction problem.
+-->
+
+<!--
+
+ FN <- 'tmp'
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+-->
+
+
+
+```{r preprocBreast-setup-preproc, include=F}
+
+
+### CLEAR CACHE
+   # file rmarkdown file management options: cache, figures
+ figures_DIR <- file.path('Static', 'figures/')
+ suppressMessages(dir.create(figures_DIR, recursive=T))
+ knitr::opts_chunk$set(fig.path=paste0(figures_DIR))
+```
+
+## Load the data
+
+<!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
+<!-- TO TURN ON, SET eval=T                            -->
+```{r preprocBreast-chunk-options, include=FALSE, eval=F}
+
+
+library("knitr")
+opts_chunk$set(eval = FALSE)
+
+```
+
+<!-- Add base libraries -->
+```{r preprocBreast-libraries, include=FALSE, eval=T}
+
+
+### CLEAR CACHE
+library("magrittr")
+```
+
+
+The data that are available from NCBI GEO
+[Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)
+can be conveniently accessed through an R data package.
+Attaching the GSE96058 package makes the count data tables 
+available as well as a gene annotation table and a sample description table.
+See [GSE96058 R Data Package page](https://12379monty.github.io/GSE96058/).
+
+The data in GSE96058 have been separated into various data frames and
+matrices.  The separation of the gene expression data into separate matrices
+was designed to get around github's file size restrictions.  See
+[GSE96058 Package Page](https://github.com/12379Monty/GSE96058)
+for details.
+
+
+**Programming Note**:  
+
+* When the GSE96058 package is attached with the `library(GSE96058)`
+function call, any previously loaded object with the same
+name will mask the corresponding objects lazy-loaded by GSE96058.
+
+```{r preprocBreast-loadData, cache=F}
+### CLEAR CACHE
+if (!("GSE96058" %in% rownames(installed.packages()))) {
+  if (!requireNamespace("devtools", quietly = TRUE)) {
+    install.packages("devtools")
+  }
+  devtools::install_github("12379Monty/GSE96058")
+}
+
+library(GSE96058)
+
+# Strip GSE_ID prefix form object names
+for(OBJ in data(package='GSE96058')$results[, 'Item'])
+assign(sub('GSE96058_','',OBJ), get(OBJ))
+
+detach(package:GSE96058, unload = T )
+
+
+```
+
+For this analysis, we will consider ER+/HER2- samples only and
+examine `pam50_subtype = 'LumA' vs 'Other'` as outcome.
+This choice is predicted on the desire to have a fairly
+balanced binary outcome to work with when we examine the effect
+of sample size on classification performance.
+The outcome in this dataset will be aliased as `group`.
+
+
+```{r preprocBreast-subsetSamplesB, cache=T, cache.vars=c('sampDescB','groupCol'), echo=T}
+
+
+ER_HER2_tbl <- with(sampDesc %>% 
+ dplyr::filter(!grepl('repl$', title) & !isRepl & er_Status!='NA'   & her2_Status!='NA'),
+ table(ER_HER2=paste(er_Status, her2_Status, sep='_'),
+  exclude=NULL)
+ )
+
+ knitr::kable(ER_HER2_tbl,
+  caption="ER, PR and HER2 Status")  %>%
+  kableExtra::kable_styling(full_width = F)
+
+# Use suffix 'B' to distinguish from sampDescA 
+sampDescB <-
+  sampDesc %>%
+  dplyr::filter(!grepl('repl$', title) & er_Status == '1' & her2_Status == '0') %>%
+  dplyr::mutate(group = pam50_subtype) %>%
+  dplyr::rename(sampID = title) %>%
+  dplyr::arrange(group, sampID)
+
+#with(sampDescB, table(group, exclude=NULL))
+
+# Recode group
+sampDescB$group <- with(
+  sampDescB,
+  ifelse(group == "LumA", "LumA", "Other")  ## Luma > Other
+)
+
+# Re-order and name rows
+o.v <- with(sampDescB, order(group, sampID))
+sampDescB  <- sampDescB[o.v, ]
+
+rownames(sampDescB) <- sampDescB$sampID
+
+# set groupCol for later
+groupCol <- c("#F3C300", "#875692")
+names(groupCol) <- unique(sampDescB$group)
+
+with(sampDescB, 
+ knitr::kable(table(group, exclude = NULL),
+  caption="Samples used in this analysis") %>%
+  kableExtra::kable_styling(full_width = F)
+)
+
+```
+
+
+The features in this dataset are gene expression indicators:
+
+```
+
+Gene expression data in FPKM were generated using cufflinks 2.2.1 
+(default parameters except –GTF, –frag-bias-correct GRCh38.fa, –multi-read-correct, 
+–library-type fr-firststrand, –total-hits-norm, –max-bundle-frags 10000000). 
+The resulting data was was post-processed by collapsing on 30,865 unique gene symbols 
+(sum of FPKM values of each matching transcript), adding to each expression measurement 
+0.1 FPKM, and performing a log2 transformation.
+
+```
+
+^[See [NCBI GEO GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)].
+
+
+Note that before conducting any substantive analyses, the data would normally
+be very carefully examined for any sign of quality variation between groups
+of samples.  This analysis would integrate sample meta data - where and when were
+the blood samples collected - as well as library preparation and sequencing metrics
+in order to detect any sign of processing artifacts that may be present in the dataset.
+
+
+As proper data QC requires an intimate familiarity with the details of
+data collection and processing, such a task cannot be untertaken here.
+We will simply run a *minimal set of QC sanity checks* to make sure that
+there are no apparent systematic effects in the data.
+
+
+Assemble feature matrix for `sampDescB` samples.
+
+```{r preprocBreast-getfeatures, cache=T, cache.vars=c('genes_annotB','geneExpressionB'), echo=T}
+
+
+# Start for geneExpression_repl1 data
+repl1_ndx <- which(is.element(colnames(geneExpression_repl1), sampDescB$sampID))
+geneExpressionB <- geneExpression_repl1[, repl1_ndx]
+
+# add samples from geneExpression_subJJ
+for(JJ in 1:5) {
+  sub_ndx <- which(is.element(
+   colnames(get(paste0('geneExpression_sub',JJ))),  sampDescB$sampID))
+  geneExpressionB <- cbind(geneExpressionB,
+   get(paste0('geneExpression_sub',JJ))[, sub_ndx])
+}
+
+# align geneExpressionB columns to sampDescB samples order
+geneExpr_ndx <- match(sampDescB$sampID, colnames(geneExpressionB))
+if(any(is.na(geneExpr_ndx)))
+stop("sampDescB/geneExpressionB: sample mismatch") else
+geneExpressionB <- geneExpressionB[, rownames(sampDescB)]
+
+# Rename genes_annot
+genes_annotB <- genes_annot
+
+```
+
+We first look at coverage - make sure there isn't too much disparity of coverage 
+across samples. To detect shared variability, samples can be annotated and ordered
+according to sample features that may be linked to sample batch processing.  Here we 
+the samples have been ordered by group and sample id (an alias of geoAcc).
+
+```{r preprocBreast-geneExprBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
+
+
+par(mar = c(1, 3, 2, 3))
+boxplot(geneExpressionB,
+  ylim = c(-4, 4), ylab='log2 Count',
+  staplewex = 0,       # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure :)
+  outline = F,         # remove outlying points
+  whisklty = 0,        # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = groupCol[sampDescB$group]
+)
+legend("top", legend = names(groupCol), text.col = groupCol, 
+  ncol = 2, bty = "n")
+# Add reference lines
+SampleMedian <- apply(geneExpressionB, 2, median)
+abline(h = median(SampleMedian), col = "grey")
+axis(side = 4, at = round(median(SampleMedian), 2), 
+  las = 2, col = "grey", line = 0, tick = F)
+
+```
+
+<!-- DNA - we're not looking at COVERAGE!!!! 
+Coverage/geneExpression level looks fairly comparable across samples.  It is sometimes helpful to
+keep track of the actual coverage which can be adequetely tracked by distribution
+quantiles.
+-->
+
+```{r preprocBreast-quantCountsA, echo=F, eval=F}
+
+
+geneExpressionB_quant <- apply(geneExpressionB, 2, function(CC) {
+  c(quantile(CC, prob = c(.15, (1:3) / 4)), totCovM = sum(CC) / 1e6)
+})
+
+geneExpressionB_quant2 <- apply(geneExpressionB_quant, 1, function(RR) {
+  quantile(RR, prob = (1:3) / 4)
+})
+
+knitr::kable(geneExpressionB_quant2,
+  digits = 1,
+  caption = paste(
+    "Coverage Summary - Columns are sample coverage quantiles and total coverage",
+    "\nRows are quartiles across samples"
+  )
+) %>% kableExtra::kable_styling(full_width = F)
+
+```
+
+<!-- SKIP
+From this table, we see that 25% of the samples have total coverage exceeding
+$TICKr round(geneExpressionB_quant2["75%", "totCovM"],1)TICK$M reads, 25% of samples
+have a 15 percentile of coverage lower than
+$TICKr geneExpressionB_quant2["25%", "15%"]TICK$, etc.  
+-->
+
+<!-- SKIP
+We next look at relative log representation (RLR) (in the context of measuring the density of 
+5hmC marks in genes, we refer to `representation` as opposed to `expression`; the
+two can be used interchangibly) -
+make sure the shapes of the distributions are not widely different.
+-->
+
+```{r preprocBreast-rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=F, echo=F,include=F}
+
+### PLACE-HOLDER
+lcpm_mtx <- edgeR::cpm(geneExpressionB, log = T)
+median_vec <- apply(lcpm_mtx, 1, median)
+RLR_mtx <- sweep(lcpm_mtx, 1, median_vec, "-")
+
+par(mar = c(1, 3, 2, 1))
+boxplot(RLR_mtx,
+  xlab = "", ylab='Relative Log Representation', ylim = c(-.6, .6),
+  staplewex = 0, # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure :)
+  outline = F, # remove outlying points
+  whisklty = 0, # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = groupCol[sampDescB$group]
+)
+legend("top", legend = names(groupCol), 
+  text.col = groupCol, ncol = 2, bty = "n")
+# Add group Q1, Q3
+for (GRP in unique(sampDescB$group)) {
+  group_ndx <- which(sampDescB$group == GRP)
+  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
+     quantile, prob = c(.25, .75))
+  abline(h = apply(group_Q1Q3_mtx, 1, median), 
+     col = groupCol[GRP], lwd = 2)
+}
+
+
+
+```
+
+<!-- SKIPPED
+We note that the HCC samples have slightly more variable coverage distribution.
+A few samples are quite different.
+-->
+
+## Differential representation analysis {#breast-rnaseq-dra}
+
+
+In the remainder of this section, we will process the data and
+perform differential expression analysis.  If we had counts,
+the analysis pipeline outlined in Law et al. (2018) [@Law:2018aa]
+would be appropriate.   The main analysis steps of the pipeline are: 
+
+* remove lowly expressed genes
+* normalize gene expression distributions
+* remove heteroscedascity
+* fit linear models and examine DE results
+
+
+We will adapt this pipeline - basically skip the 2nd and 3rd step.
+
+### Remove lowly expressed genes {-}
+
+Genes that are not expressed at a biologically 
+meaningful level in any condition should be discarded to reduce the 
+subset of genes to those that are of interest, and to reduce the number of tests 
+carried out downstream when looking at differential expression.  Carrying
+un-informative genes may also be a hindrance to classification and other
+downtream analyses.  
+
+To determine a sensible threshold we can begin by examining the shapes of the distributions.
+
+```{r preprocBreast-densityGeneExpr, fig.height=4, fig.width=10, fig.cap='Sample gene expression densities', eval=T, echo=T}
+
+
+par(mar = c(4, 3, 2, 1))
+plot(density(geneExpressionB[, 1]), 
+  col = groupCol[sampDescB$group[1]], lwd = 2, 
+  ylim = c(0, .30), xlim=c(-5, 10),
+  las = 2, main = "", xlab = "gene expression"
+)
+abline(v = 0, col = 3)
+# After verifying no outliers, can plot a random subset 
+for (JJ in sample(2:ncol(geneExpressionB), size = 100)) {
+  den <- density(geneExpressionB[, JJ])
+  lines(den$x, den$y, col = groupCol[sampDescB$group[JJ]], lwd = 2)
+} # for(JJ
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
+
+```
+
+`r EXPR_THR <- 0; SAMP_THR <- 25` 
+
+In this analysis we will be using a nominal gene expression value of 
+`r EXPR_THR`, genes are deeemed to be `represented` if their expression is 
+above this threshold, and not represented otherwise. 
+For this analysis we will require that genes be `represented` in at least 
+`r SAMP_THR` samples across the entire dataset to be retained for downstream analysis.
+
+
+<!-- or at least 
+TICKr round(EXPR_THR*LibSizeSum['Max.'])TICK counts in the sample with the 
+greatest sequencing depth (library size TICKr round(LibSizeSum['Max.'],1)TICK million).
+-->
+
+Remove weakly represented genes and replot densities.
+
+`r weak_flg <- rowSums(geneExpressionB > EXPR_THR) < SAMP_THR `
+Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
+
+```{r preprocBreast-removeWeak, cache=T, cache.vars=c('geneExpressionB_F', 'genes_annotBF', 'geneExpressionB'), echo=T, include=F}
+
+### CLEAR CACHE
+
+# Use suffix '_F' for Filtered genes
+geneExpressionB_F <- geneExpressionB[!weak_flg, ]
+
+genes.ndx <- match(rownames(geneExpressionB_F), genes_annotB$geneSymbol)
+if(sum(is.na(genes.ndx))) stop("geneExpressionB/genes_annotB mismatch")
+genes_annotBF <- genes_annotB[genes.ndx,]
+
+dim(geneExpressionB_F)
+
+rm(geneExpressionB)
+
+```
+
+
+```{r preprocBreast-densityGeneExpr2, fig.height=4, fig.width=10, fig.cap='Sample gene expression densities after removing weak genes', eval=T, echo=T}
+
+### CLEAR CACHE
+
+par(mar = c(4, 3, 2, 1))
+plot(density(geneExpressionB_F[, 1]),
+  col = groupCol[sampDescB$group[1]],
+  lwd = 2, las = 2, main = "", xlab = "gene expression",
+  ylim = c(0, .30), xlim=c(-5, 10)
+)
+#abline(v = 0, col = 3)
+# After verifying no outliers, can plot a random subset 
+for (JJ in sample(2:ncol(geneExpressionB_F), size = 100)) {
+  den <- density(geneExpressionB_F[, JJ])
+  lines(den$x, den$y, col = groupCol[sampDescB$group[JJ]], lwd = 2)
+} # for(JJ
+legend("topright", legend = names(groupCol), 
+  text.col = groupCol, bty = "n")
+
+```
+
+<!--
+Note that the $log_2(CMP)$ distribution is not quite symmetric.
+-->
+
+As another sanity check, we will look at a 
+multidimensional scaling plot of distances between gene expression
+profiles.  We use `plotMDS` in limma package [@Ritchie:2015aa]),
+which plots samples on a two-dimensional scatterplot so that distances on
+the plot approximate the typical log2 fold changes between the
+samples.   
+
+<!-- SKIP - data are $\approx$ normalized 
+Before producing the MDS plot we will normalize the distributions.
+We will store the data into s `DGEList` object as this is convenient
+when running many of the analyses implemented in the edgeR and limma packages.
+Call the set 'AF', for set 'A', 'Filtered'.
+-->
+
+```{r preprocBreast-getDGEL, cache=T, cache.var=c('AF_dgel', 'AF_lcmp_mtx'), eval=F, echo=F}
+
+### CLEAR CACHE
+
+AF_dgel <- edgeR::DGEList(
+  counts = geneExpressionB_F,
+  genes = genes_annotBF,
+  samples = sampDescB,
+  group = sampDescB$group
+)
+AF_dgel <- edgeR::calcNormFactors(AF_dgel)
+AF_lcmp_mtx <- edgeR::cpm(AF_dgel, log = T)
+
+# Save AF_dgel to facilitate restarting
+# remove from final version
+save(list = "AF_dgel", file = "RData/AF_dgel")
+```
+
+<!-- SKIP
+Verify that the counts are properly normalized.
+-->
+
+```{r preprocBreast-normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=F, eval=F}
+
+### CLEAR CACHE
+
+par(mar = c(1, 3, 2, 1))
+boxplot(AF_lcmp_mtx,
+  ylim = c(1, 8), ylab='Normalized Log CPM',
+  staplewex = 0,       # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure :)
+  outline = F,         # remove outlying points
+  whisklty = 0,        # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = groupCol[sampDescB$group]
+)
+legend("top", legend = names(groupCol), text.col = groupCol,
+  ncol = 2, bty = "n")
+# Add reference lines
+SampleMedian <- apply(AF_lcmp_mtx, 2, median)
+abline(h = median(SampleMedian), col = "grey")
+axis(side = 4, at = round(median(SampleMedian), 1),
+  las = 2, col = "grey", line = -1, tick = F)
+
+```
+
+Proceed with MDS plots.
+
+```{r preprocBreast-plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of gene expression values', echo=T}
+
+### CLEAR CACHE
+
+par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
+
+# wo loss of generality, sample 500 samples
+# simply a matter of convenience to save time
+# remove from final version
+set.seed(1)
+samp_ndx <- sample(1:ncol(geneExpressionB_F), size = 500)
+MDS.out <- limma::plotMDS(geneExpressionB_F[, samp_ndx],
+  col = groupCol[sampDescB$group[samp_ndx]], pch = 1
+)
+legend("topleft",
+  legend = names(groupCol),
+  text.col = groupCol, bty = "n"
+)
+
+MDS.out <- limma::plotMDS(geneExpressionB_F[, samp_ndx],
+  col = groupCol[sampDescB$group[samp_ndx]], pch = 1,
+  dim.plot = 3:4
+)
+
+
+```
+
+The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
+does not indicate strong clustering of samples.  
+
+<!-- SKIP
+`glMDSPlot` from package `Glimma` provides an interactive MDS 
+plot that can extremely usful for exploration
+-->
+```{r preprocBreast-GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of gene expression values", echo=F, eval=F}
+
+### CLEAR CACHE
+### CLEAR CACHE
+
+  groups = AF_dgel$samples[
+    samp_ndx,
+    c("group", "trainValGroup", "sampType", "tissue", "title", "stage")
+  ],
+  main = paste("MDS plot: filtered counts"), #### , Excluding outlier samples"),
+  path = ".", folder = figures_DIR,
+  html = paste0("GlMDSplot"), launch = F
+)
+```
+
+<!-- SKIP
+Link to glMDSPlot: 
+[Here]($TICKr file.path(figures_DIR, paste0("GlMDSplot.html"))TICK  
+
+No obvious factor links the samples in the 3 clusters observed on the
+4th MDS dimensions. The percent of variance exaplained by this dimension or 
+$\approx$ 4%.   The glMDSPlot indicates further segregation along
+the 6th dimension.  The percent of variance exaplained by this dimension or 
+$\approx$ 2%.  Tracking down this source of variability may be quite challenging,
+especially without having the complete information about the sample attributes 
+and provenance.  
+
+Unwanted variability is a well-documented problem in the analysis of RNA-Seq data
+(see Peixoto et al. (2015) [@Peixoto:2015aa]), and many procedures have been proposed
+to reduce the effect of unwanted variation on RNA-Seq analsys results 
+([@Gandolfo:2018aa;@Peixoto:2015aa;@Risso:2014aa]).  There are undoubtedly
+some similar sources of systematic variation in the 5hmC data, but it is
+beyond the scope of this work to investigate these in this particular dataset.
+Given that the clustering of samples occurs in MDS dimensions that explain
+a small fraction of variability, and that these is no assocation with the
+factor of interest, LumA vs Other, these sources of variability should not
+interfere too much with our classification analysis.  It would nonetheless be interesting
+to assess whether downstream results can be improved by removing this variability.
+
+-->
+
+### Creating a design matrix and contrasts  {-}
+
+Before proceeding with the statistical modeling used for the 
+differential expression analysis, we need to set up a
+model design matrix.
+
+```{r preprocBreast-DEADesign, cache=F, include=T, echo=T, include=T}
+
+### CLEAR CACHE
+
+Design_mtx <- model.matrix( ~  -1 + group, data=sampDescB)
+colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
+
+cat("colSums(Design_mtx):\n")
+colSums(Design_mtx)
+
+Contrasts_mtx <- limma::makeContrasts(
+  LumAvsOther = LumA  - Other,
+  levels=colnames(Design_mtx))
+
+cat("Contrasts:\n")
+Contrasts_mtx
+
+```
+
+```{r preprocBreast-printDesign, echo=T, include=F}
+
+### CLEAR CACHE
+ knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
+  kableExtra::kable_styling(full_width = F)
+```
+
+
+<!-- DOES NOT APPLY - NEED COUNTS!!!!
+### Removing heteroscedasticity from the count data {-}
+
+
+As for RNA-Seq data, for 5hmC count data the variance is not independent of the mean.
+In `limma`, the R package we are using for our analyses, 
+linear modeling is carried out on the gene expression values which are assumed to be 
+normally distributed and the mean-variance relationship is accommodated using precision 
+weights calculated by the voom function.  We apply this transformation next.
+
+-->
+
+```{r preprocBreast-Voom1, cache=T, cache.vars=c('filteredCountsAF_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=F, eval=F}
+
+### CLEAR CACHE
+
+par(mfrow=c(1,1))
+geneExpressionB_F_voom <- limma::voom(geneExpressionB_F, Design_mtx, plot=T)
+
+```
+
+<!--
+
+Note that the voom-plot provides a visual check on the level of filtering performed upstream.
+If filtering of lowly-expressed genes is insufficient, a drop in variance levels can be 
+observed at the low end of the expression scale due to very small counts. 
+
+-->
+
+
+<!--
+Means (x-axis) and variances (y-axis) of each gene are plotted to show the dependence between the two before voom is applied to the data ( A) and how the trend is removed after voom precision weights are applied to the data ( B). The plot on the left is created within the voom function which extracts residual variances from fitting linear models to gene expression transformed data. Variances are then re-scaled to quarter-root variances (or square-root of standard deviations) and plotted against the mean expression of each gene. The means are log 2-transformed mean-counts with an offset of 2. The plot on the right is created using plotSA which plots log 2 residual standard deviations against mean gene expression values. The average log 2 residual standard deviation is marked by a horizontal blue line. In both plots, each black dot represents a gene and a red curve is fitted to these points.
+-->
+
+<!--
+
+To get a sense of how this compares with RNA-Seq dsta, we can take a look at Figure 4 in Law et al. [@Law:2018aa]:
+
+TICKr knitr::include_graphics(
+  "Static/images/Law-fig4.gif",  dpi=100)TICK
+
+We observe that the variability in the 5hmC data is quite a bit lower.  Statistical summaries would give
+a better idea.  
+
+-->
+
+
+### Fit linear models and examine the results {-}
+
+Having properly filtered and  normalized the data,
+the linear models can be fitted to each gene and the results
+examined to assess differential expression between the two groups
+of interest, in our case LumA vs Other.
+
+Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
+
+```{r preprocBreast-lmFit, cache=T, echo=T, cache.vars=c('geneExpressionB_F_efit','geneExpressionB_F_efit_dt', 'geneExpressionB_F_efit'),echo=T}
+
+
+
+ geneExpressionB_F_fit <- limma::lmFit(geneExpressionB_F, Design_mtx)
+ colnames(geneExpressionB_F_fit$coefficients) <- sub("\\(Intercept\\)", "Intercept",
+ colnames(geneExpressionB_F_fit$coefficients) )
+
+ geneExpressionB_F_fit <- limma::contrasts.fit(
+    geneExpressionB_F_fit, contrasts=Contrasts_mtx)
+
+ geneExpressionB_F_efit <- limma::eBayes(geneExpressionB_F_fit)
+
+ geneExpressionB_F_efit_dt <-
+ limma::decideTests(geneExpressionB_F_efit,adjust.method = "BH", p.value = 0.05)
+ 
+ knitr::kable(t(summary(geneExpressionB_F_efit_dt)),
+  caption="DE Results at FDR = 0.05") %>% 
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+### Graphical representations of DE results: MD Plots {-}
+
+To summarise results for all genes visually, mean-difference plots
+(aka MA plot), which display log-FCs from the linear model fit against 
+the average gene expression values can be generated using the plotMD function,
+with the differentially expressed genes highlighted.
+
+We may also be interested in whether certain gene features are 
+related to gene identification.  Gene GC content, for example, might be
+of interest.  We don't have GC content here - skip this for now.
+
+```{r preprocBreast-mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=6, fig.width=11, fig.cap="LumA vs Other - Genes Identified at FDR = 0,05", echo=T}
+
+###  CLEAR CACHE
+
+par(mfrow=c(1,2), mar=c(4.5,4.5,2,1),oma=c(1,1,2,0))
+
+# log-fold-change vs ave-expr
+limma::plotMD(geneExpressionB_F_efit,
+ ylim = c(-0.5, 0.5),
+ column='LumAvsOther',
+ status=geneExpressionB_F_efit_dt[,'LumAvsOther'],
+ hl.pch = 16, hl.col = c("lightblue", "pink"), hl.cex = .5,
+ bg.pch = 16, bg.col = "grey", bg.cex = 0.5,
+ main = '',
+ xlab = paste0(
+    "Average log-expression: IQR=",
+    paste(round(quantile(geneExpressionB_F_efit$Amean, prob = c(1, 3) / 4), 2),
+      collapse = ", "
+    )
+  ),
+  ylab = paste0(
+    "log-fold-change: IQR=",
+    paste(round(quantile(geneExpressionB_F_efit$coefficients[, 'LumAvsOther'], prob = c(1, 3) / 4), 2),
+      collapse = ", "
+    )
+  ),
+  legend = F, cex.lab=1.5
+)
+abline(h = 0, col = "black")
+rug(quantile(geneExpressionB_F_efit$coefficients[, 'LumAvsOther'], prob = c(1, 2, 3) / 4),
+  col = "purple",
+  ticksize = .03, side = 2, lwd = 2
+)
+rug(quantile(geneExpressionB_F_efit$Amean, prob = c(1, 2, 3) / 4),
+  col = "purple",
+  ticksize = .03, side = 1, lwd = 2
+)
+
+# log-fold-change vs identification
+
+boxplot(split(
+ geneExpressionB_F_efit$coefficients[, 'LumAvsOther'],
+ geneExpressionB_F_efit_dt[,'LumAvsOther']),
+ outline=F,
+ border=c("pink", "grey", "lightblue"), xaxt='n',
+ ylab='log-fold-change', ylim=c(-.4, .4),
+ cex.lab=1.5
+)
+axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
+
+#SKIP - DONT HAVE ACGT 
+SKIP <- function() {
+# gc vs identification
+genes_ndx <- match(rownames(geneExpressionB_F_efit), genes_annotBF$geneSymbol)
+if(sum(is.na(genes_ndx))) stop("geneExpressionB_F_efit/genes_annotBF: genes mismatch")
+GC_vec <- with(genes_annotBF[genes_ndx,],(G+C)/(A+C+G+T))
+
+
+boxplot(split(
+ GC_vec,
+ geneExpressionB_F_efit_dt[,'LumAvsOther']),
+ outline=F,
+ border=c("pink", "grey", "lightblue"), xaxt='n',
+ ylab='gene-gc', cex.lab=1.5
+)
+axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
+
+ #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
+}#SKIP
+
+
+```
+
+```{r preprocBreast-quantlogFC,echo=T}
+
+###  CLEAR CACHE
+
+geneExpressionB_F_logFC_sum <- sapply(
+ split(
+ geneExpressionB_F_efit$coefficients[, 'LumAvsOther'],
+ geneExpressionB_F_efit_dt[,'LumAvsOther']),
+ quantile, prob = (1:3) / 4)
+
+colnames(geneExpressionB_F_logFC_sum) <- as.character(factor(
+ colnames(geneExpressionB_F_logFC_sum), 
+ levels=c("-1", "0", "1"),
+ labels=c('down', 'notDE', 'up')
+))
+
+
+knitr::kable(geneExpressionB_F_logFC_sum,
+  digits = 2,
+  caption = "log FC quartiles by gene identification") %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+
+Many genes are identified, and the effect sizes are substantial
+in comparison to the 5hmc data - compare tables
+\@ref(tab:preprocBreast-quantlogFC) and 
+\@ref(tab:quantlogFC).
+This will result in a higher signal-to-noise ratio context.   See 
+Section \@ref(breast-rnaseq-snr-regime).
+
+<!-- 5hmc comments
+The log-fold-change distribution for up-represented genes is long-tailed,
+with many high log fold-change values.
+By contrast, log-fold-change distribution for down-represented genes
+closer to symmetric and has few genes with low log fold-change values.
+We will see how this affects the results of identifying genes with
+an effect size requirement.
+
+The GC content of down regulated genes tends to be slightly lower than the
+rest of the genes.  A statistical test would find that the difference
+between the mean of the down regulated gene population is singificantly different
+than the mean of the other gene population even though the difference is
+quite small
+(TICKr round( 
+mean(GC_vec[geneExpressionB_F_efit_dt[,'LumAvsOther']=='-1']) -
+mean(GC_vec[geneExpressionB_F_efit_dt[,'LumAvsOther']!='-1']),
+3)TICK
+
+These asymmetries are minor, but it would still be good to establish that
+they relfect biology rather than processing artifacts.  
+-->
+
+### DE genes at 10% fold change {-}
+
+For a stricter definition on significance, one may require log-fold-changes 
+(log-FCs) to be above a minimum value. The treat method 
+(McCarthy and Smyth 2009 [@McCarthy:2009aa]) can be used to calculate p-values 
+from empirical Bayes moderated t-statistics with a minimum log-FC requirement. 
+The number of differentially expressed genes are greatly reduced if we 
+impose a minimal fold-change requirement of 10%.
+
+```{r preprocBreast-mdPlotTfit, cache=T, cache.vars='', fig.height=6, fig.width=11, fig.cap="LumA vs Other - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
+
+###  CLEAR CACHE
+
+geneExpressionB_F_tfit <- limma::treat(geneExpressionB_F_fit, lfc=log2(1.10))
+geneExpressionB_F_tfit_dt <- limma::decideTests(geneExpressionB_F_tfit)
+
+cat("10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:\n")
+summary(geneExpressionB_F_tfit_dt)
+
+# log-fold-change vs ave-expr
+limma::plotMD(geneExpressionB_F_efit,
+ ylim = c(-0.6, 0.6),
+ column='LumAvsOther',
+ status=geneExpressionB_F_tfit_dt[,'LumAvsOther'],
+ hl.pch = 16, hl.col = c("blue", "red"), hl.cex = .7,
+ bg.pch = 16, bg.col = "grey", bg.cex = 0.5,
+ main = '',
+ xlab = paste0(
+    "Average log-expression: IQR=",
+    paste(round(quantile(geneExpressionB_F_efit$Amean, prob = c(1, 3) / 4), 2),
+      collapse = ", "
+    )
+  ),
+  ylab = paste0(
+    "log-fold-change: IQR=",
+    paste(round(quantile(geneExpressionB_F_efit$coefficients[, 'LumAvsOther'], prob = c(1, 3) / 4), 2),
+      collapse = ", "
+    )
+  ),
+  legend = F
+)
+abline(h = 0, col = "black")
+rug(quantile(geneExpressionB_F_efit$coefficients[, 'LumAvsOther'], prob = c(1, 2, 3) / 4),
+  col = "purple",
+  ticksize = .03, side = 2, lwd = 2
+)
+rug(quantile(geneExpressionB_F_efit$Amean, prob = c(1, 2, 3) / 4),
+  col = "purple",
+  ticksize = .03, side = 1, lwd = 2
+)
+
+
+```
+
+<!-- 5hmc comment - does not apply to this RNA-Seq dataset
+As noted above, the log-fold-change distribution for the up-represented genes
+is long-tailes in  comparison to log-fold-change distribution for the down-represented genes.
+As a result fewer down-represented than up-regulated genes are identified when a 
+minimum log-FC requirement is imposed.
+-->
+
+## Signal-to-noise ratio regime {#breast-rnaseq-snr-regime}
+
+In Hastie et al. (2017) [@Hastie:2017aa]) results from `lasso` fits are
+compared with `best subset` and `forward selection` fits and it is argued
+that while `best subset` is optimal for high signal-to-noise regimes, 
+the lasso gains some competitive advantage when the prevailing signal-to-noise
+ratio of the dataset is lowered.  
+
+<!-- DNA ???
+We can extract sigma and signal from the fit objects to get SNR values for each gene
+to see in what SNR regime the 5hmC gene body data are.
+
+-->
+ 
+```{r preprocBreast-altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation", eval=F, echo=F}
+
+###  CLEAR CACHE
+
+fit <- geneExpressionB_F_efit
+sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
+sy <- sqrt(fit$sigma)
+
+CV <- sy/sx    
+
+
+```
+
+<!-- DEBUG BCV from Section \@ref(analysis-of-coverage-variability) vs CV
+pairs(cbind(BCV_mtx, CV)) 
+boxplot(cbind(BCV_mtx, CV), outline=F) 
+-->
+
+
+```{r preprocBreast-plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
+
+###  CLEAR CACHE
+
+Effect <- abs(geneExpressionB_F_efit$coefficients[,'LumAvsOther'])
+Noise <- geneExpressionB_F_efit$sigma
+SNR <- Effect/Noise
+
+plot(spatstat::CDF(density(SNR)),
+  col = 1, lwd = 2, ylab = "Prob(SNR<x)",
+  xlim = c(0, 1.5)
+)
+
+SNR_quant <- quantile(SNR, prob=c((1:3)/4,.9))
+rug(SNR_quant,
+    lwd = 2, ticksize = 0.05, col = 1
+  )
+
+
+knitr::kable(t(SNR_quant),
+  digits = 3,
+  caption = paste(
+    "SNR Quantiles") 
+) %>% kableExtra::kable_styling(full_width = F)
+
+
+
+```
+
+<!--
+These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
+best subset and forward selection fits (see  Hastie et al. (2017) [@Hastie:2017aa]).
+-->

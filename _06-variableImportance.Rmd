@@ -1,4 +1,4 @@
-# Variable importance  {#variable-importance}
+# HCC 5hmC_Seq: Variable importance  {#hcc-5hmcseq-variable-importance}
 
 Cai et al. [@Cai:2019aa] used the fequency of selection across
 bootstrap replicates to select features from their final model.

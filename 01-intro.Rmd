@@ -88,13 +88,13 @@ The layout of the paper is the following:
 analyizing predictive models in the `n << p` context and 
 give some detail about the primary tool used in this report.
 
-* In Section \@ref(preproc) we preprocess the 5hmC data that
+* In Section \@ref(hcc-5hmcseq-preproc) we preprocess the 5hmC data that
 we will use for the classification analysis and perform some light QC analyses.  
 
-* In Section \@ref(explore-sparsity) we explore sparse models
+* In Section \@ref(hcc-5hmcseq-explore-sparsity) we explore sparse models
 that discriminate between early stage HCC and control samples.
 
-* In Section \@ref(model-suite) we examine the results of fitting a suite of models to
+* In Section \@ref(hcc5-hmcseq-model-suite) we examine the results of fitting a suite of models to
 investigate the effect of sample size on model performance.  
 
 <!-- LEAVE FEATURE OUT IS NOT INFORMATIVE

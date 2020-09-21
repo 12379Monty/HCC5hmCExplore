@@ -1,0 +1,7 @@
+
+from http://stackoverflow.com/questions/9776020/recursive-search-and-replace-in-text-files-on-mac-and-linux
+
+find . -type f -name '*' -exec sed -i '' s%explore-sparsity%5hmCData-explore-sparsity% {} +
+
+find . -type f -name '*' -exec sed -i '' s%application%results% {} +
+

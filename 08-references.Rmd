@@ -3,7 +3,7 @@
 <div id="refs"></div>
 '`
 
-```{r appendix1, cache=F, child='05B-glmnetSuiteB.Rmd'}
+```{r appendix1, cache=F, child='05B-glmnetSuiteBHCC5hmC.Rmd'}
 ### CLEAR CACHE
 ```
 
