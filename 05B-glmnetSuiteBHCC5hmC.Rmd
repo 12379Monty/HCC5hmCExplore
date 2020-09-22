@@ -5,16 +5,16 @@ the elastic net as classfication model.
 
 
 <!-- RUN ONCE -->
-```{r enet-fit-all, cache=T, cache.vars=c('cv_enetAll_lst'), eval=F}
+```{r hcc5hmC-glmnetSuiteB-enet-fit-all, cache=T, cache.vars=c('hcc5hmC_cv_enetAll_lst'), eval=F}
 
 set.seed(1)
 
 start_time <-  proc.time()
 
-cv_enetAll_lst <- lapply(1:30, function(REP) {
+hcc5hmC_cv_enetAll_lst <- lapply(1:30, function(REP) {
 glmnet::cv.glmnet(
  x = all_lcpm_mtx,
- y = factor(all_group_vec,levels = c('Control', 'HCC')),
+ y = factor(hcc5hmC_hcc5hmC,levels = c('Control', 'HCC')),
  alpha = 0.5,
  family = 'binomial',
  type.measure  =  "class",
@@ -30,28 +30,28 @@ message("enetAll time: ", round((proc.time() - start_time)[3],2),"s")
 
 <!-- enet-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r save-cv_enetAll_lst, cache=T, dependson='enet-fit-all', cache.vars='', echo=F, eval=F}
- save(list='cv_enetAll_lst', file=file.path("RData",'cv_enetAll_lst'))
+```{r hcc5hmC-glmnetSuiteB-save-hcc5hmC_cv_enetAll_lst, cache=T, dependson='enet-fit-all', cache.vars='', echo=F, eval=F}
+ save(list='hcc5hmC_cv_enetAll_lst', file=file.path("RData",'hcc5hmC_cv_enetAll_lst'))
 ```
-```{r load-cv_enetAll_lst, cache=F, echo=F}
- load(file=file.path("RData",'cv_enetAll_lst'))
+```{r hcc5hmC-glmnetSuiteB-load-hcc5hmC_cv_enetAll_lst, cache=F, echo=F}
+ load(file=file.path("RData",'hcc5hmC_cv_enetAll_lst'))
 ```
 
 Examine the fits.
 
-```{r enet-plot-enetAll, cache=T, dependson='enet-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv enet models fitted to all samples'}
+```{r hcc5hmC-glmnetSuiteB-enet-plot-enetAll, cache=T, dependson='enet-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv enet models fitted to all samples'}
 ### CLEAR CACHE
 plot(
- log(cv_enetAll_lst[[1]]$lambda),
- cv_enetAll_lst[[1]]$cvm,
+ log(hcc5hmC_cv_enetAll_lst[[1]]$lambda),
+ hcc5hmC_cv_enetAll_lst[[1]]$cvm,
  lwd=2,
  xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
 )
 
-for(JJ in 2:length(cv_enetAll_lst))
+for(JJ in 2:length(hcc5hmC_cv_enetAll_lst))
  lines(
-  log(cv_enetAll_lst[[JJ]]$lambda),
-  cv_enetAll_lst[[JJ]]$cvm,
+  log(hcc5hmC_cv_enetAll_lst[[JJ]]$lambda),
+  hcc5hmC_cv_enetAll_lst[[JJ]]$cvm,
   lwd=2
 )
 
@@ -62,31 +62,31 @@ of the model through cross validation is fairly precise:
 
 <!-- DONT CACHE THIS ??? -->
 
-```{r model-size-enetAll, cache=T, dependson='enet-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv enet models'}
+```{r hcc5hmC-glmnetSuiteB-model-size-enetAll, cache=T, dependson='enet-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv enet models'}
 
 library(magrittr)
 
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
 
 # nzero
-nzero_1se_vec <- sapply(cv_enetAll_lst,
+nzero_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 
-nzero_min_vec <- sapply(cv_enetAll_lst,
+nzero_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
 
 # error
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(
  list(`1se`=error_1se_vec, min = error_min_vec), 
- ylab=cv_enetAll_lst[[1]]$name,
+ ylab=hcc5hmC_cv_enetAll_lst[[1]]$name,
  ylim=c(0.06, .10)
 )
 
@@ -124,17 +124,17 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r enet-get-sample-pred, cache=T, dependson='enet-fit-all', cache.vars=c('enetAll_predResp_1se_vec','enetAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
+```{r hcc5hmC-glmnetSuiteB-enet-get-sample-pred, cache=T, dependson='enet-fit-all', cache.vars=c('enetAll_predResp_1se_vec','enetAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
 # predicted probs - 1se
-enetAll_predResp_1se_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
+enetAll_predResp_1se_mtx <- sapply(hcc5hmC_cv_enetAll_lst, function(cv_fit) { 
   ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_1se])
  })
 enetAll_predResp_1se_vec <- rowMeans(enetAll_predResp_1se_mtx)
 
 # predicted probs - min
-enetAll_predResp_min_mtx <- sapply(cv_enetAll_lst, function(cv_fit) { 
+enetAll_predResp_min_mtx <- sapply(hcc5hmC_cv_enetAll_lst, function(cv_fit) { 
   ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_min])
  })
@@ -143,8 +143,8 @@ enetAll_predResp_min_vec <- rowMeans(enetAll_predResp_min_mtx)
 # plot
 par(mfrow=c(1,2), mar=c(5,5,2,1))
 tmp <- c(
- `1se` = split(enetAll_predResp_1se_vec, all_group_vec),
- min = split(enetAll_predResp_min_vec, all_group_vec)
+ `1se` = split(enetAll_predResp_1se_vec, hcc5hmC_all_group_vec),
+ min = split(enetAll_predResp_min_vec, hcc5hmC_all_group_vec)
 )
 names(tmp) <- sub('\\.', '\n', names(tmp))
 
@@ -161,12 +161,12 @@ axis(side=1, at=1:length(tmp), tick=F, names(tmp))
 plot(
  x = enetAll_predResp_1se_vec, xlab='1se model oof Prob',
  y = enetAll_predResp_min_vec, ylab='min lambda model oof Prob',
- col = ifelse(all_group_vec == 'HCC', 'red', 'green')
+ col = ifelse(hcc5hmC_all_group_vec == 'HCC', 'red', 'green')
 )
  
 # Add referecne lines at 10% false positive
-thres_1se <- quantile(enetAll_predResp_1se_vec[all_group_vec == 'Control'], prob=.9)
-thres_min <- quantile(enetAll_predResp_min_vec[all_group_vec == 'Control'], prob=.9)
+thres_1se <- quantile(enetAll_predResp_1se_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
+thres_min <- quantile(enetAll_predResp_min_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
 abline(v = thres_1se, h = thres_min, col='grey')
 
 ```
@@ -193,7 +193,7 @@ for the two models, the the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
-```{r enet-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('enetAll_predClass_1se_vec','enetAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
+```{r hcc5hmC-glmnetSuiteB-enet-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('enetAll_predClass_1se_vec','enetAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
 
 enetAll_predClass_1se_vec <- ifelse(
  enetAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
@@ -202,8 +202,8 @@ enetAll_predClass_min_vec <- ifelse(
  enetAll_predResp_min_vec > thres_min, 'HCC', 'Control')
 
 tmp <- cbind(
- table(truth=all_group_vec, `1se-pred`=enetAll_predClass_1se_vec),
- table(truth=all_group_vec, `min-pred`=enetAll_predClass_min_vec)
+ table(truth=hcc5hmC_all_group_vec, `1se-pred`=enetAll_predClass_1se_vec),
+ table(truth=hcc5hmC_all_group_vec, `min-pred`=enetAll_predClass_min_vec)
 ) 
 # Hack for printing
 colnames(tmp) <- c('1se-Control', '1se-HCC', 'min-Control', 'min-HCC')
@@ -249,12 +249,12 @@ $`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`$.
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r enet-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','enetAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+```{r hcc5hmC-glmnetSuiteB-enet-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','enetAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
 ### CLEAR CACHE
 
 
 # 1se
-enetAll_coef_1se_lst <- lapply(cv_enetAll_lst, function(cv_fit){
+enetAll_coef_1se_lst <- lapply(hcc5hmC_cv_enetAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.1se"
@@ -288,12 +288,12 @@ $`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(enetAll_coef_1se_mtx), 3/4
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
-```{r enet-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','enetAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+```{r hcc5hmC-glmnetSuiteB-enet-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','enetAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
 ### CLEAR CACHE
 
 
 # min
-enetAll_coef_min_lst <- lapply(cv_enetAll_lst, function(cv_fit){
+enetAll_coef_min_lst <- lapply(hcc5hmC_cv_enetAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.min"
@@ -329,7 +329,7 @@ We will consider the genes that are selected in all cv replicates as a
 gene signature produced by each model.
 
 
-```{r enet-minVs1seGenes}
+```{r hcc5hmC-glmnetSuiteB-enet-minVs1seGenes}
 
 enet_gene_sign_1se_vec <- rownames(enetAll_coef_1se_mtx)[rowSums(enetAll_coef_1se_mtx)==30]
 enet_gene_sign_min_vec <- rownames(enetAll_coef_min_mtx)[rowSums(enetAll_coef_min_mtx)==30]
@@ -363,7 +363,7 @@ per iteration, or 4 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r enet-run-sim, cache=T, cache.vars='start_time', eval=F}
+```{r hcc5hmC-glmnetSuiteB-enet-run-sim, cache=T, cache.vars='start_time', eval=F}
 ### CLEAR CACHE
 start_time <- proc.time()
 
@@ -384,7 +384,7 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
       all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]
     )
     sim_stage_lcpm_mtx <- all_lcpm_mtx[sim_stage_samples_vec, ]
-    sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
+    sim_stage_group_vec <- hcc5hmC_all_group_vec[sim_stage_samples_vec]
     #print(table(sim_stage_group_vec))
 
     sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
@@ -408,7 +408,7 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
       # test error
       sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
       sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_1se_vec <- predict(
        cv_fit,
@@ -435,7 +435,7 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
       # test error
       sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
       sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_min_vec <- predict(
        cv_fit,
@@ -482,7 +482,7 @@ for (SIMno in 8:ncol(sim_control_qual_mtx)) {
 <!--
 First we extract simluation results and store into one big table:
 -->
-```{r enet-extract-sim-results, cache=T, cache.vars='enet_sim_results_frm', include=F}
+```{r hcc5hmC-glmnetSuiteB-enet-extract-sim-results, cache=T, cache.vars='enet_sim_results_frm', include=F}
 
 # CLEAR CACHE 
 
@@ -532,7 +532,7 @@ enet_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
 Have a table of simulation results - `enet_sim_results_frm`:
 -->
 
-```{r enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
+```{r hcc5hmC-glmnetSuiteB-enet-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
 # CLEAR CACHE 
 
 knitr::kable(head(with(enet_sim_results_frm, table(SimNo, Size))),
@@ -554,16 +554,16 @@ knitr::kable(head(enet_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_mi
 
 First examine results for one simulation run.
 
-```{r enet-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-enet-simRes-errors-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
 
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -688,16 +688,16 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 ```
 
 
-```{r enet-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-enet-simRes-features-bySim, cache=T, cache.vars='what-to-keep', fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
 
 ### CLEAR CACHE
 
 # get full model nzero ref
-nzero_1se_vec <- sapply(cv_enetAll_lst,
+nzero_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
-nzero_min_vec <- sapply(cv_enetAll_lst,
+nzero_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
@@ -837,16 +837,16 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 ### Summarize results across simulation runs  {.unnumbered}
 
-```{r enet-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-enet-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Model Errors by Sample Size'}
 
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_enetAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_enetAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -891,7 +891,7 @@ boxplot(error_1se_Bysize_lst,
 for(JJ in 1:length(error_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_1se_Bysize_lst[[JJ]],
+   y=error_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -946,7 +946,7 @@ boxplot(error_min_Bysize_lst,
 for(JJ in 1:length(error_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_min_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_min_Bysize_lst[[JJ]],
+   y=error_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -969,7 +969,7 @@ mtext(side=3, outer=T, cex=1.25, paste('enet fit error rates summarized across s
 
 ```
 
-```{r print-enet-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='enet Model Errors by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-print-enet-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='enet Model Errors by Sample Size'}
 
 ### CLEAR CACHE
 
@@ -992,7 +992,7 @@ knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm)
 
 Now look at feature selection.
 
-```{r enet-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-enet-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='enet Models Selected Features by Sample Size'}
 
 ### CLEAR CACHE
 
@@ -1043,7 +1043,7 @@ boxplot(p_singP_1se_Bysize_lst,
 for(JJ in 1:length(p_singP_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_1se_Bysize_lst[[JJ]],
+   y=p_singP_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1105,7 +1105,7 @@ boxplot(p_singP_min_Bysize_lst,
 for(JJ in 1:length(p_singP_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_min_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_min_Bysize_lst[[JJ]],
+   y=p_singP_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1130,7 +1130,7 @@ mtext(side=3, outer=T, cex=1.25, paste('enet fit feature selection summarized ac
 ```
 
 
-```{r print-enet-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='enet Models Selected Features by Sample Size'}
+```{r hcc5hmC-glmnetSuiteB-print-enet-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='enet Models Selected Features by Sample Size'}
 
 ### CLEAR CACHE
 

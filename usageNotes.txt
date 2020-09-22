@@ -1,0 +1,26 @@
+* Two data packages are required:
+   - HCC 5hmC-Seq: devtools::install_github("12379Monty/GSE112679")
+   - BC RNA-Seq: devtools::install_github("12379Monty/GSE96058")
+      - takes a while ...
+
+* rmd_files: parameter in _bookdown.yml controls which Rmd files are knitted in what order.
+
+* to knit the book from the command line:
+    % nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+
+* Heavy use of caching is made within the Rmd files (which is generally considered 
+bad practice, but it saves a lot of time when making small many small changes)
+   - **This can lead to unexpected and/or misleading results** eg. when the cache is
+broken for an R chunk but not its dependents.
+   - To break cache, change any line inside the chunk eg add a comment - ### CLEAR CACHE 
+   - Sometimes may be good to reknit the entire article.  To accomplish this
+      % rm -rf docs
+      % rm -rf _bookdown_files
+      % nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+
+* sections of the paper can be executed independently with some order restrictions:
+   - 03-preprocHCC5hmC.Rmd needs to be processed before 04-glmnetFitsHCC5hmC.Rmd
+and 05-glmnetSuiteHCC5hmC.Rmd
+   - 06-preprocBrCaRNASeq.Rmd needs to be processed before 07-glmnetFitsBrCaRNASeq.Rmd and
+   08-glmnnetSuiteBrCaRNASeq.Rmd
+

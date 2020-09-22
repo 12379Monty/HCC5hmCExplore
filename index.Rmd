@@ -52,14 +52,8 @@ KellyColors.vec <- c(
 )
 col_vec <- KellyColors.vec
 
+library(magrittr)
 
- # This is for kableExtra::kable_styling to work
- # specify for html
- options(knitr.table.format = 'html')
-
- # specify for pdf
- #options(knitr.table.format = 'latex')
-  
  FN <- 'tmp'
  # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
  kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
@@ -73,5 +67,12 @@ col_vec <- KellyColors.vec
  # The usual shotcuts
  zz <- function(n='') source(paste("t", n, sep=''))
 
+ # This is for kableExtra::kable_styling to work
+ # specify for html
+ options(knitr.table.format = 'html')
+
+ # specify for pdf
+ options(knitr.table.format = 'latex')
+  
 ```
 

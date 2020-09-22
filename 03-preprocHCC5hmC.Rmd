@@ -27,7 +27,7 @@ classification problem.
 
 
 
-```{r setup-preproc, include=F}
+```{r hcc5hmC-preproc-setup-preproc, include=F}
 #### CLEAR CACHE
    # file rmarkdown file management options: cache, figures
  figures_DIR <- file.path('Static', 'figures/')
@@ -39,14 +39,14 @@ classification problem.
 
 <!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
 <!-- TO TURN ON, SET eval=T                            -->
-```{r chunk-options, include=FALSE, eval=F}
+```{r hcc5hmC-preproc-chunk-options, include=FALSE, eval=F}
 #### CLEAR CACHE
 library("knitr")
 opts_chunk$set(eval = FALSE)
 ```
 
 <!-- Add base libraries -->
-```{r libraries, include=FALSE, eval=T}
+```{r hcc5hmC-preproc-libraries, include=FALSE, eval=T}
 #### CLEAR CACHE
 library("magrittr")
 ```
@@ -62,7 +62,7 @@ In the Cai et al. [@Cai:2019aa] paper, samples were separated into
 `Train` and `Val-1` subsets for model fitting and analysis.
 `Val-2` was used as an external validation set.
 
-```{r loadData, cache=F}
+```{r hcc5hmC-preproc-loadData, cache=F}
 #### CLEAR CACHE
 
 if (!("GSE112679" %in% rownames(installed.packages()))) {
@@ -74,19 +74,22 @@ if (!("GSE112679" %in% rownames(installed.packages()))) {
 
 library(GSE112679)
 
-# Strip GSE_ID prefix form object names
+# Strip GSE_ID prefix from object names
+### MOD: (2020.09.21) keep 'hcc5hmC_' as prefix to object names. 
+###     Otherwise we run into problems when different datasets are 
+###     analyzed
 for(OBJ in data(package='GSE112679')$results[, 'Item'])
-assign(sub('GSE112679_','',OBJ), get(OBJ))
+assign(sub('GSE112679_','hcc5hmC_',OBJ), get(OBJ))
 
 detach(package:GSE112679, unload = T )
 
 # Continue
 
-sampDesc$DxStage <- with(sampDesc, ifelse(outcome=='HCC', 
+hcc5hmC_sampDesc$DxStage <- with(hcc5hmC_sampDesc, ifelse(outcome=='HCC', 
    paste0(outcome,':',stage), outcome))
 
 with(
-  sampDesc %>% dplyr::filter(sampType == "blood"),
+  hcc5hmC_sampDesc %>% dplyr::filter(sampType == "blood"),
   knitr::kable(table(DxStage, trainValGroup, exclude = NULL),
    caption="GSE112679 Samples by Dx Group and Subset") %>% 
   kableExtra::kable_styling(full_width = F)
@@ -98,15 +101,12 @@ For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
 The appropriate outcome variable will be renamed or aliased `group`
 
-```{r subsetSamples, cache=T, cache.vars=c('sampDescA','groupCol'), echo=T}
+```{r hcc5hmC-preproc-subsetSamples, cache=T, cache.vars=c('hcc5hmC_sampDesc','hcc5hmC_groupCol'), echo=T}
 #### CLEAR CACHE
 
-# rename sampDesc - this seems to help with  masking
-sampDescA <- sampDesc
-
-# Use suffix 'A' for Analysis samples
-sampDescA <-
-  sampDescA %>%
+# Subset analysis samples
+hcc5hmC_sampDesc <-
+  hcc5hmC_sampDesc %>%
   dplyr::filter(sampType == "blood" &
     (trainValGroup %in% c("Train", "Val-1")) &
     ((outcome2 == "BenignHealthy") |
@@ -114,15 +114,15 @@ sampDescA <-
   dplyr::rename(group = outcome2) %>%
   dplyr::arrange(group, sampID)
 # Recode group
-sampDescA$group <- with(
-  sampDescA,
+hcc5hmC_sampDesc$group <- with(
+  hcc5hmC_sampDesc,
   ifelse(group == "BenignHealthy", "Control", group)
 )
-# set groupCol for later
-groupCol <- c("#F3C300", "#875692")
-names(groupCol) <- unique(sampDescA$group)
+# set hcc5hmC_groupCol for later
+hcc5hmC_groupCol <- c("#F3C300", "#875692")
+names(hcc5hmC_groupCol) <- unique(hcc5hmC_sampDesc$group)
 
-with(sampDescA, 
+with(hcc5hmC_sampDesc, 
  knitr::kable(table(group, exclude = NULL),
   caption="Samples used in this analysis") %>%
   kableExtra::kable_styling(full_width = F)
@@ -159,18 +159,15 @@ We will simply run a *minimal set of QC sanity checks* to make sure that
 there are no apparent systematic effects in the data.
 
 
-```{r getfeatures, cache=T, cache.vars=c('featureCountsA'), echo=T}
+```{r hcc5hmC-preproc-getfeatures, cache=T, cache.vars=c('hcc5hmC_featureCounts'), echo=T}
 #### CLEAR CACHE
 
-featureCountsA <- cbind(
-  Train_featureCount,
-  Val1_featureCount,
-  Val2_featureCount
-)[, rownames(sampDescA)]
+hcc5hmC_featureCounts <- cbind(
+  hcc5hmC_Train_featureCount,
+  hcc5hmC_Val1_featureCount,
+  hcc5hmC_Val2_featureCount
+)[, rownames(hcc5hmC_sampDesc)]
 
-
-# also rename genes_annot
-genes_annotA <- genes_annot
 
 
 ```
@@ -180,23 +177,23 @@ across samples. To detect shared variability, samples can be annotated and order
 according to sample features that may be linked to sample batch processing.  Here we 
 the samples have been ordered by group and sample id (an alias of geoAcc).
 
-```{r lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
+```{r hcc5hmC-preproc-lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
 #### CLEAR CACHE
 
 par(mar = c(1, 3, 2, 1))
-boxplot(log2(featureCountsA + 1),
+boxplot(log2(hcc5hmC_featureCounts + 1),
   ylim = c(3, 11), ylab='log2 Count',
   staplewex = 0,       # remove horizontal whisker lines
   staplecol = "white", # just to be totally sure :)
   outline = F,         # remove outlying points
   whisklty = 0,        # remove vertical whisker lines
   las = 2, horizontal = F, xaxt = "n",
-  border = groupCol[sampDescA$group]
+  border = hcc5hmC_groupCol[hcc5hmC_sampDesc$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol, 
+legend("top", legend = names(hcc5hmC_groupCol), text.col = hcc5hmC_groupCol, 
   ncol = 2, bty = "n")
 # Add reference lines
-SampleMedian <- apply(log2(featureCountsA + 1), 2, median)
+SampleMedian <- apply(log2(hcc5hmC_featureCounts + 1), 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 1), 
   las = 2, col = "grey", line = -1, tick = F)
@@ -209,18 +206,18 @@ keep track of the actual coverage which can be adequately tracked by distributio
 quantiles.
 -->
 
-```{r quantCountsA, echo=T}
+```{r hcc5hmC-preproc-hcc5hmC-quantCounts, echo=T}
 #### CLEAR CACHE
 
-featureCountsA_quant <- apply(featureCountsA, 2, function(CC) {
+hcc5hmC_featureCounts_quant <- apply(hcc5hmC_featureCounts, 2, function(CC) {
   c(quantile(CC, prob = c(.15, (1:3) / 4)), totCovM = sum(CC) / 1e6)
 })
 
-featureCountsA_quant2 <- apply(featureCountsA_quant, 1, function(RR) {
+hcc5hmC_featureCounts_quant2 <- apply(hcc5hmC_featureCounts_quant, 1, function(RR) {
   quantile(RR, prob = (1:3) / 4)
 })
 
-knitr::kable(featureCountsA_quant2,
+knitr::kable(hcc5hmC_featureCounts_quant2,
   digits = 1,
   caption = paste(
     "Coverage Summary - Columns are sample coverage quantiles and total coverage",
@@ -232,9 +229,9 @@ knitr::kable(featureCountsA_quant2,
 
 
 From this table, we see that 25% of the samples have total coverage exceeding
-`r round(featureCountsA_quant2["75%", "totCovM"],1)`M reads, 25% of samples
+`r round(hcc5hmC_featureCounts_quant2["75%", "totCovM"],1)`M reads, 25% of samples
 have a 15 percentile of coverage lower than
-`r featureCountsA_quant2["25%", "15%"]`, etc.  
+`r hcc5hmC_featureCounts_quant2["25%", "15%"]`, etc.  
 
 
 <!-- SKIP
@@ -244,12 +241,12 @@ two can be used interchangeably) -
 make sure the shapes of the distributions are not widely different.
 -->
 
-```{r rlr, cache=T, cache.vars='lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F}
+```{r hcc5hmC-preproc-rlr, cache=T, cache.vars='hcc5hmC_lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F}
 #### CLEAR CACHE
 
-lcpm_mtx <- edgeR::cpm(featureCountsA, log = T)
-median_vec <- apply(lcpm_mtx, 1, median)
-RLR_mtx <- sweep(lcpm_mtx, 1, median_vec, "-")
+hcc5hmC_lcpm_mtx <- edgeR::cpm(hcc5hmC_featureCounts, log = T)
+median_vec <- apply(hcc5hmC_lcpm_mtx, 1, median)
+RLR_mtx <- sweep(hcc5hmC_lcpm_mtx, 1, median_vec, "-")
 
 par(mar = c(1, 3, 2, 1))
 boxplot(RLR_mtx,
@@ -259,17 +256,17 @@ boxplot(RLR_mtx,
   outline = F, # remove outlying points
   whisklty = 0, # remove vertical whisker lines
   las = 2, horizontal = F, xaxt = "n",
-  border = groupCol[sampDescA$group]
+  border = hcc5hmC_groupCol[hcc5hmC_sampDesc$group]
 )
-legend("top", legend = names(groupCol), 
-  text.col = groupCol, ncol = 2, bty = "n")
+legend("top", legend = names(hcc5hmC_groupCol), 
+  text.col = hcc5hmC_groupCol, ncol = 2, bty = "n")
 # Add group Q1, Q3
-for (GRP in unique(sampDescA$group)) {
-  group_ndx <- which(sampDescA$group == GRP)
+for (GRP in unique(hcc5hmC_sampDesc$group)) {
+  group_ndx <- which(hcc5hmC_sampDesc$group == GRP)
   group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
      quantile, prob = c(.25, .75))
   abline(h = apply(group_Q1Q3_mtx, 1, median), 
-     col = groupCol[GRP], lwd = 2)
+     col = hcc5hmC_groupCol[GRP], lwd = 2)
 }
 
 
@@ -312,26 +309,26 @@ downstream analyses.
 
 To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
-```{r densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=T}
+```{r hcc5hmC-preproc-densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=T}
 #### CLEAR CACHE
 
 par(mar = c(4, 3, 2, 1))
-plot(density(lcpm_mtx[, 1]),
-  col = groupCol[sampDescA$group[1]],
+plot(density(hcc5hmC_lcpm_mtx[, 1]),
+  col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[1]],
   lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = "log2 CPM"
 )
 abline(v = 0, col = 3)
 # After verifying no outliers, can plot a random subset 
-for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
-  den <- density(lcpm_mtx[, JJ])
-  lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
+for (JJ in sample(2:ncol(hcc5hmC_lcpm_mtx), size = 100)) {
+  den <- density(hcc5hmC_lcpm_mtx[, JJ])
+  lines(den$x, den$y, col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[JJ]], lwd = 2)
 } # for(JJ
-legend("topright", legend = names(groupCol), 
-  text.col = groupCol, bty = "n")
+legend("topright", legend = names(hcc5hmC_groupCol), 
+  text.col = hcc5hmC_groupCol, bty = "n")
 
 ```
 
-`r  LibSizeSum <- summary( colSums(featureCountsA) / 1e6 )`
+`r  LibSizeSum <- summary( colSums(hcc5hmC_featureCounts) / 1e6 )`
 `r CPM_THR <- 3; SAMP_THR <- 25` 
 
 As is typically the case with RNA-Seq data, we notice many weakly represented genes 
@@ -358,43 +355,45 @@ greatest sequencing depth (library size `r round(LibSizeSum['Max.'],1)` million)
 
 Remove weakly represented genes and re-plot densities.
 
-`r weak_flg <- rowSums(edgeR::cpm(featureCountsA) > CPM_THR) < SAMP_THR `
+`r weak_flg <- rowSums(edgeR::cpm(hcc5hmC_featureCounts) > CPM_THR) < SAMP_THR `
 Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
 
-```{r removeWeak, cache=T, cache.vars=c('featureCountsAF', 'genes_annotAF', 'lcpm_mtx'), echo=T, include=F}
+```{r hcc5hmC-preproc-removeWeak, cache=T, cache.vars=c('hcc5hmC_featureCountsF', 'hcc5hmC_genes_annotF', 'hcc5hmC_F_lcpm_mtx'), echo=T, include=F}
+
 #### CLEAR CACHE
 
 # Use suffix 'F' for Filtered genes
-featureCountsAF <- featureCountsA[!weak_flg, ]
+hcc5hmC_featureCounts_F <- hcc5hmC_featureCounts[!weak_flg, ]
 
-genes.ndx <- match(rownames(featureCountsAF), genes_annotA$Symbol)
-if(sum(is.na(genes.ndx))) stop("featureCountsA/genes_annotA mismatch")
-genes_annotAF <- genes_annotA[genes.ndx,]
+genes.ndx <- match(rownames(hcc5hmC_featureCounts_F), hcc5hmC_genes_annot$Symbol)
+if(sum(is.na(genes.ndx))) stop("hcc5hmC_featureCounts/hcc5hmC_genes_annot mismatch")
+hcc5hmC_genes_annot_F <- hcc5hmC_genes_annot[genes.ndx,]
 
-lcpm_mtx <- edgeR::cpm(featureCountsAF, log = T)
-dim(lcpm_mtx)
+hcc5hmC_F_lcpm_mtx <- edgeR::cpm(hcc5hmC_featureCounts_F, log = T)
+dim(hcc5hmC_F_lcpm_mtx)
 
-rm(featureCountsA)
+rm(hcc5hmC_featureCounts)
 
 ```
 
 
-```{r densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=T}
+```{r hcc5hmC-preproc-densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=T}
+
 #### CLEAR CACHE
 
 par(mar = c(4, 3, 2, 1))
-plot(density(lcpm_mtx[, 1]),
-  col = groupCol[sampDescA$group[1]],
+plot(density(hcc5hmC_F_lcpm_mtx[, 1]),
+  col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[1]],
   lwd = 2, ylim = c(0, .25), las = 2, main = "", xlab = "log2 CPM"
 )
 #abline(v = 0, col = 3)
 # After verifying no outliers, can plot a random subset 
-for (JJ in sample(2:ncol(lcpm_mtx), size = 100)) {
-  den <- density(lcpm_mtx[, JJ])
-  lines(den$x, den$y, col = groupCol[sampDescA$group[JJ]], lwd = 2)
+for (JJ in sample(2:ncol(hcc5hmC_F_lcpm_mtx), size = 100)) {
+  den <- density(hcc5hmC_F_lcpm_mtx[, JJ])
+  lines(den$x, den$y, col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[JJ]], lwd = 2)
 } # for(JJ
-legend("topright", legend = names(groupCol), 
-  text.col = groupCol, bty = "n")
+legend("topright", legend = names(hcc5hmC_groupCol), 
+  text.col = hcc5hmC_groupCol, bty = "n")
 
 ```
 
@@ -412,54 +411,53 @@ samples.
 Before producing the MDS plot we will normalize the distributions.
 We will store the data into s `DGEList` object as this is convenient
 when running many of the analyses implemented in the edgeR and limma packages.
-Call the set 'AF', for set 'A', 'Filtered'.
 
-```{r getDGEL, cache=T, cache.var=c('AF_dgel', 'AF_lcmp_mtx')}
+```{r hcc5hmC-preproc-getDGEL, cache=T, cache.var=c('hcc5hmC_F_dgel', 'hcc5hmC_F_lcpm_mtx')}
+
 #### CLEAR CACHE
 
-AF_dgel <- edgeR::DGEList(
-  counts = featureCountsAF,
-  genes = genes_annotAF,
-  samples = sampDescA,
-  group = sampDescA$group
+hcc5hmC_F_dgel <- edgeR::DGEList(
+  counts = hcc5hmC_featureCounts_F,
+  genes = hcc5hmC_genes_annot_F,
+  samples = hcc5hmC_sampDesc,
+  group = hcc5hmC_sampDesc$group
 )
-AF_dgel <- edgeR::calcNormFactors(AF_dgel)
-AF_lcmp_mtx <- edgeR::cpm(AF_dgel, log = T)
+hcc5hmC_F_dgel <- edgeR::calcNormFactors(hcc5hmC_F_dgel)
+hcc5hmC_F_lcpm_mtx <- edgeR::cpm(hcc5hmC_F_dgel, log = T)
 
-# Save AF_dgel to facilitate restarting
+# Save hcc5hmC_F_dgel to facilitate restarting
 # remove from final version
-save(list = "AF_dgel", file = "RData/AF_dgel")
+save(list = "hcc5hmC_F_dgel", file = "RData/hcc5hmC_F_dgel")
 ```
 
 Verify that the counts are properly normalized.
 
 
-```{r normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
+```{r hcc5hmC-preproc-normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
 #### CLEAR CACHE
 
 par(mar = c(1, 3, 2, 1))
-boxplot(AF_lcmp_mtx,
+boxplot(hcc5hmC_F_lcpm_mtx,
   ylim = c(1, 8), ylab='Normalized Log CPM',
   staplewex = 0,       # remove horizontal whisker lines
   staplecol = "white", # just to be totally sure :)
   outline = F,         # remove outlying points
   whisklty = 0,        # remove vertical whisker lines
   las = 2, horizontal = F, xaxt = "n",
-  border = groupCol[sampDescA$group]
+  border = hcc5hmC_groupCol[hcc5hmC_sampDesc$group]
 )
-legend("top", legend = names(groupCol), text.col = groupCol,
+legend("top", legend = names(hcc5hmC_groupCol), text.col = hcc5hmC_groupCol,
   ncol = 2, bty = "n")
 # Add reference lines
-SampleMedian <- apply(AF_lcmp_mtx, 2, median)
+SampleMedian <- apply(hcc5hmC_F_lcpm_mtx, 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 1),
   las = 2, col = "grey", line = -1, tick = F)
 
 ```
 
-Proceed with MDS plots.
 
-```{r plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values', echo=T}
+```{r hcc5hmC-preproc-plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values', echo=T}
 #### CLEAR CACHE
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
@@ -468,17 +466,17 @@ par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 # simply a matter of convenience to save time
 # remove from final version
 set.seed(1)
-samp_ndx <- sample(1:ncol(AF_lcmp_mtx), size = 500)
-MDS.out <- limma::plotMDS(AF_lcmp_mtx[, samp_ndx],
-  col = groupCol[sampDescA$group[samp_ndx]], pch = 1
+samp_ndx <- sample(1:ncol(hcc5hmC_F_lcpm_mtx), size = 500)
+MDS.out <- limma::plotMDS(hcc5hmC_F_lcpm_mtx[, samp_ndx],
+  col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[samp_ndx]], pch = 1
 )
 legend("topleft",
-  legend = names(groupCol),
-  text.col = groupCol, bty = "n"
+  legend = names(hcc5hmC_groupCol),
+  text.col = hcc5hmC_groupCol, bty = "n"
 )
 
-MDS.out <- limma::plotMDS(AF_lcmp_mtx[, samp_ndx],
-  col = groupCol[sampDescA$group[samp_ndx]], pch = 1,
+MDS.out <- limma::plotMDS(hcc5hmC_F_lcpm_mtx[, samp_ndx],
+  col = hcc5hmC_groupCol[hcc5hmC_sampDesc$group[samp_ndx]], pch = 1,
   dim.plot = 3:4
 )
 ```
@@ -491,11 +489,11 @@ core set, but in no particular direction.  There is some structure in the
 `glMDSPlot` from package `Glimma` provides an interactive MDS 
 plot that can extremely usful for exploration
 
-```{r GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=T}
+```{r hcc5hmC-preproc-GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=T}
 #### CLEAR CACHE
 
-Glimma::glMDSPlot(AF_dgel[, samp_ndx],
-  groups = AF_dgel$samples[
+Glimma::glMDSPlot(hcc5hmC_F_dgel[, samp_ndx],
+  groups = hcc5hmC_F_dgel$samples[
     samp_ndx,
     c("group", "trainValGroup", "sampType", "tissue", "title", "stage")
   ],
@@ -536,10 +534,10 @@ Before proceeding with the statistical modeling used for the
 differential expression analysis, we need to set up a
 model design matrix.
 
-```{r DEADesign, cache=F, include=T, echo=T, include=T}
+```{r hcc5hmC-preproc-DEADesign, cache=F, include=T, echo=T, include=T}
 #### CLEAR CACHE
 
-Design_mtx <- model.matrix( ~  -1 + group, data=AF_dgel$samples)
+Design_mtx <- model.matrix( ~  -1 + group, data=hcc5hmC_F_dgel$samples)
 colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
 
 cat("colSums(Design_mtx):\n")
@@ -554,7 +552,7 @@ Contrasts_mtx
 
 ```
 
-```{r printDesign, echo=T, include=F}
+```{r hcc5hmC-preproc-printDesign, echo=T, include=F}
 #### CLEAR CACHE
  knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
   kableExtra::kable_styling(full_width = F)
@@ -571,11 +569,11 @@ normally distributed and the mean-variance relationship is accommodated using pr
 weights calculated by the voom function.  We apply this transformation next.
 
 
-```{r Voom1, cache=T, cache.vars=c('filteredCountsAF_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=T}
+```{r hcc5hmC-preproc-Voom1, cache=T, cache.vars=c('hcc5hmC_F_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=T}
 #### CLEAR CACHE
 
 par(mfrow=c(1,1))
-filteredCountsAF_voom <- limma::voom(AF_dgel, Design_mtx, plot=T)
+hcc5hmC_F_voom <- limma::voom(hcc5hmC_F_dgel, Design_mtx, plot=T)
 
 ```
 
@@ -609,23 +607,23 @@ of interest, in our case HCC vs Control.
 
 Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
 
-```{r lmFit, cache=T, echo=T, cache.vars=c('filteredCountsAF_voom_efit','filteredCountsAF_voom_efit_dt'),echo=T}
+```{r hcc5hmC-preproc-lmFit, cache=T, echo=T, cache.vars=c('hcc5hmC_F_voom_efit','hcc5hmC_F_voom_efit_dt'),echo=T}
 #### CLEAR CACHE
 
 
- filteredCountsAF_voom_fit <- limma::lmFit(filteredCountsAF_voom, Design_mtx)
- colnames(filteredCountsAF_voom_fit$coefficients) <- sub("\\(Intercept\\)", "Intercept",
- colnames(filteredCountsAF_voom_fit$coefficients) )
+ hcc5hmC_F_voom_fit <- limma::lmFit(hcc5hmC_F_voom, Design_mtx)
+ colnames(hcc5hmC_F_voom_fit$coefficients) <- sub("\\(Intercept\\)", "Intercept",
+ colnames(hcc5hmC_F_voom_fit$coefficients) )
 
- filteredCountsAF_voom_fit <- limma::contrasts.fit(
-    filteredCountsAF_voom_fit, contrasts=Contrasts_mtx)
+ hcc5hmC_F_voom_fit <- limma::contrasts.fit(
+    hcc5hmC_F_voom_fit, contrasts=Contrasts_mtx)
 
- filteredCountsAF_voom_efit <- limma::eBayes(filteredCountsAF_voom_fit)
+ hcc5hmC_F_voom_efit <- limma::eBayes(hcc5hmC_F_voom_fit)
 
- filteredCountsAF_voom_efit_dt <-
- limma::decideTests(filteredCountsAF_voom_efit,adjust.method = "BH", p.value = 0.05)
+ hcc5hmC_F_voom_efit_dt <-
+ limma::decideTests(hcc5hmC_F_voom_efit,adjust.method = "BH", p.value = 0.05)
  
- knitr::kable(t(summary(filteredCountsAF_voom_efit_dt)),
+ knitr::kable(t(summary(hcc5hmC_F_voom_efit_dt)),
   caption="DE Results at FDR = 0.05") %>% 
   kableExtra::kable_styling(full_width = F)
 
@@ -642,40 +640,40 @@ We may also be interested in whether certain gene features are
 related to gene identification.  Gene GC content, for example, might be
 of interest.
 
-```{r mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=T}
+```{r hcc5hmC-preproc-mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=T}
 #### CLEAR CACHE
 
 
 par(mfrow=c(1,3), mar=c(4.5,4.5,2,1),oma=c(1,1,2,0))
 
 # log-fold-change vs ave-expr
-limma::plotMD(filteredCountsAF_voom_efit,
+limma::plotMD(hcc5hmC_F_voom_efit,
  ylim = c(-0.4, 0.4),
  column='HCCvsControl',
- status=filteredCountsAF_voom_efit_dt[,'HCCvsControl'],
+ status=hcc5hmC_F_voom_efit_dt[,'HCCvsControl'],
  hl.pch = 16, hl.col = c("lightblue", "pink"), hl.cex = .5,
  bg.pch = 16, bg.col = "grey", bg.cex = 0.5,
  main = '',
  xlab = paste0(
     "Average log-expression: IQR=",
-    paste(round(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 3) / 4), 2),
+    paste(round(quantile(hcc5hmC_F_voom_efit$Amean, prob = c(1, 3) / 4), 2),
       collapse = ", "
     )
   ),
   ylab = paste0(
     "log-fold-change: IQR=",
-    paste(round(quantile(filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 3) / 4), 2),
+    paste(round(quantile(hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 3) / 4), 2),
       collapse = ", "
     )
   ),
   legend = F, cex.lab=1.5
 )
 abline(h = 0, col = "black")
-rug(quantile(filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 2, 3) / 4),
+rug(quantile(hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 2, lwd = 2
 )
-rug(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 2, 3) / 4),
+rug(quantile(hcc5hmC_F_voom_efit$Amean, prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 1, lwd = 2
 )
@@ -683,8 +681,8 @@ rug(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 2, 3) / 4),
 # log-fold-change vs identification
 
 boxplot(split(
- filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'],
- filteredCountsAF_voom_efit_dt[,'HCCvsControl']),
+ hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'],
+ hcc5hmC_F_voom_efit_dt[,'HCCvsControl']),
  outline=F,
  border=c("pink", "grey", "lightblue"), xaxt='n',
  ylab='log-fold-change', ylim=c(-.4, .4),
@@ -693,14 +691,14 @@ boxplot(split(
 axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
 
 # gc vs identification
-genes_ndx <- match(rownames(filteredCountsAF_voom_efit), genes_annotAF$Symbol)
-if(sum(is.na(genes_ndx))) stop("filteredCountsAF_voom_efit/genes_annotAF: genes mismatch")
-GC_vec <- with(genes_annotAF[genes_ndx,],(G+C)/(A+C+G+T))
+genes_ndx <- match(rownames(hcc5hmC_F_voom_efit), hcc5hmC_genes_annot_F$Symbol)
+if(sum(is.na(genes_ndx))) stop("hcc5hmC_F_voom_efit/hcc5hmC_genes_annot_F: genes mismatch")
+GC_vec <- with(hcc5hmC_genes_annot_F[genes_ndx,],(G+C)/(A+C+G+T))
 
 
 boxplot(split(
  GC_vec,
- filteredCountsAF_voom_efit_dt[,'HCCvsControl']),
+ hcc5hmC_F_voom_efit_dt[,'HCCvsControl']),
  outline=F,
  border=c("pink", "grey", "lightblue"), xaxt='n',
  ylab='gene-gc', cex.lab=1.5
@@ -710,23 +708,23 @@ axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
  #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
 ```
 
-```{r quantlogFC,echo=T}
+```{r hcc5hmC-preproc-quantlogFC,echo=T}
 #### CLEAR CACHE
 
-featureCountsAF_logFC_sum <- sapply(
+hcc5hmC_featureCounts_F_logFC_sum <- sapply(
  split(
- filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'],
- filteredCountsAF_voom_efit_dt[,'HCCvsControl']),
+ hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'],
+ hcc5hmC_F_voom_efit_dt[,'HCCvsControl']),
  quantile, prob = (1:3) / 4)
 
-colnames(featureCountsAF_logFC_sum) <- as.character(factor(
- colnames(featureCountsAF_logFC_sum), 
+colnames(hcc5hmC_featureCounts_F_logFC_sum) <- as.character(factor(
+ colnames(hcc5hmC_featureCounts_F_logFC_sum), 
  levels=c("-1", "0", "1"),
  labels=c('down', 'notDE', 'up')
 ))
 
 
-knitr::kable(featureCountsAF_logFC_sum,
+knitr::kable(hcc5hmC_featureCounts_F_logFC_sum,
   digits = 2,
   caption = "log FC quartiles by gene identification") %>%
   kableExtra::kable_styling(full_width = F)
@@ -751,8 +749,8 @@ between the mean of the down regulated gene population is significantly differen
 than the mean of the other gene population even though the difference is
 quite small
 (`r round( 
-mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']=='-1']) -
-mean(GC_vec[filteredCountsAF_voom_efit_dt[,'HCCvsControl']!='-1']),
+mean(GC_vec[hcc5hmC_F_voom_efit_dt[,'HCCvsControl']=='-1']) -
+mean(GC_vec[hcc5hmC_F_voom_efit_dt[,'HCCvsControl']!='-1']),
 3)`).
 
 These asymmetries are minor, but it would still be good to establish that
@@ -768,43 +766,43 @@ from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 The number of differentially expressed genes are greatly reduced if we 
 impose a minimal fold-change requirement of 10%.
 
-```{r mdPlotTfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
+```{r hcc5hmC-preproc-mdPlotTfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
 #### CLEAR CACHE
 
-filteredCountsAF_voom_tfit <- limma::treat(filteredCountsAF_voom_fit, lfc=log2(1.10))
-filteredCountsAF_voom_tfit_dt <- limma::decideTests(filteredCountsAF_voom_tfit)
+hcc5hmC_F_voom_tfit <- limma::treat(hcc5hmC_F_voom_fit, lfc=log2(1.10))
+hcc5hmC_F_voom_tfit_dt <- limma::decideTests(hcc5hmC_F_voom_tfit)
 
 cat("10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:\n")
-summary(filteredCountsAF_voom_tfit_dt)
+summary(hcc5hmC_F_voom_tfit_dt)
 
 # log-fold-change vs ave-expr
-limma::plotMD(filteredCountsAF_voom_efit,
+limma::plotMD(hcc5hmC_F_voom_efit,
  ylim = c(-0.5, 0.5),
  column='HCCvsControl',
- status=filteredCountsAF_voom_tfit_dt[,'HCCvsControl'],
+ status=hcc5hmC_F_voom_tfit_dt[,'HCCvsControl'],
  hl.pch = 16, hl.col = c("blue", "red"), hl.cex = .7,
  bg.pch = 16, bg.col = "grey", bg.cex = 0.5,
  main = '',
  xlab = paste0(
     "Average log-expression: IQR=",
-    paste(round(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 3) / 4), 2),
+    paste(round(quantile(hcc5hmC_F_voom_efit$Amean, prob = c(1, 3) / 4), 2),
       collapse = ", "
     )
   ),
   ylab = paste0(
     "log-fold-change: IQR=",
-    paste(round(quantile(filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 3) / 4), 2),
+    paste(round(quantile(hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 3) / 4), 2),
       collapse = ", "
     )
   ),
   legend = F
 )
 abline(h = 0, col = "black")
-rug(quantile(filteredCountsAF_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 2, 3) / 4),
+rug(quantile(hcc5hmC_F_voom_efit$coefficients[, 'HCCvsControl'], prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 2, lwd = 2
 )
-rug(quantile(filteredCountsAF_voom_efit$Amean, prob = c(1, 2, 3) / 4),
+rug(quantile(hcc5hmC_F_voom_efit$Amean, prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 1, lwd = 2
 )
@@ -830,11 +828,11 @@ We can extract sigma and signal from the fit objects to get SNR values for each 
 to see in what SNR regime the 5hmC gene body data are.
 
  
-```{r altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
+```{r hcc5hmC-preproc-altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
 #### CLEAR CACHE
-lib.size <- colSums(AF_dgel$counts)
+lib.size <- colSums(hcc5hmC_F_dgel$counts)
 
-fit <- filteredCountsAF_voom_efit
+fit <- hcc5hmC_F_voom_efit
 sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
 sy <- sqrt(fit$sigma)
 
@@ -849,11 +847,11 @@ boxplot(cbind(BCV_mtx, CV), outline=F)
 -->
 
 
-```{r plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
+```{r hcc5hmC-preproc-plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
 #### CLEAR CACHE
 
-Effect <- abs(filteredCountsAF_voom_efit$coefficients[,'HCCvsControl'])
-Noise <- filteredCountsAF_voom_efit$sigma
+Effect <- abs(hcc5hmC_F_voom_efit$coefficients[,'HCCvsControl'])
+Noise <- hcc5hmC_F_voom_efit$sigma
 SNR <- Effect/Noise
 
 plot(spatstat::CDF(density(SNR)),

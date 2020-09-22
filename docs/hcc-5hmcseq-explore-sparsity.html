@@ -312,31 +312,31 @@ EPS <- 0.05    # Have no idea what "small" epsilon means
 -->
 <p>First we divide the analysis dataset into <code>train</code> and <code>test</code> in a <span class="math inline">\(4\)</span>:1 ratio.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb35-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-2"></a>train_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(AF_dgel<span class="op">$</span>samples,</span>
-<span id="cb35-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-3"></a>AF_dgel<span class="op">$</span>samples<span class="op">$</span>sampID[caret<span class="op">::</span><span class="kw">createDataPartition</span>(<span class="dt">y=</span>group, <span class="dt">p=</span>trainP, <span class="dt">list=</span>F)]</span>
+<span id="cb35-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-2"></a>hcc5hmC_train_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(hcc5hmC_F_dgel<span class="op">$</span>samples,</span>
+<span id="cb35-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-3"></a>hcc5hmC_F_dgel<span class="op">$</span>samples<span class="op">$</span>sampID[caret<span class="op">::</span><span class="kw">createDataPartition</span>(<span class="dt">y=</span>group, <span class="dt">p=</span>trainP, <span class="dt">list=</span>F)]</span>
 <span id="cb35-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-4"></a>)</span>
 <span id="cb35-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-5"></a></span>
-<span id="cb35-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-6"></a>test_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(AF_dgel<span class="op">$</span>samples,</span>
-<span id="cb35-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-7"></a><span class="kw">setdiff</span>(sampID, train_sampID_vec)</span>
+<span id="cb35-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-6"></a>hcc5hmC_test_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(hcc5hmC_F_dgel<span class="op">$</span>samples,</span>
+<span id="cb35-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-7"></a><span class="kw">setdiff</span>(sampID, hcc5hmC_train_sampID_vec)</span>
 <span id="cb35-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-8"></a>)</span>
 <span id="cb35-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-9"></a></span>
-<span id="cb35-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-10"></a>train_group_vec &lt;-<span class="st"> </span>AF_dgel<span class="op">$</span>samples[train_sampID_vec, <span class="st">&#39;group&#39;</span>]</span>
-<span id="cb35-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-11"></a><span class="kw">names</span>(train_group_vec) &lt;-<span class="st"> </span>AF_dgel<span class="op">$</span>samples[train_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
+<span id="cb35-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-10"></a>hcc5hmC_train_group_vec &lt;-<span class="st"> </span>hcc5hmC_F_dgel<span class="op">$</span>samples[hcc5hmC_train_sampID_vec, <span class="st">&#39;group&#39;</span>]</span>
+<span id="cb35-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-11"></a><span class="kw">names</span>(hcc5hmC_train_group_vec) &lt;-<span class="st"> </span>hcc5hmC_F_dgel<span class="op">$</span>samples[hcc5hmC_train_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
 <span id="cb35-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-12"></a></span>
-<span id="cb35-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-13"></a>test_group_vec &lt;-<span class="st"> </span>AF_dgel<span class="op">$</span>samples[test_sampID_vec, <span class="st">&#39;group&#39;</span>]</span>
-<span id="cb35-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-14"></a><span class="kw">names</span>(test_group_vec) &lt;-<span class="st"> </span>AF_dgel<span class="op">$</span>samples[test_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
+<span id="cb35-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-13"></a>hcc5hmC_test_group_vec &lt;-<span class="st"> </span>hcc5hmC_F_dgel<span class="op">$</span>samples[hcc5hmC_test_sampID_vec, <span class="st">&#39;group&#39;</span>]</span>
+<span id="cb35-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-14"></a><span class="kw">names</span>(hcc5hmC_test_group_vec) &lt;-<span class="st"> </span>hcc5hmC_F_dgel<span class="op">$</span>samples[hcc5hmC_test_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
 <span id="cb35-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-15"></a></span>
-<span id="cb35-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-16"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(train_group_vec),</span>
+<span id="cb35-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-16"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(hcc5hmC_train_group_vec),</span>
 <span id="cb35-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-17"></a>  <span class="dt">caption=</span><span class="st">&quot;Train set&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb35-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb35-18"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:getTrainVal">Table 4.1: </span>Train set
+<span id="tab:hcc5hmC-glmnetFit-getTrainVal">Table 4.1: </span>Train set
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-train_group_vec
+hcc5hmC_train_group_vec
 </th>
 <th style="text-align:right;">
 Freq
@@ -362,17 +362,17 @@ HCC
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb36-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(test_group_vec),</span>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb36-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(hcc5hmC_test_group_vec),</span>
 <span id="cb36-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb36-2"></a>  <span class="dt">caption=</span><span class="st">&quot;Test set&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb36-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb36-3"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:getTrainVal">Table 4.1: </span>Test set
+<span id="tab:hcc5hmC-glmnetFit-getTrainVal">Table 4.1: </span>Test set
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-test_group_vec
+hcc5hmC_test_group_vec
 </th>
 <th style="text-align:right;">
 Freq
@@ -398,8 +398,8 @@ HCC
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb37-1"></a>train_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(lcpm_mtx[,train_sampID_vec])</span>
-<span id="cb37-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb37-2"></a>test_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(lcpm_mtx[,test_sampID_vec])</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb37-1"></a>hcc5hmC_train_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(hcc5hmC_lcpm_mtx[,hcc5hmC_train_sampID_vec])</span>
+<span id="cb37-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb37-2"></a>hcc5hmC_test_lcpm_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(hcc5hmC_lcpm_mtx[,hcc5hmC_test_sampID_vec])</span></code></pre></div>
 <p>We explore some glmnet fits and the “bet on sparsity”.
 We consider three models, specified by the value of the
 <strong>alpha</strong> parameter in the elastic net parametrization:<br />
@@ -437,24 +437,24 @@ stability of performance will be investigated in the next section.</p>
 training data. We’ll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-1"></a><span class="co"># This is too variable, both in terms of fold size And composition</span></span>
-<span id="cb38-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-2"></a><span class="co">#foldid_vec &lt;- sample(1:10, size=length(train_group_vec), replace=T)</span></span>
+<span id="cb38-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-2"></a><span class="co">#foldid_vec &lt;- sample(1:10, size=length(hcc5hmC_train_group_vec), replace=T)</span></span>
 <span id="cb38-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-3"></a></span>
 <span id="cb38-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-4"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb38-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-5"></a>train_foldid_vec &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createFolds</span>(</span>
-<span id="cb38-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-6"></a> <span class="kw">factor</span>(train_group_vec), </span>
+<span id="cb38-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-5"></a>hcc5hmC_train_foldid_vec &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createFolds</span>(</span>
+<span id="cb38-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-6"></a> <span class="kw">factor</span>(hcc5hmC_train_group_vec), </span>
 <span id="cb38-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-7"></a> <span class="dt">k=</span>K_FOLD,</span>
 <span id="cb38-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-8"></a> <span class="dt">list=</span>F)</span>
 <span id="cb38-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-9"></a></span>
-<span id="cb38-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-10"></a><span class="co"># train_foldid_vec contains the left-out IDs </span></span>
+<span id="cb38-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-10"></a><span class="co"># hcc5hmC_train_foldid_vec contains the left-out IDs </span></span>
 <span id="cb38-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-11"></a><span class="co"># the rest are kept</span></span>
-<span id="cb38-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-12"></a>fold_out_tbl &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(train_group_vec, train_foldid_vec),</span>
+<span id="cb38-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-12"></a>fold_out_tbl &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(hcc5hmC_train_group_vec, hcc5hmC_train_foldid_vec),</span>
 <span id="cb38-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-13"></a>  table)</span>
 <span id="cb38-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-14"></a><span class="kw">rownames</span>(fold_out_tbl) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">rownames</span>(fold_out_tbl), <span class="st">&#39;- Out&#39;</span>) </span>
 <span id="cb38-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-15"></a></span>
-<span id="cb38-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-16"></a>fold_in_tbl &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(train_foldid_vec)),</span>
-<span id="cb38-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-17"></a>  <span class="cf">function</span>(FOLD) <span class="kw">table</span>(train_group_vec[train_foldid_vec <span class="op">!=</span><span class="st"> </span>FOLD])))</span>
+<span id="cb38-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-16"></a>fold_in_tbl &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(hcc5hmC_train_foldid_vec)),</span>
+<span id="cb38-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-17"></a>  <span class="cf">function</span>(FOLD) <span class="kw">table</span>(hcc5hmC_train_group_vec[hcc5hmC_train_foldid_vec <span class="op">!=</span><span class="st"> </span>FOLD])))</span>
 <span id="cb38-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-18"></a><span class="kw">rownames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">rownames</span>(fold_in_tbl), <span class="st">&#39;- In&#39;</span>) </span>
-<span id="cb38-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-19"></a><span class="kw">colnames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(train_foldid_vec)))</span>
+<span id="cb38-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-19"></a><span class="kw">colnames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(hcc5hmC_train_foldid_vec)))</span>
 <span id="cb38-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-20"></a></span>
 <span id="cb38-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-21"></a></span>
 <span id="cb38-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-22"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">rbind</span>(fold_in_tbl, fold_out_tbl[,<span class="kw">colnames</span>(fold_in_tbl)]),</span>
@@ -462,7 +462,7 @@ to folds while keeping the outcome ratios constant across folds.</p>
 <span id="cb38-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb38-24"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:getTrainFolds">Table 4.2: </span>training samples fold composition
+<span id="tab:hcc5hmC-glmnetFit-getTrainFolds">Table 4.2: </span>training samples fold composition
 </caption>
 <thead>
 <tr>
@@ -693,7 +693,7 @@ The link function is given by:</p>
 <p><span class="math display">\[g(y) = h^{-1}(y) = ln(\frac{y}{1-y})\]</span></p>
 <p>This link function is called the <em>logit</em> function, and its inverse the <em>logistic</em>
 function.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb39-1"></a>logistic_f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x))</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb39-1"></a>logistic_f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">ifelse</span>(<span class="kw">is.nan</span>(<span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x))), <span class="dv">1</span>, <span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x)))</span></code></pre></div>
 <p>We should also point out that the cv error rates quoted in various <code>glmnet</code> summaries
 are computed from out-of-fold predictions. In other words,
 we cannot recover the <code>cvm</code> component of a glmnet fit object by comparing
@@ -719,10 +719,10 @@ performance in this data set.
 -->
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-1"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb40-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-2"></a></span>
-<span id="cb40-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-3"></a>cv_lasso &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb40-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-4"></a> <span class="dt">x=</span>train_lcpm_mtx,</span>
-<span id="cb40-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-5"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb40-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-6"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb40-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-3"></a>hcc5hmC_cv_lasso &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb40-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-4"></a> <span class="dt">x=</span>hcc5hmC_train_lcpm_mtx,</span>
+<span id="cb40-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-5"></a> <span class="dt">y=</span>hcc5hmC_train_group_vec,</span>
+<span id="cb40-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-6"></a> <span class="dt">foldid=</span>hcc5hmC_train_foldid_vec,</span>
 <span id="cb40-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-7"></a> <span class="dt">alpha=</span><span class="dv">1</span>,</span>
 <span id="cb40-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-8"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>, </span>
 <span id="cb40-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-9"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -731,13 +731,13 @@ performance in this data set.
 <span id="cb40-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-12"></a>)</span>
 <span id="cb40-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-13"></a></span>
 <span id="cb40-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-14"></a><span class="kw">message</span>(<span class="st">&quot;lasso time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## lasso time: 11.62s</code></pre>
+<pre><code>## lasso time: 12.89s</code></pre>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-1"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb42-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-2"></a></span>
-<span id="cb42-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-3"></a>cv_ridge &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb42-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-4"></a> <span class="dt">x=</span>train_lcpm_mtx,</span>
-<span id="cb42-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-5"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb42-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-6"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb42-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-3"></a>hcc5hmC_cv_ridge &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb42-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-4"></a> <span class="dt">x=</span>hcc5hmC_train_lcpm_mtx,</span>
+<span id="cb42-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-5"></a> <span class="dt">y=</span>hcc5hmC_train_group_vec,</span>
+<span id="cb42-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-6"></a> <span class="dt">foldid=</span>hcc5hmC_train_foldid_vec,</span>
 <span id="cb42-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-7"></a> <span class="dt">alpha=</span><span class="dv">0</span>,</span>
 <span id="cb42-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-8"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>, </span>
 <span id="cb42-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-9"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -746,13 +746,13 @@ performance in this data set.
 <span id="cb42-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-12"></a>)</span>
 <span id="cb42-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-13"></a></span>
 <span id="cb42-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-14"></a><span class="kw">message</span>(<span class="st">&quot;ridge time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## ridge time: 102.37s</code></pre>
+<pre><code>## ridge time: 132.58s</code></pre>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-1"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb44-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-2"></a></span>
-<span id="cb44-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-3"></a>cv_enet &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb44-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-4"></a> <span class="dt">x=</span>train_lcpm_mtx,</span>
-<span id="cb44-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-5"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb44-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-6"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb44-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-3"></a>hcc5hmC_cv_enet &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb44-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-4"></a> <span class="dt">x=</span>hcc5hmC_train_lcpm_mtx,</span>
+<span id="cb44-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-5"></a> <span class="dt">y=</span>hcc5hmC_train_group_vec,</span>
+<span id="cb44-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-6"></a> <span class="dt">foldid=</span>hcc5hmC_train_foldid_vec,</span>
 <span id="cb44-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-7"></a> <span class="dt">alpha=</span><span class="fl">0.5</span>,</span>
 <span id="cb44-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-8"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,</span>
 <span id="cb44-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-9"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -761,7 +761,7 @@ performance in this data set.
 <span id="cb44-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-12"></a>)</span>
 <span id="cb44-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-13"></a></span>
 <span id="cb44-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-14"></a><span class="kw">message</span>(<span class="st">&quot;enet time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## enet time: 12.48s</code></pre>
+<pre><code>## enet time: 13.62s</code></pre>
 <!--
 The ridge regression model takes over 10 times longer to compute.
 -->
@@ -781,29 +781,29 @@ Maybe show in appendix??
 <span id="cb46-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-10"></a> ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_fit<span class="op">$</span>lambda)</span>
 <span id="cb46-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-11"></a> train_oofPred_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb46-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-12"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
-<span id="cb46-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-13"></a> train_oofPred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb46-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-13"></a> train_oofPred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec)</span>
 <span id="cb46-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-14"></a></span>
 <span id="cb46-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-15"></a> ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda.min,cv_fit<span class="op">$</span>lambda)</span>
 <span id="cb46-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-16"></a> train_oofPred_min_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb46-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-17"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_min]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
-<span id="cb46-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-18"></a> train_oofPred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_min_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb46-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-18"></a> train_oofPred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_min_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec)</span>
 <span id="cb46-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-19"></a></span>
 <span id="cb46-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-20"></a> <span class="co"># Get test set error</span></span>
 <span id="cb46-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-21"></a> test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb46-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-22"></a>  cv_fit, </span>
-<span id="cb46-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-23"></a>  <span class="dt">newx=</span>test_lcpm_mtx, </span>
+<span id="cb46-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-23"></a>  <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx, </span>
 <span id="cb46-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-24"></a>  <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb46-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-25"></a>  <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
 <span id="cb46-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-26"></a> )</span>
-<span id="cb46-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-27"></a> test_pred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb46-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-27"></a> test_pred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec)</span>
 <span id="cb46-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-28"></a> </span>
 <span id="cb46-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-29"></a> test_pred_min_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb46-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-30"></a>  cv_fit, </span>
-<span id="cb46-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-31"></a>  <span class="dt">newx=</span>test_lcpm_mtx, </span>
+<span id="cb46-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-31"></a>  <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx, </span>
 <span id="cb46-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-32"></a>  <span class="dt">s=</span><span class="st">&quot;lambda.min&quot;</span>,</span>
 <span id="cb46-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-33"></a>  <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
 <span id="cb46-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-34"></a> )</span>
-<span id="cb46-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-35"></a> test_pred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb46-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-35"></a> test_pred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec)</span>
 <span id="cb46-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-36"></a> </span>
 <span id="cb46-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-37"></a>  </span>
 <span id="cb46-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb46-38"></a> <span class="kw">plot</span>(</span>
@@ -855,20 +855,20 @@ Maybe show in appendix??
 <p>Examine model performance.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb47-1"></a> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>)) </span>
 <span id="cb47-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb47-2"></a></span>
-<span id="cb47-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb47-3"></a> lasso_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(cv_lasso, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span></code></pre></div>
+<span id="cb47-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb47-3"></a> lasso_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(hcc5hmC_cv_lasso, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## Warning: package &#39;glmnet&#39; was built under R version 4.0.2</code></pre>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-1"></a> <span class="kw">title</span>(<span class="st">&#39;lasso&#39;</span>)</span>
 <span id="cb49-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-2"></a></span>
-<span id="cb49-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-3"></a> rifge_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(cv_ridge, <span class="dt">Nzero=</span>F, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb49-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-3"></a> rifge_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(hcc5hmC_cv_ridge, <span class="dt">Nzero=</span>F, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
 <span id="cb49-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-4"></a> <span class="kw">title</span>(<span class="st">&#39;ridge&#39;</span>)</span>
 <span id="cb49-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-5"></a></span>
-<span id="cb49-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-6"></a> enet_errors_mtx &lt;-<span class="st">  </span><span class="kw">plot_cv_f</span>(cv_enet, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb49-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-6"></a> enet_errors_mtx &lt;-<span class="st">  </span><span class="kw">plot_cv_f</span>(hcc5hmC_cv_enet, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
 <span id="cb49-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-7"></a> <span class="kw">title</span>(<span class="st">&#39;enet&#39;</span>)</span>
 <span id="cb49-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-8"></a></span>
 <span id="cb49-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-9"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="st">&#39;log(Lambda)&#39;</span>)</span>
-<span id="cb49-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-10"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, cv_lasso<span class="op">$</span>name)</span></code></pre></div>
-<div class="figure"><span id="fig:lookFits"></span>
-<img src="Static/figures/lookFits-1.png" alt="compare fits" width="1056" />
+<span id="cb49-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb49-10"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, hcc5hmC_cv_lasso<span class="op">$</span>name)</span></code></pre></div>
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-lookFits"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-lookFits-1.png" alt="compare fits" width="1056" />
 <p class="caption">
 Figure 4.1: compare fits
 </p>
@@ -884,7 +884,7 @@ Figure 4.1: compare fits
 <span id="cb50-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb50-9"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:printErrors">Table 4.3: </span>Misclassifiaction error rates
+<span id="tab:hcc5hmC-glmnetFit-printErrors">Table 4.3: </span>Misclassifiaction error rates
 </caption>
 <thead>
 <tr>
@@ -907,13 +907,13 @@ test
 lasso_1se
 </td>
 <td style="text-align:right;">
-99
+68
 </td>
 <td style="text-align:right;">
-7.0
+7.9
 </td>
 <td style="text-align:right;">
-10.2
+10.9
 </td>
 </tr>
 <tr>
@@ -921,7 +921,7 @@ lasso_1se
 lasso_min
 </td>
 <td style="text-align:right;">
-99
+226
 </td>
 <td style="text-align:right;">
 7.0
@@ -935,13 +935,13 @@ lasso_min
 ridge_1se
 </td>
 <td style="text-align:right;">
-15752
+19100
 </td>
 <td style="text-align:right;">
-13.5
+15.0
 </td>
 <td style="text-align:right;">
-18.4
+18.8
 </td>
 </tr>
 <tr>
@@ -949,13 +949,13 @@ ridge_1se
 ridge_min
 </td>
 <td style="text-align:right;">
-15752
+19100
 </td>
 <td style="text-align:right;">
-12.5
+13.8
 </td>
 <td style="text-align:right;">
-16.2
+17.3
 </td>
 </tr>
 <tr>
@@ -963,13 +963,13 @@ ridge_min
 enet_1se
 </td>
 <td style="text-align:right;">
-118
+160
 </td>
 <td style="text-align:right;">
-7.2
+7.1
 </td>
 <td style="text-align:right;">
-12.0
+11.3
 </td>
 </tr>
 <tr>
@@ -977,13 +977,13 @@ enet_1se
 enet_min
 </td>
 <td style="text-align:right;">
-278
+284
 </td>
 <td style="text-align:right;">
-6.7
+6.6
 </td>
 <td style="text-align:right;">
-10.2
+9.4
 </td>
 </tr>
 </tbody>
@@ -1014,25 +1014,25 @@ The relaxed fit takes quite a bit longer.
 -->
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb51-1"></a><span class="kw">library</span>(glmnet)</span>
 <span id="cb51-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb51-2"></a></span>
-<span id="cb51-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb51-3"></a>cv_lassoR_sum &lt;-<span class="st"> </span><span class="kw">print</span>(cv_lassoR)</span></code></pre></div>
+<span id="cb51-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb51-3"></a>hcc5hmC_cv_lassoR_sum &lt;-<span class="st"> </span><span class="kw">print</span>(hcc5hmC_cv_lassoR)</span></code></pre></div>
 <pre><code>## 
-## Call:  glmnet::cv.glmnet(x = train_lcpm_mtx, y = train_group_vec, type.measure = &quot;class&quot;,      foldid = train_foldid_vec, keep = T, relax = T, alpha = 1,      family = &quot;binomial&quot;, nlambda = 30) 
+## Call:  glmnet::cv.glmnet(x = hcc5hmC_train_lcpm_mtx, y = hcc5hmC_train_group_vec,      type.measure = &quot;class&quot;, foldid = hcc5hmC_train_foldid_vec,      keep = T, relax = T, alpha = 1, family = &quot;binomial&quot;, nlambda = 30) 
 ## 
 ## Measure: Misclassification Error 
 ## 
-##     Gamma Lambda Measure       SE Nonzero
-## min   0.5 0.0379 0.06748 0.005274      35
-## 1se   0.5 0.0379 0.06748 0.005274      35</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb53-1"></a><span class="kw">plot</span>(cv_lassoR)</span></code></pre></div>
-<div class="figure"><span id="fig:lookLassoR"></span>
-<img src="Static/figures/lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
+##     Gamma  Lambda Measure       SE Nonzero
+## min   0.5 0.03790 0.06467 0.004819      38
+## 1se   0.5 0.04442 0.06560 0.005303      33</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb53-1"></a><span class="kw">plot</span>(hcc5hmC_cv_lassoR)</span></code></pre></div>
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-lookLassoR"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
 <p class="caption">
 Figure 4.2: Relaxed lasso fit
 </p>
 </div>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-1"></a><span class="co"># only report  1se</span></span>
-<span id="cb54-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb54-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-3"></a>ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda.min, cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb54-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se, hcc5hmC_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb54-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-3"></a>ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>lambda.min, hcc5hmC_cv_lassoR<span class="op">$</span>lambda)</span>
 <span id="cb54-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-4"></a></span>
 <span id="cb54-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-5"></a><span class="co"># only show 1se anyway</span></span>
 <span id="cb54-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-6"></a><span class="co"># if(ndx_1se != ndx_min) stop(&quot;lambda.1se != lambda.min&quot;)</span></span>
@@ -1041,48 +1041,48 @@ Figure 4.2: Relaxed lasso fit
 <span id="cb54-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-9"></a><span class="co"># train oof data - NOT CLEAR WHY THESE DIFFER FROM CV ERRORS EXTRACTED FROM MODEL</span></span>
 <span id="cb54-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-10"></a><span class="co"># Get relaxed lasso (gamma=0) oof error</span></span>
 <span id="cb54-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-11"></a>train_oofPred_relaxed_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb54-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-12"></a>  <span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;HCC&quot;</span>, <span class="st">&quot;Control&quot;</span></span>
+<span id="cb54-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-12"></a>  <span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;HCC&quot;</span>, <span class="st">&quot;Control&quot;</span></span>
 <span id="cb54-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-13"></a>)</span>
-<span id="cb54-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-14"></a>train_oofPred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb54-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-14"></a>train_oofPred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec)</span>
 <span id="cb54-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-15"></a></span>
 <span id="cb54-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-16"></a><span class="co"># blended mix (gamma=0.5)</span></span>
 <span id="cb54-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-17"></a>train_oofPred_blended_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb54-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-18"></a>  <span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0.5&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;HCC&quot;</span>, <span class="st">&quot;Control&quot;</span></span>
+<span id="cb54-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-18"></a>  <span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0.5&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;HCC&quot;</span>, <span class="st">&quot;Control&quot;</span></span>
 <span id="cb54-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-19"></a>)</span>
-<span id="cb54-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-20"></a>train_oofPred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb54-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-20"></a>train_oofPred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec)</span>
 <span id="cb54-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-21"></a></span>
 <span id="cb54-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-22"></a></span>
 <span id="cb54-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-23"></a><span class="co"># Test set error - relaxed</span></span>
 <span id="cb54-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-24"></a>test_pred_relaxed_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb54-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-25"></a>  cv_lassoR,</span>
-<span id="cb54-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-26"></a>  <span class="dt">newx =</span> test_lcpm_mtx,</span>
+<span id="cb54-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-25"></a>  hcc5hmC_cv_lassoR,</span>
+<span id="cb54-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-26"></a>  <span class="dt">newx =</span> hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb54-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-27"></a>  <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb54-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-28"></a>  <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb54-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-29"></a>  <span class="dt">gamma =</span> <span class="dv">0</span></span>
 <span id="cb54-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-30"></a>)</span>
-<span id="cb54-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-31"></a>test_pred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb54-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-31"></a>test_pred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec)</span>
 <span id="cb54-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-32"></a></span>
 <span id="cb54-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-33"></a><span class="co"># Test set error - blended</span></span>
 <span id="cb54-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-34"></a>test_pred_blended_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb54-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-35"></a>  cv_lassoR,</span>
-<span id="cb54-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-36"></a>  <span class="dt">newx =</span> test_lcpm_mtx,</span>
+<span id="cb54-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-35"></a>  hcc5hmC_cv_lassoR,</span>
+<span id="cb54-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-36"></a>  <span class="dt">newx =</span> hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb54-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-37"></a>  <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb54-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-38"></a>  <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb54-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-39"></a>  <span class="dt">gamma =</span> <span class="fl">0.5</span></span>
 <span id="cb54-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-40"></a>)</span>
-<span id="cb54-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-41"></a>test_pred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb54-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-41"></a>test_pred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec)</span>
 <span id="cb54-42"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-42"></a></span>
 <span id="cb54-43"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-43"></a></span>
-<span id="cb54-44"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-44"></a>cv_lassoR_1se_error &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>cvm[cv_lassoR<span class="op">$</span>lambda<span class="op">==</span>cv_lassoR<span class="op">$</span>lambda.min]</span>
+<span id="cb54-44"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-44"></a>hcc5hmC_cv_lassoR_1se_error &lt;-<span class="st"> </span>hcc5hmC_cv_lassoR<span class="op">$</span>cvm[hcc5hmC_cv_lassoR<span class="op">$</span>lambda<span class="op">==</span>hcc5hmC_cv_lassoR<span class="op">$</span>lambda.min]</span>
 <span id="cb54-45"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-45"></a></span>
-<span id="cb54-46"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-46"></a>cv_blended_statlist &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
+<span id="cb54-46"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-46"></a>cv_blended_statlist &lt;-<span class="st"> </span>hcc5hmC_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
 <span id="cb54-47"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-47"></a>cv_blended_1se_error &lt;-<span class="st"> </span>cv_blended_statlist<span class="op">$</span>cvm[cv_blended_statlist<span class="op">$</span>lambda<span class="op">==</span></span>
-<span id="cb54-48"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-48"></a><span class="st">   </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se]</span>
+<span id="cb54-48"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-48"></a><span class="st">   </span>hcc5hmC_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se]</span>
 <span id="cb54-49"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-49"></a> </span>
 <span id="cb54-50"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-50"></a></span>
 <span id="cb54-51"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-51"></a></span>
 <span id="cb54-52"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-52"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(</span>
-<span id="cb54-53"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-53"></a>  <span class="dt">train_relaxed  =</span> cv_lassoR_1se_error,</span>
+<span id="cb54-53"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-53"></a>  <span class="dt">train_relaxed  =</span> hcc5hmC_cv_lassoR_1se_error,</span>
 <span id="cb54-54"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-54"></a>  <span class="dt">train_blended  =</span> cv_blended_1se_error,</span>
 <span id="cb54-55"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-55"></a>  <span class="co">#train_relaxed_oof = train_oofPred_relaxed_1se_error,</span></span>
 <span id="cb54-56"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-56"></a>  <span class="co">#train_blended_oof = train_oofPred_blended_1se_error,</span></span>
@@ -1095,7 +1095,7 @@ Figure 4.2: Relaxed lasso fit
 <span id="cb54-63"><a href="hcc-5hmcseq-explore-sparsity.html#cb54-63"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lookLassoR2">Table 4.4: </span>Relaxed lasso and blended mix error rates
+<span id="tab:hcc5hmC-glmnetFit-lookLassoR2">Table 4.4: </span>Relaxed lasso and blended mix error rates
 </caption>
 <tbody>
 <tr>
@@ -1111,7 +1111,7 @@ train_relaxed
 train_blended
 </td>
 <td style="text-align:right;">
-6.7
+6.6
 </td>
 </tr>
 <tr>
@@ -1119,7 +1119,7 @@ train_blended
 test_relaxed
 </td>
 <td style="text-align:right;">
-10.9
+10.5
 </td>
 </tr>
 <tr>
@@ -1127,7 +1127,7 @@ test_relaxed
 test_blended
 </td>
 <td style="text-align:right;">
-10.2
+9.8
 </td>
 </tr>
 </tbody>
@@ -1141,12 +1141,12 @@ continue to be good indicators of unseen data error rates, as captured
 by the test set.  
 --></p>
 <p>The <em>1se</em> lambda rule applied to the relaxed lasso fit selected a model with
-<span class="math inline">\(99\)</span> features,
+<span class="math inline">\(68\)</span> features,
 while for the blended mix model
 (See <a href="modeling-background.html#eq:blended">(2.3)</a> in Section <a href="modeling-background.html#modeling-background">2</a>)
 the <em>1se</em> lambda rule selected
-<span class="math inline">\(35\)</span> features (vertical
-dotted reference line in Figure <a href="hcc-5hmcseq-explore-sparsity.html#fig:lookLassoR">4.2</a>).
+<span class="math inline">\(33\)</span> features (vertical
+dotted reference line in Figure <a href="#fig:lookLassoR"><strong>??</strong></a>).
 This feature is pointed out in the
 <a href="https://cran.r-project.org/web/packages/glmnet/vignettes/relax.pdf">glmnet 3.0 vignette</a>:
 <em>The debiasing will potentially improve prediction performance,
@@ -1161,34 +1161,34 @@ to get a sense of the trade-off.</p>
 <h3><span class="header-section-number">4.4.1</span> Training data out-of-fold ROC curves</h3>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-1"></a><span class="co"># train</span></span>
 <span id="cb55-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-2"></a><span class="co"># lasso</span></span>
-<span id="cb55-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-3"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lasso<span class="op">$</span>lambda)</span>
-<span id="cb55-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-4"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb55-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-3"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_lasso<span class="op">$</span>lambda)</span>
+<span id="cb55-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-4"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb55-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-5"></a>train_lasso_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb55-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-6"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb55-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-6"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
 <span id="cb55-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb55-7"></a> <span class="dt">predictor =</span> train_lasso_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1</code></pre>
 <pre><code>## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-1"></a><span class="co"># enet</span></span>
-<span id="cb58-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_enet<span class="op">$</span>lambda)</span>
-<span id="cb58-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-3"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb58-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_enet<span class="op">$</span>lambda)</span>
+<span id="cb58-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-3"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb58-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-4"></a>train_enet_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb58-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb58-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
 <span id="cb58-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb58-6"></a> <span class="dt">predictor =</span> train_enet_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-1"></a><span class="co"># lasso - relaxed</span></span>
-<span id="cb60-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb60-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-3"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
+<span id="cb60-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb60-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-3"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
 <span id="cb60-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-4"></a>train_relaxed_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb60-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb60-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
 <span id="cb60-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb60-6"></a> <span class="dt">predictor =</span> train_relaxed_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-1"></a><span class="co"># blended mix (gamma=0.5)</span></span>
-<span id="cb62-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb62-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-3"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
+<span id="cb62-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb62-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-3"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
 <span id="cb62-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-4"></a>train_blended_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb62-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
+<span id="cb62-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;HCC&#39;</span>),</span>
 <span id="cb62-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb62-6"></a> <span class="dt">predictor =</span> train_blended_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
@@ -1207,8 +1207,8 @@ to get a sense of the trade-off.</p>
 <span id="cb64-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb64-13"></a> <span class="dt">text.col =</span> col_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</span>
 <span id="cb64-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb64-14"></a> <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb64-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb64-15"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:trainROC"></span>
-<img src="Static/figures/trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-trainROC"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
 <p class="caption">
 Figure 4.3: Train data out-of-sample ROCs
 </p>
@@ -1241,7 +1241,7 @@ Figure 4.3: Train data out-of-sample ROCs
 <span id="cb65-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb65-25"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:thresh90">Table 4.5: </span>Specificity = .90 Coordinates
+<span id="tab:hcc5hmC-glmnetFit-thresh90">Table 4.5: </span>Specificity = .90 Coordinates
 </caption>
 <thead>
 <tr>
@@ -1264,7 +1264,7 @@ sensitivity
 lasso
 </td>
 <td style="text-align:right;">
-0.337
+0.358
 </td>
 <td style="text-align:right;">
 0.9
@@ -1278,7 +1278,7 @@ lasso
 enet
 </td>
 <td style="text-align:right;">
-0.347
+0.350
 </td>
 <td style="text-align:right;">
 0.9
@@ -1292,13 +1292,13 @@ enet
 relaxed
 </td>
 <td style="text-align:right;">
-0.003
+0.356
 </td>
 <td style="text-align:right;">
 0.9
 </td>
 <td style="text-align:right;">
-0.894
+0.860
 </td>
 </tr>
 <tr>
@@ -1306,13 +1306,13 @@ relaxed
 blended
 </td>
 <td style="text-align:right;">
-0.031
+0.281
 </td>
 <td style="text-align:right;">
 0.9
 </td>
 <td style="text-align:right;">
-0.899
+0.867
 </td>
 </tr>
 </tbody>
@@ -1321,46 +1321,46 @@ blended
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb66-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-2"></a></span>
 <span id="cb66-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-3"></a><span class="co"># lasso</span></span>
-<span id="cb66-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-4"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb66-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-4"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb66-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-5"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb66-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-6"></a>)</span>
-<span id="cb66-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-7"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb66-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-7"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb66-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-8"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb66-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-9"></a>)</span>
 <span id="cb66-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-10"></a><span class="kw">title</span>(<span class="st">&quot;lasso&quot;</span>)</span>
 <span id="cb66-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-11"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;HCC&quot;</span>), <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
 <span id="cb66-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-12"></a></span>
 <span id="cb66-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-13"></a><span class="co"># enet</span></span>
-<span id="cb66-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-14"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_enet_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb66-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-14"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_enet_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb66-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-15"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb66-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-16"></a>)</span>
-<span id="cb66-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-17"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_enet_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb66-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-17"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_enet_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb66-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-18"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb66-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-19"></a>)</span>
 <span id="cb66-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-20"></a><span class="kw">title</span>(<span class="st">&quot;enet&quot;</span>)</span>
 <span id="cb66-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-21"></a></span>
 <span id="cb66-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-22"></a><span class="co"># lassoR</span></span>
-<span id="cb66-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-23"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb66-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-23"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb66-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-24"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb66-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-25"></a>)</span>
-<span id="cb66-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-26"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb66-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-26"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb66-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-27"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb66-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-28"></a>)</span>
 <span id="cb66-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-29"></a><span class="kw">title</span>(<span class="st">&quot;lassoR&quot;</span>)</span>
 <span id="cb66-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-30"></a></span>
 <span id="cb66-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-31"></a><span class="co"># blended</span></span>
-<span id="cb66-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-32"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_blended_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb66-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-32"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_blended_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb66-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-33"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb66-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-34"></a>)</span>
-<span id="cb66-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-35"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_blended_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb66-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-35"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_blended_oofProb_vec[hcc5hmC_train_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb66-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-36"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb66-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-37"></a>)</span>
 <span id="cb66-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-38"></a><span class="kw">title</span>(<span class="st">&quot;blended&quot;</span>)</span>
 <span id="cb66-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-39"></a></span>
 <span id="cb66-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-40"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;out-of-fold predicted probability&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span>
 <span id="cb66-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb66-41"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;density&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:trainOOFprops"></span>
-<img src="Static/figures/trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-trainOOFprops"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
 <p class="caption">
 Figure 4.4: Train data out-of-fold predicted probabilities
 </p>
@@ -1385,8 +1385,8 @@ distribution - predicted probabilities are very close to 0 or 1.</p>
 <span id="cb67-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb67-15"></a>  <span class="dt">text.col =</span> col_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</span>
 <span id="cb67-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb67-16"></a>  <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb67-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb67-17"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:testROC2"></span>
-<img src="Static/figures/testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-testROC2"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
 <p class="caption">
 Figure 4.5: Test data out-of-sample ROCs
 </p>
@@ -1395,49 +1395,49 @@ Figure 4.5: Test data out-of-sample ROCs
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-1"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb68-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-2"></a></span>
 <span id="cb68-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-3"></a><span class="co"># lasso</span></span>
-<span id="cb68-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-4"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_lasso_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb68-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-4"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_lasso_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb68-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-5"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb68-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-6"></a>)</span>
-<span id="cb68-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-7"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_lasso_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb68-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-7"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_lasso_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb68-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-8"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb68-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-9"></a>)</span>
 <span id="cb68-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-10"></a><span class="kw">title</span>(<span class="st">&quot;lasso&quot;</span>)</span>
 <span id="cb68-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-11"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;HCC&quot;</span>), <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
 <span id="cb68-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-12"></a></span>
 <span id="cb68-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-13"></a><span class="co"># enet</span></span>
-<span id="cb68-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-14"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_enet_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb68-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-14"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_enet_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb68-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-15"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb68-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-16"></a>)</span>
-<span id="cb68-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-17"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_enet_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb68-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-17"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_enet_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb68-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-18"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb68-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-19"></a>)</span>
 <span id="cb68-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-20"></a><span class="kw">title</span>(<span class="st">&quot;enet&quot;</span>)</span>
 <span id="cb68-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-21"></a></span>
 <span id="cb68-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-22"></a><span class="co"># relaxed</span></span>
-<span id="cb68-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-23"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb68-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-23"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb68-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-24"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb68-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-25"></a>)</span>
-<span id="cb68-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-26"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb68-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-26"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb68-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-27"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb68-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-28"></a>)</span>
 <span id="cb68-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-29"></a><span class="kw">title</span>(<span class="st">&quot;relaxed&quot;</span>)</span>
 <span id="cb68-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-30"></a></span>
-<span id="cb68-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-31"></a><span class="co">#sapply(split(test_relaxed_predProb_vec, test_group_vec), summary)</span></span>
+<span id="cb68-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-31"></a><span class="co">#sapply(split(test_relaxed_predProb_vec, hcc5hmC_test_group_vec), summary)</span></span>
 <span id="cb68-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-32"></a></span>
 <span id="cb68-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-33"></a></span>
 <span id="cb68-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-34"></a><span class="co"># blended</span></span>
-<span id="cb68-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-35"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_blended_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
+<span id="cb68-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-35"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_blended_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;Control&quot;</span>]),</span>
 <span id="cb68-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-36"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb68-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-37"></a>)</span>
-<span id="cb68-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-38"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_blended_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
+<span id="cb68-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-38"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_blended_predProb_vec[hcc5hmC_test_group_vec <span class="op">==</span><span class="st"> &quot;HCC&quot;</span>]),</span>
 <span id="cb68-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-39"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb68-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-40"></a>)</span>
 <span id="cb68-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-41"></a><span class="kw">title</span>(<span class="st">&quot;blended&quot;</span>)</span>
 <span id="cb68-42"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-42"></a></span>
 <span id="cb68-43"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-43"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;test set predicted probability&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span>
 <span id="cb68-44"><a href="hcc-5hmcseq-explore-sparsity.html#cb68-44"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;density&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:testOOFprobs"></span>
-<img src="Static/figures/testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-testOOFprobs"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
 <p class="caption">
 Figure 4.6: Test data out-of-fold predicted probabilities
 </p>
@@ -1455,14 +1455,14 @@ Figure 4.6: Test data out-of-fold predicted probabilities
 <span id="cb69-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-11"></a>  <span class="co"># Test</span></span>
 <span id="cb69-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-12"></a>  test_1se_predProb_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb69-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-13"></a>    cv_fit,</span>
-<span id="cb69-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-14"></a>    <span class="dt">newx =</span> test_lcpm_mtx,</span>
+<span id="cb69-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-14"></a>    <span class="dt">newx =</span> hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb69-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-15"></a>    <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb69-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-16"></a>    <span class="dt">type =</span> <span class="st">&quot;resp&quot;</span></span>
 <span id="cb69-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-17"></a>  )</span>
 <span id="cb69-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-18"></a></span>
 <span id="cb69-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-19"></a>  tmp &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb69-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-20"></a>    <span class="dt">train =</span> <span class="kw">split</span>(train_1se_predProb_vec, train_group_vec),</span>
-<span id="cb69-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-21"></a>    <span class="dt">test =</span> <span class="kw">split</span>(test_1se_predProb_vec, test_group_vec)</span>
+<span id="cb69-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-20"></a>    <span class="dt">train =</span> <span class="kw">split</span>(train_1se_predProb_vec, hcc5hmC_train_group_vec),</span>
+<span id="cb69-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-21"></a>    <span class="dt">test =</span> <span class="kw">split</span>(test_1se_predProb_vec, hcc5hmC_test_group_vec)</span>
 <span id="cb69-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-22"></a>  )</span>
 <span id="cb69-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-23"></a>  <span class="kw">names</span>(tmp) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="kw">sub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="kw">names</span>(tmp)))</span>
 <span id="cb69-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-24"></a></span>
@@ -1471,19 +1471,19 @@ Figure 4.6: Test data out-of-fold predicted probabilities
 <span id="cb69-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-27"></a></span>
 <span id="cb69-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-28"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb69-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-29"></a></span>
-<span id="cb69-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-30"></a><span class="kw">bxpPredProb_f</span>(cv_lasso)</span>
+<span id="cb69-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-30"></a><span class="kw">bxpPredProb_f</span>(hcc5hmC_cv_lasso)</span>
 <span id="cb69-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-31"></a><span class="kw">title</span>(<span class="st">&#39;lasso&#39;</span>)</span>
 <span id="cb69-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-32"></a></span>
-<span id="cb69-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-33"></a><span class="kw">bxpPredProb_f</span>(cv_enet)</span>
+<span id="cb69-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-33"></a><span class="kw">bxpPredProb_f</span>(hcc5hmC_cv_enet)</span>
 <span id="cb69-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-34"></a><span class="kw">title</span>(<span class="st">&#39;enet&#39;</span>)</span>
 <span id="cb69-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-35"></a></span>
-<span id="cb69-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-36"></a><span class="kw">bxpPredProb_f</span>(cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0&#39;</span>)</span>
+<span id="cb69-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-36"></a><span class="kw">bxpPredProb_f</span>(hcc5hmC_cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0&#39;</span>)</span>
 <span id="cb69-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-37"></a><span class="kw">title</span>(<span class="st">&#39;relaxed&#39;</span>)</span>
 <span id="cb69-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-38"></a></span>
-<span id="cb69-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-39"></a><span class="kw">bxpPredProb_f</span>(cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0.5&#39;</span>)</span>
+<span id="cb69-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-39"></a><span class="kw">bxpPredProb_f</span>(hcc5hmC_cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0.5&#39;</span>)</span>
 <span id="cb69-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb69-40"></a><span class="kw">title</span>(<span class="st">&#39;blended&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:fitPrevalByGroup"></span>
-<img src="Static/figures/fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-fitPrevalByGroup"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
 <p class="caption">
 Figure 4.7: Predicted Probabilities - Train and Test
 </p>
@@ -1527,76 +1527,79 @@ as they are too similar in nature.</p>
 <span id="cb70-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-2"></a><span class="co"># as predClass extracted from predict() are fitted values.</span></span>
 <span id="cb70-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-3"></a></span>
 <span id="cb70-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-4"></a><span class="co"># train - oof</span></span>
-<span id="cb70-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-5"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lasso<span class="op">$</span>lambda)</span>
-<span id="cb70-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-6"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb70-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-5"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_lasso<span class="op">$</span>lambda)</span>
+<span id="cb70-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-6"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb70-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-7"></a>train_lasso_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb70-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-8"></a>   train_lasso_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
 <span id="cb70-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-9"></a></span>
-<span id="cb70-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-10"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_enet<span class="op">$</span>lambda)</span>
-<span id="cb70-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-11"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb70-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-10"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_enet<span class="op">$</span>lambda)</span>
+<span id="cb70-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-11"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb70-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-12"></a>train_enet_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb70-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-13"></a>   train_enet_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
 <span id="cb70-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-14"></a></span>
-<span id="cb70-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-15"></a><span class="co"># RECALL: cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]</span></span>
+<span id="cb70-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-15"></a><span class="co"># RECALL: hcc5hmC_cv_lassoR$nzero[hcc5hmC_cv_lassoR$lambda==hcc5hmC_cv_lassoR$lambda.1se]</span></span>
 <span id="cb70-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-16"></a><span class="co"># train - oof</span></span>
-<span id="cb70-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-17"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb70-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-18"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
+<span id="cb70-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-17"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,hcc5hmC_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb70-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-18"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
 <span id="cb70-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-19"></a>train_relaxed_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb70-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-20"></a>   train_relaxed_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
 <span id="cb70-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-21"></a></span>
-<span id="cb70-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-22"></a><span class="co"># RECALL $`r cv_lassoR$relaxed$nzero.1se`$ features (vertical</span></span>
-<span id="cb70-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-23"></a><span class="co">#  cv_blended_statlist &lt;- cv_lassoR$relaxed$statlist[[&#39;g:0.5&#39;]]</span></span>
-<span id="cb70-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-24"></a><span class="co">#  cv_blended_1se_error &lt;- cv_blended_statlist$cvm[cv_blended_statlist$lambda==</span></span>
-<span id="cb70-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-25"></a>      <span class="co">#cv_lassoR$relaxed$lambda.1se]</span></span>
-<span id="cb70-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-26"></a></span>
-<span id="cb70-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-27"></a><span class="co"># train - oof</span></span>
-<span id="cb70-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-28"></a>cv_blended_statlist &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
-<span id="cb70-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-29"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_blended_statlist<span class="op">$</span>lambda)</span>
-<span id="cb70-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-30"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
-<span id="cb70-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-31"></a>train_blended_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb70-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-32"></a>   train_blended_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
-<span id="cb70-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-33"></a></span>
+<span id="cb70-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-22"></a></span>
+<span id="cb70-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-23"></a><span class="co"># RECALL $`r hcc5hmC_cv_lassoR$relaxed$nzero.1se`$ features (vertical</span></span>
+<span id="cb70-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-24"></a><span class="co">#  cv_blended_statlist &lt;- hcc5hmC_cv_lassoR$relaxed$statlist[[&#39;g:0.5&#39;]]</span></span>
+<span id="cb70-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-25"></a><span class="co">#  cv_blended_1se_error &lt;- cv_blended_statlist$cvm[cv_blended_statlist$lambda==</span></span>
+<span id="cb70-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-26"></a>      <span class="co">#hcc5hmC_cv_lassoR$relaxed$lambda.1se]</span></span>
+<span id="cb70-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-27"></a></span>
+<span id="cb70-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-28"></a><span class="co"># train - oof</span></span>
+<span id="cb70-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-29"></a>cv_blended_statlist &lt;-<span class="st"> </span>hcc5hmC_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
+<span id="cb70-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-30"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(hcc5hmC_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_blended_statlist<span class="op">$</span>lambda)</span>
+<span id="cb70-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-31"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(hcc5hmC_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
+<span id="cb70-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-32"></a>train_blended_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
+<span id="cb70-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-33"></a>   train_blended_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;HCC&#39;</span>, <span class="st">&#39;Control&#39;</span>)</span>
 <span id="cb70-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-34"></a></span>
-<span id="cb70-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-35"></a>misclass_id_vec &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">c</span>(</span>
-<span id="cb70-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-36"></a> <span class="kw">names</span>(train_lasso_oofClass_vec)[train_lasso_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb70-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-37"></a> <span class="kw">names</span>(train_enet_oofClass_vec)[train_enet_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb70-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-38"></a> <span class="kw">names</span>(train_relaxed_oofClass_vec)[train_relaxed_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb70-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-39"></a> <span class="kw">names</span>(train_blended_oofClass_vec)[train_blended_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec]</span>
-<span id="cb70-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-40"></a> )</span>
-<span id="cb70-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-41"></a>)</span>
-<span id="cb70-42"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-42"></a></span>
+<span id="cb70-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-35"></a></span>
+<span id="cb70-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-36"></a>misclass_id_vec &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">c</span>(</span>
+<span id="cb70-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-37"></a> <span class="kw">names</span>(train_lasso_oofClass_vec)[train_lasso_oofClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec],</span>
+<span id="cb70-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-38"></a> <span class="kw">names</span>(train_enet_oofClass_vec)[train_enet_oofClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec],</span>
+<span id="cb70-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-39"></a> <span class="kw">names</span>(train_relaxed_oofClass_vec)[train_relaxed_oofClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec],</span>
+<span id="cb70-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-40"></a> <span class="kw">names</span>(train_blended_oofClass_vec)[train_blended_oofClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_train_group_vec]</span>
+<span id="cb70-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-41"></a> )</span>
+<span id="cb70-42"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-42"></a>)</span>
 <span id="cb70-43"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-43"></a></span>
-<span id="cb70-44"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-44"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span><span class="kw">cbind</span>(</span>
-<span id="cb70-45"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-45"></a> train_lasso_oofProb_vec[misclass_id_vec],</span>
-<span id="cb70-46"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-46"></a> train_enet_oofProb_vec[misclass_id_vec],</span>
-<span id="cb70-47"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-47"></a> train_relaxed_oofProb_vec[misclass_id_vec],</span>
-<span id="cb70-48"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-48"></a> train_blended_oofProb_vec[misclass_id_vec]</span>
-<span id="cb70-49"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-49"></a>)</span>
-<span id="cb70-50"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-50"></a><span class="kw">colnames</span>(missclass_oofProb_mtx) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;lasso&#39;</span>,<span class="st">&#39;enet&#39;</span>, <span class="st">&#39;lassoR&#39;</span>, <span class="st">&#39;blended&#39;</span>)</span>
-<span id="cb70-51"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-51"></a></span>
-<span id="cb70-52"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-52"></a>row_med_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(missclass_oofProb_mtx, <span class="dv">1</span>, median)</span>
-<span id="cb70-53"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-53"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span>missclass_oofProb_mtx[</span>
-<span id="cb70-54"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-54"></a>  <span class="kw">order</span>(train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
-<span id="cb70-55"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-55"></a></span>
-<span id="cb70-56"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-56"></a><span class="kw">plot</span>(</span>
-<span id="cb70-57"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-57"></a> <span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">nrow</span>(missclass_oofProb_mtx)), <span class="dt">xlab=</span><span class="st">&#39;samples&#39;</span>,</span>
-<span id="cb70-58"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-58"></a> <span class="dt">y=</span><span class="kw">range</span>(missclass_oofProb_mtx), <span class="dt">ylab=</span><span class="st">&#39;out-of-fold predicted probability&#39;</span>,</span>
-<span id="cb70-59"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-59"></a> <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="dt">type=</span><span class="st">&#39;n&#39;</span>)</span>
-<span id="cb70-60"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-60"></a></span>
-<span id="cb70-61"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-61"></a><span class="cf">for</span>(RR <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(missclass_oofProb_mtx))</span>
-<span id="cb70-62"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-62"></a><span class="kw">points</span>(</span>
-<span id="cb70-63"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-63"></a> <span class="kw">rep</span>(RR, <span class="kw">ncol</span>(missclass_oofProb_mtx)), </span>
-<span id="cb70-64"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-64"></a> missclass_oofProb_mtx[RR,],</span>
-<span id="cb70-65"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-65"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Control&#39;</span>,</span>
-<span id="cb70-66"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-66"></a>  <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
-<span id="cb70-67"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-67"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(missclass_oofProb_mtx))</span>
-<span id="cb70-68"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-68"></a></span>
-<span id="cb70-69"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-69"></a><span class="kw">legend</span>(<span class="st">&#39;top&#39;</span>, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">legend=</span><span class="kw">colnames</span>(missclass_oofProb_mtx), </span>
-<span id="cb70-70"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-70"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bty=</span><span class="st">&#39;n&#39;</span>)</span>
+<span id="cb70-44"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-44"></a><span class="co"># Dont know why NAs creeo in here</span></span>
+<span id="cb70-45"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-45"></a></span>
+<span id="cb70-46"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-46"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span><span class="kw">cbind</span>(</span>
+<span id="cb70-47"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-47"></a> train_lasso_oofProb_vec[misclass_id_vec],</span>
+<span id="cb70-48"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-48"></a> train_enet_oofProb_vec[misclass_id_vec],</span>
+<span id="cb70-49"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-49"></a> train_relaxed_oofProb_vec[misclass_id_vec],</span>
+<span id="cb70-50"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-50"></a> train_blended_oofProb_vec[misclass_id_vec]</span>
+<span id="cb70-51"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-51"></a>)</span>
+<span id="cb70-52"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-52"></a><span class="kw">colnames</span>(missclass_oofProb_mtx) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;lasso&#39;</span>,<span class="st">&#39;enet&#39;</span>, <span class="st">&#39;lassoR&#39;</span>, <span class="st">&#39;blended&#39;</span>)</span>
+<span id="cb70-53"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-53"></a></span>
+<span id="cb70-54"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-54"></a></span>
+<span id="cb70-55"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-55"></a>row_med_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(missclass_oofProb_mtx, <span class="dv">1</span>, median)</span>
+<span id="cb70-56"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-56"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span>missclass_oofProb_mtx[</span>
+<span id="cb70-57"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-57"></a>  <span class="kw">order</span>(hcc5hmC_train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
+<span id="cb70-58"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-58"></a></span>
+<span id="cb70-59"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-59"></a><span class="kw">plot</span>(</span>
+<span id="cb70-60"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-60"></a> <span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">nrow</span>(missclass_oofProb_mtx)), <span class="dt">xlab=</span><span class="st">&#39;samples&#39;</span>,</span>
+<span id="cb70-61"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-61"></a> <span class="dt">y=</span><span class="kw">range</span>(missclass_oofProb_mtx), <span class="dt">ylab=</span><span class="st">&#39;out-of-fold predicted probability&#39;</span>,</span>
+<span id="cb70-62"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-62"></a> <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>, <span class="dt">type=</span><span class="st">&#39;n&#39;</span>)</span>
+<span id="cb70-63"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-63"></a></span>
+<span id="cb70-64"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-64"></a><span class="cf">for</span>(RR <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(missclass_oofProb_mtx))</span>
+<span id="cb70-65"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-65"></a><span class="kw">points</span>(</span>
+<span id="cb70-66"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-66"></a> <span class="kw">rep</span>(RR, <span class="kw">ncol</span>(missclass_oofProb_mtx)), </span>
+<span id="cb70-67"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-67"></a> missclass_oofProb_mtx[RR,],</span>
+<span id="cb70-68"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-68"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(hcc5hmC_train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Control&#39;</span>,</span>
+<span id="cb70-69"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-69"></a>  <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
+<span id="cb70-70"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-70"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(missclass_oofProb_mtx))</span>
 <span id="cb70-71"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-71"></a></span>
-<span id="cb70-72"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-72"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:misclassTrain"></span>
-<img src="Static/figures/misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
+<span id="cb70-72"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-72"></a><span class="kw">legend</span>(<span class="st">&#39;top&#39;</span>, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">legend=</span><span class="kw">colnames</span>(missclass_oofProb_mtx), </span>
+<span id="cb70-73"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-73"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bty=</span><span class="st">&#39;n&#39;</span>)</span>
+<span id="cb70-74"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-74"></a></span>
+<span id="cb70-75"><a href="hcc-5hmcseq-explore-sparsity.html#cb70-75"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="fl">0.5</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-misclassTrain"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
 <p class="caption">
 Figure 4.8: out-of-fold predicted probabilities at miscassified samples
 </p>
@@ -1608,40 +1611,40 @@ less than 0.5 are considered correct here. For the HCC (red) samples,
 predicted probabilities greater than 0.5 are considered correct here.</p>
 <p>Now look at the same plot on the test data set.</p>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-1"></a>test_lasso_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb71-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-2"></a> cv_lasso,</span>
-<span id="cb71-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-3"></a> <span class="dt">newx=</span>test_lcpm_mtx,</span>
+<span id="cb71-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-2"></a> hcc5hmC_cv_lasso,</span>
+<span id="cb71-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-3"></a> <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb71-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-4"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb71-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-5"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb71-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-6"></a>)</span>
 <span id="cb71-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-7"></a></span>
 <span id="cb71-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-8"></a>test_enet_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb71-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-9"></a> cv_enet,</span>
-<span id="cb71-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-10"></a> <span class="dt">newx=</span>test_lcpm_mtx,</span>
+<span id="cb71-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-9"></a> hcc5hmC_cv_enet,</span>
+<span id="cb71-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-10"></a> <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb71-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-11"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb71-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-12"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb71-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-13"></a>)</span>
 <span id="cb71-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-14"></a></span>
 <span id="cb71-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-15"></a>test_relaxed_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb71-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-16"></a> cv_lassoR,</span>
+<span id="cb71-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-16"></a> hcc5hmC_cv_lassoR,</span>
 <span id="cb71-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-17"></a> <span class="dt">g=</span><span class="dv">0</span>,</span>
-<span id="cb71-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-18"></a> <span class="dt">newx=</span>test_lcpm_mtx,</span>
+<span id="cb71-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-18"></a> <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb71-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-19"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb71-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-20"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb71-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-21"></a>)</span>
 <span id="cb71-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-22"></a></span>
 <span id="cb71-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-23"></a>test_blended_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb71-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-24"></a> cv_lassoR,</span>
+<span id="cb71-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-24"></a> hcc5hmC_cv_lassoR,</span>
 <span id="cb71-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-25"></a> <span class="dt">g=</span><span class="fl">0.5</span>,</span>
-<span id="cb71-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-26"></a> <span class="dt">newx=</span>test_lcpm_mtx,</span>
+<span id="cb71-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-26"></a> <span class="dt">newx=</span>hcc5hmC_test_lcpm_mtx,</span>
 <span id="cb71-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-27"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb71-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-28"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb71-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-29"></a>)</span>
 <span id="cb71-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-30"></a></span>
 <span id="cb71-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-31"></a>misclass_id_vec &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">c</span>(</span>
-<span id="cb71-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-32"></a> <span class="kw">names</span>(test_lasso_predClass_vec[,<span class="dv">1</span>])[test_lasso_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb71-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-33"></a> <span class="kw">names</span>(test_enet_predClass_vec[,<span class="dv">1</span>])[test_enet_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb71-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-34"></a> <span class="kw">names</span>(test_relaxed_predClass_vec[,<span class="dv">1</span>])[test_relaxed_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb71-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-35"></a> <span class="kw">names</span>(test_blended_predClass_vec[,<span class="dv">1</span>])[test_blended_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec]</span>
+<span id="cb71-32"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-32"></a> <span class="kw">names</span>(test_lasso_predClass_vec[,<span class="dv">1</span>])[test_lasso_predClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec],</span>
+<span id="cb71-33"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-33"></a> <span class="kw">names</span>(test_enet_predClass_vec[,<span class="dv">1</span>])[test_enet_predClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec],</span>
+<span id="cb71-34"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-34"></a> <span class="kw">names</span>(test_relaxed_predClass_vec[,<span class="dv">1</span>])[test_relaxed_predClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec],</span>
+<span id="cb71-35"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-35"></a> <span class="kw">names</span>(test_blended_predClass_vec[,<span class="dv">1</span>])[test_blended_predClass_vec <span class="op">!=</span><span class="st"> </span>hcc5hmC_test_group_vec]</span>
 <span id="cb71-36"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-36"></a> )</span>
 <span id="cb71-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-37"></a>)</span>
 <span id="cb71-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-38"></a></span>
@@ -1656,7 +1659,7 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb71-47"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-47"></a></span>
 <span id="cb71-48"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-48"></a>row_med_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(missclass_oofProb_mtx, <span class="dv">1</span>, median)</span>
 <span id="cb71-49"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-49"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span>missclass_oofProb_mtx[</span>
-<span id="cb71-50"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-50"></a>  <span class="kw">order</span>(test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
+<span id="cb71-50"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-50"></a>  <span class="kw">order</span>(hcc5hmC_test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
 <span id="cb71-51"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-51"></a></span>
 <span id="cb71-52"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-52"></a><span class="kw">plot</span>(</span>
 <span id="cb71-53"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-53"></a> <span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">nrow</span>(missclass_oofProb_mtx)), <span class="dt">xlab=</span><span class="st">&#39;samples&#39;</span>,</span>
@@ -1667,7 +1670,7 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb71-58"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-58"></a><span class="kw">points</span>(</span>
 <span id="cb71-59"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-59"></a> <span class="kw">rep</span>(RR, <span class="kw">ncol</span>(missclass_oofProb_mtx)), </span>
 <span id="cb71-60"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-60"></a> missclass_oofProb_mtx[RR,],</span>
-<span id="cb71-61"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-61"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Control&#39;</span>,</span>
+<span id="cb71-61"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-61"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(hcc5hmC_test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Control&#39;</span>,</span>
 <span id="cb71-62"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-62"></a>  <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
 <span id="cb71-63"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-63"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(missclass_oofProb_mtx))</span>
 <span id="cb71-64"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-64"></a></span>
@@ -1675,8 +1678,8 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb71-66"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-66"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bty=</span><span class="st">&#39;n&#39;</span>)</span>
 <span id="cb71-67"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-67"></a></span>
 <span id="cb71-68"><a href="hcc-5hmcseq-explore-sparsity.html#cb71-68"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:misclassTest"></span>
-<img src="Static/figures/misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-misclassTest"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
 <p class="caption">
 Figure 4.9: Test data predicted probabilities at miscassified samples
 </p>
@@ -1695,7 +1698,7 @@ This seems to indicate over-fitting in the relaxed lasso fit.</p>
 <span id="cb72-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-2"></a><span class="co">##########################</span></span>
 <span id="cb72-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-3"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb72-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-4"></a>lasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb72-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-5"></a> cv_lasso,</span>
+<span id="cb72-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-5"></a> hcc5hmC_cv_lasso,</span>
 <span id="cb72-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-6"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb72-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-7"></a>)</span>
 <span id="cb72-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-8"></a>lasso_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1706,7 +1709,7 @@ This seems to indicate over-fitting in the relaxed lasso fit.</p>
 <span id="cb72-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-13"></a><span class="co"># enet</span></span>
 <span id="cb72-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-14"></a><span class="co">##########################</span></span>
 <span id="cb72-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-15"></a>enet_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb72-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-16"></a> cv_enet,</span>
+<span id="cb72-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-16"></a> hcc5hmC_cv_enet,</span>
 <span id="cb72-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-17"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb72-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-18"></a>)</span>
 <span id="cb72-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-19"></a>enet_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1718,7 +1721,7 @@ This seems to indicate over-fitting in the relaxed lasso fit.</p>
 <span id="cb72-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-25"></a><span class="co">##########################</span></span>
 <span id="cb72-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-26"></a>SKIP &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
 <span id="cb72-27"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-27"></a>lassoR_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb72-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-28"></a> cv_lassoR,</span>
+<span id="cb72-28"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-28"></a> hcc5hmC_cv_lassoR,</span>
 <span id="cb72-29"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-29"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb72-30"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-30"></a> <span class="dt">g=</span><span class="dv">0</span></span>
 <span id="cb72-31"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-31"></a>)</span>
@@ -1730,7 +1733,7 @@ This seems to indicate over-fitting in the relaxed lasso fit.</p>
 <span id="cb72-37"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-37"></a><span class="co"># blended mix (gamma=0.5)</span></span>
 <span id="cb72-38"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-38"></a><span class="co">###############################</span></span>
 <span id="cb72-39"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-39"></a>blended_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb72-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-40"></a> cv_lassoR,</span>
+<span id="cb72-40"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-40"></a> hcc5hmC_cv_lassoR,</span>
 <span id="cb72-41"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-41"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb72-42"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-42"></a> <span class="dt">g=</span><span class="fl">0.5</span></span>
 <span id="cb72-43"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-43"></a>)</span>
@@ -1765,8 +1768,8 @@ This seems to indicate over-fitting in the relaxed lasso fit.</p>
 <span id="cb72-72"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-72"></a>  <span class="dt">y=</span>all_coef_frm[<span class="op">-</span><span class="dv">1</span>, CC], <span class="dt">ylab=</span><span class="kw">colnames</span>(all_coef_frm)[CC],</span>
 <span id="cb72-73"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-73"></a>  <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>)</span>
 <span id="cb72-74"><a href="hcc-5hmcseq-explore-sparsity.html#cb72-74"></a>}</span></code></pre></div>
-<div class="figure"><span id="fig:compCoeffProf"></span>
-<img src="Static/figures/compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-compCoeffProf"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
 <p class="caption">
 Figure 4.10: Coefficient Profiles
 </p>
@@ -1780,7 +1783,7 @@ is small in the other. By contrast, the blended fit produces more shrinkage.</p>
 <span id="cb73-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb73-4"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:zreros">Table 4.6: </span>Zero Ceofficient: rows are lasso, columns enet
+<span id="tab:hcc5hmC-glmnetFit-zreros">Table 4.6: </span>Zero Ceofficient: rows are lasso, columns enet
 </caption>
 <thead>
 <tr>
@@ -1788,9 +1791,6 @@ is small in the other. By contrast, the blended fit produces more shrinkage.</p>
 </th>
 <th style="text-align:right;">
 FALSE
-</th>
-<th style="text-align:right;">
-TRUE
 </th>
 </tr>
 </thead>
@@ -1800,10 +1800,7 @@ TRUE
 FALSE
 </td>
 <td style="text-align:right;">
-88
-</td>
-<td style="text-align:right;">
-12
+69
 </td>
 </tr>
 <tr>
@@ -1811,10 +1808,7 @@ FALSE
 TRUE
 </td>
 <td style="text-align:right;">
-31
-</td>
-<td style="text-align:right;">
-0
+92
 </td>
 </tr>
 </tbody>
@@ -1833,8 +1827,8 @@ lasso fit, or zero.</p>
 <span id="cb74-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb74-4"></a>    <span class="kw">points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb74-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb74-5"></a>  }</span>
 <span id="cb74-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb74-6"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:pairsCoeffProf"></span>
-<img src="Static/figures/pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-pairsCoeffProf"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
 <p class="caption">
 Figure 4.11: Coefficients from fits
 </p>
@@ -1863,7 +1857,7 @@ feature selection.</code></pre>
 <span id="cb77-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-2"></a></span>
 <span id="cb77-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-3"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb77-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-4"></a>lasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb77-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-5"></a> cv_lasso,</span>
+<span id="cb77-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-5"></a> hcc5hmC_cv_lasso,</span>
 <span id="cb77-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-6"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb77-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-7"></a>)</span>
 <span id="cb77-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-8"></a>lasso_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1873,20 +1867,20 @@ feature selection.</code></pre>
 <span id="cb77-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-12"></a> </span>
 <span id="cb77-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-13"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb77-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-14"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb77-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-15"></a>    <span class="dt">x=</span><span class="kw">t</span>(train_lcpm_mtx[,lasso_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
+<span id="cb77-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-15"></a>    <span class="dt">x=</span><span class="kw">t</span>(hcc5hmC_train_lcpm_mtx[,lasso_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
 <span id="cb77-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-16"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
 <span id="cb77-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-17"></a>    <span class="dt">labRow=</span>lasso_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb77-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-18"></a>    <span class="dt">labCol=</span>train_group_vec,</span>
+<span id="cb77-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-18"></a>    <span class="dt">labCol=</span>hcc5hmC_train_group_vec,</span>
 <span id="cb77-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-19"></a>    <span class="dt">col=</span>Mycol, </span>
 <span id="cb77-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-20"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
 <span id="cb77-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-21"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
 <span id="cb77-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-22"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
 <span id="cb77-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-23"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb77-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-24"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
+<span id="cb77-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-24"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
 <span id="cb77-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-25"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
 <span id="cb77-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-26"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;lasso genes - N =&#39;</span>, <span class="kw">nrow</span>(lasso_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:heatmapLasso"></span>
-<img src="Static/figures/heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-heatmapLasso"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
 <p class="caption">
 Figure 4.12: Lasso Model Genes
 </p>
@@ -1895,7 +1889,7 @@ Figure 4.12: Lasso Model Genes
 <span id="cb78-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-2"></a></span>
 <span id="cb78-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-3"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb78-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-4"></a>enet_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb78-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-5"></a> cv_enet,</span>
+<span id="cb78-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-5"></a> hcc5hmC_cv_enet,</span>
 <span id="cb78-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-6"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb78-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-7"></a>)</span>
 <span id="cb78-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-8"></a>enet_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1905,20 +1899,20 @@ Figure 4.12: Lasso Model Genes
 <span id="cb78-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-12"></a> </span>
 <span id="cb78-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-13"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb78-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-14"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb78-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-15"></a>    <span class="dt">x=</span><span class="kw">t</span>(train_lcpm_mtx[,enet_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
+<span id="cb78-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-15"></a>    <span class="dt">x=</span><span class="kw">t</span>(hcc5hmC_train_lcpm_mtx[,enet_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
 <span id="cb78-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-16"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
 <span id="cb78-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-17"></a>    <span class="dt">labRow=</span>enet_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb78-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-18"></a>    <span class="dt">labCol=</span>train_group_vec,</span>
+<span id="cb78-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-18"></a>    <span class="dt">labCol=</span>hcc5hmC_train_group_vec,</span>
 <span id="cb78-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-19"></a>    <span class="dt">col=</span>Mycol, </span>
 <span id="cb78-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-20"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
 <span id="cb78-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-21"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
 <span id="cb78-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-22"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
 <span id="cb78-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-23"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb78-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-24"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
+<span id="cb78-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-24"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
 <span id="cb78-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-25"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
 <span id="cb78-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb78-26"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;enet genes - N =&#39;</span>, <span class="kw">nrow</span>(enet_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:heatmapEnet"></span>
-<img src="Static/figures/heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
+<div class="figure"><span id="fig:hcc5hmC-glmnetFit-heatmapEnet"></span>
+<img src="Static/figures/hcc5hmC-glmnetFit-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
 <p class="caption">
 Figure 4.13: Enet Model Genes
 </p>

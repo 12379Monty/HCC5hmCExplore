@@ -107,25 +107,25 @@ sizes.
 First assemble the data set.  This entails simply re-combining the
 train and test data.
 
-```{r get-all-data, cache=T, cache.vars=c('all_lcpm_mtx', 'all_group_vec')}
+```{r hcc5hmC-glmnetSuite-get-all-data, cache=T, cache.vars=c('hcc5hmC_all_lcpm_mtx', 'hcc5hmC_all_group_vec')}
 
 # combine train and test 
-all_lcpm_mtx <- rbind(train_lcpm_mtx, test_lcpm_mtx)
+hcc5hmC_all_lcpm_mtx <- rbind(hcc5hmC_train_lcpm_mtx, hcc5hmC_test_lcpm_mtx)
 
 # we have to be careful with factors!
 # We'll keep as a character and change to factor when needed
-all_group_vec <- c(
- as.character(train_group_vec), 
- as.character(test_group_vec)
+hcc5hmC_all_group_vec <- c(
+ as.character(hcc5hmC_train_group_vec), 
+ as.character(hcc5hmC_test_group_vec)
 )
 # I suspect adding names to vectors breaks one of the tidy commandments,
 # but then again I am sure I have already offended the creed beyond salvation
-names(all_group_vec) <- c(
- names(train_group_vec),
- names(test_group_vec)
+names(hcc5hmC_all_group_vec) <- c(
+ names(hcc5hmC_train_group_vec),
+ names(hcc5hmC_test_group_vec)
 )
 
-knitr::kable(table(group = all_group_vec),
+knitr::kable(table(group = hcc5hmC_all_group_vec),
   caption = "samples by group") %>%
    kableExtra::kable_styling(full_width = F)
 
@@ -139,16 +139,16 @@ Here we will obtain sample consistency scores by averaging results
 over 30 cv runs.
 
 
-```{r lasso-fit-all, cache=T, cache.vars=c('cv_lassoAll_lst'), eval=F}
+```{r hcc5hmC-glmnetSuite-lasso-fit-all, cache=T, cache.vars=c('hcc5hmC_cv_lassoAll_lst'), eval=F}
 
 set.seed(1)
 
 start_time <-  proc.time()
 
-cv_lassoAll_lst <- lapply(1:30, function(REP) {
+hcc5hmC_cv_lassoAll_lst <- lapply(1:30, function(REP) {
 glmnet::cv.glmnet(
- x = all_lcpm_mtx,
- y = factor(all_group_vec,levels = c('Control', 'HCC')),
+ x = hcc5hmC_all_lcpm_mtx,
+ y = factor(hcc5hmC_all_group_vec,levels = c('Control', 'HCC')),
  alpha = 1,
  family = 'binomial',
  type.measure  =  "class",
@@ -164,29 +164,29 @@ message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
 
 <!-- lasso-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r save-cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
- save(list='cv_lassoAll_lst', file=file.path("RData",'cv_lassoAll_lst'))
+```{r hcc5hmC-glmnetSuite-save-hcc5hmC_cv_lassoAll_lst, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars='', echo=F, eval=F}
+ save(list='hcc5hmC_cv_lassoAll_lst', file=file.path("RData",'hcc5hmC_cv_lassoAll_lst'))
 ```
-```{r load-cv_lassoAll_lst, cache=F, echo=F}
- load(file=file.path("RData",'cv_lassoAll_lst'))
+```{r hcc5hmC-glmnetSuite-load-hcc5hmC_cv_lassoAll_lst, cache=F, echo=F}
+ load(file=file.path("RData",'hcc5hmC_cv_lassoAll_lst'))
 ```
 
 
 Examine the fits.
 
-```{r plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
+```{r hcc5hmC-glmnetSuite-plot-lassoAll, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
 ### CLEAR CACHE
 plot(
- log(cv_lassoAll_lst[[1]]$lambda),
- cv_lassoAll_lst[[1]]$cvm,
+ log(hcc5hmC_cv_lassoAll_lst[[1]]$lambda),
+ hcc5hmC_cv_lassoAll_lst[[1]]$cvm,
  lwd=2,
  xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
 )
 
-for(JJ in 2:length(cv_lassoAll_lst))
+for(JJ in 2:length(hcc5hmC_cv_lassoAll_lst))
  lines(
-  log(cv_lassoAll_lst[[JJ]]$lambda),
-  cv_lassoAll_lst[[JJ]]$cvm,
+  log(hcc5hmC_cv_lassoAll_lst[[JJ]]$lambda),
+  hcc5hmC_cv_lassoAll_lst[[JJ]]$cvm,
   lwd=2
 )
 
@@ -197,31 +197,31 @@ of the model fitted through cross validation to the full data set is fairly prec
 
 <!-- DONT CACHE THIS ??? -->
 
-```{r model-size-lassoAll, cache=T, dependson='lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
+```{r hcc5hmC-glmnetSuite-model-size-lassoAll, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
 
 library(magrittr)
 
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
 
 # nzero
-nzero_1se_vec <- sapply(cv_lassoAll_lst,
+nzero_1se_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 
-nzero_min_vec <- sapply(cv_lassoAll_lst,
+nzero_min_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Selected Features")
 
 # error
-error_1se_vec <- sapply(cv_lassoAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 
-error_min_vec <- sapply(cv_lassoAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(
  list(`1se`=error_1se_vec, min = error_min_vec), 
- ylab=cv_lassoAll_lst[[1]]$name,
+ ylab=hcc5hmC_cv_lassoAll_lst[[1]]$name,
  ylim=c(0.06, .10)
 )
 
@@ -255,9 +255,9 @@ rates observed in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')` samples
+`r paste(round(table(group = hcc5hmC_all_group_vec)*.8), collapse=' vs ')` samples
 to a data set with
-`r paste(round(table(group = all_group_vec)), collapse=' vs ')` samples.
+`r paste(round(table(group = hcc5hmC_all_group_vec)), collapse=' vs ')` samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -267,17 +267,17 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r get-sample-pred, cache=F, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
+```{r hcc5hmC-glmnetSuite-get-sample-pred, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
 # predicted probs - 1se
-lassoAll_predResp_1se_mtx <- sapply(cv_lassoAll_lst, function(cv_fit) { 
+lassoAll_predResp_1se_mtx <- sapply(hcc5hmC_cv_lassoAll_lst, function(cv_fit) { 
   ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_1se])
  })
 lassoAll_predResp_1se_vec <- rowMeans(lassoAll_predResp_1se_mtx)
 
 # predicted probs - min
-lassoAll_predResp_min_mtx <- sapply(cv_lassoAll_lst, function(cv_fit) { 
+lassoAll_predResp_min_mtx <- sapply(hcc5hmC_cv_lassoAll_lst, function(cv_fit) { 
   ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_min])
  })
@@ -286,8 +286,8 @@ lassoAll_predResp_min_vec <- rowMeans(lassoAll_predResp_min_mtx)
 # plot
 par(mfrow=c(1,2), mar=c(5,5,2,1))
 tmp <- c(
- `1se` = split(lassoAll_predResp_1se_vec, all_group_vec),
- min = split(lassoAll_predResp_min_vec, all_group_vec)
+ `1se` = split(lassoAll_predResp_1se_vec, hcc5hmC_all_group_vec),
+ min = split(lassoAll_predResp_min_vec, hcc5hmC_all_group_vec)
 )
 names(tmp) <- sub('\\.', '\n', names(tmp))
 
@@ -304,12 +304,12 @@ axis(side=1, at=1:length(tmp), tick=F, names(tmp))
 plot(
  x = lassoAll_predResp_1se_vec, xlab='1se model oof Prob',
  y = lassoAll_predResp_min_vec, ylab='min lambda model oof Prob',
- col = ifelse(all_group_vec == 'HCC', 'red', 'green')
+ col = ifelse(hcc5hmC_all_group_vec == 'HCC', 'red', 'green')
 )
  
 # Add referecne lines at 10% false positive
-thres_1se <- quantile(lassoAll_predResp_1se_vec[all_group_vec == 'Control'], prob=.9)
-thres_min <- quantile(lassoAll_predResp_min_vec[all_group_vec == 'Control'], prob=.9)
+thres_1se <- quantile(lassoAll_predResp_1se_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
+thres_min <- quantile(lassoAll_predResp_min_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
 abline(v = thres_1se, h = thres_min, col='grey')
 
 ```
@@ -336,7 +336,7 @@ for the two models, the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
-```{r get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
+```{r hcc5hmC-glmnetSuite-get-sample-class, cache=T, dependson='hcc5hmC-glmnetSuite-get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
 
 lassoAll_predClass_1se_vec <- ifelse(
  lassoAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
@@ -345,8 +345,8 @@ lassoAll_predClass_min_vec <- ifelse(
  lassoAll_predResp_min_vec > thres_min, 'HCC', 'Control')
 
 tmp <- cbind(
- table(truth=all_group_vec, `1se-pred`=lassoAll_predClass_1se_vec),
- table(truth=all_group_vec, `min-pred`=lassoAll_predClass_min_vec)
+ table(truth=hcc5hmC_all_group_vec, `1se-pred`=lassoAll_predClass_1se_vec),
+ table(truth=hcc5hmC_all_group_vec, `min-pred`=lassoAll_predClass_min_vec)
 ) 
 # Hack for printing
 colnames(tmp) <- c('1se-Control', '1se-HCC', 'min-Control', 'min-HCC')
@@ -372,12 +372,12 @@ of computing sample consistency scores - what do these differences mean?
 
 ### Get sample consistency scores {-}
 
-To compute quality scores, we will use the out-of-fold predicted probabilities.
+To compute consistency scores, we will use the out-of-fold predicted probabilities.
 
-```{r get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
+```{r hcc5hmC-glmnetSuite-get-sample-qual, cache=T, dependson='hcc5hmC-glmnetSuite-get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
 # get qual scores
 
-y <- as.numeric(all_group_vec == 'HCC')
+y <- as.numeric(hcc5hmC_all_group_vec == 'HCC')
 # 1se
 p <- lassoAll_predResp_1se_vec
 sample_1se_qual_vec <- p^y*(1-p)^(1-y)
@@ -391,12 +391,12 @@ sample_min_qual_vec <- p^y*(1-p)^(1-y)
 
 
 
-We can examine quality scores as a function of classification bin.
+We can examine consistency scores as a function of classification bin.
 
 
-```{r plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - Control=0, HCC=1'}
+```{r hcc5hmC-glmnetSuite-plot-qual-conf, cache=F, cache.vars='', dependson='hcc5hmC-glmnetSuite-get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - Control=0, HCC=1'}
 
-y <- as.numeric(all_group_vec == 'HCC')
+y <- as.numeric(hcc5hmC_all_group_vec == 'HCC')
 
 # 1se
 lassoAll_1se_conf_vec <- paste(
@@ -450,7 +450,7 @@ We will use the minimum lambda model to provide
 the fitted probabilities used to compute quality scores,
 but we could have used either one.
 
-```{r sample-qual}
+```{r hcc5hmC-glmnetSuite-sample-qual}
 
 sample_qual_vec <- sample_min_qual_vec
 
@@ -471,12 +471,12 @@ while the one standard error rule models had an IQR of
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+```{r hcc5hmC-glmnetSuite-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
 ### CLEAR CACHE
 
 
 # 1se
-lassoAll_coef_1se_lst <- lapply(cv_lassoAll_lst, function(cv_fit){
+lassoAll_coef_1se_lst <- lapply(hcc5hmC_cv_lassoAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.1se"
@@ -510,12 +510,12 @@ and
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
-```{r feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+```{r hcc5hmC-glmnetSuite-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
 ### CLEAR CACHE
 
 
 # min
-lassoAll_coef_min_lst <- lapply(cv_lassoAll_lst, function(cv_fit){
+lassoAll_coef_min_lst <- lapply(hcc5hmC_cv_lassoAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.min"
@@ -551,7 +551,7 @@ We will consider the genes that are selected in all cv replicates as a
 gene signature produced by each model.
 
 
-```{r minVs1seGenes}
+```{r hcc5hmC-glmnetSuite-minVs1seGenes}
 
 lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
 lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
@@ -566,7 +566,7 @@ are contained in the min lambda model gene signature.
 
 We are now ready to run the simulations.
 
-```{r simParms, cahce=F}
+```{r hcc5hmC-glmnetSuite-simParms, cahce=F}
  SIM <- 30
  SIZE <- c(25, 50, 100, 200, 300)
  CV_REP <- 30
@@ -612,8 +612,8 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected HCC samples, the expected overlap between two randomly
-selected sets of HCC samples is `r round(100*(300/sum(all_group_vec=='HCC'))^2,1)`%.
-For Controls the expected overlap is `r round(100*(300/sum(all_group_vec=='Control'))^2,1)`%. 
+selected sets of HCC samples is `r round(100*(300/sum(hcc5hmC_all_group_vec=='HCC'))^2,1)`%.
+For Controls the expected overlap is `r round(100*(300/sum(hcc5hmC_all_group_vec=='Control'))^2,1)`%. 
 
 **Reader Note**
 ```
@@ -631,60 +631,60 @@ To Do.
 To setup the simulation, we only need two master tables: one for the selection of Controls
 and one for the selection of HCC samples.
 
-```{r get-all-vec, cache=T, cache.vars=c('all_control_vec', 'all_affected_vec')}
+```{r hcc5hmC-glmnetSuite-get-all-vec, cache=T, cache.vars=c('hcc5hmC_all_control_vec', 'hcc5hmC_all_affected_vec')}
 
-all_control_vec <- names(all_group_vec[all_group_vec=='Control']) 
-all_affected_vec <- names(all_group_vec[all_group_vec=='HCC'])  
+hcc5hmC_all_control_vec <- names(hcc5hmC_all_group_vec[hcc5hmC_all_group_vec=='Control']) 
+hcc5hmC_all_affected_vec <- names(hcc5hmC_all_group_vec[hcc5hmC_all_group_vec=='HCC'])  
 
 ```
 
-We have `r length(all_control_vec)` control sample IDs stored in `all_control_vec`
-and `r length(all_affected_vec)` affected sample IDs stored in `all_affected_vec`.
+We have `r length(hcc5hmC_all_control_vec)` control sample IDs stored in `hcc5hmC_all_control_vec`
+and `r length(hcc5hmC_all_affected_vec)` affected sample IDs stored in `hcc5hmC_all_affected_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
   
-```{r getSimTable, cache=T, cache.vars=c('sim_control_mtx', 'sim_affected_mtx')}
+```{r hcc5hmC-glmnetSuite-getSimTable, cache=T, cache.vars=c('hcc5hmC_sim_control_mtx', 'hcc5hmC_sim_affected_mtx')}
 
 set.seed(12379)
 
-sim_control_mtx <- sapply(
+hcc5hmC_sim_control_mtx <- sapply(
  1:SIM, 
  function(dummy) 
-   sample(1:length(all_control_vec), size =  max(SIZE))
+   sample(1:length(hcc5hmC_all_control_vec), size =  max(SIZE))
 )
 
 
-sim_affected_mtx <- sapply(
+hcc5hmC_sim_affected_mtx <- sapply(
  1:SIM, 
  function(dummy) 
-   sample(1:length(all_affected_vec), size =  max(SIZE))
+   sample(1:length(hcc5hmC_all_affected_vec), size =  max(SIZE))
 )
 
 
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`sim_control_mtx` and `sim_affected_mtx`, each with dimensions `r dim(sim_affected_mtx)`.
+`hcc5hmC_sim_control_mtx` and `hcc5hmC_sim_affected_mtx`, each with dimensions `r dim(hcc5hmC_sim_affected_mtx)`.
 Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
 Here we show results for the small sample sizes where variability will be the greatest.
 
-```{r look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
+```{r hcc5hmC-glmnetSuite-look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
 ### CLEAR CACHE
 
-all_control_qual_vec <- sample_qual_vec[all_control_vec]
+all_control_qual_vec <- sample_qual_vec[hcc5hmC_all_control_vec]
 sim_control_qual_mtx <- sapply(
-  1:ncol(sim_control_mtx), 
-  function(CC) all_control_qual_vec[sim_control_mtx[,CC]]
+  1:ncol(hcc5hmC_sim_control_mtx), 
+  function(CC) all_control_qual_vec[hcc5hmC_sim_control_mtx[,CC]]
  )
 
-all_affected_qual_vec <- sample_qual_vec[all_affected_vec]
+all_affected_qual_vec <- sample_qual_vec[hcc5hmC_all_affected_vec]
 sim_affected_qual_mtx <- sapply(
-  1:ncol(sim_affected_mtx),  
-  function(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]
+  1:ncol(hcc5hmC_sim_affected_mtx),  
+  function(CC) all_affected_qual_vec[hcc5hmC_sim_affected_mtx[,CC]]
  )
 
 # Get stage from SIZE 
@@ -749,19 +749,19 @@ title("Affected sample consistency by stage and simulation")
 
 ```
 
-```{r look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
+```{r hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
 ### CLEAR CACHE
 
-all_control_qual_vec <- sample_qual_vec[all_control_vec]
+all_control_qual_vec <- sample_qual_vec[hcc5hmC_all_control_vec]
 sim_control_qual_mtx <- sapply(
-  1:ncol(sim_control_mtx), 
-  function(CC) all_control_qual_vec[sim_control_mtx[,CC]]
+  1:ncol(hcc5hmC_sim_control_mtx), 
+  function(CC) all_control_qual_vec[hcc5hmC_sim_control_mtx[,CC]]
  )
 
-all_affected_qual_vec <- sample_qual_vec[all_affected_vec]
+all_affected_qual_vec <- sample_qual_vec[hcc5hmC_all_affected_vec]
 sim_affected_qual_mtx <- sapply(
-  1:ncol(sim_affected_mtx),  
-  function(CC) all_affected_qual_vec[sim_affected_mtx[,CC]]
+  1:ncol(hcc5hmC_sim_affected_mtx),  
+  function(CC) all_affected_qual_vec[hcc5hmC_sim_affected_mtx[,CC]]
  )
 
 # ONLY LOOK AT SAMPLE SIZE == 50
@@ -811,7 +811,7 @@ per iteration, or 4 to 5 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r run-sim, cache=T, cache.vars='start_time', eval=F}
+```{r hcc5hmC-glmnetSuite-run-sim, cache=T, cache.vars='start_time', eval=F}
 start_time <- proc.time()
 
 # Get stage from SIZE
@@ -826,11 +826,11 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
     #cat("Stage ", STGno, "- analyzing", length(Stage_rows_vec), "paired samples.\n")
 
     sim_stage_samples_vec <- c(
-      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],
-      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]
+      hcc5hmC_all_control_vec[hcc5hmC_sim_control_mtx[Stage_rows_vec, SIMno]],
+      hcc5hmC_all_affected_vec[hcc5hmC_sim_affected_mtx[Stage_rows_vec, SIMno]]
     )
-    sim_stage_lcpm_mtx <- all_lcpm_mtx[sim_stage_samples_vec, ]
-    sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
+    sim_stage_lcpm_mtx <- hcc5hmC_all_lcpm_mtx[sim_stage_samples_vec, ]
+    sim_stage_group_vec <- hcc5hmC_all_group_vec[sim_stage_samples_vec]
     #print(table(sim_stage_group_vec))
 
     sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
@@ -852,17 +852,17 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
       cvm_1se <- cv_fit$cvm[ndx_1se]
 
       # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
-      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_samples_vec <- setdiff(rownames(hcc5hmC_all_lcpm_mtx), sim_stage_samples_vec)
+      sim_stage_hcc5hmC_test_lcpm_mtx <- hcc5hmC_all_lcpm_mtx[sim_stage_test_samples_vec,]
+      sim_stage_hcc5hmC_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_1se_vec <- predict(
        cv_fit,
-       newx=sim_stage_test_lcpm_mtx,
+       newx=sim_stage_hcc5hmC_test_lcpm_mtx,
        s="lambda.1se",
        type="class"
       )
-      test_1se_error <- mean(test_pred_1se_vec != sim_stage_test_group_vec)
+      test_1se_error <- mean(test_pred_1se_vec != sim_stage_hcc5hmC_test_group_vec)
 
       # genes
       coef_1se <- coef(
@@ -879,17 +879,17 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
       cvm_min <- cv_fit$cvm[ndx_min]
 
       # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
-      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_samples_vec <- setdiff(rownames(hcc5hmC_all_lcpm_mtx), sim_stage_samples_vec)
+      sim_stage_hcc5hmC_test_lcpm_mtx <- hcc5hmC_all_lcpm_mtx[sim_stage_test_samples_vec,]
+      sim_stage_hcc5hmC_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_min_vec <- predict(
        cv_fit,
-       newx=sim_stage_test_lcpm_mtx,
+       newx=sim_stage_hcc5hmC_test_lcpm_mtx,
        s="lambda.min",
        type="class"
       )
-      test_min_error <- mean(test_pred_min_vec != sim_stage_test_group_vec)
+      test_min_error <- mean(test_pred_min_vec != sim_stage_hcc5hmC_test_group_vec)
 
       # genes
       coef_min <- coef(
@@ -913,7 +913,7 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
   })
 
   # save  sim_cv_lst
-  fName <- paste0("sim_", SIMno, "_cv_lst")
+  fName <- paste0("hcc5hmC_sim_", SIMno, "_cv_lst")
   assign(fName, sim_cv_lst)
   save(list = fName, file=file.path("RData", fName))
 
@@ -921,6 +921,18 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
 
 ```
 
+<!-- DEBUG - rename after the fact -->
+
+```{r hcc5hmC-glmnetSuite-RENAME-sim, echo=F, eval=F}
+sim_files_vec <- list.files('RData', '^sim_')
+
+for(FF in sim_files_vec){
+  load(file=file.path('RData', FF))
+  assign(paste0('hcc5hmC_',FF), get(FF))
+  save(list = paste0('hcc5hmC_',FF), file=file.path("RData", paste0('hcc5hmC_',FF)))
+  rm(list=c(FF, paste0('hcc5hmC_',FF)))
+}
+```
 
 
 ## Simulation results
@@ -935,12 +947,13 @@ analyzed in increasing sizes of `r paste(SIZE, sep=', ')`, with
 * Number of CV Replicates:  CV_REP = `r CV_REP`
 
 
+
 First we extract simulation results and store into one big table
 (only showing the top of table here):
 
-```{r extract-sim-results, cache=T, cache.vars='lasso_sim_results_frm'}
+```{r hcc5hmC-glmnetSuite-extract-sim-results, cache=T, cache.vars='hcc5hmC_lasso_sim_results_frm'}
 ### CLEAR CACHE
-sim_files_vec <- list.files('RData', '^sim_')
+sim_files_vec <- list.files('RData', '^hcc5hmC_sim_')
 
 
 # define extraction methods
@@ -970,7 +983,7 @@ cv_lst_to_frm <- function(sim_cv_lst) {
 }
 
 # we loop across simulations to combine all results into one big table
-lasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
+hcc5hmC_lasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
  function(SIM_NO) {
   load(file=file.path('RData', sim_files_vec[SIM_NO]))
   assign('sim_cv_lst', get(sim_files_vec[SIM_NO]))
@@ -983,17 +996,17 @@ lasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec),
 ```
 
 <!-- 
-Have a table of simulation results - `lasso_sim_results_frm`:
+Have a table of simulation results - `hcc5hmC_lasso_sim_results_frm`:
 -->
 
-```{r sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+```{r hcc5hmC-glmnetSuite-sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
 ### CLEAR CACHE
  
-knitr::kable(head(with(lasso_sim_results_frm, table(SimNo, Size))),
+knitr::kable(head(with(hcc5hmC_lasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
    kableExtra::kable_styling(full_width = F)
 
-knitr::kable(head(lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
+knitr::kable(head(hcc5hmC_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
     caption = paste("Simulation Results - not showing genes column"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
@@ -1009,15 +1022,15 @@ fixed random selection of Control and Affected samples.  Recall that as
 we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
-```{r lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+```{r hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_lassoAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_lassoAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -1028,11 +1041,11 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(lasso_sim_results_frm$SimNo)[1]){
+for(SIM in unique(hcc5hmC_lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 # errors
@@ -1151,15 +1164,15 @@ and may be related to sample consistency.
 * There isn't much to chose from between the one standard error and the minimum lambda models.  The
 latter may show lower propensity to produce optimistic cv error rates.  
 
-```{r lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+```{r hcc5hmC-glmnetSuite-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
 # get full model nzero ref
-nzero_1se_vec <- sapply(cv_lassoAll_lst,
+nzero_1se_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
-nzero_min_vec <- sapply(cv_lassoAll_lst,
+nzero_min_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
@@ -1170,11 +1183,11 @@ stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(lasso_sim_results_frm$SimNo)[1]){
+for(SIM in unique(hcc5hmC_lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
@@ -1314,15 +1327,15 @@ summarizes the results of 30 simulations.  For a give sample size and a
 given simulation, each data point is the median across 30 repeated cv runs.
 
 
-```{r lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+```{r hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(cv_lassoAll_lst,
+error_1se_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(cv_lassoAll_lst,
+error_min_vec <- sapply(hcc5hmC_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
@@ -1334,24 +1347,24 @@ par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 ## cv
-cv_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+cv_1se_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_1se_lst <- with(sizeVal_results_frm, split(cv_1se, SimNo))
  sapply(sizeVal_cv_1se_lst, median)
 })
 names(cv_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+test_1se_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_1se_lst <- with(sizeVal_results_frm, split(test_1se, SimNo))
  sapply(sizeVal_test_1se_lst, median)
 })
 names(test_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_1se_Bysize_lst <- c(cv_1se_Bysize_lst, test_1se_Bysize_lst)
@@ -1367,7 +1380,7 @@ boxplot(error_1se_Bysize_lst,
 for(JJ in 1:length(error_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_1se_Bysize_lst[[JJ]],
+   y=error_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -1389,24 +1402,24 @@ title(paste('one se lambda - error rates'))
 # min
 #########################################
 ## cv
-cv_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+cv_min_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_min_lst <- with(sizeVal_results_frm, split(cv_min, SimNo))
  sapply(sizeVal_cv_min_lst, median)
 })
 names(cv_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+test_min_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_min_lst <- with(sizeVal_results_frm, split(test_min, SimNo))
  sapply(sizeVal_test_min_lst, median)
 })
 names(test_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_min_Bysize_lst <- c(cv_min_Bysize_lst, test_min_Bysize_lst)
@@ -1422,7 +1435,7 @@ boxplot(error_min_Bysize_lst,
 for(JJ in 1:length(error_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_min_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_min_Bysize_lst[[JJ]],
+   y=error_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -1457,7 +1470,7 @@ rate produced by a given cohort can range from below 0.2 to higher than 0.5,
 or basically no indication of discrimination value in the analyzed features.
 
 
-```{r print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
+```{r hcc5hmC-glmnetSuite-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
 ### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1477,7 +1490,7 @@ knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm)
 
 Now look at feature selection.
 
-```{r lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+```{r hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
 # Utility objects
@@ -1488,19 +1501,19 @@ par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 # selected features
-p_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+p_1se_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_1se_lst <- with(sizeVal_results_frm, split(p_1se, SimNo))
  sapply(sizeVal_p_1se_lst, median)
 })
 names(p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_1se_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+sign_p_1se_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_1se_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
@@ -1512,7 +1525,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_1se_lst, median)
 })
 names(sign_p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_1se_Bysize_lst <- c(p_1se_Bysize_lst, sign_p_1se_Bysize_lst)
@@ -1527,7 +1540,7 @@ boxplot(p_singP_1se_Bysize_lst,
 for(JJ in 1:length(p_singP_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_1se_Bysize_lst[[JJ]],
+   y=p_singP_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1550,19 +1563,19 @@ title(paste('one se lamdba - selected gene counts'))
 # min
 #########################################
 # selected features
-p_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+p_min_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_min_lst <- with(sizeVal_results_frm, split(p_min, SimNo))
  sapply(sizeVal_p_min_lst, median)
 })
 names(p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_min_Bysize_lst <- lapply(unique(lasso_sim_results_frm$Size),
+sign_p_min_Bysize_lst <- lapply(unique(hcc5hmC_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- hcc5hmC_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_min_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
@@ -1574,7 +1587,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_min_lst, median)
 })
 names(sign_p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(hcc5hmC_lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_min_Bysize_lst <- c(p_min_Bysize_lst, sign_p_min_Bysize_lst)
@@ -1589,7 +1602,7 @@ boxplot(p_singP_min_Bysize_lst,
 for(JJ in 1:length(p_singP_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_min_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_min_Bysize_lst[[JJ]],
+   y=p_singP_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1614,7 +1627,7 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 ```
 
 
-```{r print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
+```{r hcc5hmC-glmnetSuite-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
 ### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1652,7 +1665,7 @@ cv runs.
 
 * 1se_cv and 1se_test are the cross-validation and test set error rates, respectively.
 
-```{r small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance'}
+```{r hcc5hmC-glmnetSuite-small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance'}
 
 control_samp25_qual_vec <- apply(sim_control_qual_mtx[1:25, ], 2, median)
 affected_samp25_qual_vec <- apply(sim_affected_qual_mtx[1:25, ], 2, median)

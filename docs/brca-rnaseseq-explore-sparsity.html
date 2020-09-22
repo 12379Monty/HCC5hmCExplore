@@ -313,33 +313,33 @@ EPS <- 0.05    # Have no idea what "small" epsilon means
 <div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="brca-rnaseseq-explore-sparsity.html#cb137-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb137-2"><a href="brca-rnaseseq-explore-sparsity.html#cb137-2"></a></span>
 <span id="cb137-3"><a href="brca-rnaseseq-explore-sparsity.html#cb137-3"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb137-4"><a href="brca-rnaseseq-explore-sparsity.html#cb137-4"></a>train_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescB,</span>
-<span id="cb137-5"><a href="brca-rnaseseq-explore-sparsity.html#cb137-5"></a>sampDescB<span class="op">$</span>sampID[caret<span class="op">::</span><span class="kw">createDataPartition</span>(<span class="dt">y=</span>group, <span class="dt">p=</span>trainP, <span class="dt">list=</span>F)]</span>
+<span id="cb137-4"><a href="brca-rnaseseq-explore-sparsity.html#cb137-4"></a>brcaRna_train_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(brcaRna_sampDesc,</span>
+<span id="cb137-5"><a href="brca-rnaseseq-explore-sparsity.html#cb137-5"></a>brcaRna_sampDesc<span class="op">$</span>sampID[caret<span class="op">::</span><span class="kw">createDataPartition</span>(<span class="dt">y=</span>group, <span class="dt">p=</span>trainP, <span class="dt">list=</span>F)]</span>
 <span id="cb137-6"><a href="brca-rnaseseq-explore-sparsity.html#cb137-6"></a>)</span>
 <span id="cb137-7"><a href="brca-rnaseseq-explore-sparsity.html#cb137-7"></a></span>
-<span id="cb137-8"><a href="brca-rnaseseq-explore-sparsity.html#cb137-8"></a>test_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(sampDescB,</span>
-<span id="cb137-9"><a href="brca-rnaseseq-explore-sparsity.html#cb137-9"></a><span class="kw">setdiff</span>(sampID, train_sampID_vec)</span>
+<span id="cb137-8"><a href="brca-rnaseseq-explore-sparsity.html#cb137-8"></a>brcaRna_test_sampID_vec &lt;-<span class="st"> </span><span class="kw">with</span>(brcaRna_sampDesc,</span>
+<span id="cb137-9"><a href="brca-rnaseseq-explore-sparsity.html#cb137-9"></a><span class="kw">setdiff</span>(sampID, brcaRna_train_sampID_vec)</span>
 <span id="cb137-10"><a href="brca-rnaseseq-explore-sparsity.html#cb137-10"></a>)</span>
 <span id="cb137-11"><a href="brca-rnaseseq-explore-sparsity.html#cb137-11"></a></span>
-<span id="cb137-12"><a href="brca-rnaseseq-explore-sparsity.html#cb137-12"></a>train_group_vec &lt;-<span class="st"> </span><span class="kw">factor</span>(sampDescB[train_sampID_vec, <span class="st">&#39;group&#39;</span>],</span>
+<span id="cb137-12"><a href="brca-rnaseseq-explore-sparsity.html#cb137-12"></a>brcaRna_train_group_vec &lt;-<span class="st"> </span><span class="kw">factor</span>(brcaRna_sampDesc[brcaRna_train_sampID_vec, <span class="st">&#39;group&#39;</span>],</span>
 <span id="cb137-13"><a href="brca-rnaseseq-explore-sparsity.html#cb137-13"></a><span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&#39;Other&#39;</span>, <span class="st">&#39;LumA&#39;</span>))</span>
-<span id="cb137-14"><a href="brca-rnaseseq-explore-sparsity.html#cb137-14"></a><span class="kw">names</span>(train_group_vec) &lt;-<span class="st"> </span>sampDescB[train_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
+<span id="cb137-14"><a href="brca-rnaseseq-explore-sparsity.html#cb137-14"></a><span class="kw">names</span>(brcaRna_train_group_vec) &lt;-<span class="st"> </span>brcaRna_sampDesc[brcaRna_train_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
 <span id="cb137-15"><a href="brca-rnaseseq-explore-sparsity.html#cb137-15"></a></span>
-<span id="cb137-16"><a href="brca-rnaseseq-explore-sparsity.html#cb137-16"></a>test_group_vec &lt;-<span class="st"> </span><span class="kw">factor</span>(sampDescB[test_sampID_vec, <span class="st">&#39;group&#39;</span>],</span>
+<span id="cb137-16"><a href="brca-rnaseseq-explore-sparsity.html#cb137-16"></a>brcaRna_test_group_vec &lt;-<span class="st"> </span><span class="kw">factor</span>(brcaRna_sampDesc[brcaRna_test_sampID_vec, <span class="st">&#39;group&#39;</span>],</span>
 <span id="cb137-17"><a href="brca-rnaseseq-explore-sparsity.html#cb137-17"></a><span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&#39;Other&#39;</span>, <span class="st">&#39;LumA&#39;</span>))</span>
-<span id="cb137-18"><a href="brca-rnaseseq-explore-sparsity.html#cb137-18"></a><span class="kw">names</span>(test_group_vec) &lt;-<span class="st"> </span>sampDescB[test_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
+<span id="cb137-18"><a href="brca-rnaseseq-explore-sparsity.html#cb137-18"></a><span class="kw">names</span>(brcaRna_test_group_vec) &lt;-<span class="st"> </span>brcaRna_sampDesc[brcaRna_test_sampID_vec, <span class="st">&#39;sampID&#39;</span>]</span>
 <span id="cb137-19"><a href="brca-rnaseseq-explore-sparsity.html#cb137-19"></a></span>
-<span id="cb137-20"><a href="brca-rnaseseq-explore-sparsity.html#cb137-20"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(train_group_vec),</span>
+<span id="cb137-20"><a href="brca-rnaseseq-explore-sparsity.html#cb137-20"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(brcaRna_train_group_vec),</span>
 <span id="cb137-21"><a href="brca-rnaseseq-explore-sparsity.html#cb137-21"></a>  <span class="dt">caption=</span><span class="st">&quot;Train set&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb137-22"><a href="brca-rnaseseq-explore-sparsity.html#cb137-22"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-getTrainVal">Table 7.1: </span>Train set
+<span id="tab:brcaRna-glmnetFit-getTrainVal">Table 7.1: </span>Train set
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-train_group_vec
+brcaRna_train_group_vec
 </th>
 <th style="text-align:right;">
 Freq
@@ -365,17 +365,17 @@ LumA
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="brca-rnaseseq-explore-sparsity.html#cb138-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(test_group_vec),</span>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="brca-rnaseseq-explore-sparsity.html#cb138-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">table</span>(brcaRna_test_group_vec),</span>
 <span id="cb138-2"><a href="brca-rnaseseq-explore-sparsity.html#cb138-2"></a>  <span class="dt">caption=</span><span class="st">&quot;Test set&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb138-3"><a href="brca-rnaseseq-explore-sparsity.html#cb138-3"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-getTrainVal">Table 7.1: </span>Test set
+<span id="tab:brcaRna-glmnetFit-getTrainVal">Table 7.1: </span>Test set
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-test_group_vec
+brcaRna_test_group_vec
 </th>
 <th style="text-align:right;">
 Freq
@@ -401,8 +401,8 @@ LumA
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="brca-rnaseseq-explore-sparsity.html#cb139-1"></a>train_geneExpr_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(geneExpressionB_F[,train_sampID_vec])</span>
-<span id="cb139-2"><a href="brca-rnaseseq-explore-sparsity.html#cb139-2"></a>test_geneExpr_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(geneExpressionB_F[,test_sampID_vec])</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="brca-rnaseseq-explore-sparsity.html#cb139-1"></a>brcaRna_train_geneExpr_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(brcaRna_geneExpression_F[,brcaRna_train_sampID_vec])</span>
+<span id="cb139-2"><a href="brca-rnaseseq-explore-sparsity.html#cb139-2"></a>brcaRna_test_geneExpr_mtx &lt;-<span class="st"> </span><span class="kw">t</span>(brcaRna_geneExpression_F[,brcaRna_test_sampID_vec])</span></code></pre></div>
 <p>We explore some glmnet fits and the “bet on sparsity”.
 We consider three models, specified by the value of the
 <strong>alpha</strong> parameter in the elastic net parametrization:<br />
@@ -423,25 +423,25 @@ stability of performance will be investigated in the next section.</p>
 training data. We’ll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.</p>
 <div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="brca-rnaseseq-explore-sparsity.html#cb140-1"></a><span class="co"># This is too variable, both in terms of fold size And composition</span></span>
-<span id="cb140-2"><a href="brca-rnaseseq-explore-sparsity.html#cb140-2"></a><span class="co">#foldid_vec &lt;- sample(1:10, size=length(train_group_vec), replace=T)</span></span>
+<span id="cb140-2"><a href="brca-rnaseseq-explore-sparsity.html#cb140-2"></a><span class="co">#foldid_vec &lt;- sample(1:10, size=length(brcaRna_train_group_vec), replace=T)</span></span>
 <span id="cb140-3"><a href="brca-rnaseseq-explore-sparsity.html#cb140-3"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb140-4"><a href="brca-rnaseseq-explore-sparsity.html#cb140-4"></a></span>
 <span id="cb140-5"><a href="brca-rnaseseq-explore-sparsity.html#cb140-5"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb140-6"><a href="brca-rnaseseq-explore-sparsity.html#cb140-6"></a>train_foldid_vec &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createFolds</span>(</span>
-<span id="cb140-7"><a href="brca-rnaseseq-explore-sparsity.html#cb140-7"></a> <span class="kw">factor</span>(train_group_vec), </span>
+<span id="cb140-6"><a href="brca-rnaseseq-explore-sparsity.html#cb140-6"></a>brcaRna_train_foldid_vec &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createFolds</span>(</span>
+<span id="cb140-7"><a href="brca-rnaseseq-explore-sparsity.html#cb140-7"></a> <span class="kw">factor</span>(brcaRna_train_group_vec), </span>
 <span id="cb140-8"><a href="brca-rnaseseq-explore-sparsity.html#cb140-8"></a> <span class="dt">k=</span>K_FOLD,</span>
 <span id="cb140-9"><a href="brca-rnaseseq-explore-sparsity.html#cb140-9"></a> <span class="dt">list=</span>F)</span>
 <span id="cb140-10"><a href="brca-rnaseseq-explore-sparsity.html#cb140-10"></a></span>
-<span id="cb140-11"><a href="brca-rnaseseq-explore-sparsity.html#cb140-11"></a><span class="co"># train_foldid_vec contains the left-out IDs </span></span>
+<span id="cb140-11"><a href="brca-rnaseseq-explore-sparsity.html#cb140-11"></a><span class="co"># brcaRna_train_foldid_vec contains the left-out IDs </span></span>
 <span id="cb140-12"><a href="brca-rnaseseq-explore-sparsity.html#cb140-12"></a><span class="co"># the rest are kept</span></span>
-<span id="cb140-13"><a href="brca-rnaseseq-explore-sparsity.html#cb140-13"></a>fold_out_tbl &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(train_group_vec, train_foldid_vec),</span>
+<span id="cb140-13"><a href="brca-rnaseseq-explore-sparsity.html#cb140-13"></a>fold_out_tbl &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">split</span>(brcaRna_train_group_vec, brcaRna_train_foldid_vec),</span>
 <span id="cb140-14"><a href="brca-rnaseseq-explore-sparsity.html#cb140-14"></a>  table)</span>
 <span id="cb140-15"><a href="brca-rnaseseq-explore-sparsity.html#cb140-15"></a><span class="kw">rownames</span>(fold_out_tbl) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">rownames</span>(fold_out_tbl), <span class="st">&#39;- Out&#39;</span>) </span>
 <span id="cb140-16"><a href="brca-rnaseseq-explore-sparsity.html#cb140-16"></a></span>
-<span id="cb140-17"><a href="brca-rnaseseq-explore-sparsity.html#cb140-17"></a>fold_in_tbl &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(train_foldid_vec)),</span>
-<span id="cb140-18"><a href="brca-rnaseseq-explore-sparsity.html#cb140-18"></a>  <span class="cf">function</span>(FOLD) <span class="kw">table</span>(train_group_vec[train_foldid_vec <span class="op">!=</span><span class="st"> </span>FOLD])))</span>
+<span id="cb140-17"><a href="brca-rnaseseq-explore-sparsity.html#cb140-17"></a>fold_in_tbl &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&#39;cbind&#39;</span>, <span class="kw">lapply</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(brcaRna_train_foldid_vec)),</span>
+<span id="cb140-18"><a href="brca-rnaseseq-explore-sparsity.html#cb140-18"></a>  <span class="cf">function</span>(FOLD) <span class="kw">table</span>(brcaRna_train_group_vec[brcaRna_train_foldid_vec <span class="op">!=</span><span class="st"> </span>FOLD])))</span>
 <span id="cb140-19"><a href="brca-rnaseseq-explore-sparsity.html#cb140-19"></a><span class="kw">rownames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">rownames</span>(fold_in_tbl), <span class="st">&#39;- In&#39;</span>) </span>
-<span id="cb140-20"><a href="brca-rnaseseq-explore-sparsity.html#cb140-20"></a><span class="kw">colnames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(train_foldid_vec)))</span>
+<span id="cb140-20"><a href="brca-rnaseseq-explore-sparsity.html#cb140-20"></a><span class="kw">colnames</span>(fold_in_tbl) &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">sort</span>(<span class="kw">unique</span>(brcaRna_train_foldid_vec)))</span>
 <span id="cb140-21"><a href="brca-rnaseseq-explore-sparsity.html#cb140-21"></a></span>
 <span id="cb140-22"><a href="brca-rnaseseq-explore-sparsity.html#cb140-22"></a></span>
 <span id="cb140-23"><a href="brca-rnaseseq-explore-sparsity.html#cb140-23"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">rbind</span>(fold_in_tbl, fold_out_tbl[,<span class="kw">colnames</span>(fold_in_tbl)]),</span>
@@ -449,7 +449,7 @@ to folds while keeping the outcome ratios constant across folds.</p>
 <span id="cb140-25"><a href="brca-rnaseseq-explore-sparsity.html#cb140-25"></a><span class="st">   </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-getTrainFolds">Table 7.2: </span>training samples fold composition
+<span id="tab:brcaRna-glmnetFit-getTrainFolds">Table 7.2: </span>training samples fold composition
 </caption>
 <thead>
 <tr>
@@ -639,10 +639,10 @@ data for each fold fit.</p>
 <span id="cb141-2"><a href="brca-rnaseseq-explore-sparsity.html#cb141-2"></a></span>
 <span id="cb141-3"><a href="brca-rnaseseq-explore-sparsity.html#cb141-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb141-4"><a href="brca-rnaseseq-explore-sparsity.html#cb141-4"></a></span>
-<span id="cb141-5"><a href="brca-rnaseseq-explore-sparsity.html#cb141-5"></a>cv_lasso &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb141-6"><a href="brca-rnaseseq-explore-sparsity.html#cb141-6"></a> <span class="dt">x=</span>train_geneExpr_mtx,</span>
-<span id="cb141-7"><a href="brca-rnaseseq-explore-sparsity.html#cb141-7"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb141-8"><a href="brca-rnaseseq-explore-sparsity.html#cb141-8"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb141-5"><a href="brca-rnaseseq-explore-sparsity.html#cb141-5"></a>brcaRna_cv_lasso &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb141-6"><a href="brca-rnaseseq-explore-sparsity.html#cb141-6"></a> <span class="dt">x=</span>brcaRna_train_geneExpr_mtx,</span>
+<span id="cb141-7"><a href="brca-rnaseseq-explore-sparsity.html#cb141-7"></a> <span class="dt">y=</span>brcaRna_train_group_vec,</span>
+<span id="cb141-8"><a href="brca-rnaseseq-explore-sparsity.html#cb141-8"></a> <span class="dt">foldid=</span>brcaRna_train_foldid_vec,</span>
 <span id="cb141-9"><a href="brca-rnaseseq-explore-sparsity.html#cb141-9"></a> <span class="dt">alpha=</span><span class="dv">1</span>,</span>
 <span id="cb141-10"><a href="brca-rnaseseq-explore-sparsity.html#cb141-10"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>, </span>
 <span id="cb141-11"><a href="brca-rnaseseq-explore-sparsity.html#cb141-11"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -651,15 +651,15 @@ data for each fold fit.</p>
 <span id="cb141-14"><a href="brca-rnaseseq-explore-sparsity.html#cb141-14"></a>)</span>
 <span id="cb141-15"><a href="brca-rnaseseq-explore-sparsity.html#cb141-15"></a></span>
 <span id="cb141-16"><a href="brca-rnaseseq-explore-sparsity.html#cb141-16"></a><span class="kw">message</span>(<span class="st">&quot;lasso time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## lasso time: 34.51s</code></pre>
+<pre><code>## lasso time: 31.07s</code></pre>
 <div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="brca-rnaseseq-explore-sparsity.html#cb143-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb143-2"><a href="brca-rnaseseq-explore-sparsity.html#cb143-2"></a></span>
 <span id="cb143-3"><a href="brca-rnaseseq-explore-sparsity.html#cb143-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb143-4"><a href="brca-rnaseseq-explore-sparsity.html#cb143-4"></a></span>
-<span id="cb143-5"><a href="brca-rnaseseq-explore-sparsity.html#cb143-5"></a>cv_ridge &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb143-6"><a href="brca-rnaseseq-explore-sparsity.html#cb143-6"></a> <span class="dt">x=</span>train_geneExpr_mtx,</span>
-<span id="cb143-7"><a href="brca-rnaseseq-explore-sparsity.html#cb143-7"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb143-8"><a href="brca-rnaseseq-explore-sparsity.html#cb143-8"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb143-5"><a href="brca-rnaseseq-explore-sparsity.html#cb143-5"></a>brcaRna_cv_ridge &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb143-6"><a href="brca-rnaseseq-explore-sparsity.html#cb143-6"></a> <span class="dt">x=</span>brcaRna_train_geneExpr_mtx,</span>
+<span id="cb143-7"><a href="brca-rnaseseq-explore-sparsity.html#cb143-7"></a> <span class="dt">y=</span>brcaRna_train_group_vec,</span>
+<span id="cb143-8"><a href="brca-rnaseseq-explore-sparsity.html#cb143-8"></a> <span class="dt">foldid=</span>brcaRna_train_foldid_vec,</span>
 <span id="cb143-9"><a href="brca-rnaseseq-explore-sparsity.html#cb143-9"></a> <span class="dt">alpha=</span><span class="dv">0</span>,</span>
 <span id="cb143-10"><a href="brca-rnaseseq-explore-sparsity.html#cb143-10"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>, </span>
 <span id="cb143-11"><a href="brca-rnaseseq-explore-sparsity.html#cb143-11"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -668,15 +668,15 @@ data for each fold fit.</p>
 <span id="cb143-14"><a href="brca-rnaseseq-explore-sparsity.html#cb143-14"></a>)</span>
 <span id="cb143-15"><a href="brca-rnaseseq-explore-sparsity.html#cb143-15"></a></span>
 <span id="cb143-16"><a href="brca-rnaseseq-explore-sparsity.html#cb143-16"></a><span class="kw">message</span>(<span class="st">&quot;ridge time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## ridge time: 234.09s</code></pre>
+<pre><code>## ridge time: 252.13s</code></pre>
 <div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="brca-rnaseseq-explore-sparsity.html#cb145-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb145-2"><a href="brca-rnaseseq-explore-sparsity.html#cb145-2"></a></span>
 <span id="cb145-3"><a href="brca-rnaseseq-explore-sparsity.html#cb145-3"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb145-4"><a href="brca-rnaseseq-explore-sparsity.html#cb145-4"></a></span>
-<span id="cb145-5"><a href="brca-rnaseseq-explore-sparsity.html#cb145-5"></a>cv_enet &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
-<span id="cb145-6"><a href="brca-rnaseseq-explore-sparsity.html#cb145-6"></a> <span class="dt">x=</span>train_geneExpr_mtx,</span>
-<span id="cb145-7"><a href="brca-rnaseseq-explore-sparsity.html#cb145-7"></a> <span class="dt">y=</span>train_group_vec,</span>
-<span id="cb145-8"><a href="brca-rnaseseq-explore-sparsity.html#cb145-8"></a> <span class="dt">foldid=</span>train_foldid_vec,</span>
+<span id="cb145-5"><a href="brca-rnaseseq-explore-sparsity.html#cb145-5"></a>brcaRna_cv_enet &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
+<span id="cb145-6"><a href="brca-rnaseseq-explore-sparsity.html#cb145-6"></a> <span class="dt">x=</span>brcaRna_train_geneExpr_mtx,</span>
+<span id="cb145-7"><a href="brca-rnaseseq-explore-sparsity.html#cb145-7"></a> <span class="dt">y=</span>brcaRna_train_group_vec,</span>
+<span id="cb145-8"><a href="brca-rnaseseq-explore-sparsity.html#cb145-8"></a> <span class="dt">foldid=</span>brcaRna_train_foldid_vec,</span>
 <span id="cb145-9"><a href="brca-rnaseseq-explore-sparsity.html#cb145-9"></a> <span class="dt">alpha=</span><span class="fl">0.5</span>,</span>
 <span id="cb145-10"><a href="brca-rnaseseq-explore-sparsity.html#cb145-10"></a> <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,</span>
 <span id="cb145-11"><a href="brca-rnaseseq-explore-sparsity.html#cb145-11"></a> <span class="dt">type.measure =</span> <span class="st">&quot;class&quot;</span>,</span>
@@ -685,7 +685,7 @@ data for each fold fit.</p>
 <span id="cb145-14"><a href="brca-rnaseseq-explore-sparsity.html#cb145-14"></a>)</span>
 <span id="cb145-15"><a href="brca-rnaseseq-explore-sparsity.html#cb145-15"></a></span>
 <span id="cb145-16"><a href="brca-rnaseseq-explore-sparsity.html#cb145-16"></a><span class="kw">message</span>(<span class="st">&quot;enet time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## enet time: 33.32s</code></pre>
+<pre><code>## enet time: 29.67s</code></pre>
 <!--
 The ridge regression model takes over 10 times longer to compute.
 -->
@@ -707,29 +707,29 @@ Maybe show in appendix??
 <span id="cb147-12"><a href="brca-rnaseseq-explore-sparsity.html#cb147-12"></a> ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_fit<span class="op">$</span>lambda)</span>
 <span id="cb147-13"><a href="brca-rnaseseq-explore-sparsity.html#cb147-13"></a> train_oofPred_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb147-14"><a href="brca-rnaseseq-explore-sparsity.html#cb147-14"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
-<span id="cb147-15"><a href="brca-rnaseseq-explore-sparsity.html#cb147-15"></a> train_oofPred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb147-15"><a href="brca-rnaseseq-explore-sparsity.html#cb147-15"></a> train_oofPred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec)</span>
 <span id="cb147-16"><a href="brca-rnaseseq-explore-sparsity.html#cb147-16"></a></span>
 <span id="cb147-17"><a href="brca-rnaseseq-explore-sparsity.html#cb147-17"></a> ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(cv_fit<span class="op">$</span>lambda.min,cv_fit<span class="op">$</span>lambda)</span>
 <span id="cb147-18"><a href="brca-rnaseseq-explore-sparsity.html#cb147-18"></a> train_oofPred_min_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb147-19"><a href="brca-rnaseseq-explore-sparsity.html#cb147-19"></a>  <span class="kw">logistic_f</span>(cv_fit<span class="op">$</span>fit.preval[,ndx_min]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
-<span id="cb147-20"><a href="brca-rnaseseq-explore-sparsity.html#cb147-20"></a> train_oofPred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_min_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb147-20"><a href="brca-rnaseseq-explore-sparsity.html#cb147-20"></a> train_oofPred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_min_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec)</span>
 <span id="cb147-21"><a href="brca-rnaseseq-explore-sparsity.html#cb147-21"></a></span>
 <span id="cb147-22"><a href="brca-rnaseseq-explore-sparsity.html#cb147-22"></a> <span class="co"># Get test set error</span></span>
 <span id="cb147-23"><a href="brca-rnaseseq-explore-sparsity.html#cb147-23"></a> test_pred_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb147-24"><a href="brca-rnaseseq-explore-sparsity.html#cb147-24"></a>  cv_fit, </span>
-<span id="cb147-25"><a href="brca-rnaseseq-explore-sparsity.html#cb147-25"></a>  <span class="dt">newx=</span>test_geneExpr_mtx, </span>
+<span id="cb147-25"><a href="brca-rnaseseq-explore-sparsity.html#cb147-25"></a>  <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx, </span>
 <span id="cb147-26"><a href="brca-rnaseseq-explore-sparsity.html#cb147-26"></a>  <span class="dt">s=</span><span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb147-27"><a href="brca-rnaseseq-explore-sparsity.html#cb147-27"></a>  <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
 <span id="cb147-28"><a href="brca-rnaseseq-explore-sparsity.html#cb147-28"></a> )</span>
-<span id="cb147-29"><a href="brca-rnaseseq-explore-sparsity.html#cb147-29"></a> test_pred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb147-29"><a href="brca-rnaseseq-explore-sparsity.html#cb147-29"></a> test_pred_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec)</span>
 <span id="cb147-30"><a href="brca-rnaseseq-explore-sparsity.html#cb147-30"></a> </span>
 <span id="cb147-31"><a href="brca-rnaseseq-explore-sparsity.html#cb147-31"></a> test_pred_min_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb147-32"><a href="brca-rnaseseq-explore-sparsity.html#cb147-32"></a>  cv_fit, </span>
-<span id="cb147-33"><a href="brca-rnaseseq-explore-sparsity.html#cb147-33"></a>  <span class="dt">newx=</span>test_geneExpr_mtx, </span>
+<span id="cb147-33"><a href="brca-rnaseseq-explore-sparsity.html#cb147-33"></a>  <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx, </span>
 <span id="cb147-34"><a href="brca-rnaseseq-explore-sparsity.html#cb147-34"></a>  <span class="dt">s=</span><span class="st">&quot;lambda.min&quot;</span>,</span>
 <span id="cb147-35"><a href="brca-rnaseseq-explore-sparsity.html#cb147-35"></a>  <span class="dt">type=</span><span class="st">&quot;class&quot;</span></span>
 <span id="cb147-36"><a href="brca-rnaseseq-explore-sparsity.html#cb147-36"></a> )</span>
-<span id="cb147-37"><a href="brca-rnaseseq-explore-sparsity.html#cb147-37"></a> test_pred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb147-37"><a href="brca-rnaseseq-explore-sparsity.html#cb147-37"></a> test_pred_min_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_min_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec)</span>
 <span id="cb147-38"><a href="brca-rnaseseq-explore-sparsity.html#cb147-38"></a> </span>
 <span id="cb147-39"><a href="brca-rnaseseq-explore-sparsity.html#cb147-39"></a>  </span>
 <span id="cb147-40"><a href="brca-rnaseseq-explore-sparsity.html#cb147-40"></a> <span class="kw">plot</span>(</span>
@@ -783,19 +783,19 @@ Maybe show in appendix??
 <span id="cb148-2"><a href="brca-rnaseseq-explore-sparsity.html#cb148-2"></a></span>
 <span id="cb148-3"><a href="brca-rnaseseq-explore-sparsity.html#cb148-3"></a> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>)) </span>
 <span id="cb148-4"><a href="brca-rnaseseq-explore-sparsity.html#cb148-4"></a></span>
-<span id="cb148-5"><a href="brca-rnaseseq-explore-sparsity.html#cb148-5"></a> lasso_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(cv_lasso, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb148-5"><a href="brca-rnaseseq-explore-sparsity.html#cb148-5"></a> lasso_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(brcaRna_cv_lasso, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
 <span id="cb148-6"><a href="brca-rnaseseq-explore-sparsity.html#cb148-6"></a> <span class="kw">title</span>(<span class="st">&#39;lasso&#39;</span>)</span>
 <span id="cb148-7"><a href="brca-rnaseseq-explore-sparsity.html#cb148-7"></a></span>
-<span id="cb148-8"><a href="brca-rnaseseq-explore-sparsity.html#cb148-8"></a> rifge_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(cv_ridge, <span class="dt">Nzero=</span>F, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb148-8"><a href="brca-rnaseseq-explore-sparsity.html#cb148-8"></a> rifge_errors_mtx &lt;-<span class="st"> </span><span class="kw">plot_cv_f</span>(brcaRna_cv_ridge, <span class="dt">Nzero=</span>F, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
 <span id="cb148-9"><a href="brca-rnaseseq-explore-sparsity.html#cb148-9"></a> <span class="kw">title</span>(<span class="st">&#39;ridge&#39;</span>)</span>
 <span id="cb148-10"><a href="brca-rnaseseq-explore-sparsity.html#cb148-10"></a></span>
-<span id="cb148-11"><a href="brca-rnaseseq-explore-sparsity.html#cb148-11"></a> enet_errors_mtx &lt;-<span class="st">  </span><span class="kw">plot_cv_f</span>(cv_enet, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
+<span id="cb148-11"><a href="brca-rnaseseq-explore-sparsity.html#cb148-11"></a> enet_errors_mtx &lt;-<span class="st">  </span><span class="kw">plot_cv_f</span>(brcaRna_cv_enet, <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">5</span>))</span>
 <span id="cb148-12"><a href="brca-rnaseseq-explore-sparsity.html#cb148-12"></a> <span class="kw">title</span>(<span class="st">&#39;enet&#39;</span>)</span>
 <span id="cb148-13"><a href="brca-rnaseseq-explore-sparsity.html#cb148-13"></a></span>
 <span id="cb148-14"><a href="brca-rnaseseq-explore-sparsity.html#cb148-14"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, <span class="st">&#39;log(Lambda)&#39;</span>)</span>
-<span id="cb148-15"><a href="brca-rnaseseq-explore-sparsity.html#cb148-15"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, cv_lasso<span class="op">$</span>name)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-lookFits"></span>
-<img src="Static/figures/brca-rnaseseq-lookFits-1.png" alt="compare fits" width="1056" />
+<span id="cb148-15"><a href="brca-rnaseseq-explore-sparsity.html#cb148-15"></a> <span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.25</span>, brcaRna_cv_lasso<span class="op">$</span>name)</span></code></pre></div>
+<div class="figure"><span id="fig:brcaRna-glmnetFit-lookFits"></span>
+<img src="Static/figures/brcaRna-glmnetFit-lookFits-1.png" alt="compare fits" width="1056" />
 <p class="caption">
 Figure 7.1: compare fits
 </p>
@@ -814,7 +814,7 @@ Figure 7.1: compare fits
 <span id="cb149-12"><a href="brca-rnaseseq-explore-sparsity.html#cb149-12"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-printErrors">Table 7.3: </span>Misclassifiaction error rates
+<span id="tab:brcaRna-glmnetFit-printErrors">Table 7.3: </span>Misclassifiaction error rates
 </caption>
 <thead>
 <tr>
@@ -941,26 +941,26 @@ The relaxed fit takes quite a bit longer.
 <span id="cb150-2"><a href="brca-rnaseseq-explore-sparsity.html#cb150-2"></a></span>
 <span id="cb150-3"><a href="brca-rnaseseq-explore-sparsity.html#cb150-3"></a><span class="kw">library</span>(glmnet)</span>
 <span id="cb150-4"><a href="brca-rnaseseq-explore-sparsity.html#cb150-4"></a></span>
-<span id="cb150-5"><a href="brca-rnaseseq-explore-sparsity.html#cb150-5"></a>cv_lassoR_sum &lt;-<span class="st"> </span><span class="kw">print</span>(cv_lassoR)</span></code></pre></div>
+<span id="cb150-5"><a href="brca-rnaseseq-explore-sparsity.html#cb150-5"></a>brcaRna_cv_lassoR_sum &lt;-<span class="st"> </span><span class="kw">print</span>(brcaRna_cv_lassoR)</span></code></pre></div>
 <pre><code>## 
-## Call:  glmnet::cv.glmnet(x = train_geneExpr_mtx, y = train_group_vec,      type.measure = &quot;class&quot;, foldid = train_foldid_vec, keep = T,      relax = T, alpha = 1, family = &quot;binomial&quot;, nlambda = 30) 
+## Call:  glmnet::cv.glmnet(x = brcaRna_train_geneExpr_mtx, y = brcaRna_train_group_vec,      type.measure = &quot;class&quot;, foldid = brcaRna_train_foldid_vec,      keep = T, relax = T, alpha = 1, family = &quot;binomial&quot;, nlambda = 30) 
 ## 
 ## Measure: Misclassification Error 
 ## 
 ##     Gamma   Lambda Measure       SE Nonzero
 ## min  1.00 0.005227  0.1139 0.006167     408
 ## 1se  0.75 0.021823  0.1180 0.008812      91</code></pre>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="brca-rnaseseq-explore-sparsity.html#cb152-1"></a><span class="kw">plot</span>(cv_lassoR)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-lookLassoR"></span>
-<img src="Static/figures/brca-rnaseseq-lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="brca-rnaseseq-explore-sparsity.html#cb152-1"></a><span class="kw">plot</span>(brcaRna_cv_lassoR)</span></code></pre></div>
+<div class="figure"><span id="fig:brcaRna-glmnetFit-lookLassoR"></span>
+<img src="Static/figures/brcaRna-glmnetFit-lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
 <p class="caption">
 Figure 7.2: Relaxed lasso fit
 </p>
 </div>
 <div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="brca-rnaseseq-explore-sparsity.html#cb153-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb153-2"><a href="brca-rnaseseq-explore-sparsity.html#cb153-2"></a><span class="co"># only report  1se</span></span>
-<span id="cb153-3"><a href="brca-rnaseseq-explore-sparsity.html#cb153-3"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb153-4"><a href="brca-rnaseseq-explore-sparsity.html#cb153-4"></a>ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda.min, cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb153-3"><a href="brca-rnaseseq-explore-sparsity.html#cb153-3"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se, brcaRna_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb153-4"><a href="brca-rnaseseq-explore-sparsity.html#cb153-4"></a>ndx_min &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>lambda.min, brcaRna_cv_lassoR<span class="op">$</span>lambda)</span>
 <span id="cb153-5"><a href="brca-rnaseseq-explore-sparsity.html#cb153-5"></a></span>
 <span id="cb153-6"><a href="brca-rnaseseq-explore-sparsity.html#cb153-6"></a><span class="co"># only show 1se anyway</span></span>
 <span id="cb153-7"><a href="brca-rnaseseq-explore-sparsity.html#cb153-7"></a><span class="co"># if(ndx_1se != ndx_min) stop(&quot;lambda.1se != lambda.min&quot;)</span></span>
@@ -969,48 +969,48 @@ Figure 7.2: Relaxed lasso fit
 <span id="cb153-10"><a href="brca-rnaseseq-explore-sparsity.html#cb153-10"></a><span class="co"># train oof data - NOT CLEAR WHY THESE DIFFER FROM CV ERRORS EXTRACTED FROM MODEL</span></span>
 <span id="cb153-11"><a href="brca-rnaseseq-explore-sparsity.html#cb153-11"></a><span class="co"># Get relaxed lasso (gamma=0) oof error</span></span>
 <span id="cb153-12"><a href="brca-rnaseseq-explore-sparsity.html#cb153-12"></a>train_oofPred_relaxed_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb153-13"><a href="brca-rnaseseq-explore-sparsity.html#cb153-13"></a>  <span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;LumA&quot;</span>, <span class="st">&quot;Other&quot;</span></span>
+<span id="cb153-13"><a href="brca-rnaseseq-explore-sparsity.html#cb153-13"></a>  <span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;LumA&quot;</span>, <span class="st">&quot;Other&quot;</span></span>
 <span id="cb153-14"><a href="brca-rnaseseq-explore-sparsity.html#cb153-14"></a>)</span>
-<span id="cb153-15"><a href="brca-rnaseseq-explore-sparsity.html#cb153-15"></a>train_oofPred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb153-15"><a href="brca-rnaseseq-explore-sparsity.html#cb153-15"></a>train_oofPred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec)</span>
 <span id="cb153-16"><a href="brca-rnaseseq-explore-sparsity.html#cb153-16"></a></span>
 <span id="cb153-17"><a href="brca-rnaseseq-explore-sparsity.html#cb153-17"></a><span class="co"># blended mix (gamma=0.5)</span></span>
 <span id="cb153-18"><a href="brca-rnaseseq-explore-sparsity.html#cb153-18"></a>train_oofPred_blended_1se_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
-<span id="cb153-19"><a href="brca-rnaseseq-explore-sparsity.html#cb153-19"></a>  <span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0.5&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;LumA&quot;</span>, <span class="st">&quot;Other&quot;</span></span>
+<span id="cb153-19"><a href="brca-rnaseseq-explore-sparsity.html#cb153-19"></a>  <span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&quot;g:0.5&quot;</span>]][, ndx_1se]) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&quot;LumA&quot;</span>, <span class="st">&quot;Other&quot;</span></span>
 <span id="cb153-20"><a href="brca-rnaseseq-explore-sparsity.html#cb153-20"></a>)</span>
-<span id="cb153-21"><a href="brca-rnaseseq-explore-sparsity.html#cb153-21"></a>train_oofPred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>train_group_vec)</span>
+<span id="cb153-21"><a href="brca-rnaseseq-explore-sparsity.html#cb153-21"></a>train_oofPred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(train_oofPred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec)</span>
 <span id="cb153-22"><a href="brca-rnaseseq-explore-sparsity.html#cb153-22"></a></span>
 <span id="cb153-23"><a href="brca-rnaseseq-explore-sparsity.html#cb153-23"></a></span>
 <span id="cb153-24"><a href="brca-rnaseseq-explore-sparsity.html#cb153-24"></a><span class="co"># Test set error - relaxed</span></span>
 <span id="cb153-25"><a href="brca-rnaseseq-explore-sparsity.html#cb153-25"></a>test_pred_relaxed_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb153-26"><a href="brca-rnaseseq-explore-sparsity.html#cb153-26"></a>  cv_lassoR,</span>
-<span id="cb153-27"><a href="brca-rnaseseq-explore-sparsity.html#cb153-27"></a>  <span class="dt">newx =</span> test_geneExpr_mtx,</span>
+<span id="cb153-26"><a href="brca-rnaseseq-explore-sparsity.html#cb153-26"></a>  brcaRna_cv_lassoR,</span>
+<span id="cb153-27"><a href="brca-rnaseseq-explore-sparsity.html#cb153-27"></a>  <span class="dt">newx =</span> brcaRna_test_geneExpr_mtx,</span>
 <span id="cb153-28"><a href="brca-rnaseseq-explore-sparsity.html#cb153-28"></a>  <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb153-29"><a href="brca-rnaseseq-explore-sparsity.html#cb153-29"></a>  <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb153-30"><a href="brca-rnaseseq-explore-sparsity.html#cb153-30"></a>  <span class="dt">gamma =</span> <span class="dv">0</span></span>
 <span id="cb153-31"><a href="brca-rnaseseq-explore-sparsity.html#cb153-31"></a>)</span>
-<span id="cb153-32"><a href="brca-rnaseseq-explore-sparsity.html#cb153-32"></a>test_pred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb153-32"><a href="brca-rnaseseq-explore-sparsity.html#cb153-32"></a>test_pred_relaxed_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_relaxed_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec)</span>
 <span id="cb153-33"><a href="brca-rnaseseq-explore-sparsity.html#cb153-33"></a></span>
 <span id="cb153-34"><a href="brca-rnaseseq-explore-sparsity.html#cb153-34"></a><span class="co"># Test set error - blended</span></span>
 <span id="cb153-35"><a href="brca-rnaseseq-explore-sparsity.html#cb153-35"></a>test_pred_blended_1se_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb153-36"><a href="brca-rnaseseq-explore-sparsity.html#cb153-36"></a>  cv_lassoR,</span>
-<span id="cb153-37"><a href="brca-rnaseseq-explore-sparsity.html#cb153-37"></a>  <span class="dt">newx =</span> test_geneExpr_mtx,</span>
+<span id="cb153-36"><a href="brca-rnaseseq-explore-sparsity.html#cb153-36"></a>  brcaRna_cv_lassoR,</span>
+<span id="cb153-37"><a href="brca-rnaseseq-explore-sparsity.html#cb153-37"></a>  <span class="dt">newx =</span> brcaRna_test_geneExpr_mtx,</span>
 <span id="cb153-38"><a href="brca-rnaseseq-explore-sparsity.html#cb153-38"></a>  <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb153-39"><a href="brca-rnaseseq-explore-sparsity.html#cb153-39"></a>  <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb153-40"><a href="brca-rnaseseq-explore-sparsity.html#cb153-40"></a>  <span class="dt">gamma =</span> <span class="fl">0.5</span></span>
 <span id="cb153-41"><a href="brca-rnaseseq-explore-sparsity.html#cb153-41"></a>)</span>
-<span id="cb153-42"><a href="brca-rnaseseq-explore-sparsity.html#cb153-42"></a>test_pred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>test_group_vec)</span>
+<span id="cb153-42"><a href="brca-rnaseseq-explore-sparsity.html#cb153-42"></a>test_pred_blended_1se_error &lt;-<span class="st"> </span><span class="kw">mean</span>(test_pred_blended_1se_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec)</span>
 <span id="cb153-43"><a href="brca-rnaseseq-explore-sparsity.html#cb153-43"></a></span>
 <span id="cb153-44"><a href="brca-rnaseseq-explore-sparsity.html#cb153-44"></a></span>
-<span id="cb153-45"><a href="brca-rnaseseq-explore-sparsity.html#cb153-45"></a>cv_lassoR_1se_error &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>cvm[cv_lassoR<span class="op">$</span>lambda<span class="op">==</span>cv_lassoR<span class="op">$</span>lambda.min]</span>
+<span id="cb153-45"><a href="brca-rnaseseq-explore-sparsity.html#cb153-45"></a>brcaRna_cv_lassoR_1se_error &lt;-<span class="st"> </span>brcaRna_cv_lassoR<span class="op">$</span>cvm[brcaRna_cv_lassoR<span class="op">$</span>lambda<span class="op">==</span>brcaRna_cv_lassoR<span class="op">$</span>lambda.min]</span>
 <span id="cb153-46"><a href="brca-rnaseseq-explore-sparsity.html#cb153-46"></a></span>
-<span id="cb153-47"><a href="brca-rnaseseq-explore-sparsity.html#cb153-47"></a>cv_blended_statlist &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
+<span id="cb153-47"><a href="brca-rnaseseq-explore-sparsity.html#cb153-47"></a>cv_blended_statlist &lt;-<span class="st"> </span>brcaRna_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
 <span id="cb153-48"><a href="brca-rnaseseq-explore-sparsity.html#cb153-48"></a>cv_blended_1se_error &lt;-<span class="st"> </span>cv_blended_statlist<span class="op">$</span>cvm[cv_blended_statlist<span class="op">$</span>lambda<span class="op">==</span></span>
-<span id="cb153-49"><a href="brca-rnaseseq-explore-sparsity.html#cb153-49"></a><span class="st">   </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se]</span>
+<span id="cb153-49"><a href="brca-rnaseseq-explore-sparsity.html#cb153-49"></a><span class="st">   </span>brcaRna_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se]</span>
 <span id="cb153-50"><a href="brca-rnaseseq-explore-sparsity.html#cb153-50"></a> </span>
 <span id="cb153-51"><a href="brca-rnaseseq-explore-sparsity.html#cb153-51"></a></span>
 <span id="cb153-52"><a href="brca-rnaseseq-explore-sparsity.html#cb153-52"></a></span>
 <span id="cb153-53"><a href="brca-rnaseseq-explore-sparsity.html#cb153-53"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">t</span>(<span class="kw">data.frame</span>(</span>
-<span id="cb153-54"><a href="brca-rnaseseq-explore-sparsity.html#cb153-54"></a>  <span class="dt">train_relaxed  =</span> cv_lassoR_1se_error,</span>
+<span id="cb153-54"><a href="brca-rnaseseq-explore-sparsity.html#cb153-54"></a>  <span class="dt">train_relaxed  =</span> brcaRna_cv_lassoR_1se_error,</span>
 <span id="cb153-55"><a href="brca-rnaseseq-explore-sparsity.html#cb153-55"></a>  <span class="dt">train_blended  =</span> cv_blended_1se_error,</span>
 <span id="cb153-56"><a href="brca-rnaseseq-explore-sparsity.html#cb153-56"></a>  <span class="co">#train_relaxed_oof = train_oofPred_relaxed_1se_error,</span></span>
 <span id="cb153-57"><a href="brca-rnaseseq-explore-sparsity.html#cb153-57"></a>  <span class="co">#train_blended_oof = train_oofPred_blended_1se_error,</span></span>
@@ -1023,7 +1023,7 @@ Figure 7.2: Relaxed lasso fit
 <span id="cb153-64"><a href="brca-rnaseseq-explore-sparsity.html#cb153-64"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-lookLassoR2">Table 7.4: </span>Relaxed lasso and blended mix error rates
+<span id="tab:brcaRna-glmnetFit-lookLassoR2">Table 7.4: </span>Relaxed lasso and blended mix error rates
 </caption>
 <tbody>
 <tr>
@@ -1074,7 +1074,7 @@ while for the blended mix model
 (See <a href="modeling-background.html#eq:blended">(2.3)</a> in Section <a href="modeling-background.html#modeling-background">2</a>)
 the <em>1se</em> lambda rule selected
 <span class="math inline">\(91\)</span> features (vertical
-dotted reference line in Figure <a href="hcc-5hmcseq-explore-sparsity.html#fig:lookLassoR">4.2</a>).
+dotted reference line in Figure <a href="#fig:lookLassoR"><strong>??</strong></a>).
 This feature is pointed out in the
 <a href="https://cran.r-project.org/web/packages/glmnet/vignettes/relax.pdf">glmnet 3.0 vignette</a>:
 <em>The debiasing will potentially improve prediction performance,
@@ -1092,41 +1092,41 @@ to get a sense of the trade-off.</p>
 <span id="cb154-3"><a href="brca-rnaseseq-explore-sparsity.html#cb154-3"></a></span>
 <span id="cb154-4"><a href="brca-rnaseseq-explore-sparsity.html#cb154-4"></a><span class="co"># train</span></span>
 <span id="cb154-5"><a href="brca-rnaseseq-explore-sparsity.html#cb154-5"></a><span class="co"># lasso</span></span>
-<span id="cb154-6"><a href="brca-rnaseseq-explore-sparsity.html#cb154-6"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lasso<span class="op">$</span>lambda)</span>
-<span id="cb154-7"><a href="brca-rnaseseq-explore-sparsity.html#cb154-7"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb154-6"><a href="brca-rnaseseq-explore-sparsity.html#cb154-6"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_lasso<span class="op">$</span>lambda)</span>
+<span id="cb154-7"><a href="brca-rnaseseq-explore-sparsity.html#cb154-7"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb154-8"><a href="brca-rnaseseq-explore-sparsity.html#cb154-8"></a>train_lasso_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb154-9"><a href="brca-rnaseseq-explore-sparsity.html#cb154-9"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
+<span id="cb154-9"><a href="brca-rnaseseq-explore-sparsity.html#cb154-9"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
 <span id="cb154-10"><a href="brca-rnaseseq-explore-sparsity.html#cb154-10"></a> <span class="dt">predictor =</span> train_lasso_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1</code></pre>
 <pre><code>## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="brca-rnaseseq-explore-sparsity.html#cb157-1"></a><span class="co"># enet</span></span>
-<span id="cb157-2"><a href="brca-rnaseseq-explore-sparsity.html#cb157-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_enet<span class="op">$</span>lambda)</span>
-<span id="cb157-3"><a href="brca-rnaseseq-explore-sparsity.html#cb157-3"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb157-2"><a href="brca-rnaseseq-explore-sparsity.html#cb157-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_enet<span class="op">$</span>lambda)</span>
+<span id="cb157-3"><a href="brca-rnaseseq-explore-sparsity.html#cb157-3"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb157-4"><a href="brca-rnaseseq-explore-sparsity.html#cb157-4"></a>train_enet_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb157-5"><a href="brca-rnaseseq-explore-sparsity.html#cb157-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
+<span id="cb157-5"><a href="brca-rnaseseq-explore-sparsity.html#cb157-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
 <span id="cb157-6"><a href="brca-rnaseseq-explore-sparsity.html#cb157-6"></a> <span class="dt">predictor =</span> train_enet_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="brca-rnaseseq-explore-sparsity.html#cb159-1"></a><span class="co"># lasso - relaxed</span></span>
-<span id="cb159-2"><a href="brca-rnaseseq-explore-sparsity.html#cb159-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb159-3"><a href="brca-rnaseseq-explore-sparsity.html#cb159-3"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
+<span id="cb159-2"><a href="brca-rnaseseq-explore-sparsity.html#cb159-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb159-3"><a href="brca-rnaseseq-explore-sparsity.html#cb159-3"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
 <span id="cb159-4"><a href="brca-rnaseseq-explore-sparsity.html#cb159-4"></a>train_relaxed_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb159-5"><a href="brca-rnaseseq-explore-sparsity.html#cb159-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
+<span id="cb159-5"><a href="brca-rnaseseq-explore-sparsity.html#cb159-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
 <span id="cb159-6"><a href="brca-rnaseseq-explore-sparsity.html#cb159-6"></a> <span class="dt">predictor =</span> train_relaxed_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
 <div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="brca-rnaseseq-explore-sparsity.html#cb161-1"></a><span class="co"># blended mix (gamma=0.5)</span></span>
-<span id="cb161-2"><a href="brca-rnaseseq-explore-sparsity.html#cb161-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb161-3"><a href="brca-rnaseseq-explore-sparsity.html#cb161-3"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
+<span id="cb161-2"><a href="brca-rnaseseq-explore-sparsity.html#cb161-2"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb161-3"><a href="brca-rnaseseq-explore-sparsity.html#cb161-3"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
 <span id="cb161-4"><a href="brca-rnaseseq-explore-sparsity.html#cb161-4"></a>train_blended_roc &lt;-<span class="st"> </span>pROC<span class="op">::</span><span class="kw">roc</span>(</span>
-<span id="cb161-5"><a href="brca-rnaseseq-explore-sparsity.html#cb161-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
+<span id="cb161-5"><a href="brca-rnaseseq-explore-sparsity.html#cb161-5"></a> <span class="dt">response =</span> <span class="kw">as.numeric</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;LumA&#39;</span>),</span>
 <span id="cb161-6"><a href="brca-rnaseseq-explore-sparsity.html#cb161-6"></a> <span class="dt">predictor =</span> train_blended_oofProb_vec)</span></code></pre></div>
 <pre><code>## Setting levels: control = 0, case = 1
 ## Setting direction: controls &lt; cases</code></pre>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="brca-rnaseseq-explore-sparsity.html#cb163-1"></a><span class="kw">plot</span>(train_lasso_roc, <span class="dt">col=</span>col_vec[<span class="dv">1</span>])</span>
-<span id="cb163-2"><a href="brca-rnaseseq-explore-sparsity.html#cb163-2"></a><span class="kw">lines</span>(train_enet_roc, <span class="dt">col=</span>col_vec[<span class="dv">2</span>])</span>
-<span id="cb163-3"><a href="brca-rnaseseq-explore-sparsity.html#cb163-3"></a><span class="kw">lines</span>(train_relaxed_roc, <span class="dt">col=</span>col_vec[<span class="dv">3</span>])</span>
-<span id="cb163-4"><a href="brca-rnaseseq-explore-sparsity.html#cb163-4"></a><span class="kw">lines</span>(train_blended_roc, <span class="dt">col=</span>col_vec[<span class="dv">4</span>])</span>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="brca-rnaseseq-explore-sparsity.html#cb163-1"></a><span class="kw">plot</span>(train_lasso_roc, <span class="dt">col =</span> col_vec[<span class="dv">1</span>])</span>
+<span id="cb163-2"><a href="brca-rnaseseq-explore-sparsity.html#cb163-2"></a><span class="kw">lines</span>(train_enet_roc, <span class="dt">col =</span> col_vec[<span class="dv">2</span>])</span>
+<span id="cb163-3"><a href="brca-rnaseseq-explore-sparsity.html#cb163-3"></a><span class="kw">lines</span>(train_relaxed_roc, <span class="dt">col =</span> col_vec[<span class="dv">3</span>])</span>
+<span id="cb163-4"><a href="brca-rnaseseq-explore-sparsity.html#cb163-4"></a><span class="kw">lines</span>(train_blended_roc, <span class="dt">col =</span> col_vec[<span class="dv">4</span>])</span>
 <span id="cb163-5"><a href="brca-rnaseseq-explore-sparsity.html#cb163-5"></a></span>
 <span id="cb163-6"><a href="brca-rnaseseq-explore-sparsity.html#cb163-6"></a><span class="kw">legend</span>(<span class="st">&#39;bottomright&#39;</span>, <span class="dt">title=</span><span class="st">&#39;AUC&#39;</span>,</span>
 <span id="cb163-7"><a href="brca-rnaseseq-explore-sparsity.html#cb163-7"></a> <span class="dt">legend=</span><span class="kw">c</span>(</span>
@@ -1138,8 +1138,8 @@ to get a sense of the trade-off.</p>
 <span id="cb163-13"><a href="brca-rnaseseq-explore-sparsity.html#cb163-13"></a> <span class="dt">text.col =</span> col_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</span>
 <span id="cb163-14"><a href="brca-rnaseseq-explore-sparsity.html#cb163-14"></a> <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb163-15"><a href="brca-rnaseseq-explore-sparsity.html#cb163-15"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-trainROC"></span>
-<img src="Static/figures/brca-rnaseseq-trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-trainROC"></span>
+<img src="Static/figures/brcaRna-glmnetFit-trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
 <p class="caption">
 Figure 7.3: Train data out-of-sample ROCs
 </p>
@@ -1174,7 +1174,7 @@ Figure 7.3: Train data out-of-sample ROCs
 <span id="cb164-27"><a href="brca-rnaseseq-explore-sparsity.html#cb164-27"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-thresh90">Table 7.5: </span>Specificity = .90 Coordinates
+<span id="tab:brcaRna-glmnetFit-thresh90">Table 7.5: </span>Specificity = .90 Coordinates
 </caption>
 <thead>
 <tr>
@@ -1256,46 +1256,46 @@ blended
 <span id="cb165-3"><a href="brca-rnaseseq-explore-sparsity.html#cb165-3"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb165-4"><a href="brca-rnaseseq-explore-sparsity.html#cb165-4"></a></span>
 <span id="cb165-5"><a href="brca-rnaseseq-explore-sparsity.html#cb165-5"></a><span class="co"># lasso</span></span>
-<span id="cb165-6"><a href="brca-rnaseseq-explore-sparsity.html#cb165-6"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb165-6"><a href="brca-rnaseseq-explore-sparsity.html#cb165-6"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb165-7"><a href="brca-rnaseseq-explore-sparsity.html#cb165-7"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb165-8"><a href="brca-rnaseseq-explore-sparsity.html#cb165-8"></a>)</span>
-<span id="cb165-9"><a href="brca-rnaseseq-explore-sparsity.html#cb165-9"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb165-9"><a href="brca-rnaseseq-explore-sparsity.html#cb165-9"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_lasso_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb165-10"><a href="brca-rnaseseq-explore-sparsity.html#cb165-10"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb165-11"><a href="brca-rnaseseq-explore-sparsity.html#cb165-11"></a>)</span>
 <span id="cb165-12"><a href="brca-rnaseseq-explore-sparsity.html#cb165-12"></a><span class="kw">title</span>(<span class="st">&quot;lasso&quot;</span>)</span>
 <span id="cb165-13"><a href="brca-rnaseseq-explore-sparsity.html#cb165-13"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Other&quot;</span>, <span class="st">&quot;LumA&quot;</span>), <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
 <span id="cb165-14"><a href="brca-rnaseseq-explore-sparsity.html#cb165-14"></a></span>
 <span id="cb165-15"><a href="brca-rnaseseq-explore-sparsity.html#cb165-15"></a><span class="co"># enet</span></span>
-<span id="cb165-16"><a href="brca-rnaseseq-explore-sparsity.html#cb165-16"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_enet_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb165-16"><a href="brca-rnaseseq-explore-sparsity.html#cb165-16"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_enet_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb165-17"><a href="brca-rnaseseq-explore-sparsity.html#cb165-17"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb165-18"><a href="brca-rnaseseq-explore-sparsity.html#cb165-18"></a>)</span>
-<span id="cb165-19"><a href="brca-rnaseseq-explore-sparsity.html#cb165-19"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_enet_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb165-19"><a href="brca-rnaseseq-explore-sparsity.html#cb165-19"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_enet_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb165-20"><a href="brca-rnaseseq-explore-sparsity.html#cb165-20"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb165-21"><a href="brca-rnaseseq-explore-sparsity.html#cb165-21"></a>)</span>
 <span id="cb165-22"><a href="brca-rnaseseq-explore-sparsity.html#cb165-22"></a><span class="kw">title</span>(<span class="st">&quot;enet&quot;</span>)</span>
 <span id="cb165-23"><a href="brca-rnaseseq-explore-sparsity.html#cb165-23"></a></span>
 <span id="cb165-24"><a href="brca-rnaseseq-explore-sparsity.html#cb165-24"></a><span class="co"># lassoR</span></span>
-<span id="cb165-25"><a href="brca-rnaseseq-explore-sparsity.html#cb165-25"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb165-25"><a href="brca-rnaseseq-explore-sparsity.html#cb165-25"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb165-26"><a href="brca-rnaseseq-explore-sparsity.html#cb165-26"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb165-27"><a href="brca-rnaseseq-explore-sparsity.html#cb165-27"></a>)</span>
-<span id="cb165-28"><a href="brca-rnaseseq-explore-sparsity.html#cb165-28"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb165-28"><a href="brca-rnaseseq-explore-sparsity.html#cb165-28"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_relaxed_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb165-29"><a href="brca-rnaseseq-explore-sparsity.html#cb165-29"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb165-30"><a href="brca-rnaseseq-explore-sparsity.html#cb165-30"></a>)</span>
 <span id="cb165-31"><a href="brca-rnaseseq-explore-sparsity.html#cb165-31"></a><span class="kw">title</span>(<span class="st">&quot;lassoR&quot;</span>)</span>
 <span id="cb165-32"><a href="brca-rnaseseq-explore-sparsity.html#cb165-32"></a></span>
 <span id="cb165-33"><a href="brca-rnaseseq-explore-sparsity.html#cb165-33"></a><span class="co"># blended</span></span>
-<span id="cb165-34"><a href="brca-rnaseseq-explore-sparsity.html#cb165-34"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_blended_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb165-34"><a href="brca-rnaseseq-explore-sparsity.html#cb165-34"></a><span class="kw">plot</span>(<span class="kw">density</span>(train_blended_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb165-35"><a href="brca-rnaseseq-explore-sparsity.html#cb165-35"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb165-36"><a href="brca-rnaseseq-explore-sparsity.html#cb165-36"></a>)</span>
-<span id="cb165-37"><a href="brca-rnaseseq-explore-sparsity.html#cb165-37"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_blended_oofProb_vec[train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb165-37"><a href="brca-rnaseseq-explore-sparsity.html#cb165-37"></a><span class="kw">lines</span>(<span class="kw">density</span>(train_blended_oofProb_vec[brcaRna_train_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb165-38"><a href="brca-rnaseseq-explore-sparsity.html#cb165-38"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb165-39"><a href="brca-rnaseseq-explore-sparsity.html#cb165-39"></a>)</span>
 <span id="cb165-40"><a href="brca-rnaseseq-explore-sparsity.html#cb165-40"></a><span class="kw">title</span>(<span class="st">&quot;blended&quot;</span>)</span>
 <span id="cb165-41"><a href="brca-rnaseseq-explore-sparsity.html#cb165-41"></a></span>
 <span id="cb165-42"><a href="brca-rnaseseq-explore-sparsity.html#cb165-42"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;out-of-fold predicted probability&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span>
 <span id="cb165-43"><a href="brca-rnaseseq-explore-sparsity.html#cb165-43"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;density&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-trainOOFprops"></span>
-<img src="Static/figures/brca-rnaseseq-trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-trainOOFprops"></span>
+<img src="Static/figures/brcaRna-glmnetFit-trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
 <p class="caption">
 Figure 7.4: Train data out-of-fold predicted probabilities
 </p>
@@ -1322,8 +1322,8 @@ distribution - predicted probabilities are very close to 0 or 1.</p>
 <span id="cb166-17"><a href="brca-rnaseseq-explore-sparsity.html#cb166-17"></a>  <span class="dt">text.col =</span> col_vec[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</span>
 <span id="cb166-18"><a href="brca-rnaseseq-explore-sparsity.html#cb166-18"></a>  <span class="dt">bty=</span><span class="st">&#39;n&#39;</span></span>
 <span id="cb166-19"><a href="brca-rnaseseq-explore-sparsity.html#cb166-19"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-testROC2"></span>
-<img src="Static/figures/brca-rnaseseq-testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-testROC2"></span>
+<img src="Static/figures/brcaRna-glmnetFit-testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
 <p class="caption">
 Figure 7.5: Test data out-of-sample ROCs
 </p>
@@ -1334,49 +1334,49 @@ Figure 7.5: Test data out-of-sample ROCs
 <span id="cb167-3"><a href="brca-rnaseseq-explore-sparsity.html#cb167-3"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb167-4"><a href="brca-rnaseseq-explore-sparsity.html#cb167-4"></a></span>
 <span id="cb167-5"><a href="brca-rnaseseq-explore-sparsity.html#cb167-5"></a><span class="co"># lasso</span></span>
-<span id="cb167-6"><a href="brca-rnaseseq-explore-sparsity.html#cb167-6"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_lasso_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb167-6"><a href="brca-rnaseseq-explore-sparsity.html#cb167-6"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_lasso_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb167-7"><a href="brca-rnaseseq-explore-sparsity.html#cb167-7"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb167-8"><a href="brca-rnaseseq-explore-sparsity.html#cb167-8"></a>)</span>
-<span id="cb167-9"><a href="brca-rnaseseq-explore-sparsity.html#cb167-9"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_lasso_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb167-9"><a href="brca-rnaseseq-explore-sparsity.html#cb167-9"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_lasso_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb167-10"><a href="brca-rnaseseq-explore-sparsity.html#cb167-10"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb167-11"><a href="brca-rnaseseq-explore-sparsity.html#cb167-11"></a>)</span>
 <span id="cb167-12"><a href="brca-rnaseseq-explore-sparsity.html#cb167-12"></a><span class="kw">title</span>(<span class="st">&quot;lasso&quot;</span>)</span>
 <span id="cb167-13"><a href="brca-rnaseseq-explore-sparsity.html#cb167-13"></a><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Other&quot;</span>, <span class="st">&quot;LumA&quot;</span>), <span class="dt">text.col =</span> <span class="kw">c</span>(<span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
 <span id="cb167-14"><a href="brca-rnaseseq-explore-sparsity.html#cb167-14"></a></span>
 <span id="cb167-15"><a href="brca-rnaseseq-explore-sparsity.html#cb167-15"></a><span class="co"># enet</span></span>
-<span id="cb167-16"><a href="brca-rnaseseq-explore-sparsity.html#cb167-16"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_enet_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb167-16"><a href="brca-rnaseseq-explore-sparsity.html#cb167-16"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_enet_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb167-17"><a href="brca-rnaseseq-explore-sparsity.html#cb167-17"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb167-18"><a href="brca-rnaseseq-explore-sparsity.html#cb167-18"></a>)</span>
-<span id="cb167-19"><a href="brca-rnaseseq-explore-sparsity.html#cb167-19"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_enet_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb167-19"><a href="brca-rnaseseq-explore-sparsity.html#cb167-19"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_enet_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb167-20"><a href="brca-rnaseseq-explore-sparsity.html#cb167-20"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb167-21"><a href="brca-rnaseseq-explore-sparsity.html#cb167-21"></a>)</span>
 <span id="cb167-22"><a href="brca-rnaseseq-explore-sparsity.html#cb167-22"></a><span class="kw">title</span>(<span class="st">&quot;enet&quot;</span>)</span>
 <span id="cb167-23"><a href="brca-rnaseseq-explore-sparsity.html#cb167-23"></a></span>
 <span id="cb167-24"><a href="brca-rnaseseq-explore-sparsity.html#cb167-24"></a><span class="co"># relaxed</span></span>
-<span id="cb167-25"><a href="brca-rnaseseq-explore-sparsity.html#cb167-25"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb167-25"><a href="brca-rnaseseq-explore-sparsity.html#cb167-25"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb167-26"><a href="brca-rnaseseq-explore-sparsity.html#cb167-26"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb167-27"><a href="brca-rnaseseq-explore-sparsity.html#cb167-27"></a>)</span>
-<span id="cb167-28"><a href="brca-rnaseseq-explore-sparsity.html#cb167-28"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb167-28"><a href="brca-rnaseseq-explore-sparsity.html#cb167-28"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_relaxed_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb167-29"><a href="brca-rnaseseq-explore-sparsity.html#cb167-29"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb167-30"><a href="brca-rnaseseq-explore-sparsity.html#cb167-30"></a>)</span>
 <span id="cb167-31"><a href="brca-rnaseseq-explore-sparsity.html#cb167-31"></a><span class="kw">title</span>(<span class="st">&quot;relaxed&quot;</span>)</span>
 <span id="cb167-32"><a href="brca-rnaseseq-explore-sparsity.html#cb167-32"></a></span>
-<span id="cb167-33"><a href="brca-rnaseseq-explore-sparsity.html#cb167-33"></a><span class="co">#sapply(split(test_relaxed_predProb_vec, test_group_vec), summary)</span></span>
+<span id="cb167-33"><a href="brca-rnaseseq-explore-sparsity.html#cb167-33"></a><span class="co">#sapply(split(test_relaxed_predProb_vec, brcaRna_test_group_vec), summary)</span></span>
 <span id="cb167-34"><a href="brca-rnaseseq-explore-sparsity.html#cb167-34"></a></span>
 <span id="cb167-35"><a href="brca-rnaseseq-explore-sparsity.html#cb167-35"></a></span>
 <span id="cb167-36"><a href="brca-rnaseseq-explore-sparsity.html#cb167-36"></a><span class="co"># blended</span></span>
-<span id="cb167-37"><a href="brca-rnaseseq-explore-sparsity.html#cb167-37"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_blended_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
+<span id="cb167-37"><a href="brca-rnaseseq-explore-sparsity.html#cb167-37"></a><span class="kw">plot</span>(<span class="kw">density</span>(test_blended_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;Other&quot;</span>]),</span>
 <span id="cb167-38"><a href="brca-rnaseseq-explore-sparsity.html#cb167-38"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb167-39"><a href="brca-rnaseseq-explore-sparsity.html#cb167-39"></a>)</span>
-<span id="cb167-40"><a href="brca-rnaseseq-explore-sparsity.html#cb167-40"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_blended_predProb_vec[test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
+<span id="cb167-40"><a href="brca-rnaseseq-explore-sparsity.html#cb167-40"></a><span class="kw">lines</span>(<span class="kw">density</span>(test_blended_predProb_vec[brcaRna_test_group_vec <span class="op">==</span><span class="st"> &quot;LumA&quot;</span>]),</span>
 <span id="cb167-41"><a href="brca-rnaseseq-explore-sparsity.html#cb167-41"></a>  <span class="dt">col =</span> <span class="st">&quot;red&quot;</span></span>
 <span id="cb167-42"><a href="brca-rnaseseq-explore-sparsity.html#cb167-42"></a>)</span>
 <span id="cb167-43"><a href="brca-rnaseseq-explore-sparsity.html#cb167-43"></a><span class="kw">title</span>(<span class="st">&quot;blended&quot;</span>)</span>
 <span id="cb167-44"><a href="brca-rnaseseq-explore-sparsity.html#cb167-44"></a></span>
 <span id="cb167-45"><a href="brca-rnaseseq-explore-sparsity.html#cb167-45"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">outer =</span> T, <span class="st">&quot;test set predicted probability&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span>
 <span id="cb167-46"><a href="brca-rnaseseq-explore-sparsity.html#cb167-46"></a><span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="dt">outer =</span> T, <span class="st">&quot;density&quot;</span>, <span class="dt">cex =</span> <span class="fl">1.25</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-testOOFprobs"></span>
-<img src="Static/figures/brca-rnaseseq-testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-testOOFprobs"></span>
+<img src="Static/figures/brcaRna-glmnetFit-testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
 <p class="caption">
 Figure 7.6: Test data out-of-fold predicted probabilities
 </p>
@@ -1396,14 +1396,14 @@ Figure 7.6: Test data out-of-fold predicted probabilities
 <span id="cb168-13"><a href="brca-rnaseseq-explore-sparsity.html#cb168-13"></a>  <span class="co"># Test</span></span>
 <span id="cb168-14"><a href="brca-rnaseseq-explore-sparsity.html#cb168-14"></a>  test_1se_predProb_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
 <span id="cb168-15"><a href="brca-rnaseseq-explore-sparsity.html#cb168-15"></a>    cv_fit,</span>
-<span id="cb168-16"><a href="brca-rnaseseq-explore-sparsity.html#cb168-16"></a>    <span class="dt">newx =</span> test_geneExpr_mtx,</span>
+<span id="cb168-16"><a href="brca-rnaseseq-explore-sparsity.html#cb168-16"></a>    <span class="dt">newx =</span> brcaRna_test_geneExpr_mtx,</span>
 <span id="cb168-17"><a href="brca-rnaseseq-explore-sparsity.html#cb168-17"></a>    <span class="dt">s =</span> <span class="st">&quot;lambda.1se&quot;</span>,</span>
 <span id="cb168-18"><a href="brca-rnaseseq-explore-sparsity.html#cb168-18"></a>    <span class="dt">type =</span> <span class="st">&quot;resp&quot;</span></span>
 <span id="cb168-19"><a href="brca-rnaseseq-explore-sparsity.html#cb168-19"></a>  )</span>
 <span id="cb168-20"><a href="brca-rnaseseq-explore-sparsity.html#cb168-20"></a></span>
 <span id="cb168-21"><a href="brca-rnaseseq-explore-sparsity.html#cb168-21"></a>  tmp &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb168-22"><a href="brca-rnaseseq-explore-sparsity.html#cb168-22"></a>    <span class="dt">train =</span> <span class="kw">split</span>(train_1se_predProb_vec, train_group_vec),</span>
-<span id="cb168-23"><a href="brca-rnaseseq-explore-sparsity.html#cb168-23"></a>    <span class="dt">test =</span> <span class="kw">split</span>(test_1se_predProb_vec, test_group_vec)</span>
+<span id="cb168-22"><a href="brca-rnaseseq-explore-sparsity.html#cb168-22"></a>    <span class="dt">train =</span> <span class="kw">split</span>(train_1se_predProb_vec, brcaRna_train_group_vec),</span>
+<span id="cb168-23"><a href="brca-rnaseseq-explore-sparsity.html#cb168-23"></a>    <span class="dt">test =</span> <span class="kw">split</span>(test_1se_predProb_vec, brcaRna_test_group_vec)</span>
 <span id="cb168-24"><a href="brca-rnaseseq-explore-sparsity.html#cb168-24"></a>  )</span>
 <span id="cb168-25"><a href="brca-rnaseseq-explore-sparsity.html#cb168-25"></a>  <span class="kw">names</span>(tmp) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="kw">sub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="kw">names</span>(tmp)))</span>
 <span id="cb168-26"><a href="brca-rnaseseq-explore-sparsity.html#cb168-26"></a></span>
@@ -1412,19 +1412,19 @@ Figure 7.6: Test data out-of-fold predicted probabilities
 <span id="cb168-29"><a href="brca-rnaseseq-explore-sparsity.html#cb168-29"></a></span>
 <span id="cb168-30"><a href="brca-rnaseseq-explore-sparsity.html#cb168-30"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
 <span id="cb168-31"><a href="brca-rnaseseq-explore-sparsity.html#cb168-31"></a></span>
-<span id="cb168-32"><a href="brca-rnaseseq-explore-sparsity.html#cb168-32"></a><span class="kw">bxpPredProb_f</span>(cv_lasso)</span>
+<span id="cb168-32"><a href="brca-rnaseseq-explore-sparsity.html#cb168-32"></a><span class="kw">bxpPredProb_f</span>(brcaRna_cv_lasso)</span>
 <span id="cb168-33"><a href="brca-rnaseseq-explore-sparsity.html#cb168-33"></a><span class="kw">title</span>(<span class="st">&#39;lasso&#39;</span>)</span>
 <span id="cb168-34"><a href="brca-rnaseseq-explore-sparsity.html#cb168-34"></a></span>
-<span id="cb168-35"><a href="brca-rnaseseq-explore-sparsity.html#cb168-35"></a><span class="kw">bxpPredProb_f</span>(cv_enet)</span>
+<span id="cb168-35"><a href="brca-rnaseseq-explore-sparsity.html#cb168-35"></a><span class="kw">bxpPredProb_f</span>(brcaRna_cv_enet)</span>
 <span id="cb168-36"><a href="brca-rnaseseq-explore-sparsity.html#cb168-36"></a><span class="kw">title</span>(<span class="st">&#39;enet&#39;</span>)</span>
 <span id="cb168-37"><a href="brca-rnaseseq-explore-sparsity.html#cb168-37"></a></span>
-<span id="cb168-38"><a href="brca-rnaseseq-explore-sparsity.html#cb168-38"></a><span class="kw">bxpPredProb_f</span>(cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0&#39;</span>)</span>
+<span id="cb168-38"><a href="brca-rnaseseq-explore-sparsity.html#cb168-38"></a><span class="kw">bxpPredProb_f</span>(brcaRna_cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0&#39;</span>)</span>
 <span id="cb168-39"><a href="brca-rnaseseq-explore-sparsity.html#cb168-39"></a><span class="kw">title</span>(<span class="st">&#39;relaxed&#39;</span>)</span>
 <span id="cb168-40"><a href="brca-rnaseseq-explore-sparsity.html#cb168-40"></a></span>
-<span id="cb168-41"><a href="brca-rnaseseq-explore-sparsity.html#cb168-41"></a><span class="kw">bxpPredProb_f</span>(cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0.5&#39;</span>)</span>
+<span id="cb168-41"><a href="brca-rnaseseq-explore-sparsity.html#cb168-41"></a><span class="kw">bxpPredProb_f</span>(brcaRna_cv_lassoR, <span class="dt">Gamma=</span><span class="st">&#39;g:0.5&#39;</span>)</span>
 <span id="cb168-42"><a href="brca-rnaseseq-explore-sparsity.html#cb168-42"></a><span class="kw">title</span>(<span class="st">&#39;blended&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-fitPrevalByGroup"></span>
-<img src="Static/figures/brca-rnaseseq-fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-fitPrevalByGroup"></span>
+<img src="Static/figures/brcaRna-glmnetFit-fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
 <p class="caption">
 Figure 7.7: Predicted Probabilities - Train and Test
 </p>
@@ -1470,41 +1470,41 @@ as they are too similar in nature.</p>
 <span id="cb169-4"><a href="brca-rnaseseq-explore-sparsity.html#cb169-4"></a><span class="co"># as predClass extracted from predict() are fitted values.</span></span>
 <span id="cb169-5"><a href="brca-rnaseseq-explore-sparsity.html#cb169-5"></a></span>
 <span id="cb169-6"><a href="brca-rnaseseq-explore-sparsity.html#cb169-6"></a><span class="co"># train - oof</span></span>
-<span id="cb169-7"><a href="brca-rnaseseq-explore-sparsity.html#cb169-7"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lasso<span class="op">$</span>lambda)</span>
-<span id="cb169-8"><a href="brca-rnaseseq-explore-sparsity.html#cb169-8"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb169-7"><a href="brca-rnaseseq-explore-sparsity.html#cb169-7"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lasso<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_lasso<span class="op">$</span>lambda)</span>
+<span id="cb169-8"><a href="brca-rnaseseq-explore-sparsity.html#cb169-8"></a>train_lasso_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lasso<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb169-9"><a href="brca-rnaseseq-explore-sparsity.html#cb169-9"></a>train_lasso_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb169-10"><a href="brca-rnaseseq-explore-sparsity.html#cb169-10"></a>   train_lasso_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
 <span id="cb169-11"><a href="brca-rnaseseq-explore-sparsity.html#cb169-11"></a></span>
-<span id="cb169-12"><a href="brca-rnaseseq-explore-sparsity.html#cb169-12"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_enet<span class="op">$</span>lambda)</span>
-<span id="cb169-13"><a href="brca-rnaseseq-explore-sparsity.html#cb169-13"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
+<span id="cb169-12"><a href="brca-rnaseseq-explore-sparsity.html#cb169-12"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_enet<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_enet<span class="op">$</span>lambda)</span>
+<span id="cb169-13"><a href="brca-rnaseseq-explore-sparsity.html#cb169-13"></a>train_enet_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_enet<span class="op">$</span>fit.preval[,ndx_1se])</span>
 <span id="cb169-14"><a href="brca-rnaseseq-explore-sparsity.html#cb169-14"></a>train_enet_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb169-15"><a href="brca-rnaseseq-explore-sparsity.html#cb169-15"></a>   train_enet_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
 <span id="cb169-16"><a href="brca-rnaseseq-explore-sparsity.html#cb169-16"></a></span>
-<span id="cb169-17"><a href="brca-rnaseseq-explore-sparsity.html#cb169-17"></a><span class="co"># RECALL: cv_lassoR$nzero[cv_lassoR$lambda==cv_lassoR$lambda.1se]</span></span>
+<span id="cb169-17"><a href="brca-rnaseseq-explore-sparsity.html#cb169-17"></a><span class="co"># RECALL: brcaRna_cv_lassoR$nzero[brcaRna_cv_lassoR$lambda==brcaRna_cv_lassoR$lambda.1se]</span></span>
 <span id="cb169-18"><a href="brca-rnaseseq-explore-sparsity.html#cb169-18"></a><span class="co"># train - oof</span></span>
-<span id="cb169-19"><a href="brca-rnaseseq-explore-sparsity.html#cb169-19"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,cv_lassoR<span class="op">$</span>lambda)</span>
-<span id="cb169-20"><a href="brca-rnaseseq-explore-sparsity.html#cb169-20"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
+<span id="cb169-19"><a href="brca-rnaseseq-explore-sparsity.html#cb169-19"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>lambda<span class="fl">.1</span>se,brcaRna_cv_lassoR<span class="op">$</span>lambda)</span>
+<span id="cb169-20"><a href="brca-rnaseseq-explore-sparsity.html#cb169-20"></a>train_relaxed_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0&#39;</span>]][,ndx_1se])</span>
 <span id="cb169-21"><a href="brca-rnaseseq-explore-sparsity.html#cb169-21"></a>train_relaxed_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb169-22"><a href="brca-rnaseseq-explore-sparsity.html#cb169-22"></a>   train_relaxed_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
 <span id="cb169-23"><a href="brca-rnaseseq-explore-sparsity.html#cb169-23"></a></span>
-<span id="cb169-24"><a href="brca-rnaseseq-explore-sparsity.html#cb169-24"></a><span class="co"># RECALL $`r cv_lassoR$relaxed$nzero.1se`$ features (vertical</span></span>
-<span id="cb169-25"><a href="brca-rnaseseq-explore-sparsity.html#cb169-25"></a><span class="co">#  cv_blended_statlist &lt;- cv_lassoR$relaxed$statlist[[&#39;g:0.5&#39;]]</span></span>
+<span id="cb169-24"><a href="brca-rnaseseq-explore-sparsity.html#cb169-24"></a><span class="co"># RECALL $`r brcaRna_cv_lassoR$relaxed$nzero.1se`$ features (vertical</span></span>
+<span id="cb169-25"><a href="brca-rnaseseq-explore-sparsity.html#cb169-25"></a><span class="co">#  cv_blended_statlist &lt;- brcaRna_cv_lassoR$relaxed$statlist[[&#39;g:0.5&#39;]]</span></span>
 <span id="cb169-26"><a href="brca-rnaseseq-explore-sparsity.html#cb169-26"></a><span class="co">#  cv_blended_1se_error &lt;- cv_blended_statlist$cvm[cv_blended_statlist$lambda==</span></span>
-<span id="cb169-27"><a href="brca-rnaseseq-explore-sparsity.html#cb169-27"></a>      <span class="co">#cv_lassoR$relaxed$lambda.1se]</span></span>
+<span id="cb169-27"><a href="brca-rnaseseq-explore-sparsity.html#cb169-27"></a>      <span class="co">#brcaRna_cv_lassoR$relaxed$lambda.1se]</span></span>
 <span id="cb169-28"><a href="brca-rnaseseq-explore-sparsity.html#cb169-28"></a></span>
 <span id="cb169-29"><a href="brca-rnaseseq-explore-sparsity.html#cb169-29"></a><span class="co"># train - oof</span></span>
-<span id="cb169-30"><a href="brca-rnaseseq-explore-sparsity.html#cb169-30"></a>cv_blended_statlist &lt;-<span class="st"> </span>cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
-<span id="cb169-31"><a href="brca-rnaseseq-explore-sparsity.html#cb169-31"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_blended_statlist<span class="op">$</span>lambda)</span>
-<span id="cb169-32"><a href="brca-rnaseseq-explore-sparsity.html#cb169-32"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
+<span id="cb169-30"><a href="brca-rnaseseq-explore-sparsity.html#cb169-30"></a>cv_blended_statlist &lt;-<span class="st"> </span>brcaRna_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>statlist[[<span class="st">&#39;g:0.5&#39;</span>]]</span>
+<span id="cb169-31"><a href="brca-rnaseseq-explore-sparsity.html#cb169-31"></a>ndx_1se &lt;-<span class="st"> </span><span class="kw">match</span>(brcaRna_cv_lassoR<span class="op">$</span>relaxed<span class="op">$</span>lambda<span class="fl">.1</span>se, cv_blended_statlist<span class="op">$</span>lambda)</span>
+<span id="cb169-32"><a href="brca-rnaseseq-explore-sparsity.html#cb169-32"></a>train_blended_oofProb_vec &lt;-<span class="st"> </span><span class="kw">logistic_f</span>(brcaRna_cv_lassoR<span class="op">$</span>fit.preval[[<span class="st">&#39;g:0.5&#39;</span>]][,ndx_1se])</span>
 <span id="cb169-33"><a href="brca-rnaseseq-explore-sparsity.html#cb169-33"></a>train_blended_oofClass_vec &lt;-<span class="st"> </span><span class="kw">ifelse</span>(</span>
 <span id="cb169-34"><a href="brca-rnaseseq-explore-sparsity.html#cb169-34"></a>   train_blended_oofProb_vec <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="st">&#39;LumA&#39;</span>, <span class="st">&#39;_Other&#39;</span>)</span>
 <span id="cb169-35"><a href="brca-rnaseseq-explore-sparsity.html#cb169-35"></a></span>
 <span id="cb169-36"><a href="brca-rnaseseq-explore-sparsity.html#cb169-36"></a></span>
 <span id="cb169-37"><a href="brca-rnaseseq-explore-sparsity.html#cb169-37"></a>misclass_id_vec &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">c</span>(</span>
-<span id="cb169-38"><a href="brca-rnaseseq-explore-sparsity.html#cb169-38"></a> <span class="kw">names</span>(train_lasso_oofClass_vec)[train_lasso_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb169-39"><a href="brca-rnaseseq-explore-sparsity.html#cb169-39"></a> <span class="kw">names</span>(train_enet_oofClass_vec)[train_enet_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb169-40"><a href="brca-rnaseseq-explore-sparsity.html#cb169-40"></a> <span class="kw">names</span>(train_relaxed_oofClass_vec)[train_relaxed_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec],</span>
-<span id="cb169-41"><a href="brca-rnaseseq-explore-sparsity.html#cb169-41"></a> <span class="kw">names</span>(train_blended_oofClass_vec)[train_blended_oofClass_vec <span class="op">!=</span><span class="st"> </span>train_group_vec]</span>
+<span id="cb169-38"><a href="brca-rnaseseq-explore-sparsity.html#cb169-38"></a> <span class="kw">names</span>(train_lasso_oofClass_vec)[train_lasso_oofClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec],</span>
+<span id="cb169-39"><a href="brca-rnaseseq-explore-sparsity.html#cb169-39"></a> <span class="kw">names</span>(train_enet_oofClass_vec)[train_enet_oofClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec],</span>
+<span id="cb169-40"><a href="brca-rnaseseq-explore-sparsity.html#cb169-40"></a> <span class="kw">names</span>(train_relaxed_oofClass_vec)[train_relaxed_oofClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec],</span>
+<span id="cb169-41"><a href="brca-rnaseseq-explore-sparsity.html#cb169-41"></a> <span class="kw">names</span>(train_blended_oofClass_vec)[train_blended_oofClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_train_group_vec]</span>
 <span id="cb169-42"><a href="brca-rnaseseq-explore-sparsity.html#cb169-42"></a> )</span>
 <span id="cb169-43"><a href="brca-rnaseseq-explore-sparsity.html#cb169-43"></a>)</span>
 <span id="cb169-44"><a href="brca-rnaseseq-explore-sparsity.html#cb169-44"></a></span>
@@ -1519,7 +1519,7 @@ as they are too similar in nature.</p>
 <span id="cb169-53"><a href="brca-rnaseseq-explore-sparsity.html#cb169-53"></a></span>
 <span id="cb169-54"><a href="brca-rnaseseq-explore-sparsity.html#cb169-54"></a>row_med_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(missclass_oofProb_mtx, <span class="dv">1</span>, median)</span>
 <span id="cb169-55"><a href="brca-rnaseseq-explore-sparsity.html#cb169-55"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span>missclass_oofProb_mtx[</span>
-<span id="cb169-56"><a href="brca-rnaseseq-explore-sparsity.html#cb169-56"></a>  <span class="kw">order</span>(train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
+<span id="cb169-56"><a href="brca-rnaseseq-explore-sparsity.html#cb169-56"></a>  <span class="kw">order</span>(brcaRna_train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
 <span id="cb169-57"><a href="brca-rnaseseq-explore-sparsity.html#cb169-57"></a></span>
 <span id="cb169-58"><a href="brca-rnaseseq-explore-sparsity.html#cb169-58"></a><span class="kw">plot</span>(</span>
 <span id="cb169-59"><a href="brca-rnaseseq-explore-sparsity.html#cb169-59"></a> <span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">nrow</span>(missclass_oofProb_mtx)), <span class="dt">xlab=</span><span class="st">&#39;samples&#39;</span>,</span>
@@ -1530,7 +1530,7 @@ as they are too similar in nature.</p>
 <span id="cb169-64"><a href="brca-rnaseseq-explore-sparsity.html#cb169-64"></a><span class="kw">points</span>(</span>
 <span id="cb169-65"><a href="brca-rnaseseq-explore-sparsity.html#cb169-65"></a> <span class="kw">rep</span>(RR, <span class="kw">ncol</span>(missclass_oofProb_mtx)), </span>
 <span id="cb169-66"><a href="brca-rnaseseq-explore-sparsity.html#cb169-66"></a> missclass_oofProb_mtx[RR,],</span>
-<span id="cb169-67"><a href="brca-rnaseseq-explore-sparsity.html#cb169-67"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Other&#39;</span>,</span>
+<span id="cb169-67"><a href="brca-rnaseseq-explore-sparsity.html#cb169-67"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(brcaRna_train_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Other&#39;</span>,</span>
 <span id="cb169-68"><a href="brca-rnaseseq-explore-sparsity.html#cb169-68"></a>  <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
 <span id="cb169-69"><a href="brca-rnaseseq-explore-sparsity.html#cb169-69"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(missclass_oofProb_mtx))</span>
 <span id="cb169-70"><a href="brca-rnaseseq-explore-sparsity.html#cb169-70"></a></span>
@@ -1538,8 +1538,8 @@ as they are too similar in nature.</p>
 <span id="cb169-72"><a href="brca-rnaseseq-explore-sparsity.html#cb169-72"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bty=</span><span class="st">&#39;n&#39;</span>)</span>
 <span id="cb169-73"><a href="brca-rnaseseq-explore-sparsity.html#cb169-73"></a></span>
 <span id="cb169-74"><a href="brca-rnaseseq-explore-sparsity.html#cb169-74"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-misclassTrain"></span>
-<img src="Static/figures/brca-rnaseseq-misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-misclassTrain"></span>
+<img src="Static/figures/brcaRna-glmnetFit-misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
 <p class="caption">
 Figure 7.8: out-of-fold predicted probabilities at miscassified samples
 </p>
@@ -1553,40 +1553,40 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="brca-rnaseseq-explore-sparsity.html#cb170-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb170-2"><a href="brca-rnaseseq-explore-sparsity.html#cb170-2"></a></span>
 <span id="cb170-3"><a href="brca-rnaseseq-explore-sparsity.html#cb170-3"></a>test_lasso_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb170-4"><a href="brca-rnaseseq-explore-sparsity.html#cb170-4"></a> cv_lasso,</span>
-<span id="cb170-5"><a href="brca-rnaseseq-explore-sparsity.html#cb170-5"></a> <span class="dt">newx=</span>test_geneExpr_mtx,</span>
+<span id="cb170-4"><a href="brca-rnaseseq-explore-sparsity.html#cb170-4"></a> brcaRna_cv_lasso,</span>
+<span id="cb170-5"><a href="brca-rnaseseq-explore-sparsity.html#cb170-5"></a> <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx,</span>
 <span id="cb170-6"><a href="brca-rnaseseq-explore-sparsity.html#cb170-6"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb170-7"><a href="brca-rnaseseq-explore-sparsity.html#cb170-7"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb170-8"><a href="brca-rnaseseq-explore-sparsity.html#cb170-8"></a>)</span>
 <span id="cb170-9"><a href="brca-rnaseseq-explore-sparsity.html#cb170-9"></a></span>
 <span id="cb170-10"><a href="brca-rnaseseq-explore-sparsity.html#cb170-10"></a>test_enet_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb170-11"><a href="brca-rnaseseq-explore-sparsity.html#cb170-11"></a> cv_enet,</span>
-<span id="cb170-12"><a href="brca-rnaseseq-explore-sparsity.html#cb170-12"></a> <span class="dt">newx=</span>test_geneExpr_mtx,</span>
+<span id="cb170-11"><a href="brca-rnaseseq-explore-sparsity.html#cb170-11"></a> brcaRna_cv_enet,</span>
+<span id="cb170-12"><a href="brca-rnaseseq-explore-sparsity.html#cb170-12"></a> <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx,</span>
 <span id="cb170-13"><a href="brca-rnaseseq-explore-sparsity.html#cb170-13"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb170-14"><a href="brca-rnaseseq-explore-sparsity.html#cb170-14"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb170-15"><a href="brca-rnaseseq-explore-sparsity.html#cb170-15"></a>)</span>
 <span id="cb170-16"><a href="brca-rnaseseq-explore-sparsity.html#cb170-16"></a></span>
 <span id="cb170-17"><a href="brca-rnaseseq-explore-sparsity.html#cb170-17"></a>test_relaxed_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb170-18"><a href="brca-rnaseseq-explore-sparsity.html#cb170-18"></a> cv_lassoR,</span>
+<span id="cb170-18"><a href="brca-rnaseseq-explore-sparsity.html#cb170-18"></a> brcaRna_cv_lassoR,</span>
 <span id="cb170-19"><a href="brca-rnaseseq-explore-sparsity.html#cb170-19"></a> <span class="dt">g=</span><span class="dv">0</span>,</span>
-<span id="cb170-20"><a href="brca-rnaseseq-explore-sparsity.html#cb170-20"></a> <span class="dt">newx=</span>test_geneExpr_mtx,</span>
+<span id="cb170-20"><a href="brca-rnaseseq-explore-sparsity.html#cb170-20"></a> <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx,</span>
 <span id="cb170-21"><a href="brca-rnaseseq-explore-sparsity.html#cb170-21"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb170-22"><a href="brca-rnaseseq-explore-sparsity.html#cb170-22"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb170-23"><a href="brca-rnaseseq-explore-sparsity.html#cb170-23"></a>)</span>
 <span id="cb170-24"><a href="brca-rnaseseq-explore-sparsity.html#cb170-24"></a></span>
 <span id="cb170-25"><a href="brca-rnaseseq-explore-sparsity.html#cb170-25"></a>test_blended_predClass_vec &lt;-<span class="st"> </span><span class="kw">predict</span>(</span>
-<span id="cb170-26"><a href="brca-rnaseseq-explore-sparsity.html#cb170-26"></a> cv_lassoR,</span>
+<span id="cb170-26"><a href="brca-rnaseseq-explore-sparsity.html#cb170-26"></a> brcaRna_cv_lassoR,</span>
 <span id="cb170-27"><a href="brca-rnaseseq-explore-sparsity.html#cb170-27"></a> <span class="dt">g=</span><span class="fl">0.5</span>,</span>
-<span id="cb170-28"><a href="brca-rnaseseq-explore-sparsity.html#cb170-28"></a> <span class="dt">newx=</span>test_geneExpr_mtx,</span>
+<span id="cb170-28"><a href="brca-rnaseseq-explore-sparsity.html#cb170-28"></a> <span class="dt">newx=</span>brcaRna_test_geneExpr_mtx,</span>
 <span id="cb170-29"><a href="brca-rnaseseq-explore-sparsity.html#cb170-29"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb170-30"><a href="brca-rnaseseq-explore-sparsity.html#cb170-30"></a> <span class="dt">type=</span><span class="st">&#39;class&#39;</span></span>
 <span id="cb170-31"><a href="brca-rnaseseq-explore-sparsity.html#cb170-31"></a>)</span>
 <span id="cb170-32"><a href="brca-rnaseseq-explore-sparsity.html#cb170-32"></a></span>
 <span id="cb170-33"><a href="brca-rnaseseq-explore-sparsity.html#cb170-33"></a>misclass_id_vec &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">c</span>(</span>
-<span id="cb170-34"><a href="brca-rnaseseq-explore-sparsity.html#cb170-34"></a> <span class="kw">names</span>(test_lasso_predClass_vec[,<span class="dv">1</span>])[test_lasso_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb170-35"><a href="brca-rnaseseq-explore-sparsity.html#cb170-35"></a> <span class="kw">names</span>(test_enet_predClass_vec[,<span class="dv">1</span>])[test_enet_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb170-36"><a href="brca-rnaseseq-explore-sparsity.html#cb170-36"></a> <span class="kw">names</span>(test_relaxed_predClass_vec[,<span class="dv">1</span>])[test_relaxed_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec],</span>
-<span id="cb170-37"><a href="brca-rnaseseq-explore-sparsity.html#cb170-37"></a> <span class="kw">names</span>(test_blended_predClass_vec[,<span class="dv">1</span>])[test_blended_predClass_vec <span class="op">!=</span><span class="st"> </span>test_group_vec]</span>
+<span id="cb170-34"><a href="brca-rnaseseq-explore-sparsity.html#cb170-34"></a> <span class="kw">names</span>(test_lasso_predClass_vec[,<span class="dv">1</span>])[test_lasso_predClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec],</span>
+<span id="cb170-35"><a href="brca-rnaseseq-explore-sparsity.html#cb170-35"></a> <span class="kw">names</span>(test_enet_predClass_vec[,<span class="dv">1</span>])[test_enet_predClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec],</span>
+<span id="cb170-36"><a href="brca-rnaseseq-explore-sparsity.html#cb170-36"></a> <span class="kw">names</span>(test_relaxed_predClass_vec[,<span class="dv">1</span>])[test_relaxed_predClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec],</span>
+<span id="cb170-37"><a href="brca-rnaseseq-explore-sparsity.html#cb170-37"></a> <span class="kw">names</span>(test_blended_predClass_vec[,<span class="dv">1</span>])[test_blended_predClass_vec <span class="op">!=</span><span class="st"> </span>brcaRna_test_group_vec]</span>
 <span id="cb170-38"><a href="brca-rnaseseq-explore-sparsity.html#cb170-38"></a> )</span>
 <span id="cb170-39"><a href="brca-rnaseseq-explore-sparsity.html#cb170-39"></a>)</span>
 <span id="cb170-40"><a href="brca-rnaseseq-explore-sparsity.html#cb170-40"></a></span>
@@ -1601,7 +1601,7 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb170-49"><a href="brca-rnaseseq-explore-sparsity.html#cb170-49"></a></span>
 <span id="cb170-50"><a href="brca-rnaseseq-explore-sparsity.html#cb170-50"></a>row_med_vec &lt;-<span class="st"> </span><span class="kw">apply</span>(missclass_oofProb_mtx, <span class="dv">1</span>, median)</span>
 <span id="cb170-51"><a href="brca-rnaseseq-explore-sparsity.html#cb170-51"></a>missclass_oofProb_mtx &lt;-<span class="st"> </span>missclass_oofProb_mtx[</span>
-<span id="cb170-52"><a href="brca-rnaseseq-explore-sparsity.html#cb170-52"></a>  <span class="kw">order</span>(test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
+<span id="cb170-52"><a href="brca-rnaseseq-explore-sparsity.html#cb170-52"></a>  <span class="kw">order</span>(brcaRna_test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)], row_med_vec),]</span>
 <span id="cb170-53"><a href="brca-rnaseseq-explore-sparsity.html#cb170-53"></a></span>
 <span id="cb170-54"><a href="brca-rnaseseq-explore-sparsity.html#cb170-54"></a><span class="kw">plot</span>(</span>
 <span id="cb170-55"><a href="brca-rnaseseq-explore-sparsity.html#cb170-55"></a> <span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">nrow</span>(missclass_oofProb_mtx)), <span class="dt">xlab=</span><span class="st">&#39;samples&#39;</span>,</span>
@@ -1612,7 +1612,7 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb170-60"><a href="brca-rnaseseq-explore-sparsity.html#cb170-60"></a><span class="kw">points</span>(</span>
 <span id="cb170-61"><a href="brca-rnaseseq-explore-sparsity.html#cb170-61"></a> <span class="kw">rep</span>(RR, <span class="kw">ncol</span>(missclass_oofProb_mtx)), </span>
 <span id="cb170-62"><a href="brca-rnaseseq-explore-sparsity.html#cb170-62"></a> missclass_oofProb_mtx[RR,],</span>
-<span id="cb170-63"><a href="brca-rnaseseq-explore-sparsity.html#cb170-63"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Other&#39;</span>,</span>
+<span id="cb170-63"><a href="brca-rnaseseq-explore-sparsity.html#cb170-63"></a> <span class="dt">col=</span><span class="kw">ifelse</span>(brcaRna_test_group_vec[<span class="kw">rownames</span>(missclass_oofProb_mtx)[RR]] <span class="op">==</span><span class="st"> &#39;Other&#39;</span>,</span>
 <span id="cb170-64"><a href="brca-rnaseseq-explore-sparsity.html#cb170-64"></a>  <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>),</span>
 <span id="cb170-65"><a href="brca-rnaseseq-explore-sparsity.html#cb170-65"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(missclass_oofProb_mtx))</span>
 <span id="cb170-66"><a href="brca-rnaseseq-explore-sparsity.html#cb170-66"></a></span>
@@ -1620,8 +1620,8 @@ predicted probabilities greater than 0.5 are considered correct here.</p>
 <span id="cb170-68"><a href="brca-rnaseseq-explore-sparsity.html#cb170-68"></a> <span class="dt">pch=</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">bty=</span><span class="st">&#39;n&#39;</span>)</span>
 <span id="cb170-69"><a href="brca-rnaseseq-explore-sparsity.html#cb170-69"></a></span>
 <span id="cb170-70"><a href="brca-rnaseseq-explore-sparsity.html#cb170-70"></a><span class="kw">abline</span>(<span class="dt">h=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-misclassTest"></span>
-<img src="Static/figures/brca-rnaseseq-misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-misclassTest"></span>
+<img src="Static/figures/brcaRna-glmnetFit-misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
 <p class="caption">
 Figure 7.9: Test data predicted probabilities at miscassified samples
 </p>
@@ -1642,7 +1642,7 @@ in the relaxed lasso fit.</p>
 <span id="cb171-4"><a href="brca-rnaseseq-explore-sparsity.html#cb171-4"></a><span class="co">##########################</span></span>
 <span id="cb171-5"><a href="brca-rnaseseq-explore-sparsity.html#cb171-5"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb171-6"><a href="brca-rnaseseq-explore-sparsity.html#cb171-6"></a>lasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb171-7"><a href="brca-rnaseseq-explore-sparsity.html#cb171-7"></a> cv_lasso,</span>
+<span id="cb171-7"><a href="brca-rnaseseq-explore-sparsity.html#cb171-7"></a> brcaRna_cv_lasso,</span>
 <span id="cb171-8"><a href="brca-rnaseseq-explore-sparsity.html#cb171-8"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb171-9"><a href="brca-rnaseseq-explore-sparsity.html#cb171-9"></a>)</span>
 <span id="cb171-10"><a href="brca-rnaseseq-explore-sparsity.html#cb171-10"></a>lasso_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1653,7 +1653,7 @@ in the relaxed lasso fit.</p>
 <span id="cb171-15"><a href="brca-rnaseseq-explore-sparsity.html#cb171-15"></a><span class="co"># enet</span></span>
 <span id="cb171-16"><a href="brca-rnaseseq-explore-sparsity.html#cb171-16"></a><span class="co">##########################</span></span>
 <span id="cb171-17"><a href="brca-rnaseseq-explore-sparsity.html#cb171-17"></a>enet_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb171-18"><a href="brca-rnaseseq-explore-sparsity.html#cb171-18"></a> cv_enet,</span>
+<span id="cb171-18"><a href="brca-rnaseseq-explore-sparsity.html#cb171-18"></a> brcaRna_cv_enet,</span>
 <span id="cb171-19"><a href="brca-rnaseseq-explore-sparsity.html#cb171-19"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb171-20"><a href="brca-rnaseseq-explore-sparsity.html#cb171-20"></a>)</span>
 <span id="cb171-21"><a href="brca-rnaseseq-explore-sparsity.html#cb171-21"></a>enet_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1665,7 +1665,7 @@ in the relaxed lasso fit.</p>
 <span id="cb171-27"><a href="brca-rnaseseq-explore-sparsity.html#cb171-27"></a><span class="co">##########################</span></span>
 <span id="cb171-28"><a href="brca-rnaseseq-explore-sparsity.html#cb171-28"></a>SKIP &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
 <span id="cb171-29"><a href="brca-rnaseseq-explore-sparsity.html#cb171-29"></a>lassoR_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb171-30"><a href="brca-rnaseseq-explore-sparsity.html#cb171-30"></a> cv_lassoR,</span>
+<span id="cb171-30"><a href="brca-rnaseseq-explore-sparsity.html#cb171-30"></a> brcaRna_cv_lassoR,</span>
 <span id="cb171-31"><a href="brca-rnaseseq-explore-sparsity.html#cb171-31"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb171-32"><a href="brca-rnaseseq-explore-sparsity.html#cb171-32"></a> <span class="dt">g=</span><span class="dv">0</span></span>
 <span id="cb171-33"><a href="brca-rnaseseq-explore-sparsity.html#cb171-33"></a>)</span>
@@ -1677,7 +1677,7 @@ in the relaxed lasso fit.</p>
 <span id="cb171-39"><a href="brca-rnaseseq-explore-sparsity.html#cb171-39"></a><span class="co"># blended mix (gamma=0.5)</span></span>
 <span id="cb171-40"><a href="brca-rnaseseq-explore-sparsity.html#cb171-40"></a><span class="co">###############################</span></span>
 <span id="cb171-41"><a href="brca-rnaseseq-explore-sparsity.html#cb171-41"></a>blended_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb171-42"><a href="brca-rnaseseq-explore-sparsity.html#cb171-42"></a> cv_lassoR,</span>
+<span id="cb171-42"><a href="brca-rnaseseq-explore-sparsity.html#cb171-42"></a> brcaRna_cv_lassoR,</span>
 <span id="cb171-43"><a href="brca-rnaseseq-explore-sparsity.html#cb171-43"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span>,</span>
 <span id="cb171-44"><a href="brca-rnaseseq-explore-sparsity.html#cb171-44"></a> <span class="dt">g=</span><span class="fl">0.5</span></span>
 <span id="cb171-45"><a href="brca-rnaseseq-explore-sparsity.html#cb171-45"></a>)</span>
@@ -1712,8 +1712,8 @@ in the relaxed lasso fit.</p>
 <span id="cb171-74"><a href="brca-rnaseseq-explore-sparsity.html#cb171-74"></a>  <span class="dt">y=</span>all_coef_frm[<span class="op">-</span><span class="dv">1</span>, CC], <span class="dt">ylab=</span><span class="kw">colnames</span>(all_coef_frm)[CC],</span>
 <span id="cb171-75"><a href="brca-rnaseseq-explore-sparsity.html#cb171-75"></a>  <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>)</span>
 <span id="cb171-76"><a href="brca-rnaseseq-explore-sparsity.html#cb171-76"></a>}</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-compCoeffProf"></span>
-<img src="Static/figures/brca-rnaseseq-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-compCoeffProf"></span>
+<img src="Static/figures/brcaRna-glmnetFit-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
 <p class="caption">
 Figure 7.10: Coefficient Profiles
 </p>
@@ -1729,7 +1729,7 @@ is smaell in the other. By contrast, the blended fit produces more shrinkage.</p
 <span id="cb172-6"><a href="brca-rnaseseq-explore-sparsity.html#cb172-6"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:brca-rnaseseq-zreros">Table 7.6: </span>Zero Ceofficient: rows are lasso, columns enet
+<span id="tab:brcaRna-glmnetFit-zreros">Table 7.6: </span>Zero Ceofficient: rows are lasso, columns enet
 </caption>
 <thead>
 <tr>
@@ -1785,8 +1785,8 @@ lasso fit, or zero.</p>
 <span id="cb173-7"><a href="brca-rnaseseq-explore-sparsity.html#cb173-7"></a>    <span class="kw">points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb173-8"><a href="brca-rnaseseq-explore-sparsity.html#cb173-8"></a>  }</span>
 <span id="cb173-9"><a href="brca-rnaseseq-explore-sparsity.html#cb173-9"></a>)</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-pairsCoeffProf"></span>
-<img src="Static/figures/brca-rnaseseq-pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-pairsCoeffProf"></span>
+<img src="Static/figures/brcaRna-glmnetFit-pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
 <p class="caption">
 Figure 7.11: Coefficients from fits
 </p>
@@ -1816,7 +1816,7 @@ feature selection.</code></pre>
 <span id="cb176-3"><a href="brca-rnaseseq-explore-sparsity.html#cb176-3"></a></span>
 <span id="cb176-4"><a href="brca-rnaseseq-explore-sparsity.html#cb176-4"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb176-5"><a href="brca-rnaseseq-explore-sparsity.html#cb176-5"></a>lasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb176-6"><a href="brca-rnaseseq-explore-sparsity.html#cb176-6"></a> cv_lasso,</span>
+<span id="cb176-6"><a href="brca-rnaseseq-explore-sparsity.html#cb176-6"></a> brcaRna_cv_lasso,</span>
 <span id="cb176-7"><a href="brca-rnaseseq-explore-sparsity.html#cb176-7"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb176-8"><a href="brca-rnaseseq-explore-sparsity.html#cb176-8"></a>)</span>
 <span id="cb176-9"><a href="brca-rnaseseq-explore-sparsity.html#cb176-9"></a>lasso_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1826,20 +1826,20 @@ feature selection.</code></pre>
 <span id="cb176-13"><a href="brca-rnaseseq-explore-sparsity.html#cb176-13"></a> </span>
 <span id="cb176-14"><a href="brca-rnaseseq-explore-sparsity.html#cb176-14"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb176-15"><a href="brca-rnaseseq-explore-sparsity.html#cb176-15"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb176-16"><a href="brca-rnaseseq-explore-sparsity.html#cb176-16"></a>    <span class="dt">x=</span><span class="kw">t</span>(train_geneExpr_mtx[,lasso_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
+<span id="cb176-16"><a href="brca-rnaseseq-explore-sparsity.html#cb176-16"></a>    <span class="dt">x=</span><span class="kw">t</span>(brcaRna_train_geneExpr_mtx[,lasso_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
 <span id="cb176-17"><a href="brca-rnaseseq-explore-sparsity.html#cb176-17"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
 <span id="cb176-18"><a href="brca-rnaseseq-explore-sparsity.html#cb176-18"></a>    <span class="dt">labRow=</span>lasso_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb176-19"><a href="brca-rnaseseq-explore-sparsity.html#cb176-19"></a>    <span class="dt">labCol=</span>train_group_vec,</span>
+<span id="cb176-19"><a href="brca-rnaseseq-explore-sparsity.html#cb176-19"></a>    <span class="dt">labCol=</span>brcaRna_train_group_vec,</span>
 <span id="cb176-20"><a href="brca-rnaseseq-explore-sparsity.html#cb176-20"></a>    <span class="dt">col=</span>Mycol, </span>
 <span id="cb176-21"><a href="brca-rnaseseq-explore-sparsity.html#cb176-21"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
 <span id="cb176-22"><a href="brca-rnaseseq-explore-sparsity.html#cb176-22"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
 <span id="cb176-23"><a href="brca-rnaseseq-explore-sparsity.html#cb176-23"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
 <span id="cb176-24"><a href="brca-rnaseseq-explore-sparsity.html#cb176-24"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb176-25"><a href="brca-rnaseseq-explore-sparsity.html#cb176-25"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(train_group_vec<span class="op">==</span><span class="st">&#39;_Other&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
+<span id="cb176-25"><a href="brca-rnaseseq-explore-sparsity.html#cb176-25"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;_Other&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
 <span id="cb176-26"><a href="brca-rnaseseq-explore-sparsity.html#cb176-26"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
 <span id="cb176-27"><a href="brca-rnaseseq-explore-sparsity.html#cb176-27"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;lasso genes - N =&#39;</span>, <span class="kw">nrow</span>(lasso_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-heatmapLasso"></span>
-<img src="Static/figures/brca-rnaseseq-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-heatmapLasso"></span>
+<img src="Static/figures/brcaRna-glmnetFit-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
 <p class="caption">
 Figure 7.12: Lasso Model Genes
 </p>
@@ -1849,7 +1849,7 @@ Figure 7.12: Lasso Model Genes
 <span id="cb177-3"><a href="brca-rnaseseq-explore-sparsity.html#cb177-3"></a></span>
 <span id="cb177-4"><a href="brca-rnaseseq-explore-sparsity.html#cb177-4"></a><span class="co"># train - cv predicted</span></span>
 <span id="cb177-5"><a href="brca-rnaseseq-explore-sparsity.html#cb177-5"></a>enet_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb177-6"><a href="brca-rnaseseq-explore-sparsity.html#cb177-6"></a> cv_enet,</span>
+<span id="cb177-6"><a href="brca-rnaseseq-explore-sparsity.html#cb177-6"></a> brcaRna_cv_enet,</span>
 <span id="cb177-7"><a href="brca-rnaseseq-explore-sparsity.html#cb177-7"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
 <span id="cb177-8"><a href="brca-rnaseseq-explore-sparsity.html#cb177-8"></a>)</span>
 <span id="cb177-9"><a href="brca-rnaseseq-explore-sparsity.html#cb177-9"></a>enet_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -1859,20 +1859,20 @@ Figure 7.12: Lasso Model Genes
 <span id="cb177-13"><a href="brca-rnaseseq-explore-sparsity.html#cb177-13"></a> </span>
 <span id="cb177-14"><a href="brca-rnaseseq-explore-sparsity.html#cb177-14"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb177-15"><a href="brca-rnaseseq-explore-sparsity.html#cb177-15"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb177-16"><a href="brca-rnaseseq-explore-sparsity.html#cb177-16"></a>    <span class="dt">x=</span><span class="kw">t</span>(train_geneExpr_mtx[,enet_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
+<span id="cb177-16"><a href="brca-rnaseseq-explore-sparsity.html#cb177-16"></a>    <span class="dt">x=</span><span class="kw">t</span>(brcaRna_train_geneExpr_mtx[,enet_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
 <span id="cb177-17"><a href="brca-rnaseseq-explore-sparsity.html#cb177-17"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
 <span id="cb177-18"><a href="brca-rnaseseq-explore-sparsity.html#cb177-18"></a>    <span class="dt">labRow=</span>enet_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb177-19"><a href="brca-rnaseseq-explore-sparsity.html#cb177-19"></a>    <span class="dt">labCol=</span>train_group_vec,</span>
+<span id="cb177-19"><a href="brca-rnaseseq-explore-sparsity.html#cb177-19"></a>    <span class="dt">labCol=</span>brcaRna_train_group_vec,</span>
 <span id="cb177-20"><a href="brca-rnaseseq-explore-sparsity.html#cb177-20"></a>    <span class="dt">col=</span>Mycol, </span>
 <span id="cb177-21"><a href="brca-rnaseseq-explore-sparsity.html#cb177-21"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
 <span id="cb177-22"><a href="brca-rnaseseq-explore-sparsity.html#cb177-22"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
 <span id="cb177-23"><a href="brca-rnaseseq-explore-sparsity.html#cb177-23"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
 <span id="cb177-24"><a href="brca-rnaseseq-explore-sparsity.html#cb177-24"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb177-25"><a href="brca-rnaseseq-explore-sparsity.html#cb177-25"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(train_group_vec<span class="op">==</span><span class="st">&#39;_Other&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
+<span id="cb177-25"><a href="brca-rnaseseq-explore-sparsity.html#cb177-25"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(brcaRna_train_group_vec<span class="op">==</span><span class="st">&#39;_Other&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
 <span id="cb177-26"><a href="brca-rnaseseq-explore-sparsity.html#cb177-26"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
 <span id="cb177-27"><a href="brca-rnaseseq-explore-sparsity.html#cb177-27"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;enet genes - N =&#39;</span>, <span class="kw">nrow</span>(enet_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:brca-rnaseseq-heatmapEnet"></span>
-<img src="Static/figures/brca-rnaseseq-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
+<div class="figure"><span id="fig:brcaRna-glmnetFit-heatmapEnet"></span>
+<img src="Static/figures/brcaRna-glmnetFit-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
 <p class="caption">
 Figure 7.13: Enet Model Genes
 </p>

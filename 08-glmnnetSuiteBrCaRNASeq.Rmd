@@ -22,26 +22,26 @@ sizes.
 First assemble the data set.  This entails simply re-combining the
 train and test data.
 
-```{r brca-rnaseq-get-all-data, cache=T, cache.vars=c('all_geneExpr_mtx', 'all_group_vec')}
+```{r brca-rnaseq-get-all-data, cache=T, cache.vars=c('brcaRna_all_geneExpr_mtx', 'brcaRna_all_group_vec')}
 ### CLEAR CACHE
 
 # combine train and test 
-all_geneExpr_mtx <- rbind(train_geneExpr_mtx, test_geneExpr_mtx)
+brcaRna_all_geneExpr_mtx <- rbind(brcaRna_train_geneExpr_mtx, brcaRna_test_geneExpr_mtx)
 
 # we have to be careful with factors!
 # We'll keep as a character and change to factor when needed
-all_group_vec <- c(
- as.character(train_group_vec), 
- as.character(test_group_vec)
+brcaRna_all_group_vec <- c(
+ as.character(brcaRna_train_group_vec), 
+ as.character(brcaRna_test_group_vec)
 )
 # I suspect adding names to vectors breaks one of the tidy commandments,
 # but then again I am sure I have already offended the creed beyond salvation
-names(all_group_vec) <- c(
- names(train_group_vec),
- names(test_group_vec)
+names(brcaRna_all_group_vec) <- c(
+ names(brcaRna_train_group_vec),
+ names(brcaRna_test_group_vec)
 )
 
-knitr::kable(table(group = all_group_vec),
+knitr::kable(table(group = brcaRna_all_group_vec),
   caption = "samples by group") %>%
    kableExtra::kable_styling(full_width = F)
 
@@ -61,10 +61,10 @@ set.seed(1)
 
 start_time <-  proc.time()
 
-BrCa_cv_lassoAll_lst <- lapply(1:30, function(REP) {
+brcaRna_cv_lassoAll_lst <- lapply(1:30, function(REP) {
 glmnet::cv.glmnet(
- x = all_geneExpr_mtx,
- y = factor(all_group_vec,levels = c('Other', 'LumA')),
+ x = brcaRna_all_geneExpr_mtx,
+ y = factor(brcaRna_all_group_vec,levels = c('Other', 'LumA')),
  alpha = 1,
  family = 'binomial',
  type.measure  =  "class",
@@ -80,11 +80,11 @@ message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
 
 <!-- lasso-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r brca-rnaseq-save-BrCa_cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
- save(list='BrCa_cv_lassoAll_lst', file=file.path("RData",'BrCa_cv_lassoAll_lst'))
+```{r brca-rnaseq-save-brcaRna_cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
+ save(list='brcaRna_cv_lassoAll_lst', file=file.path("RData",'brcaRna_cv_lassoAll_lst'))
 ```
-```{r brca-rnaseq-load-BrCa_cv_lassoAll_lst, cache=F, echo=T}
- load(file=file.path("RData",'BrCa_cv_lassoAll_lst'))
+```{r brca-rnaseq-load-brcaRna_cv_lassoAll_lst, cache=F, echo=T}
+ load(file=file.path("RData",'brcaRna_cv_lassoAll_lst'))
 ```
 
 
@@ -93,16 +93,16 @@ Examine the fits.
 ```{r brca-rnaseq-plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
 ### CLEAR CACHE
 plot(
- log(BrCa_cv_lassoAll_lst[[1]]$lambda),
- BrCa_cv_lassoAll_lst[[1]]$cvm,
+ log(brcaRna_cv_lassoAll_lst[[1]]$lambda),
+ brcaRna_cv_lassoAll_lst[[1]]$cvm,
  lwd=2,
  xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
 )
 
-for(JJ in 2:length(BrCa_cv_lassoAll_lst))
+for(JJ in 2:length(brcaRna_cv_lassoAll_lst))
  lines(
-  log(BrCa_cv_lassoAll_lst[[JJ]]$lambda),
-  BrCa_cv_lassoAll_lst[[JJ]]$cvm,
+  log(brcaRna_cv_lassoAll_lst[[JJ]]$lambda),
+  brcaRna_cv_lassoAll_lst[[JJ]]$cvm,
   lwd=2
 )
 
@@ -119,24 +119,24 @@ library(magrittr)
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
 
 # nzero
-nzero_1se_vec <- sapply(BrCa_cv_lassoAll_lst,
+nzero_1se_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 
-nzero_min_vec <- sapply(BrCa_cv_lassoAll_lst,
+nzero_min_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Selected Features")
 
 # error
-error_1se_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_1se_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 
-error_min_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_min_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 
 boxplot(
  list(`1se`=error_1se_vec, min = error_min_vec), 
- ylab=BrCa_cv_lassoAll_lst[[1]]$name,
+ ylab=brcaRna_cv_lassoAll_lst[[1]]$name,
  ylim=c(0.10, .13)
 )
 
@@ -172,9 +172,9 @@ rates oberved in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-`r paste(round(table(group = all_group_vec)*.8), collapse=' vs ')` samples
+`r paste(round(table(group = brcaRna_all_group_vec)*.8), collapse=' vs ')` samples
 to a data set with
-`r paste(round(table(group = all_group_vec)), collapse=' vs ')` samples.
+`r paste(round(table(group = brcaRna_all_group_vec)), collapse=' vs ')` samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -187,14 +187,14 @@ there is a meaningful difference between the two.
 ```{r brca-rnaseq-get-sample-pred, cache=F, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
 # predicted probs - 1se
-lassoAll_predResp_1se_mtx <- sapply(BrCa_cv_lassoAll_lst, function(cv_fit) { 
+lassoAll_predResp_1se_mtx <- sapply(brcaRna_cv_lassoAll_lst, function(cv_fit) { 
   ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_1se])
  })
 lassoAll_predResp_1se_vec <- rowMeans(lassoAll_predResp_1se_mtx)
 
 # predicted probs - min
-lassoAll_predResp_min_mtx <- sapply(BrCa_cv_lassoAll_lst, function(cv_fit) { 
+lassoAll_predResp_min_mtx <- sapply(brcaRna_cv_lassoAll_lst, function(cv_fit) { 
   ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
   logistic_f(cv_fit$fit.preval[,ndx_min])
  })
@@ -203,8 +203,8 @@ lassoAll_predResp_min_vec <- rowMeans(lassoAll_predResp_min_mtx)
 # plot
 par(mfrow=c(1,2), mar=c(5,5,2,1))
 tmp <- c(
- `1se` = split(lassoAll_predResp_1se_vec, all_group_vec),
- min = split(lassoAll_predResp_min_vec, all_group_vec)
+ `1se` = split(lassoAll_predResp_1se_vec, brcaRna_all_group_vec),
+ min = split(lassoAll_predResp_min_vec, brcaRna_all_group_vec)
 )
 names(tmp) <- sub('\\.', '\n', names(tmp))
 
@@ -221,12 +221,12 @@ axis(side=1, at=1:length(tmp), tick=F, names(tmp))
 plot(
  x = lassoAll_predResp_1se_vec, xlab='1se model oof Prob',
  y = lassoAll_predResp_min_vec, ylab='min lambda model oof Prob',
- col = ifelse(all_group_vec == 'LumA', 'red', 'green')
+ col = ifelse(brcaRna_all_group_vec == 'LumA', 'red', 'green')
 )
  
 # Add reference lines at 10% false positive
-thres_1se <- quantile(lassoAll_predResp_1se_vec[all_group_vec == 'Other'], prob=.9)
-thres_min <- quantile(lassoAll_predResp_min_vec[all_group_vec == 'Other'], prob=.9)
+thres_1se <- quantile(lassoAll_predResp_1se_vec[brcaRna_all_group_vec == 'Other'], prob=.9)
+thres_min <- quantile(lassoAll_predResp_min_vec[brcaRna_all_group_vec == 'Other'], prob=.9)
 abline(v = thres_1se, h = thres_min, col='grey')
 
 ```
@@ -263,8 +263,8 @@ lassoAll_predClass_min_vec <- ifelse(
  lassoAll_predResp_min_vec > thres_min, 'LumA', 'Other')
 
 tmp <- cbind(
- table(truth=all_group_vec, `1se-pred`=lassoAll_predClass_1se_vec),
- table(truth=all_group_vec, `min-pred`=lassoAll_predClass_min_vec)
+ table(truth=brcaRna_all_group_vec, `1se-pred`=lassoAll_predClass_1se_vec),
+ table(truth=brcaRna_all_group_vec, `min-pred`=lassoAll_predClass_min_vec)
 ) 
 # HARD-WIRED Hack for printing!!!!
 colnames(tmp) <- c('1se-LumA', '1se-Other', 'min-LumA', 'min-Other')
@@ -292,17 +292,17 @@ of computing sample consistency scores - what do these differences mean?
 
 To compute consistency scores, we will use the out-of-fold predicted probabilities.
 
-```{r brca-rnaseq-get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('sample_1se_qual_vec','sample_min_qual_vec')}
+```{r brca-rnaseq-get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('brcaRna_sample_1se_qual_vec','brcaRna_sample_min_qual_vec')}
 # get qual scores
 
-y <- as.numeric(all_group_vec == 'LumA')
+y <- as.numeric(brcaRna_all_group_vec == 'LumA')
 # 1se
 p <- lassoAll_predResp_1se_vec
-sample_1se_qual_vec <- p^y*(1-p)^(1-y)
+brcaRna_sample_1se_qual_vec <- p^y*(1-p)^(1-y)
 
 # min
 p <- lassoAll_predResp_min_vec
-sample_min_qual_vec <- p^y*(1-p)^(1-y)
+brcaRna_sample_min_qual_vec <- p^y*(1-p)^(1-y)
 
 ```
 
@@ -314,7 +314,8 @@ We can examine consistency scores as a function of classification bin.
 
 ```{r brca-rnaseq-plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='consistency scores by classification - Other=0, LumA=1'}
 
-y <- as.numeric(all_group_vec == 'LumA')
+
+y <- as.numeric(brcaRna_all_group_vec == 'LumA')
 
 # 1se
 lassoAll_1se_conf_vec <- paste(
@@ -333,7 +334,7 @@ lassoAll_min_conf_vec <- paste(
 
 tmp <- c(
  split(sample_1se_qual_vec, lassoAll_1se_conf_vec), 
- split(sample_min_qual_vec, lassoAll_min_conf_vec)
+ split(brcaRna_sample_min_qual_vec, lassoAll_min_conf_vec)
 )
 
 par(mfrow=c(1,2), mar=c(4,3,3,2), oma=c(2,2,2,0))
@@ -343,7 +344,7 @@ gplots::boxplot2(split(sample_1se_qual_vec, lassoAll_1se_conf_vec),
   ylim=c(0,1))
 title('1se Model')
 
-gplots::boxplot2(split(sample_min_qual_vec, lassoAll_min_conf_vec), 
+gplots::boxplot2(split(brcaRna_sample_min_qual_vec, lassoAll_min_conf_vec), 
   outline=F, ylab = '',
   border=c('green', 'green', 'red', 'red'),
   ylim=c(0,1))
@@ -370,7 +371,7 @@ but we could have used either one.
 
 ```{r brca-rnaseq-sample-qual}
 
-sample_qual_vec <- sample_min_qual_vec
+brcaRna_sample_qual_vec <- brcaRna_sample_min_qual_vec
 
 
 ```
@@ -394,7 +395,7 @@ Let's examine the stability of the gene lists across cv replicates.
 
 
 # 1se
-lassoAll_coef_1se_lst <- lapply(BrCa_cv_lassoAll_lst, function(cv_fit){
+lassoAll_coef_1se_lst <- lapply(brcaRna_cv_lassoAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.1se"
@@ -433,7 +434,7 @@ and
 
 
 # min
-lassoAll_coef_min_lst <- lapply(BrCa_cv_lassoAll_lst, function(cv_fit){
+lassoAll_coef_min_lst <- lapply(brcaRna_cv_lassoAll_lst, function(cv_fit){
  cv_fit_coef <- coef(
  cv_fit,
  s = "lambda.min"
@@ -516,8 +517,8 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected LumA samples, the expected overlap between two randomly
-selected sets of LumA samples is `r round(100*(300/sum(all_group_vec=='LumA'))^2,1)`%.
-For Others the expected overlap is `r round(100*(300/sum(all_group_vec=='Other'))^2,1)`%. 
+selected sets of LumA samples is `r round(100*(300/sum(brcaRna_all_group_vec=='LumA'))^2,1)`%.
+For Others the expected overlap is `r round(100*(300/sum(brcaRna_all_group_vec=='Other'))^2,1)`%. 
 
 
 ## Setup simulation 
@@ -525,41 +526,42 @@ For Others the expected overlap is `r round(100*(300/sum(all_group_vec=='Other')
 To setup the simulation, we only need two master tables: one for the selection of Others
 and one for the selection of LumA samples.
 
-```{r brca-rnaseq-get-all-vec, cache=T, cache.vars=c('all_other_vec', 'all_LumA_vec')}
+```{r brca-rnaseq-get-all-vec, cache=T, cache.vars=c('brcaRna_all_other_vec', 'brcaRna_all_LumA_vec')}
 
-all_other_vec <- names(all_group_vec[all_group_vec=='Other']) 
-all_LumA_vec <- names(all_group_vec[all_group_vec=='LumA'])  
+brcaRna_all_other_vec <- names(brcaRna_all_group_vec[brcaRna_all_group_vec=='Other']) 
+brcaRna_all_LumA_vec <- names(brcaRna_all_group_vec[brcaRna_all_group_vec=='LumA'])  
 
 ```
 
-We have `r length(all_other_vec)` other sample IDs stored in `all_other_vec`
-and `r length(all_LumA_vec)` LumA sample IDs stored in `all_LumA_vec`.
+We have `r length(brcaRna_all_other_vec)` other sample IDs stored in `brcaRna_all_other_vec`
+and `r length(brcaRna_all_LumA_vec)` LumA sample IDs stored in `brcaRna_all_LumA_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
   
-```{r brca-rnaseq-getSimTable, cache=T, cache.vars=c('sim_other_mtx', 'sim_LumA_mtx')}
+```{r brca-rnaseq-getSimTable, cache=T, cache.vars=c('brcaRna_sim_other_mtx', 'brcaRna_sim_LumA_mtx')}
+### CLEAR CACHE
 
 set.seed(12379)
 
-sim_other_mtx <- sapply(
+brcaRna_sim_other_mtx <- sapply(
  1:SIM, 
  function(dummy) 
-   sample(1:length(all_other_vec), size =  max(SIZE))
+   sample(1:length(brcaRna_all_other_vec), size =  max(SIZE))
 )
 
 
-sim_LumA_mtx <- sapply(
+brcaRna_sim_LumA_mtx <- sapply(
  1:SIM, 
  function(dummy) 
-   sample(1:length(all_LumA_vec), size =  max(SIZE))
+   sample(1:length(brcaRna_all_LumA_vec), size =  max(SIZE))
 )
 
 
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`sim_other_mtx` and `sim_LumA_mtx`, each with domensions `r dim(sim_LumA_mtx)`.
+`brcaRna_sim_other_mtx` and `brcaRna_sim_LumA_mtx`, each with domensions `r dim(brcaRna_sim_LumA_mtx)`.
 Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
@@ -567,18 +569,18 @@ We can examine how much variability we have in the consistency scores of the sel
 Here we show results for the smalle sample sizes where variability will be the greatest.
 
 ```{r brca-rnaseq-look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
-### CLEAR CACHE
 
-all_other_qual_vec <- sample_qual_vec[all_other_vec]
+
+all_other_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_other_vec]
 sim_other_qual_mtx <- sapply(
-  1:ncol(sim_other_mtx), 
-  function(CC) all_other_qual_vec[sim_other_mtx[,CC]]
+  1:ncol(brcaRna_sim_other_mtx), 
+  function(CC) all_other_qual_vec[brcaRna_sim_other_mtx[,CC]]
  )
 
-all_LumA_qual_vec <- sample_qual_vec[all_LumA_vec]
+all_LumA_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_LumA_vec]
 sim_LumA_qual_mtx <- sapply(
-  1:ncol(sim_LumA_mtx),  
-  function(CC) all_LumA_qual_vec[sim_LumA_mtx[,CC]]
+  1:ncol(brcaRna_sim_LumA_mtx),  
+  function(CC) all_LumA_qual_vec[brcaRna_sim_LumA_mtx[,CC]]
  )
 
 # Get stage from SIZE 
@@ -643,19 +645,19 @@ title("LumA sample consistency by stage and simulation")
 
 ```
 
-```{r brca-rnaseq-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
-### CLEAR CACHE
+```{r brca-rnaseq-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('brcaRna_sim_other_qual_mtx', 'brcaRna_sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
 
-all_other_qual_vec <- sample_qual_vec[all_other_vec]
-sim_other_qual_mtx <- sapply(
-  1:ncol(sim_other_mtx), 
-  function(CC) all_other_qual_vec[sim_other_mtx[,CC]]
+
+brcaRna_all_other_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_other_vec]
+brcaRna_sim_other_qual_mtx <- sapply(
+  1:ncol(brcaRna_sim_other_mtx), 
+  function(CC) brcaRna_all_other_qual_vec[brcaRna_sim_other_mtx[,CC]]
  )
 
-all_LumA_qual_vec <- sample_qual_vec[all_LumA_vec]
-sim_LumA_qual_mtx <- sapply(
-  1:ncol(sim_LumA_mtx),  
-  function(CC) all_LumA_qual_vec[sim_LumA_mtx[,CC]]
+brcaRna_all_LumA_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_LumA_vec]
+brcaRna_sim_LumA_qual_mtx <- sapply(
+  1:ncol(brcaRna_sim_LumA_mtx),  
+  function(CC) brcaRna_all_LumA_qual_vec[brcaRna_sim_LumA_mtx[,CC]]
  )
 
 # ONLY LOOK AT SAMPLE SIZE == 50
@@ -665,7 +667,7 @@ NN <- 50
 par(mfrow=c(2,1), mar = c(2,5,2,1))
 # other
 boxplot(
-  sim_other_qual_mtx[1:NN,],
+  brcaRna_sim_other_qual_mtx[1:NN,],
   outline = T, 
   ylab = 'Quality Score',
   xaxt = 'n'
@@ -674,7 +676,7 @@ title("Other sample consistency across simulations")
 
 # LumA
 boxplot(
-  sim_LumA_qual_mtx[1:NN,],
+  brcaRna_sim_LumA_qual_mtx[1:NN,],
   outline = T, 
   ylab = 'Quality Score'
 )
@@ -709,9 +711,9 @@ Running under: macOS Mojave 10.14.6)
 start_time <- proc.time()
 
 # Get stage from SIZE
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0, SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0, SIZE), include.lowest = T)
 
-for (SIMno in 1:ncol(sim_other_qual_mtx)) {
+for (SIMno in 1:ncol(brcaRna_sim_other_qual_mtx)) {
 
   #cat("Running simulation ", SIMno, "\n")
 
@@ -720,11 +722,11 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
     #cat("Stage ", STGno, "- analyzing", length(Stage_rows_vec), "paired samples.\n")
 
     sim_stage_samples_vec <- c(
-      all_other_vec[sim_other_mtx[Stage_rows_vec, SIMno]],
-      all_LumA_vec[sim_LumA_mtx[Stage_rows_vec, SIMno]]
+      brcaRna_all_other_vec[brcaRna_sim_other_mtx[Stage_rows_vec, SIMno]],
+      brcaRna_all_LumA_vec[brcaRna_sim_LumA_mtx[Stage_rows_vec, SIMno]]
     )
-    sim_stage_geneExpr_mtx <- all_geneExpr_mtx[sim_stage_samples_vec, ]
-    sim_stage_group_vec <- all_group_vec[sim_stage_samples_vec]
+    sim_stage_geneExpr_mtx <- brcaRna_all_geneExpr_mtx[sim_stage_samples_vec, ]
+    sim_stage_group_vec <- brcaRna_all_group_vec[sim_stage_samples_vec]
     #print(table(sim_stage_group_vec))
 
     sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
@@ -746,17 +748,17 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
       cvm_1se <- cv_fit$cvm[ndx_1se]
 
       # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_geneExpr_mtx), sim_stage_samples_vec)
-      sim_stage_test_geneExpr_mtx <- all_geneExpr_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_samples_vec <- setdiff(rownames(brcaRna_all_geneExpr_mtx), sim_stage_samples_vec)
+      sim_stage_brcaRna_test_geneExpr_mtx <- brcaRna_all_geneExpr_mtx[sim_stage_test_samples_vec,]
+      sim_stage_brcaRna_test_group_vec <- brcaRna_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_1se_vec <- predict(
        cv_fit,
-       newx=sim_stage_test_geneExpr_mtx,
+       newx=sim_stage_brcaRna_test_geneExpr_mtx,
        s="lambda.1se",
        type="class"
       )
-      test_1se_error <- mean(test_pred_1se_vec != sim_stage_test_group_vec)
+      test_1se_error <- mean(test_pred_1se_vec != sim_stage_brcaRna_test_group_vec)
 
       # genes
       coef_1se <- coef(
@@ -773,17 +775,17 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
       cvm_min <- cv_fit$cvm[ndx_min]
 
       # test error
-      sim_stage_test_samples_vec <- setdiff(rownames(all_geneExpr_mtx), sim_stage_samples_vec)
-      sim_stage_test_geneExpr_mtx <- all_geneExpr_mtx[sim_stage_test_samples_vec,]
-      sim_stage_test_group_vec <- all_group_vec[sim_stage_test_samples_vec]
+      sim_stage_test_samples_vec <- setdiff(rownames(brcaRna_all_geneExpr_mtx), sim_stage_samples_vec)
+      sim_stage_brcaRna_test_geneExpr_mtx <- brcaRna_all_geneExpr_mtx[sim_stage_test_samples_vec,]
+      sim_stage_brcaRna_test_group_vec <- brcaRna_all_group_vec[sim_stage_test_samples_vec]
 
       test_pred_min_vec <- predict(
        cv_fit,
-       newx=sim_stage_test_geneExpr_mtx,
+       newx=sim_stage_brcaRna_test_geneExpr_mtx,
        s="lambda.min",
        type="class"
       )
-      test_min_error <- mean(test_pred_min_vec != sim_stage_test_group_vec)
+      test_min_error <- mean(test_pred_min_vec != sim_stage_brcaRna_test_group_vec)
 
       # genes
       coef_min <- coef(
@@ -806,11 +808,26 @@ for (SIMno in 1:ncol(sim_other_qual_mtx)) {
     sim_stage_cv_lst
   })
 
-  # save  brca_sim_cv_lst
-  fName <- paste0("brca_sim_", SIMno, "_cv_lst")
+  # save  brcaRna_sim_cv_lst
+  fName <- paste0("brcaRna_sim_", SIMno, "_cv_lst")
   assign(fName, brca_sim_cv_lst)
   save(list = fName, file=file.path("RData", fName))
 
+}
+
+```
+
+
+<!-- DEBUG - rename after the fact -->
+
+```{r brcaRna-glmnetSuite-RENAME-sim, echo=F, eval=F}
+sim_files_vec <- list.files('RData', '^brca_sim_')
+
+for(FF in sim_files_vec){
+  load(file=file.path('RData', FF))
+  assign(sub('brca','brcaRna',FF), get(FF))
+  save(list = sub('brca','brcaRna',FF), file=file.path("RData", sub('brca','brcaRna',FF)))
+  rm(list=c(FF, sub('brca','brcaRna',FF)))
 }
 
 ```
@@ -831,10 +848,9 @@ analyzed in inreasing sizes of `r paste(SIZE, sep=', ')`, with
 
 First we extract simluation results and store into one big table (only showing the top of table shere):
 
-```{r brca-rnaseq-extract-sim-results, cache=T, cache.vars='lasso_brca_sim_results_frm'}
+```{r brca-rnaseq-extract-sim-results, cache=T, cache.vars='brcaRna_lasso_sim_results_frm'}
 
-### CLEAR CACHE
-brca_sim_files_vec <- list.files('RData', '^brca_sim_')
+brcaRna_sim_files_vec <- list.files('RData', '^brcaRna_sim_')
 
 
 # define extraction methods
@@ -855,40 +871,39 @@ cvList2frm_f <- function(cv_lst) {
   data.frame(Rep=1:nrow(frm2), frm2)}
 
 # cv_lst_to_frm loop over replicates, concatenating the inner list frames
-cv_lst_to_frm <- function(brca_sim_cv_lst) {
- do.call('rbind', lapply(1:length(brca_sim_cv_lst),
+cv_lst_to_frm <- function(brcaRna_sim_cv_lst) {
+ do.call('rbind', lapply(1:length(brcaRna_sim_cv_lst),
   function(JJ) {
-    siz_frm <- cvList2frm_f(brca_sim_cv_lst[[JJ]])
+    siz_frm <- cvList2frm_f(brcaRna_sim_cv_lst[[JJ]])
     data.frame(Size=SIZE[JJ], siz_frm)
   }))
 }
 
 # we loop across simulations to combine all results into one big table
-lasso_brca_sim_results_frm <- do.call('rbind', lapply(1:length(brca_sim_files_vec),
+brcaRna_lasso_sim_results_frm <- do.call('rbind', lapply(1:length(brcaRna_sim_files_vec),
  function(SIM_NO) {
-  load(file=file.path('RData', brca_sim_files_vec[SIM_NO]))
-  assign('brca_sim_cv_lst', get(brca_sim_files_vec[SIM_NO]))
-  rm(list=brca_sim_files_vec[SIM_NO])
+  load(file=file.path('RData', brcaRna_sim_files_vec[SIM_NO]))
+  assign('brcaRna_sim_cv_lst', get(brcaRna_sim_files_vec[SIM_NO]))
+  rm(list=brcaRna_sim_files_vec[SIM_NO])
   
-  data.frame(SimNo=paste0('Sim_',formatC(SIM_NO,width = 2,flag = 0)), cv_lst_to_frm(brca_sim_cv_lst))
+  data.frame(SimNo=paste0('Sim_',formatC(SIM_NO,width = 2,flag = 0)), cv_lst_to_frm(brcaRna_sim_cv_lst))
 } 
 )) 
 
 ```
 
 <!-- 
-Have a table of simulation results - `lasso_brca_sim_results_frm`:
+Have a table of simulation results - `brcaRna_lasso_sim_results_frm`:
 -->
 
 ```{r brca-rnaseq-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
-
 ### CLEAR CACHE
  
-knitr::kable(head(with(lasso_brca_sim_results_frm, table(SimNo, Size))),
+knitr::kable(head(with(brcaRna_lasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
    kableExtra::kable_styling(full_width = F)
 
-knitr::kable(head(lasso_brca_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
+knitr::kable(head(brcaRna_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
     caption = paste("Simulation Results - not showing genes column"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
@@ -905,30 +920,29 @@ we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
 ```{r brca-rnaseq-lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
-
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_1se_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_min_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(lasso_brca_sim_results_frm$SimNo)[1]){
+for(SIM in unique(brcaRna_lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 # errors
@@ -969,8 +983,8 @@ title(paste('one se lambda - error rates'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
-LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(brcaRna_sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(brcaRna_sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
@@ -1018,8 +1032,8 @@ title(paste('min lambda - error rates'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
-LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(brcaRna_sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(brcaRna_sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
@@ -1047,30 +1061,29 @@ and more so for the 1se models.
 * There isn't much to chose from between the one standard error and the minimum lambda models.  
 
 ```{r brca-rnaseq-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
-
 ### CLEAR CACHE
 
 # get full model nzero ref
-nzero_1se_vec <- sapply(BrCa_cv_lassoAll_lst,
+nzero_1se_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
 nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
 
-nzero_min_vec <- sapply(BrCa_cv_lassoAll_lst,
+nzero_min_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
 nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 
 #SIM <- "Sim_01"
 
-for(SIM in unique(lasso_brca_sim_results_frm$SimNo)[1]){
+for(SIM in unique(brcaRna_lasso_sim_results_frm$SimNo)[1]){
 
 SimNum <- as.numeric(sub('Sim_','',SIM))
 
-simNo_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+simNo_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
@@ -1116,8 +1129,8 @@ title(paste('one se lambda - selected gene counts'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
-LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(brcaRna_sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(brcaRna_sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
@@ -1172,8 +1185,8 @@ title(paste('min lambda - selected gene counts'))
 
 SKIP  <- function() {
 # Add qual annotation
-other_qual_vec <- sapply(split(sim_other_qual_mtx[,SimNum], stage_vec), median)
-LumA_qual_vec <- sapply(split(sim_LumA_qual_mtx[,SimNum], stage_vec), median)
+other_qual_vec <- sapply(split(brcaRna_sim_other_qual_mtx[,SimNum], stage_vec), median)
+LumA_qual_vec <- sapply(split(brcaRna_sim_LumA_qual_mtx[,SimNum], stage_vec), median)
 LL <- LL + 1
 axis(side=1, tick=F, line = LL,
   at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
@@ -1218,44 +1231,43 @@ given simulation, each data point is the median across 30 repeated cv runs.
 
 
 ```{r brca-rnaseq-lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
-
 ### CLEAR CACHE
 
 # get full model cv error ref
-error_1se_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_1se_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
 error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
 
-error_min_vec <- sapply(BrCa_cv_lassoAll_lst,
+error_min_vec <- sapply(brcaRna_cv_lassoAll_lst,
  function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
 error_min_q2 <- quantile(error_min_vec, prob=1/2)        
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 ## cv
-cv_1se_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+cv_1se_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_1se_lst <- with(sizeVal_results_frm, split(cv_1se, SimNo))
  sapply(sizeVal_cv_1se_lst, median)
 })
 names(cv_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_1se_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+test_1se_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_1se_lst <- with(sizeVal_results_frm, split(test_1se, SimNo))
  sapply(sizeVal_test_1se_lst, median)
 })
 names(test_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_1se_Bysize_lst <- c(cv_1se_Bysize_lst, test_1se_Bysize_lst)
@@ -1271,7 +1283,7 @@ boxplot(error_1se_Bysize_lst,
 for(JJ in 1:length(error_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_1se_Bysize_lst[[JJ]],
+   y=error_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -1293,24 +1305,24 @@ title(paste('one se lambda - error rates'))
 # min
 #########################################
 ## cv
-cv_min_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+cv_min_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_cv_min_lst <- with(sizeVal_results_frm, split(cv_min, SimNo))
  sapply(sizeVal_cv_min_lst, median)
 })
 names(cv_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_cv')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_cv')
 
 ## test
-test_min_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+test_min_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_test_min_lst <- with(sizeVal_results_frm, split(test_min, SimNo))
  sapply(sizeVal_test_min_lst, median)
 })
 names(test_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_test')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_test')
 
 
 error_min_Bysize_lst <- c(cv_min_Bysize_lst, test_min_Bysize_lst)
@@ -1326,7 +1338,7 @@ boxplot(error_min_Bysize_lst,
 for(JJ in 1:length(error_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_min_Bysize_lst[[JJ]])), amount=0.25), 
-   y=error_min_Bysize_lst[[JJ]],
+   y=error_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('cv', names(error_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 LL <- -1
@@ -1359,7 +1371,6 @@ to over 50%.
 
 
 ```{r brca-rnaseq-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
-
 ### CLEAR CACHE
 
 error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1386,30 +1397,29 @@ optimistic.
 Now look at feature selection.
 
 ```{r brca-rnaseq-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
-
 ### CLEAR CACHE
 
 # Utility objects
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
+stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
 par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
 # 1se
 #########################################
 # selected features
-p_1se_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+p_1se_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_1se_lst <- with(sizeVal_results_frm, split(p_1se, SimNo))
  sapply(sizeVal_p_1se_lst, median)
 })
 names(p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_1se_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+sign_p_1se_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_1se_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
@@ -1421,7 +1431,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_1se_lst, median)
 })
 names(sign_p_1se_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_1se_Bysize_lst <- c(p_1se_Bysize_lst, sign_p_1se_Bysize_lst)
@@ -1436,7 +1446,7 @@ boxplot(p_singP_1se_Bysize_lst,
 for(JJ in 1:length(p_singP_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_1se_Bysize_lst[[JJ]],
+   y=p_singP_1se_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_1se_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1459,19 +1469,19 @@ title(paste('one se lamdba - selected gene counts'))
 # min
 #########################################
 # selected features
-p_min_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+p_min_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  sizeVal_p_min_lst <- with(sizeVal_results_frm, split(p_min, SimNo))
  sapply(sizeVal_p_min_lst, median)
 })
 names(p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_p')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_p')
 
 # selected signatue features
-sign_p_min_Bysize_lst <- lapply(unique(lasso_brca_sim_results_frm$Size),
+sign_p_min_Bysize_lst <- lapply(unique(brcaRna_lasso_sim_results_frm$Size),
 function(SizeVal) {
- sizeVal_results_frm <- lasso_brca_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(Size==SizeVal)
  
   
  sizeVal_sign_genes_min_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
@@ -1483,7 +1493,7 @@ function(SizeVal) {
  sapply(sizeVal_sign_p_min_lst, median)
 })
 names(sign_p_min_Bysize_lst) <- paste0(
- stringr::str_pad(unique(lasso_brca_sim_results_frm$Size), width=3, pad='0'), '_signP')
+ stringr::str_pad(unique(brcaRna_lasso_sim_results_frm$Size), width=3, pad='0'), '_signP')
 
 
 p_singP_min_Bysize_lst <- c(p_min_Bysize_lst, sign_p_min_Bysize_lst)
@@ -1498,7 +1508,7 @@ boxplot(p_singP_min_Bysize_lst,
 for(JJ in 1:length(p_singP_min_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_min_Bysize_lst[[JJ]])), amount=0.25),
-   y=p_singP_min_Bysize_lst[[JJ]],
+   y=p_singP_min_Bysize_lst[[JJ]], cex=0.5,
    col=ifelse(grepl('_p', names(p_singP_min_Bysize_lst)[JJ]),'blue', 'green')
 )
 
@@ -1529,7 +1539,6 @@ and
 for the HCC 5hmC data.
 
 ```{r brca-rnaseq-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
-
 ### CLEAR CACHE
 
 p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
@@ -1567,10 +1576,12 @@ greatest, and the context where investigators should be most aware of the
 effect of sample selection over and beyond sample size concerns.
 -->
 ```{r brca-rnaseq-small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance', eval=F}
+
 ### CLEAR CACHE
 
-other_samp25_qual_vec <- apply(sim_other_qual_mtx[1:25, ], 2, median)
-LumA_samp25_qual_vec <- apply(sim_LumA_qual_mtx[1:25, ], 2, median)
+
+other_samp25_qual_vec <- apply(brcaRna_sim_other_qual_mtx[1:25, ], 2, median)
+LumA_samp25_qual_vec <- apply(brcaRna_sim_LumA_qual_mtx[1:25, ], 2, median)
 
 samp25_qual_error_mtx <- cbind(
    `1se_cv` = error_1se_Bysize_lst[['025_cv']],
