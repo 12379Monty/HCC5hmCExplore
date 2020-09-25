@@ -365,126 +365,6 @@ In the Cai et al. <span class="citation">[<a href="references.html#ref-Cai:2019
 <span id="cb2-29"><a href="hcc-5hmcseq-preproc.html#cb2-29"></a>   <span class="dt">caption=</span><span class="st">&quot;GSE112679 Samples by Dx Group and Subset&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-30"><a href="hcc-5hmcseq-preproc.html#cb2-30"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span>
 <span id="cb2-31"><a href="hcc-5hmcseq-preproc.html#cb2-31"></a>)</span></code></pre></div>
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>
-<span id="tab:hcc5hmC-preproc-loadData">Table 3.1: </span>GSE112679 Samples by Dx Group and Subset
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Train
-</th>
-<th style="text-align:right;">
-Val-1
-</th>
-<th style="text-align:right;">
-Val-2
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Benign
-</td>
-<td style="text-align:right;">
-253
-</td>
-<td style="text-align:right;">
-132
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CHB
-</td>
-<td style="text-align:right;">
-190
-</td>
-<td style="text-align:right;">
-96
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Cirrhosis
-</td>
-<td style="text-align:right;">
-73
-</td>
-<td style="text-align:right;">
-33
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HCC:Early
-</td>
-<td style="text-align:right;">
-335
-</td>
-<td style="text-align:right;">
-220
-</td>
-<td style="text-align:right;">
-24
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HCC:Late
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-442
-</td>
-<td style="text-align:right;">
-13
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-HCC:NA
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-23
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Healthy
-</td>
-<td style="text-align:right;">
-269
-</td>
-<td style="text-align:right;">
-124
-</td>
-<td style="text-align:right;">
-177
-</td>
-</tr>
-</tbody>
-</table>
 <p>For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the <code>Train</code> or <code>Val-1</code> subsets.
 The appropriate outcome variable will be renamed or aliased <code>group</code></p>
@@ -515,7 +395,7 @@ The appropriate outcome variable will be renamed or aliased <code>group</code></
 <span id="cb3-25"><a href="hcc-5hmcseq-preproc.html#cb3-25"></a>)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:hcc5hmC-preproc-subsetSamples">Table 3.2: </span>Samples used in this analysis
+<span id="tab:hcc5hmC-preproc-subsetSamples">Table 3.1: </span>Samples used in this analysis
 </caption>
 <thead>
 <tr>
@@ -630,7 +510,7 @@ quantiles.
 <span id="cb6-17"><a href="hcc-5hmcseq-preproc.html#cb6-17"></a>) <span class="op">%&gt;%</span><span class="st"> </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:hcc5hmC-preproc-hcc5hmC-quantCounts">Table 3.3: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
+<span id="tab:hcc5hmC-preproc-hcc5hmC-quantCounts">Table 3.2: </span>Coverage Summary - Columns are sample coverage quantiles and total coverage
 Rows are quartiles across samples
 </caption>
 <thead>
@@ -1027,7 +907,7 @@ of interest, in our case HCC vs Control.</p>
 <span id="cb22-18"><a href="hcc-5hmcseq-preproc.html#cb22-18"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:hcc5hmC-preproc-lmFit">Table 3.4: </span>DE Results at FDR = 0.05
+<span id="tab:hcc5hmC-preproc-lmFit">Table 3.3: </span>DE Results at FDR = 0.05
 </caption>
 <thead>
 <tr>
@@ -1162,7 +1042,7 @@ Figure 3.7: HCC vs Control - Genes Identified at FDR = 0,05
 <span id="cb25-19"><a href="hcc-5hmcseq-preproc.html#cb25-19"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:hcc5hmC-preproc-quantlogFC">Table 3.5: </span>log FC quartiles by gene identification
+<span id="tab:hcc5hmC-preproc-quantlogFC">Table 3.4: </span>log FC quartiles by gene identification
 </caption>
 <thead>
 <tr>
@@ -1354,7 +1234,7 @@ Figure 3.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentil
 <span id="cb33-5"><a href="hcc-5hmcseq-preproc.html#cb33-5"></a>) <span class="op">%&gt;%</span><span class="st"> </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:hcc5hmC-preproc-plotSNR">Table 3.6: </span>SNR Quantiles
+<span id="tab:hcc5hmC-preproc-plotSNR">Table 3.5: </span>SNR Quantiles
 </caption>
 <thead>
 <tr>

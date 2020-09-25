@@ -1755,7 +1755,7 @@ for a description of the use of pre-validation in model assessment.
 \end{Shaded}
 
 \begin{verbatim}
-## lasso time: 13.42s
+## lasso time: 13.81s
 \end{verbatim}
 
 \begin{Shaded}
@@ -1778,7 +1778,7 @@ for a description of the use of pre-validation in model assessment.
 \end{Shaded}
 
 \begin{verbatim}
-## ridge time: 131.35s
+## ridge time: 130.41s
 \end{verbatim}
 
 \begin{Shaded}
@@ -1801,7 +1801,7 @@ for a description of the use of pre-validation in model assessment.
 \end{Shaded}
 
 \begin{verbatim}
-## enet time: 13.69s
+## enet time: 13.65s
 \end{verbatim}
 
 \begin{Shaded}
@@ -3335,11 +3335,11 @@ To compute consistency scores, we will use the out-of-fold predicted probabiliti
 \NormalTok{y <{-}}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(hcc5hmC\_all\_group\_vec }\OperatorTok{==}\StringTok{ \textquotesingle{}HCC\textquotesingle{}}\NormalTok{)}
 \CommentTok{\# 1se}
 \NormalTok{p <{-}}\StringTok{ }\NormalTok{lassoAll\_predResp\_1se\_vec}
-\NormalTok{sample\_1se\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
+\NormalTok{hcc5hmC\_sample\_1se\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
 
 \CommentTok{\# min}
 \NormalTok{p <{-}}\StringTok{ }\NormalTok{lassoAll\_predResp\_min\_vec}
-\NormalTok{sample\_min\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
+\NormalTok{hcc5hmC\_sample\_min\_qual\_vec <{-}}\StringTok{ }\NormalTok{p}\OperatorTok{\^{}}\NormalTok{y}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{p)}\OperatorTok{\^{}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{y)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3365,18 +3365,18 @@ We can examine consistency scores as a function of classification bin.
 
 
 \NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}
- \KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
- \KeywordTok{split}\NormalTok{(sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec)}
+ \KeywordTok{split}\NormalTok{(hcc5hmC\_sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
+ \KeywordTok{split}\NormalTok{(hcc5hmC\_sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec)}
 \NormalTok{)}
 
 \KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
-\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
+\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(hcc5hmC\_sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
   \DataTypeTok{outline=}\NormalTok{F, }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
   \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
 \KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}1se Model\textquotesingle{}}\NormalTok{)}
 
-\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec), }
+\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(hcc5hmC\_sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec), }
   \DataTypeTok{outline=}\NormalTok{F, }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
   \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
@@ -3407,7 +3407,7 @@ but we could have used either one.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sample\_qual\_vec <{-}}\StringTok{ }\NormalTok{sample\_min\_qual\_vec}
+\NormalTok{sample\_qual\_vec <{-}}\StringTok{ }\NormalTok{hcc5hmC\_sample\_min\_qual\_vec}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3633,7 +3633,7 @@ each vector.
 \end{Shaded}
 
 Each simulation is specified by a given column of the simulation design matrices:
-\texttt{hcc5hmC\_sim\_control\_mtx} and \texttt{hcc5hmC\_sim\_affected\_mtx}, each with dimensions 300, 30.
+\texttt{hcc5hmC\_sim\_control\_mtx} and \texttt{hcc5hmC\_sim\_affected\_mtx}, each with dimensions 200, 30.
 Within each simulation, we can run the analyses of size 25, 50, 100, 200, 300 by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
@@ -3893,21 +3893,21 @@ First we extract simulation results and store into one big table
 
 \caption{\label{tab:hcc5hmC-glmnetSuite-sum-table}Simulation Results - N Sim = 30}
 \centering
-\begin{tabular}[t]{l|r|r|r|r|r}
+\begin{tabular}[t]{l|r|r|r|r}
 \hline
-  & 25 & 50 & 100 & 200 & 300\\
+  & 25 & 50 & 100 & 200\\
 \hline
-Sim\_01 & 30 & 30 & 30 & 30 & 30\\
+Sim\_01 & 30 & 30 & 30 & 60\\
 \hline
-Sim\_02 & 30 & 30 & 30 & 30 & 30\\
+Sim\_02 & 30 & 30 & 30 & 60\\
 \hline
-Sim\_03 & 30 & 30 & 30 & 30 & 30\\
+Sim\_03 & 30 & 30 & 30 & 60\\
 \hline
-Sim\_04 & 30 & 30 & 30 & 30 & 30\\
+Sim\_04 & 30 & 30 & 30 & 60\\
 \hline
-Sim\_05 & 30 & 30 & 30 & 30 & 30\\
+Sim\_05 & 30 & 30 & 30 & 60\\
 \hline
-Sim\_06 & 30 & 30 & 30 & 30 & 30\\
+Sim\_06 & 30 & 30 & 30 & 60\\
 \hline
 \end{tabular}
 \end{table}
@@ -3947,6 +3947,9 @@ Sim\_01 & 25 & 6 & 20 & 27 & 0.36 & 0.32 & 0.30 & 0.30\\
 \hypertarget{simulation-results---look-at-one-simulation}{%
 \subsection{Simulation Results - look at one simulation}\label{simulation-results---look-at-one-simulation}}
 
+\hypertarget{model-accuracy-assessment}{%
+\subsubsection{Model Accuracy Assessment}\label{model-accuracy-assessment}}
+
 First examine results for one simulation run. In the figures that follow,
 each boxplot summarized 30 repeated cross validation runs performed on a
 fixed random selection of Control and Affected samples. Recall that as
@@ -3981,7 +3984,7 @@ accrual of samples over time.
 
 
 \CommentTok{\# errors}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -3998,9 +4001,11 @@ accrual of samples over time.
 
 \KeywordTok{boxplot}\NormalTok{(error\_1se\_lst, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{), }
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.4}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
+
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(error\_1se\_lst)), }
@@ -4014,7 +4019,7 @@ accrual of samples over time.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -4047,9 +4052,10 @@ accrual of samples over time.
 
 \KeywordTok{boxplot}\NormalTok{(error\_min\_lst, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{), }
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.4}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(error\_min\_lst)), }
@@ -4063,7 +4069,7 @@ accrual of samples over time.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -4104,6 +4110,9 @@ In this one simulation, we see:
   There isn't much to chose from between the one standard error and the minimum lambda models. The
   latter may show lower propensity to produce optimistic cv error rates.
 \end{itemize}
+
+\hypertarget{feature-selection}{%
+\subsubsection{Feature Selection}\label{feature-selection}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4155,9 +4164,11 @@ In this one simulation, we see:
 
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_1se\_lst,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}number of selected features\textquotesingle{}}\NormalTok{)}
+
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_p\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(p\_singP\_1se\_lst)),}
@@ -4171,7 +4182,8 @@ In this one simulation, we see:
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{))}
+
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -4211,7 +4223,7 @@ In this one simulation, we see:
 
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_min\_lst,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
@@ -4227,7 +4239,7 @@ In this one simulation, we see:
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -4273,6 +4285,9 @@ In this one simulation, we see:
 \hypertarget{summarize-results-across-simulation-runs.}{%
 \subsection{Summarize results across simulation runs.}\label{summarize-results-across-simulation-runs.}}
 
+\hypertarget{model-accuracy-assessment-1}{%
+\subsubsection{Model Accuracy Assessment}\label{model-accuracy-assessment-1}}
+
 Now look across all simulations. In the figures that follow, each boxplot
 summarizes the results of 30 simulations. For a give sample size and a
 given simulation, each data point is the median across 30 repeated cv runs.
@@ -4294,7 +4309,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \NormalTok{SIZE0 <{-}}\StringTok{ }\NormalTok{stringr}\OperatorTok{::}\KeywordTok{str\_pad}\NormalTok{(SIZE, }\DataTypeTok{width=}\DecValTok{3}\NormalTok{, }\DataTypeTok{pad=}\StringTok{\textquotesingle{}0\textquotesingle{}}\NormalTok{)}
 \NormalTok{stage\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(sim\_control\_qual\_mtx), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,SIZE), }\DataTypeTok{include.lowest =}\NormalTok{ T)}
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\#\# cv}
@@ -4324,10 +4339,12 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \KeywordTok{boxplot}\NormalTok{(error\_1se\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
   \DataTypeTok{outline=}\NormalTok{F,}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
+
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(error\_1se\_Bysize\_lst))}
 \KeywordTok{points}\NormalTok{(}
    \DataTypeTok{x=}\KeywordTok{jitter}\NormalTok{(}\KeywordTok{rep}\NormalTok{(JJ, }\KeywordTok{length}\NormalTok{(error\_1se\_Bysize\_lst[[JJ]])), }\DataTypeTok{amount=}\FloatTok{0.25}\NormalTok{), }
@@ -4347,7 +4364,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{))}
 
 
 \CommentTok{\# min}
@@ -4379,7 +4396,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \KeywordTok{boxplot}\NormalTok{(error\_min\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
   \DataTypeTok{outline=}\NormalTok{F,}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
@@ -4402,7 +4419,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 
 \KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}lasso fit error rates summarized across simulations\textquotesingle{}}\NormalTok{))}
@@ -4426,7 +4443,42 @@ given simulation, each data point is the median across 30 repeated cv runs.
   or basically no indication of discrimination value in the analyzed features.
 \end{itemize}
 
-Now look at feature selection.
+To appreciate how much variability can be encountered as samples are accrued over time
+we need to look at a typical path the assessed model accuracy estimates might take.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#\#\# CLEAR CACHE}
+
+\NormalTok{error\_1se\_Bysize\_mtx <{-}}\StringTok{ }\KeywordTok{do.call}\NormalTok{(}\StringTok{\textquotesingle{}cbind\textquotesingle{}}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(error\_1se\_Bysize\_lst, }\ControlFlowTok{function}\NormalTok{(LL) LL))}
+
+\NormalTok{cv\_error\_1se\_Bysize\_mtx <{-}}\StringTok{ }\NormalTok{error\_1se\_Bysize\_mtx[,}\KeywordTok{grep}\NormalTok{(}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{, }\KeywordTok{colnames}\NormalTok{(error\_1se\_Bysize\_mtx))]}
+
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx)), }\DataTypeTok{y=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.6}\NormalTok{), }
+  \DataTypeTok{xlab=}\StringTok{\textquotesingle{}sample size\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{, }
+  \DataTypeTok{type=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{, }\DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{at=}\DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx), }
+ \DataTypeTok{labels=}\KeywordTok{sub}\NormalTok{(}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(cv\_error\_1se\_Bysize\_mtx)))}
+\ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx), }\DataTypeTok{y=}\NormalTok{cv\_error\_1se\_Bysize\_mtx[JJ,],}
+ \DataTypeTok{type=}\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\DataTypeTok{pch=}\NormalTok{JJ, }\DataTypeTok{col=}\NormalTok{JJ)}
+\KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}Example Misclassification Error Paths\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim-1.pdf}
+\caption{\label{fig:hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim}lasso Model Error Paths}
+\end{figure}
+
+We see how erratic the assessed model accuracy can be when sample sizes are small,
+and that it would be hard to guess the ultimate level of accuracy the
+is achievable, or the number of samples required to get a reasonable
+estimate of the achievable level of accuracy.
+
+\hypertarget{feature-selection-1}{%
+\subsubsection{Feature Selection}\label{feature-selection-1}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4436,7 +4488,7 @@ Now look at feature selection.
 \NormalTok{SIZE0 <{-}}\StringTok{ }\NormalTok{stringr}\OperatorTok{::}\KeywordTok{str\_pad}\NormalTok{(SIZE, }\DataTypeTok{width=}\DecValTok{3}\NormalTok{, }\DataTypeTok{pad=}\StringTok{\textquotesingle{}0\textquotesingle{}}\NormalTok{)}
 \NormalTok{stage\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(sim\_control\_qual\_mtx), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,SIZE), }\DataTypeTok{include.lowest =}\NormalTok{ T)}
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# selected features}
@@ -4473,9 +4525,11 @@ Now look at feature selection.
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_1se\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}number of selected features\textquotesingle{}}\NormalTok{)}
+
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(p\_singP\_1se\_Bysize\_lst))}
 \KeywordTok{points}\NormalTok{(}
    \DataTypeTok{x=}\KeywordTok{jitter}\NormalTok{(}\KeywordTok{rep}\NormalTok{(JJ, }\KeywordTok{length}\NormalTok{(p\_singP\_1se\_Bysize\_lst[[JJ]])), }\DataTypeTok{amount=}\FloatTok{0.25}\NormalTok{),}
@@ -4496,7 +4550,7 @@ Now look at feature selection.
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lamdba {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lamdba models\textquotesingle{}}\NormalTok{))}
 
 
 \CommentTok{\# min}
@@ -4535,7 +4589,7 @@ Now look at feature selection.
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_min\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(p\_singP\_min\_Bysize\_lst))}
@@ -4558,7 +4612,7 @@ Now look at feature selection.
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}lasso fit feature selection summarized across simulations\textquotesingle{}}\NormalTok{))}
 \end{Highlighting}
@@ -5570,7 +5624,7 @@ data for each fold fit.
 \end{Shaded}
 
 \begin{verbatim}
-## lasso time: 30.92s
+## lasso time: 31.12s
 \end{verbatim}
 
 \begin{Shaded}
@@ -5595,7 +5649,7 @@ data for each fold fit.
 \end{Shaded}
 
 \begin{verbatim}
-## ridge time: 252.83s
+## ridge time: 253.24s
 \end{verbatim}
 
 \begin{Shaded}
@@ -5620,7 +5674,7 @@ data for each fold fit.
 \end{Shaded}
 
 \begin{verbatim}
-## enet time: 30.89s
+## enet time: 30.97s
 \end{verbatim}
 
 \begin{Shaded}
@@ -7123,34 +7177,15 @@ We can examine consistency scores as a function of classification bin.
 
 
 \NormalTok{tmp <{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}
- \KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
+ \KeywordTok{split}\NormalTok{(brcaRna\_sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
  \KeywordTok{split}\NormalTok{(brcaRna\_sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec)}
 \NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## Warning in split.default(sample_1se_qual_vec, lassoAll_1se_conf_vec): data
-## length is not a multiple of split variable
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
-\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
+\NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(brcaRna\_sample\_1se\_qual\_vec, lassoAll\_1se\_conf\_vec), }
   \DataTypeTok{outline=}\NormalTok{F, }\DataTypeTok{ylab =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
   \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning in split.default(sample_1se_qual_vec, lassoAll_1se_conf_vec): data
-## length is not a multiple of split variable
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}1se Model\textquotesingle{}}\NormalTok{)}
 
 \NormalTok{gplots}\OperatorTok{::}\KeywordTok{boxplot2}\NormalTok{(}\KeywordTok{split}\NormalTok{(brcaRna\_sample\_min\_qual\_vec, lassoAll\_min\_conf\_vec), }
@@ -7631,6 +7666,9 @@ First we extract simluation results and store into one big table (only showing t
 \hypertarget{simulation-results---look-at-one-simulation-1}{%
 \subsection{Simulation Results - look at one simulation}\label{simulation-results---look-at-one-simulation-1}}
 
+\hypertarget{model-accuracy-assessment-2}{%
+\subsubsection{Model Accuracy Assessment}\label{model-accuracy-assessment-2}}
+
 First examine results for one simulation run. In the figures that follow,
 each boxplot summarized 30 repreated cross validation runs performed on a
 fixed random selection of Other and Affeced samples. Recall that as
@@ -7665,7 +7703,7 @@ accrual of samples over time.
 
 
 \CommentTok{\# errors}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -7682,9 +7720,11 @@ accrual of samples over time.
 
 \KeywordTok{boxplot}\NormalTok{(error\_1se\_lst, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{), }
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.4}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
+
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(error\_1se\_lst)), }
@@ -7698,7 +7738,7 @@ accrual of samples over time.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -7731,9 +7771,10 @@ accrual of samples over time.
 
 \KeywordTok{boxplot}\NormalTok{(error\_min\_lst, }
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{), }
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.4}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(error\_min\_lst)), }
@@ -7747,7 +7788,7 @@ accrual of samples over time.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -7788,6 +7829,9 @@ In this one simulation, we see:
   There isn't much to chose from between the one standard error and the minimum lambda models.
 \end{itemize}
 
+\hypertarget{feature-selection-2}{%
+\subsubsection{Feature Selection}\label{feature-selection-2}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\#\#\# CLEAR CACHE}
@@ -7815,7 +7859,7 @@ In this one simulation, we see:
 \NormalTok{simNo\_results\_frm <{-}}\StringTok{ }\NormalTok{brcaRna\_lasso\_sim\_results\_frm }\OperatorTok{\%>\%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(SimNo}\OperatorTok{==}\NormalTok{SIM)}
 
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
@@ -7838,9 +7882,11 @@ In this one simulation, we see:
 
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_1se\_lst,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}number of selected features\textquotesingle{}}\NormalTok{)}
+
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
 \KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{tick=}\NormalTok{F, }\DataTypeTok{line =}\NormalTok{ LL,}
   \DataTypeTok{at =} \KeywordTok{match}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(SIZE0,}\StringTok{\textquotesingle{}\_p\textquotesingle{}}\NormalTok{),}\KeywordTok{names}\NormalTok{(p\_singP\_1se\_lst)),}
@@ -7854,7 +7900,7 @@ In this one simulation, we see:
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{) )}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -7894,7 +7940,7 @@ In this one simulation, we see:
 
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_min\_lst,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{200}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
 \NormalTok{LL <{-}}\StringTok{ }\DecValTok{{-}1}
@@ -7910,7 +7956,7 @@ In this one simulation, we see:
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \NormalTok{SKIP  <{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
 \CommentTok{\# Add qual annotation}
@@ -7946,8 +7992,21 @@ and
 \ref{fig:lasso-simRes-features-bySim}
 for the HCC 5hmC data.
 
+\textbf{Reader Note}
+
+\begin{verbatim}
+IN the case of discriminating between LumA and other breast cancer subtypes,
+we could use features in the LumA breast cancer subtype signature as
+positive controls for feature selection.
+
+To Do.
+\end{verbatim}
+
 \hypertarget{summarize-results-across-simulation-runs.-1}{%
 \subsection{Summarize results across simulation runs.}\label{summarize-results-across-simulation-runs.-1}}
+
+\hypertarget{model-accuracy-assessment-3}{%
+\subsubsection{Model Accuracy Assessment}\label{model-accuracy-assessment-3}}
 
 Now look acoss all simulations. In the figures that follow, each boxplot
 summarizes the results of 30 simulations. For a give sample size and a
@@ -7970,7 +8029,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \NormalTok{SIZE0 <{-}}\StringTok{ }\NormalTok{stringr}\OperatorTok{::}\KeywordTok{str\_pad}\NormalTok{(SIZE, }\DataTypeTok{width=}\DecValTok{3}\NormalTok{, }\DataTypeTok{pad=}\StringTok{\textquotesingle{}0\textquotesingle{}}\NormalTok{)}
 \NormalTok{stage\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(brcaRna\_sim\_other\_qual\_mtx), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,SIZE), }\DataTypeTok{include.lowest =}\NormalTok{ T)}
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\#\# cv}
@@ -8000,10 +8059,12 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \KeywordTok{boxplot}\NormalTok{(error\_1se\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
   \DataTypeTok{outline=}\NormalTok{F,}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{)}
+
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(error\_1se\_Bysize\_lst))}
 \KeywordTok{points}\NormalTok{(}
    \DataTypeTok{x=}\KeywordTok{jitter}\NormalTok{(}\KeywordTok{rep}\NormalTok{(JJ, }\KeywordTok{length}\NormalTok{(error\_1se\_Bysize\_lst[[JJ]])), }\DataTypeTok{amount=}\FloatTok{0.25}\NormalTok{), }
@@ -8023,7 +8084,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lambda models\textquotesingle{}}\NormalTok{))}
 
 
 \CommentTok{\# min}
@@ -8055,7 +8116,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
 \KeywordTok{boxplot}\NormalTok{(error\_min\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{.5}\NormalTok{),}
   \DataTypeTok{outline=}\NormalTok{F,}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
@@ -8078,7 +8139,7 @@ given simulation, each data point is the median across 30 repeated cv runs.
    \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}cv error\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}test set\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} error rates\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 
 \KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}lasso fit error rates summarized across simulations\textquotesingle{}}\NormalTok{))}
@@ -8097,7 +8158,42 @@ In this example cohorts of N=25 LumA and Other subtype samples
 can yield classification error estimates ranging from less than \%10
 to over 50\%.
 
-Now look at feature selection.
+To appreciate how much variability can be encountered as samples are accrued over time
+we need to look at a typical path the assessed model accuracy estimates might take.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#\#\# CLEAR CACHE}
+
+\NormalTok{error\_1se\_Bysize\_mtx <{-}}\StringTok{ }\KeywordTok{do.call}\NormalTok{(}\StringTok{\textquotesingle{}cbind\textquotesingle{}}\NormalTok{, }\KeywordTok{lapply}\NormalTok{(error\_1se\_Bysize\_lst, }\ControlFlowTok{function}\NormalTok{(LL) LL))}
+
+\NormalTok{cv\_error\_1se\_Bysize\_mtx <{-}}\StringTok{ }\NormalTok{error\_1se\_Bysize\_mtx[,}\KeywordTok{grep}\NormalTok{(}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{, }\KeywordTok{colnames}\NormalTok{(error\_1se\_Bysize\_mtx))]}
+
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx)), }\DataTypeTok{y=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.6}\NormalTok{), }
+  \DataTypeTok{xlab=}\StringTok{\textquotesingle{}sample size\textquotesingle{}}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{\textquotesingle{}Misclassification Error\textquotesingle{}}\NormalTok{, }
+  \DataTypeTok{type=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{, }\DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\KeywordTok{axis}\NormalTok{(}\DataTypeTok{side=}\DecValTok{1}\NormalTok{, }\DataTypeTok{at=}\DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx),}
+ \DataTypeTok{labels=}\KeywordTok{sub}\NormalTok{(}\StringTok{\textquotesingle{}\_cv\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{,}\KeywordTok{colnames}\NormalTok{(cv\_error\_1se\_Bysize\_mtx)))}
+\ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\OperatorTok{:}\KeywordTok{ncol}\NormalTok{(cv\_error\_1se\_Bysize\_mtx), }\DataTypeTok{y=}\NormalTok{cv\_error\_1se\_Bysize\_mtx[JJ,],}
+ \DataTypeTok{type=}\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\DataTypeTok{pch=}\NormalTok{JJ, }\DataTypeTok{col=}\NormalTok{JJ)}
+\KeywordTok{title}\NormalTok{(}\StringTok{\textquotesingle{}Example Misclassification Error Paths\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Static/figures/brca-glmnetSuite-lasso-simRes-errorsPath-overSim-1.pdf}
+\caption{\label{fig:brca-glmnetSuite-lasso-simRes-errorsPath-overSim}lasso Model Error Paths}
+\end{figure}
+
+We see how erratic the assessed model accuracy can be when sample sizes are small,
+and that it would be hard to guess the ultimate level of accuracy the
+is achievable, or the number of samples required to get a reasonable
+estimate of the achievable level of accuracy.
+
+\hypertarget{feature-selection-3}{%
+\subsubsection{Feature Selection}\label{feature-selection-3}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8107,7 +8203,7 @@ Now look at feature selection.
 \NormalTok{SIZE0 <{-}}\StringTok{ }\NormalTok{stringr}\OperatorTok{::}\KeywordTok{str\_pad}\NormalTok{(SIZE, }\DataTypeTok{width=}\DecValTok{3}\NormalTok{, }\DataTypeTok{pad=}\StringTok{\textquotesingle{}0\textquotesingle{}}\NormalTok{)}
 \NormalTok{stage\_vec <{-}}\StringTok{ }\KeywordTok{cut}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(brcaRna\_sim\_other\_qual\_mtx), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,SIZE), }\DataTypeTok{include.lowest =}\NormalTok{ T)}
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{mar=}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{oma=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 \CommentTok{\# 1se}
 \CommentTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
 \CommentTok{\# selected features}
@@ -8144,9 +8240,11 @@ Now look at feature selection.
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_1se\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{300}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
+\KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{2}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T,  }\StringTok{\textquotesingle{}number of selected features\textquotesingle{}}\NormalTok{)}
+
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(p\_singP\_1se\_Bysize\_lst))}
 \KeywordTok{points}\NormalTok{(}
    \DataTypeTok{x=}\KeywordTok{jitter}\NormalTok{(}\KeywordTok{rep}\NormalTok{(JJ, }\KeywordTok{length}\NormalTok{(p\_singP\_1se\_Bysize\_lst[[JJ]])), }\DataTypeTok{amount=}\FloatTok{0.25}\NormalTok{),}
@@ -8167,7 +8265,7 @@ Now look at feature selection.
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lamdba {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}one se lamdba models\textquotesingle{}}\NormalTok{))}
 
 
 \CommentTok{\# min}
@@ -8206,7 +8304,7 @@ Now look at feature selection.
 \KeywordTok{boxplot}\NormalTok{(p\_singP\_min\_Bysize\_lst,}
   \DataTypeTok{col=}\DecValTok{0}\NormalTok{,}
   \DataTypeTok{border=}\KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{),}
-  \CommentTok{\#ylim=c(0, 300),}
+  \DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{300}\NormalTok{),}
   \DataTypeTok{xaxt=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{)}
 \ControlFlowTok{for}\NormalTok{(JJ }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(p\_singP\_min\_Bysize\_lst))}
@@ -8229,7 +8327,7 @@ Now look at feature selection.
    \DataTypeTok{legend=} \KeywordTok{c}\NormalTok{(}\StringTok{\textquotesingle{}selected genes\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}signature genes\textquotesingle{}}\NormalTok{),}
    \DataTypeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}
 \NormalTok{ )}
-\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda {-} selected gene counts\textquotesingle{}}\NormalTok{))}
+\KeywordTok{title}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}min lambda models\textquotesingle{}}\NormalTok{))}
 
 \KeywordTok{mtext}\NormalTok{(}\DataTypeTok{side=}\DecValTok{3}\NormalTok{, }\DataTypeTok{outer=}\NormalTok{T, }\DataTypeTok{cex=}\FloatTok{1.25}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}lasso fit feature selection summarized across simulations\textquotesingle{}}\NormalTok{))}
 \end{Highlighting}

@@ -333,12 +333,12 @@ lassoAll_min_conf_vec <- paste(
 
 
 tmp <- c(
- split(sample_1se_qual_vec, lassoAll_1se_conf_vec), 
+ split(brcaRna_sample_1se_qual_vec, lassoAll_1se_conf_vec), 
  split(brcaRna_sample_min_qual_vec, lassoAll_min_conf_vec)
 )
 
 par(mfrow=c(1,2), mar=c(4,3,3,2), oma=c(2,2,2,0))
-gplots::boxplot2(split(sample_1se_qual_vec, lassoAll_1se_conf_vec), 
+gplots::boxplot2(split(brcaRna_sample_1se_qual_vec, lassoAll_1se_conf_vec), 
   outline=F, ylab = '', 
   border=c('green', 'green', 'red', 'red'),
   ylim=c(0,1))
@@ -913,6 +913,8 @@ knitr::kable(head(brcaRna_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se,
 
 ### Simulation Results - look at one simulation
 
+#### Model Accuracy Assessment
+
 First examine results for one simulation run.  In the figures that follow,
 each boxplot summarized 30 repreated cross validation runs performed on a 
 fixed random selection of Other and Affeced samples.  Recall that as
@@ -946,7 +948,7 @@ simNo_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
 # errors
-par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,2,2,0))
 ###################
 # 1se
 ####################
@@ -963,9 +965,11 @@ error_1se_lst <- error_1se_lst[order(names(error_1se_lst))]
 
 boxplot(error_1se_lst, 
   border=c('blue','green'), 
-  ylim=c(0.05, .4),
+  ylim=c(0, 0.5), 
   xaxt='n'
 )
+mtext(side=2, outer=T,  'Misclassification Error')
+
 LL <- -1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)), 
@@ -979,7 +983,7 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('one se lambda - error rates'))
+title(paste('one se lambda models'))
 
 SKIP  <- function() {
 # Add qual annotation
@@ -1012,9 +1016,10 @@ error_min_lst <- error_min_lst[order(names(error_min_lst))]
 
 boxplot(error_min_lst, 
   border=c('blue','green'), 
-  ylim=c(0.05, .4),
+  ylim=c(0, 0.5),
   xaxt='n'
 )
+mtext(side=2, outer=T,  'Misclassification Error')
 LL <- -1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_cv'),names(error_min_lst)), 
@@ -1028,7 +1033,7 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('min lambda - error rates'))
+title(paste('min lambda models'))
 
 SKIP  <- function() {
 # Add qual annotation
@@ -1060,6 +1065,10 @@ and more so for the 1se models.
 
 * There isn't much to chose from between the one standard error and the minimum lambda models.  
 
+
+#### Feature Selection
+
+
 ```{r brca-rnaseq-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
 
@@ -1086,7 +1095,7 @@ SimNum <- as.numeric(sub('Sim_','',SIM))
 simNo_results_frm <- brcaRna_lasso_sim_results_frm %>% dplyr::filter(SimNo==SIM)
 
 
-par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,2,2,0))
 ###################
 # 1se
 ####################
@@ -1109,9 +1118,11 @@ p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
 
 boxplot(p_singP_1se_lst,
   border=c('blue','green'),
-  #ylim=c(0, 300),
+  ylim=c(0, 200),
   xaxt='n'
 )
+mtext(side=2, outer=T,  'number of selected features')
+
 LL <- -1
 axis(side=1, tick=F, line = LL,
   at = match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
@@ -1125,7 +1136,7 @@ legend('topleft',
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('one se lambda - selected gene counts'))
+title(paste('one se lambda models') )
 
 SKIP  <- function() {
 # Add qual annotation
@@ -1165,7 +1176,7 @@ p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
 
 boxplot(p_singP_min_lst,
   border=c('blue','green'),
-  #ylim=c(0, 300),
+  ylim=c(0, 200),
   xaxt='n'
 )
 LL <- -1
@@ -1181,7 +1192,7 @@ legend('topleft',
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('min lambda - selected gene counts'))
+title(paste('min lambda models'))
 
 SKIP  <- function() {
 # Add qual annotation
@@ -1211,6 +1222,16 @@ and
  \@ref(fig:lasso-simRes-features-bySim)
 for the HCC 5hmC data.
 
+
+**Reader Note**
+```
+IN the case of discriminating between LumA and other breast cancer subtypes,
+we could use features in the LumA breast cancer subtype signature as
+positive controls for feature selection.
+
+To Do.
+```
+
 <!-- 
 In this one simulation, we see:
 
@@ -1224,6 +1245,8 @@ selected in the samples of sizes 200 and 300 is stable and between 40 and 50.
 -->
 
 ### Summarize results across simulation runs.
+
+#### Model Accuracy Assessment
 
 Now look acoss all simulations.  In the figures that follow, each boxplot
 summarizes the results of 30 simulations.  For a give sample size and a 
@@ -1246,7 +1269,7 @@ error_min_q2 <- quantile(error_min_vec, prob=1/2)
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
-par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,2,2,0))
 # 1se
 #########################################
 ## cv
@@ -1276,10 +1299,12 @@ error_1se_Bysize_lst <- error_1se_Bysize_lst[order(names(error_1se_Bysize_lst))]
 boxplot(error_1se_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  ylim=c(0.05, .5),
+  ylim=c(0, .5),
   outline=F,
   xaxt='n'
 )
+mtext(side=2, outer=T,  'Misclassification Error')
+
 for(JJ in 1:length(error_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
@@ -1299,7 +1324,7 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('one se lambda - error rates'))
+title(paste('one se lambda models'))
 
 
 # min
@@ -1331,7 +1356,7 @@ error_min_Bysize_lst <- error_min_Bysize_lst[order(names(error_min_Bysize_lst))]
 boxplot(error_min_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  ylim=c(0.05, .5),
+  ylim=c(0, .5),
   outline=F,
   xaxt='n'
 )
@@ -1354,7 +1379,7 @@ legend('topright',
    legend = c('cv error', 'test set'),
    bty='n'
  )
-title(paste('min lambda - error rates'))
+title(paste('min lambda models'))
 
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across simulations'))
@@ -1368,6 +1393,41 @@ samples sizes the assessed performance is quite variable.
 In this example cohorts of N=25 LumA and Other subtype samples
 can yield classification error estimates ranging from less than %10 
 to over 50%.  
+
+<br/>
+
+
+To appreciate how much variability can be encountered as samples are accrued over time
+we need to look at a typical path the assessed model accuracy estimates might take.
+
+
+```{r brca-glmnetSuite-lasso-simRes-errorsPath-overSim, cache=T, cache.vrs='',fig.heigth=5, fig.width=10, fig.cap='lasso Model Error Paths'}
+### CLEAR CACHE
+
+error_1se_Bysize_mtx <- do.call('cbind', lapply(error_1se_Bysize_lst, function(LL) LL))
+
+cv_error_1se_Bysize_mtx <- error_1se_Bysize_mtx[,grep('_cv', colnames(error_1se_Bysize_mtx))]
+
+plot(x=c(1, ncol(cv_error_1se_Bysize_mtx)), y=c(0,0.6), 
+  xlab='sample size', ylab='Misclassification Error', 
+  type='n', xaxt='n')
+axis(side=1, at=1:ncol(cv_error_1se_Bysize_mtx),
+ labels=sub('_cv','',colnames(cv_error_1se_Bysize_mtx)))
+for(JJ in 1:15)
+lines(x=1:ncol(cv_error_1se_Bysize_mtx), y=cv_error_1se_Bysize_mtx[JJ,],
+ type='b', pch=JJ, col=JJ)
+title('Example Misclassification Error Paths')
+
+```
+
+We see how erratic the assessed model accuracy can be when sample sizes are small,
+and that it would be hard to guess the ultimate level of accuracy the
+is achievable, or the number of samples required to get a reasonable 
+estimate of the achievable level of accuracy.
+
+<br/>
+
+
 
 
 ```{r brca-rnaseq-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
@@ -1394,7 +1454,9 @@ optimistic.
 * For lower sample sizes, assess performance is quite variable.
 -->
 
-Now look at feature selection.
+
+#### Feature Selection
+
 
 ```{r brca-rnaseq-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
 ### CLEAR CACHE
@@ -1403,7 +1465,7 @@ Now look at feature selection.
 SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
 stage_vec <- cut(1:nrow(brcaRna_sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
 
-par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,2,2,0))
 # 1se
 #########################################
 # selected features
@@ -1440,9 +1502,11 @@ p_singP_1se_Bysize_lst <- p_singP_1se_Bysize_lst[order(names(p_singP_1se_Bysize_
 boxplot(p_singP_1se_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  #ylim=c(0, 300),
+  ylim=c(0, 300),
   xaxt='n'
 )
+mtext(side=2, outer=T,  'number of selected features')
+
 for(JJ in 1:length(p_singP_1se_Bysize_lst))
 points(
    x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
@@ -1463,7 +1527,7 @@ legend('topleft',
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('one se lamdba - selected gene counts'))
+title(paste('one se lamdba models'))
 
 
 # min
@@ -1502,7 +1566,7 @@ p_singP_min_Bysize_lst <- p_singP_min_Bysize_lst[order(names(p_singP_min_Bysize_
 boxplot(p_singP_min_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  #ylim=c(0, 300),
+  ylim=c(0, 300),
   xaxt='n'
 )
 for(JJ in 1:length(p_singP_min_Bysize_lst))
@@ -1525,7 +1589,7 @@ legend('topleft',
    legend= c('selected genes','signature genes'),
    bty='n'
  )
-title(paste('min lambda - selected gene counts'))
+title(paste('min lambda models'))
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized across simulations'))
 

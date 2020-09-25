@@ -731,7 +731,7 @@ performance in this data set.
 <span id="cb40-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-12"></a>)</span>
 <span id="cb40-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-13"></a></span>
 <span id="cb40-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb40-14"></a><span class="kw">message</span>(<span class="st">&quot;lasso time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## lasso time: 12.89s</code></pre>
+<pre><code>## lasso time: 16.23s</code></pre>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-1"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb42-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-2"></a></span>
 <span id="cb42-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-3"></a>hcc5hmC_cv_ridge &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
@@ -746,7 +746,7 @@ performance in this data set.
 <span id="cb42-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-12"></a>)</span>
 <span id="cb42-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-13"></a></span>
 <span id="cb42-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb42-14"></a><span class="kw">message</span>(<span class="st">&quot;ridge time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## ridge time: 132.58s</code></pre>
+<pre><code>## ridge time: 131.08s</code></pre>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-1"></a>start_time &lt;-<span class="st">  </span><span class="kw">proc.time</span>()</span>
 <span id="cb44-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-2"></a></span>
 <span id="cb44-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-3"></a>hcc5hmC_cv_enet &lt;-<span class="st"> </span>glmnet<span class="op">::</span><span class="kw">cv.glmnet</span>(</span>
@@ -761,7 +761,7 @@ performance in this data set.
 <span id="cb44-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-12"></a>)</span>
 <span id="cb44-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-13"></a></span>
 <span id="cb44-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb44-14"></a><span class="kw">message</span>(<span class="st">&quot;enet time: &quot;</span>, <span class="kw">round</span>((<span class="kw">proc.time</span>() <span class="op">-</span><span class="st"> </span>start_time)[<span class="dv">3</span>],<span class="dv">2</span>),<span class="st">&quot;s&quot;</span>)</span></code></pre></div>
-<pre><code>## enet time: 13.62s</code></pre>
+<pre><code>## enet time: 14.52s</code></pre>
 <!--
 The ridge regression model takes over 10 times longer to compute.
 -->
