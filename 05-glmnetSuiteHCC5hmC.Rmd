@@ -434,7 +434,7 @@ title('min lambda Model')
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
 mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
-mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
+mtext(side=3, outer=T, cex=1.5, 'Sample Consistency vs Classification Outcome')
 
 
 ```
@@ -709,7 +709,7 @@ boxplot(
   sim_control_qual_byStage_lst, 
   outline = F, 
   border = 1:6,
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 legend('bottomright', title = 'Stage', ncol = 2,
@@ -733,7 +733,7 @@ boxplot(
   sim_affected_qual_byStage_lst, 
   outline = F, 
   border = 1:6,
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 sim_ndx <- which(names(sim_affected_qual_byStage_lst)=='')
@@ -773,7 +773,7 @@ par(mfrow=c(2,1), mar = c(2,5,2,1))
 boxplot(
   sim_control_qual_mtx[1:NN,],
   outline = T, 
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 title("Control sample consistency across simulations")
@@ -782,7 +782,7 @@ title("Control sample consistency across simulations")
 boxplot(
   sim_affected_qual_mtx[1:NN,],
   outline = T, 
-  ylab = 'Quality Score'
+  ylab = 'Consistency Score'
 )
 title("Affected sample consistency across simulations")
 

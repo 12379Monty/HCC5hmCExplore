@@ -1335,14 +1335,25 @@ all_coef_frm <-
          #y = blended_coef_frm,
          #by='gene', all=T),
 
-all_coef_frm[,-1][is.na(all_coef_frm[,-1])] <- 0
+# save gene name into rownames
+rownames(all_coef_frm) <- all_coef_frm$gene
+all_coef_frm  %<>% dplyr::select(-gene)
 
-par(mfrow=c(ncol(all_coef_frm)-1,1), mar=c(0,5,0,1), oma=c(3,1,2,0))
+# set na to 0
+all_coef_frm[is.na(all_coef_frm)] <- 0
 
-for(CC in 2:ncol(all_coef_frm)) {
+# remove intercept
+all_coef_frm <- all_coef_frm[!rownames(all_coef_frm)=='(Intercept)',]
+
+# order rows by size
+all_coef_frm <- all_coef_frm[order(rowMeans(abs(all_coef_frm)), decreasing=T), ]
+
+par(mfrow=c(ncol(all_coef_frm),1), mar=c(0,5,0.5,1), oma=c(3,1,2,0))
+
+for(CC in 1:ncol(all_coef_frm)) {
  plot(
-  x=1:(nrow(all_coef_frm)-1), xlab='', 
-  y=all_coef_frm[-1, CC], ylab=colnames(all_coef_frm)[CC],
+  x=1:nrow(all_coef_frm), xlab='', 
+  y=all_coef_frm[, CC], ylab=colnames(all_coef_frm)[CC],
   type='h', xaxt='n')
 }
 
@@ -1357,7 +1368,7 @@ is smaell in the other.  By contrast, the blended fit produces more shrinkage.
 ### CLEAR CACHE
 
 knitr::kable(
-with(all_coef_frm[,-1], table(lassoZero=lasso==0, enetZero=enet==0)),
+with(all_coef_frm, table(lassoZero=lasso==0, enetZero=enet==0)),
  caption='Zero Ceofficient: rows are lasso, columns enet') %>%
   kableExtra::kable_styling(full_width = F)
 
@@ -1381,7 +1392,7 @@ We can also examine these with a scatter plot matrix.
 ### CLEAR CACHE
 
 
-pairs(all_coef_frm[-1,-1],
+pairs(all_coef_frm,
   lower.panel = NULL,
   panel = function(x, y) {
     points(x, y, pch = 16, col = "blue")

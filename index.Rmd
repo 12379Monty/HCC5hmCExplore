@@ -72,7 +72,7 @@ library(magrittr)
  options(knitr.table.format = 'html')
 
  # specify for pdf
- options(knitr.table.format = 'latex')
+ #options(knitr.table.format = 'latex')
   
 ```
 

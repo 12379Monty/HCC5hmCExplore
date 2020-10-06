@@ -24,6 +24,7 @@ EPS <- 0.05    # Have no idea what "small" epsilon means
 First we divide the analysis dataset into `train` and `test` in a $`r trainP/(1-trainP)`$:1 ratio.  
 
 ```{r hcc5hmC-glmnetFit-getTrainVal, cache=T, cache.vars=c('hcc5hmC_train_sampID_vec', 'hcc5hmC_test_sampID_vec','hcc5hmC_train_group_vec','hcc5hmC_test_group_vec','hcc5hmC_train_lcpm_mtx','hcc5hmC_test_lcpm_mtx')}
+### CLEAR CACHE
 
 set.seed(1)
 hcc5hmC_train_sampID_vec <- with(hcc5hmC_F_dgel$samples,
@@ -99,6 +100,8 @@ to folds while keeping the outcome ratios constant across folds.
 
 
 ```{r hcc5hmC-glmnetFit-getTrainFolds, cache=T, cache.vars='hcc5hmC_train_foldid_vec'}
+### CLEAR CACHE
+
 # This is too variable, both in terms of fold size And composition
 #foldid_vec <- sample(1:10, size=length(hcc5hmC_train_group_vec), replace=T)
 
@@ -231,6 +234,7 @@ registerDoMC(cores=14)
 
 
 ```{r hcc5hmC-glmnetFit-fit-lasso, cache=T, cache.vars=c('hcc5hmC_cv_lasso')}
+### CLEAR CACHE 
 
 start_time <-  proc.time()
 
@@ -269,6 +273,7 @@ message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
 
 
 ```{r hcc5hmC-glmnetFit-fit-enet, cache=T, cache.vars=c('hcc5hmC_cv_enet')}
+### CLEAR CACHE 
 start_time <-  proc.time()
 
 hcc5hmC_cv_enet <- glmnet::cv.glmnet(
@@ -738,6 +743,7 @@ distribution - predicted probabilities are very close to 0 or 1.
 Look at test data ROC curves.
 
 ```{r hcc5hmC-glmnetFit-testROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs", echo=T, include=F}
+### CLEAR CACHE 
 
 # train
 # lasso
@@ -1407,14 +1413,25 @@ all_coef_frm <-
          #y = blended_coef_frm,
          #by='gene', all=T),
 
-all_coef_frm[,-1][is.na(all_coef_frm[,-1])] <- 0
+# save gene name into rownames
+rownames(all_coef_frm) <- all_coef_frm$gene
+all_coef_frm  %<>% dplyr::select(-gene)
 
-par(mfrow=c(ncol(all_coef_frm)-1,1), mar=c(0,5,0,1), oma=c(3,1,2,0))
+# set na to 0
+all_coef_frm[is.na(all_coef_frm)] <- 0
 
-for(CC in 2:ncol(all_coef_frm)) {
+# remove intercept
+all_coef_frm <- all_coef_frm[!rownames(all_coef_frm)=='(Intercept)',]
+
+# order rows by size
+all_coef_frm <- all_coef_frm[order(rowMeans(abs(all_coef_frm)), decreasing=T), ]
+
+par(mfrow=c(ncol(all_coef_frm),1), mar=c(0,5,0.5,1), oma=c(3,1,2,0))
+
+for(CC in 1:ncol(all_coef_frm)) {
  plot(
-  x=1:(nrow(all_coef_frm)-1), xlab='', 
-  y=all_coef_frm[-1, CC], ylab=colnames(all_coef_frm)[CC],
+  x=1:nrow(all_coef_frm), xlab='',
+  y=all_coef_frm[, CC], ylab=colnames(all_coef_frm)[CC],
   type='h', xaxt='n')
 }
 
@@ -1428,7 +1445,7 @@ is small in the other.  By contrast, the blended fit produces more shrinkage.
 ```{r hcc5hmC-glmnetFit-zreros, fig.cap=''}
 
 knitr::kable(
-with(all_coef_frm[,-1], table(lassoZero=lasso==0, enetZero=enet==0)),
+with(all_coef_frm, table(lassoZero=lasso==0, enetZero=enet==0)),
  caption='Zero Ceofficient: rows are lasso, columns enet') %>%
   kableExtra::kable_styling(full_width = F)
 
@@ -1451,7 +1468,7 @@ We can also examine these with a scatter plot matrix.
 ```{r hcc5hmC-glmnetFit-pairsCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficients from fits"}
 
 
-pairs(all_coef_frm[-1,-1],
+pairs(all_coef_frm,
   lower.panel = NULL,
   panel = function(x, y) {
     points(x, y, pch = 16, col = "blue")

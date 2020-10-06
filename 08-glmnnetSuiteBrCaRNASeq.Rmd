@@ -353,7 +353,7 @@ title('min lambda Model')
 
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
 mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
-mtext(side=3, outer=T, cex=1.5, 'Sample Quality vs Classification Outcome')
+mtext(side=3, outer=T, cex=1.5, 'Sample Consistency vs Classification Outcome')
 
 
 ```
@@ -605,7 +605,7 @@ boxplot(
   sim_other_qual_byStage_lst, 
   outline = F, 
   border = 1:6,
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 legend('bottomright', title = 'Stage', ncol = 2,
@@ -629,7 +629,7 @@ boxplot(
   sim_LumA_qual_byStage_lst, 
   outline = F, 
   border = 1:6,
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 sim_ndx <- which(names(sim_LumA_qual_byStage_lst)=='')
@@ -669,7 +669,7 @@ par(mfrow=c(2,1), mar = c(2,5,2,1))
 boxplot(
   brcaRna_sim_other_qual_mtx[1:NN,],
   outline = T, 
-  ylab = 'Quality Score',
+  ylab = 'Consistency Score',
   xaxt = 'n'
 )
 title("Other sample consistency across simulations")
@@ -678,7 +678,7 @@ title("Other sample consistency across simulations")
 boxplot(
   brcaRna_sim_LumA_qual_mtx[1:NN,],
   outline = T, 
-  ylab = 'Quality Score'
+  ylab = 'Consistency Score'
 )
 title("LumA sample consistency across simulations")
 
@@ -1217,9 +1217,9 @@ mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 ```
 
 Compare with Figures
-\@ref(fig:lasso-simRes-errors-bySim)
+\@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim)
 and 
- \@ref(fig:lasso-simRes-features-bySim)
+ \@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-features-bySim)
 for the HCC 5hmC data.
 
 
@@ -1597,9 +1597,9 @@ mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized a
 ```
 
 Compare with Figures
-\@ref(fig:lasso-simRes-errors-overSim)
+\@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim)
 and
-\@ref(fig:lasso-simRes-features-OverSim)
+\@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim)
 for the HCC 5hmC data.
 
 ```{r brca-rnaseq-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}

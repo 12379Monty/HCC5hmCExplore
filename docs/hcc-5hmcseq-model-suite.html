@@ -908,7 +908,7 @@ of computing sample consistency scores - what do these differences mean?
 <span id="cb89-36"><a href="hcc-5hmcseq-model-suite.html#cb89-36"></a></span>
 <span id="cb89-37"><a href="hcc-5hmcseq-model-suite.html#cb89-37"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Classification - Truth:Predicted&#39;</span>)</span>
 <span id="cb89-38"><a href="hcc-5hmcseq-model-suite.html#cb89-38"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Consistency Score&#39;</span>)</span>
-<span id="cb89-39"><a href="hcc-5hmcseq-model-suite.html#cb89-39"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Quality vs Classification Outcome&#39;</span>)</span></code></pre></div>
+<span id="cb89-39"><a href="hcc-5hmcseq-model-suite.html#cb89-39"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Consistency vs Classification Outcome&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:hcc5hmC-glmnetSuite-plot-qual-conf"></span>
 <img src="Static/figures/hcc5hmC-glmnetSuite-plot-qual-conf-1.png" alt="quality scores by classification - Control=0, HCC=1" width="768" />
 <p class="caption">
@@ -1125,7 +1125,7 @@ Here we show results for the small sample sizes where variability will be the gr
 <span id="cb98-21"><a href="hcc-5hmcseq-model-suite.html#cb98-21"></a><span class="kw">boxplot</span>(</span>
 <span id="cb98-22"><a href="hcc-5hmcseq-model-suite.html#cb98-22"></a>  sim_control_qual_mtx[<span class="dv">1</span><span class="op">:</span>NN,],</span>
 <span id="cb98-23"><a href="hcc-5hmcseq-model-suite.html#cb98-23"></a>  <span class="dt">outline =</span> T, </span>
-<span id="cb98-24"><a href="hcc-5hmcseq-model-suite.html#cb98-24"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
+<span id="cb98-24"><a href="hcc-5hmcseq-model-suite.html#cb98-24"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Consistency Score&#39;</span>,</span>
 <span id="cb98-25"><a href="hcc-5hmcseq-model-suite.html#cb98-25"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
 <span id="cb98-26"><a href="hcc-5hmcseq-model-suite.html#cb98-26"></a>)</span>
 <span id="cb98-27"><a href="hcc-5hmcseq-model-suite.html#cb98-27"></a><span class="kw">title</span>(<span class="st">&quot;Control sample consistency across simulations&quot;</span>)</span>
@@ -1134,7 +1134,7 @@ Here we show results for the small sample sizes where variability will be the gr
 <span id="cb98-30"><a href="hcc-5hmcseq-model-suite.html#cb98-30"></a><span class="kw">boxplot</span>(</span>
 <span id="cb98-31"><a href="hcc-5hmcseq-model-suite.html#cb98-31"></a>  sim_affected_qual_mtx[<span class="dv">1</span><span class="op">:</span>NN,],</span>
 <span id="cb98-32"><a href="hcc-5hmcseq-model-suite.html#cb98-32"></a>  <span class="dt">outline =</span> T, </span>
-<span id="cb98-33"><a href="hcc-5hmcseq-model-suite.html#cb98-33"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span></span>
+<span id="cb98-33"><a href="hcc-5hmcseq-model-suite.html#cb98-33"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Consistency Score&#39;</span></span>
 <span id="cb98-34"><a href="hcc-5hmcseq-model-suite.html#cb98-34"></a>)</span>
 <span id="cb98-35"><a href="hcc-5hmcseq-model-suite.html#cb98-35"></a><span class="kw">title</span>(<span class="st">&quot;Affected sample consistency across simulations&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY"></span>

@@ -66,9 +66,9 @@ opts_chunk$set(eval = FALSE)
 <!-- Add base libraries -->
 ```{r brcaRNA-preproc-libraries, include=FALSE, eval=T}
 
-
 ### CLEAR CACHE
 library("magrittr")
+
 ```
 
 

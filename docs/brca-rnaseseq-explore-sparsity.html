@@ -1702,16 +1702,27 @@ in the relaxed lasso fit.</p>
 <span id="cb172-64"><a href="brca-rnaseseq-explore-sparsity.html#cb172-64"></a>         <span class="co">#y = blended_coef_frm,</span></span>
 <span id="cb172-65"><a href="brca-rnaseseq-explore-sparsity.html#cb172-65"></a>         <span class="co">#by=&#39;gene&#39;, all=T),</span></span>
 <span id="cb172-66"><a href="brca-rnaseseq-explore-sparsity.html#cb172-66"></a></span>
-<span id="cb172-67"><a href="brca-rnaseseq-explore-sparsity.html#cb172-67"></a>all_coef_frm[,<span class="op">-</span><span class="dv">1</span>][<span class="kw">is.na</span>(all_coef_frm[,<span class="op">-</span><span class="dv">1</span>])] &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb172-68"><a href="brca-rnaseseq-explore-sparsity.html#cb172-68"></a></span>
-<span id="cb172-69"><a href="brca-rnaseseq-explore-sparsity.html#cb172-69"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="kw">ncol</span>(all_coef_frm)<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb172-67"><a href="brca-rnaseseq-explore-sparsity.html#cb172-67"></a><span class="co"># save gene name into rownames</span></span>
+<span id="cb172-68"><a href="brca-rnaseseq-explore-sparsity.html#cb172-68"></a><span class="kw">rownames</span>(all_coef_frm) &lt;-<span class="st"> </span>all_coef_frm<span class="op">$</span>gene</span>
+<span id="cb172-69"><a href="brca-rnaseseq-explore-sparsity.html#cb172-69"></a>all_coef_frm  <span class="op">%&lt;&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>gene)</span>
 <span id="cb172-70"><a href="brca-rnaseseq-explore-sparsity.html#cb172-70"></a></span>
-<span id="cb172-71"><a href="brca-rnaseseq-explore-sparsity.html#cb172-71"></a><span class="cf">for</span>(CC <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(all_coef_frm)) {</span>
-<span id="cb172-72"><a href="brca-rnaseseq-explore-sparsity.html#cb172-72"></a> <span class="kw">plot</span>(</span>
-<span id="cb172-73"><a href="brca-rnaseseq-explore-sparsity.html#cb172-73"></a>  <span class="dt">x=</span><span class="dv">1</span><span class="op">:</span>(<span class="kw">nrow</span>(all_coef_frm)<span class="op">-</span><span class="dv">1</span>), <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, </span>
-<span id="cb172-74"><a href="brca-rnaseseq-explore-sparsity.html#cb172-74"></a>  <span class="dt">y=</span>all_coef_frm[<span class="op">-</span><span class="dv">1</span>, CC], <span class="dt">ylab=</span><span class="kw">colnames</span>(all_coef_frm)[CC],</span>
-<span id="cb172-75"><a href="brca-rnaseseq-explore-sparsity.html#cb172-75"></a>  <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>)</span>
-<span id="cb172-76"><a href="brca-rnaseseq-explore-sparsity.html#cb172-76"></a>}</span></code></pre></div>
+<span id="cb172-71"><a href="brca-rnaseseq-explore-sparsity.html#cb172-71"></a><span class="co"># set na to 0</span></span>
+<span id="cb172-72"><a href="brca-rnaseseq-explore-sparsity.html#cb172-72"></a>all_coef_frm[<span class="kw">is.na</span>(all_coef_frm)] &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb172-73"><a href="brca-rnaseseq-explore-sparsity.html#cb172-73"></a></span>
+<span id="cb172-74"><a href="brca-rnaseseq-explore-sparsity.html#cb172-74"></a><span class="co"># remove intercept</span></span>
+<span id="cb172-75"><a href="brca-rnaseseq-explore-sparsity.html#cb172-75"></a>all_coef_frm &lt;-<span class="st"> </span>all_coef_frm[<span class="op">!</span><span class="kw">rownames</span>(all_coef_frm)<span class="op">==</span><span class="st">&#39;(Intercept)&#39;</span>,]</span>
+<span id="cb172-76"><a href="brca-rnaseseq-explore-sparsity.html#cb172-76"></a></span>
+<span id="cb172-77"><a href="brca-rnaseseq-explore-sparsity.html#cb172-77"></a><span class="co"># order rows by size</span></span>
+<span id="cb172-78"><a href="brca-rnaseseq-explore-sparsity.html#cb172-78"></a>all_coef_frm &lt;-<span class="st"> </span>all_coef_frm[<span class="kw">order</span>(<span class="kw">rowMeans</span>(<span class="kw">abs</span>(all_coef_frm)), <span class="dt">decreasing=</span>T), ]</span>
+<span id="cb172-79"><a href="brca-rnaseseq-explore-sparsity.html#cb172-79"></a></span>
+<span id="cb172-80"><a href="brca-rnaseseq-explore-sparsity.html#cb172-80"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="kw">ncol</span>(all_coef_frm),<span class="dv">1</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="fl">0.5</span>,<span class="dv">1</span>), <span class="dt">oma=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb172-81"><a href="brca-rnaseseq-explore-sparsity.html#cb172-81"></a></span>
+<span id="cb172-82"><a href="brca-rnaseseq-explore-sparsity.html#cb172-82"></a><span class="cf">for</span>(CC <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(all_coef_frm)) {</span>
+<span id="cb172-83"><a href="brca-rnaseseq-explore-sparsity.html#cb172-83"></a> <span class="kw">plot</span>(</span>
+<span id="cb172-84"><a href="brca-rnaseseq-explore-sparsity.html#cb172-84"></a>  <span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(all_coef_frm), <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, </span>
+<span id="cb172-85"><a href="brca-rnaseseq-explore-sparsity.html#cb172-85"></a>  <span class="dt">y=</span>all_coef_frm[, CC], <span class="dt">ylab=</span><span class="kw">colnames</span>(all_coef_frm)[CC],</span>
+<span id="cb172-86"><a href="brca-rnaseseq-explore-sparsity.html#cb172-86"></a>  <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xaxt=</span><span class="st">&#39;n&#39;</span>)</span>
+<span id="cb172-87"><a href="brca-rnaseseq-explore-sparsity.html#cb172-87"></a>}</span></code></pre></div>
 <div class="figure"><span id="fig:brcaRna-glmnetFit-compCoeffProf"></span>
 <img src="Static/figures/brcaRna-glmnetFit-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
 <p class="caption">
@@ -1724,7 +1735,7 @@ is smaell in the other. By contrast, the blended fit produces more shrinkage.</p
 <div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="brca-rnaseseq-explore-sparsity.html#cb173-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb173-2"><a href="brca-rnaseseq-explore-sparsity.html#cb173-2"></a></span>
 <span id="cb173-3"><a href="brca-rnaseseq-explore-sparsity.html#cb173-3"></a>knitr<span class="op">::</span><span class="kw">kable</span>(</span>
-<span id="cb173-4"><a href="brca-rnaseseq-explore-sparsity.html#cb173-4"></a><span class="kw">with</span>(all_coef_frm[,<span class="op">-</span><span class="dv">1</span>], <span class="kw">table</span>(<span class="dt">lassoZero=</span>lasso<span class="op">==</span><span class="dv">0</span>, <span class="dt">enetZero=</span>enet<span class="op">==</span><span class="dv">0</span>)),</span>
+<span id="cb173-4"><a href="brca-rnaseseq-explore-sparsity.html#cb173-4"></a><span class="kw">with</span>(all_coef_frm, <span class="kw">table</span>(<span class="dt">lassoZero=</span>lasso<span class="op">==</span><span class="dv">0</span>, <span class="dt">enetZero=</span>enet<span class="op">==</span><span class="dv">0</span>)),</span>
 <span id="cb173-5"><a href="brca-rnaseseq-explore-sparsity.html#cb173-5"></a> <span class="dt">caption=</span><span class="st">&#39;Zero Ceofficient: rows are lasso, columns enet&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb173-6"><a href="brca-rnaseseq-explore-sparsity.html#cb173-6"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1749,7 +1760,7 @@ TRUE
 FALSE
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 <td style="text-align:right;">
 0
@@ -1779,7 +1790,7 @@ lasso fit, or zero.</p>
 <div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="brca-rnaseseq-explore-sparsity.html#cb174-1"></a><span class="co">### CLEAR CACHE</span></span>
 <span id="cb174-2"><a href="brca-rnaseseq-explore-sparsity.html#cb174-2"></a></span>
 <span id="cb174-3"><a href="brca-rnaseseq-explore-sparsity.html#cb174-3"></a></span>
-<span id="cb174-4"><a href="brca-rnaseseq-explore-sparsity.html#cb174-4"></a><span class="kw">pairs</span>(all_coef_frm[<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>],</span>
+<span id="cb174-4"><a href="brca-rnaseseq-explore-sparsity.html#cb174-4"></a><span class="kw">pairs</span>(all_coef_frm,</span>
 <span id="cb174-5"><a href="brca-rnaseseq-explore-sparsity.html#cb174-5"></a>  <span class="dt">lower.panel =</span> <span class="ot">NULL</span>,</span>
 <span id="cb174-6"><a href="brca-rnaseseq-explore-sparsity.html#cb174-6"></a>  <span class="dt">panel =</span> <span class="cf">function</span>(x, y) {</span>
 <span id="cb174-7"><a href="brca-rnaseseq-explore-sparsity.html#cb174-7"></a>    <span class="kw">points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</span>

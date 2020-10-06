@@ -1,7 +1,7 @@
 --- 
 title: "DNA Hydroxymethylation in Hepatocellular Carcinoma"
 author: "Francois Collin"
-#date: "`r Sys.Date()`"
+#date: "2020-10-06"
 date: 2020
 site: bookdown::bookdown_site
 ### see https://community.rstudio.com/t/bookdown-pdf-generation/12359
@@ -37,44 +37,7 @@ description: "Data from Cai et al. (2019) paper are explored"
 <div class="watermark">DRAFT</div>
 -->
 
-```{r setup, include=F}
-   # file rmarkdown file management options: cache, figures
- figures_DIR <- file.path('Static', 'figures/')
- suppressMessages(dir.create(figures_DIR, recursive=T))
- knitr::opts_chunk$set(fig.path=paste0(figures_DIR))
- 
 
-KellyColors.vec <- c(
-  "#222222", "#F3C300", "#875692", "#F38400", "#A1CAF1",
-  "#BE0032", "#C2B280", "#848482", "#008856", "#E68FAC", "#0067A5",
-  "#F99379", "#604E97", "#F6A600", "#B3446C", "#DCD300", "#882D17",
-  "#8DB600", "#654522", "#E25822", "#2B3D26"
-)
-col_vec <- KellyColors.vec
-
-library(magrittr)
-
- FN <- 'tmp'
- # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
- kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
-       output=paste(FN,".html", sep=''))
-
- rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
-       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
-
- bb <- function(n='') browseURL(paste(FN,".html", sep=''))
-
- # The usual shotcuts
- zz <- function(n='') source(paste("t", n, sep=''))
-
- # This is for kableExtra::kable_styling to work
- # specify for html
- options(knitr.table.format = 'html')
-
- # specify for pdf
- #options(knitr.table.format = 'latex')
-  
-```
 
 
 <!--chapter:end:index.Rmd-->
@@ -98,8 +61,7 @@ See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/).
 
 -->
 
-`r knitr::include_graphics(
-  "Static/images/CC_4_0.png",  dpi=100)`
+<img src="Static/images/CC_4_0.png" width="84" />
 
 
 This work by Francois Collin is licensed under a
@@ -515,29 +477,16 @@ classification problem.
 
 
 
-```{r hcc5hmC-preproc-setup-preproc, include=F}
-#### CLEAR CACHE
-   # file rmarkdown file management options: cache, figures
- figures_DIR <- file.path('Static', 'figures/')
- suppressMessages(dir.create(figures_DIR, recursive=T))
- knitr::opts_chunk$set(fig.path=paste0(figures_DIR))
-```
+
 
 ## Load the data
 
 <!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
 <!-- TO TURN ON, SET eval=T                            -->
-```{r hcc5hmC-preproc-chunk-options, include=FALSE, eval=F}
-#### CLEAR CACHE
-library("knitr")
-opts_chunk$set(eval = FALSE)
-```
+
 
 <!-- Add base libraries -->
-```{r hcc5hmC-preproc-libraries, include=FALSE, eval=T}
-#### CLEAR CACHE
-library("magrittr")
-```
+
 
 
 The data that are available from NCBI GEO
@@ -550,7 +499,8 @@ In the Cai et al. [@Cai:2019aa] paper, samples were separated into
 `Train` and `Val-1` subsets for model fitting and analysis.
 `Val-2` was used as an external validation set.
 
-```{r hcc5hmC-preproc-loadData, cache=F}
+
+```r
 #### CLEAR CACHE
 
 if (!("GSE112679" %in% rownames(installed.packages()))) {
@@ -582,14 +532,70 @@ with(
    caption="GSE112679 Samples by Dx Group and Subset") %>% 
   kableExtra::kable_styling(full_width = F)
 )
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-loadData)GSE112679 Samples by Dx Group and Subset</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Train </th>
+   <th style="text-align:right;"> Val-1 </th>
+   <th style="text-align:right;"> Val-2 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Benign </td>
+   <td style="text-align:right;"> 253 </td>
+   <td style="text-align:right;"> 132 </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHB </td>
+   <td style="text-align:right;"> 190 </td>
+   <td style="text-align:right;"> 96 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cirrhosis </td>
+   <td style="text-align:right;"> 73 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC:Early </td>
+   <td style="text-align:right;"> 335 </td>
+   <td style="text-align:right;"> 220 </td>
+   <td style="text-align:right;"> 24 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC:Late </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 442 </td>
+   <td style="text-align:right;"> 13 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC:NA </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 147 </td>
+   <td style="text-align:right;"> 23 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Healthy </td>
+   <td style="text-align:right;"> 269 </td>
+   <td style="text-align:right;"> 124 </td>
+   <td style="text-align:right;"> 177 </td>
+  </tr>
+</tbody>
+</table>
 
 For this analysis, we will consider early stage cancer samples
 and healthy or benign samples from the `Train` or `Val-1` subsets.
 The appropriate outcome variable will be renamed or aliased `group`
 
-```{r hcc5hmC-preproc-subsetSamples, cache=T, cache.vars=c('hcc5hmC_sampDesc','hcc5hmC_groupCol'), echo=T}
+
+```r
 #### CLEAR CACHE
 
 # Subset analysis samples
@@ -615,8 +621,27 @@ with(hcc5hmC_sampDesc,
   caption="Samples used in this analysis") %>%
   kableExtra::kable_styling(full_width = F)
 )
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-subsetSamples)Samples used in this analysis</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> group </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 778 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 555 </td>
+  </tr>
+</tbody>
+</table>
 
 
 The features are counts of reads captured by chemical labeling, and indicate
@@ -647,7 +672,8 @@ We will simply run a *minimal set of QC sanity checks* to make sure that
 there are no apparent systematic effects in the data.
 
 
-```{r hcc5hmC-preproc-getfeatures, cache=T, cache.vars=c('hcc5hmC_featureCounts'), echo=T}
+
+```r
 #### CLEAR CACHE
 
 hcc5hmC_featureCounts <- cbind(
@@ -655,9 +681,6 @@ hcc5hmC_featureCounts <- cbind(
   hcc5hmC_Val1_featureCount,
   hcc5hmC_Val2_featureCount
 )[, rownames(hcc5hmC_sampDesc)]
-
-
-
 ```
 
 We first look at coverage - make sure there isn't too much disparity of coverage 
@@ -665,7 +688,8 @@ across samples. To detect shared variability, samples can be annotated and order
 according to sample features that may be linked to sample batch processing.  Here we 
 the samples have been ordered by group and sample id (an alias of geoAcc).
 
-```{r hcc5hmC-preproc-lcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
+
+```r
 #### CLEAR CACHE
 
 par(mar = c(1, 3, 2, 1))
@@ -685,8 +709,12 @@ SampleMedian <- apply(log2(hcc5hmC_featureCounts + 1), 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 1), 
   las = 2, col = "grey", line = -1, tick = F)
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-lcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-lcpmBxp)Sample log2 count boxplots</p>
+</div>
 
 <!--
 Coverage level looks fairly comparable across samples.  It is sometimes helpful to
@@ -694,7 +722,8 @@ keep track of the actual coverage which can be adequately tracked by distributio
 quantiles.
 -->
 
-```{r hcc5hmC-preproc-hcc5hmC-quantCounts, echo=T}
+
+```r
 #### CLEAR CACHE
 
 hcc5hmC_featureCounts_quant <- apply(hcc5hmC_featureCounts, 2, function(CC) {
@@ -712,14 +741,54 @@ knitr::kable(hcc5hmC_featureCounts_quant2,
     "\nRows are quartiles across samples"
   )
 ) %>% kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-hcc5hmC-quantCounts)Coverage Summary - Columns are sample coverage quantiles and total coverage 
+Rows are quartiles across samples</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 15% </th>
+   <th style="text-align:right;"> 25% </th>
+   <th style="text-align:right;"> 50% </th>
+   <th style="text-align:right;"> 75% </th>
+   <th style="text-align:right;"> totCovM </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 111 </td>
+   <td style="text-align:right;"> 321 </td>
+   <td style="text-align:right;"> 5.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 135 </td>
+   <td style="text-align:right;"> 391 </td>
+   <td style="text-align:right;"> 6.7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 35 </td>
+   <td style="text-align:right;"> 162 </td>
+   <td style="text-align:right;"> 468 </td>
+   <td style="text-align:right;"> 8.0 </td>
+  </tr>
+</tbody>
+</table>
 
 
 From this table, we see that 25% of the samples have total coverage exceeding
-`r round(hcc5hmC_featureCounts_quant2["75%", "totCovM"],1)`M reads, 25% of samples
+8M reads, 25% of samples
 have a 15 percentile of coverage lower than
-`r hcc5hmC_featureCounts_quant2["25%", "15%"]`, etc.  
+4, etc.  
 
 
 <!-- SKIP
@@ -729,37 +798,7 @@ two can be used interchangeably) -
 make sure the shapes of the distributions are not widely different.
 -->
 
-```{r hcc5hmC-preproc-rlr, cache=T, cache.vars='hcc5hmC_lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F}
-#### CLEAR CACHE
 
-hcc5hmC_lcpm_mtx <- edgeR::cpm(hcc5hmC_featureCounts, log = T)
-median_vec <- apply(hcc5hmC_lcpm_mtx, 1, median)
-RLR_mtx <- sweep(hcc5hmC_lcpm_mtx, 1, median_vec, "-")
-
-par(mar = c(1, 3, 2, 1))
-boxplot(RLR_mtx,
-  xlab = "", ylab='Relative Log Representation', ylim = c(-.6, .6),
-  staplewex = 0, # remove horizontal whisker lines
-  staplecol = "white", # just to be totally sure :)
-  outline = F, # remove outlying points
-  whisklty = 0, # remove vertical whisker lines
-  las = 2, horizontal = F, xaxt = "n",
-  border = hcc5hmC_groupCol[hcc5hmC_sampDesc$group]
-)
-legend("top", legend = names(hcc5hmC_groupCol), 
-  text.col = hcc5hmC_groupCol, ncol = 2, bty = "n")
-# Add group Q1, Q3
-for (GRP in unique(hcc5hmC_sampDesc$group)) {
-  group_ndx <- which(hcc5hmC_sampDesc$group == GRP)
-  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
-     quantile, prob = c(.25, .75))
-  abline(h = apply(group_Q1Q3_mtx, 1, median), 
-     col = hcc5hmC_groupCol[GRP], lwd = 2)
-}
-
-
-
-```
 
 <!-- SKIPPED
 We note that the HCC samples have slightly more variable coverage distribution.
@@ -797,7 +836,8 @@ downstream analyses.
 
 To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
-```{r hcc5hmC-preproc-densityLcpm, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities', eval=T, echo=T}
+
+```r
 #### CLEAR CACHE
 
 par(mar = c(4, 3, 2, 1))
@@ -813,23 +853,27 @@ for (JJ in sample(2:ncol(hcc5hmC_lcpm_mtx), size = 100)) {
 } # for(JJ
 legend("topright", legend = names(hcc5hmC_groupCol), 
   text.col = hcc5hmC_groupCol, bty = "n")
-
 ```
 
-`r  LibSizeSum <- summary( colSums(hcc5hmC_featureCounts) / 1e6 )`
-`r CPM_THR <- 3; SAMP_THR <- 25` 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-densityLcpm-1.png" alt="Sample $log_2$ CPM densities" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-densityLcpm)Sample $log_2$ CPM densities</p>
+</div>
+
+
+ 
 
 As is typically the case with RNA-Seq data, we notice many weakly represented genes 
 in this dataset.  A cpm value of 1 appears to adequatly separate 
 the expressed from the un-expressed genes, but we will be slightly more strict here
-and require a CPM threshold of `r CPM_THR` .  Using a nominal CPM value of 
-`r CPM_THR`, genes are deeemed to be `represented` if their expression is 
+and require a CPM threshold of 3 .  Using a nominal CPM value of 
+3, genes are deeemed to be `represented` if their expression is 
 above this threshold, and not represented otherwise. 
 For this analysis we will require that genes be `represented` in at least 
-`r SAMP_THR` samples across the entire dataset to be retained for downstream analysis.
-Here, a CPM value of `r CPM_THR` means that a gene is represented if it 
-has at least `r round(CPM_THR*LibSizeSum['Min.'])` reads in the sample with the 
-lowest sequencing depth (library size `r round(LibSizeSum['Min.'],1)` million).
+25 samples across the entire dataset to be retained for downstream analysis.
+Here, a CPM value of 3 means that a gene is represented if it 
+has at least 9 reads in the sample with the 
+lowest sequencing depth (library size 2.9 million).
 Note that the thresholds used here are arbitrary as there are no hard and fast 
 rules to set these by.
 The voom-plot, which is part of analyses done to remove heteroscedasticity,
@@ -837,36 +881,20 @@ can be examined to verify that the filtering performed is adequate.
 
 
 <!-- or at least 
-`r round(CPM_THR*LibSizeSum['Max.'])` counts in the sample with the 
-greatest sequencing depth (library size `r round(LibSizeSum['Max.'],1)` million).
+40 counts in the sample with the 
+greatest sequencing depth (library size 13.3 million).
 -->
 
 Remove weakly represented genes and re-plot densities.
 
-`r weak_flg <- rowSums(edgeR::cpm(hcc5hmC_featureCounts) > CPM_THR) < SAMP_THR `
-Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
 
-```{r hcc5hmC-preproc-removeWeak, cache=T, cache.vars=c('hcc5hmC_featureCountsF', 'hcc5hmC_genes_annotF', 'hcc5hmC_F_lcpm_mtx'), echo=T, include=F}
-
-#### CLEAR CACHE
-
-# Use suffix 'F' for Filtered genes
-hcc5hmC_featureCounts_F <- hcc5hmC_featureCounts[!weak_flg, ]
-
-genes.ndx <- match(rownames(hcc5hmC_featureCounts_F), hcc5hmC_genes_annot$Symbol)
-if(sum(is.na(genes.ndx))) stop("hcc5hmC_featureCounts/hcc5hmC_genes_annot mismatch")
-hcc5hmC_genes_annot_F <- hcc5hmC_genes_annot[genes.ndx,]
-
-hcc5hmC_F_lcpm_mtx <- edgeR::cpm(hcc5hmC_featureCounts_F, log = T)
-dim(hcc5hmC_F_lcpm_mtx)
-
-rm(hcc5hmC_featureCounts)
-
-```
+Removing 17.5%  of genes...
 
 
-```{r hcc5hmC-preproc-densityLcpm2, fig.height=4, fig.width=10, fig.cap='Sample $log_2$ CPM densities after removing weak genes', eval=T, echo=T}
 
+
+
+```r
 #### CLEAR CACHE
 
 par(mar = c(4, 3, 2, 1))
@@ -882,8 +910,12 @@ for (JJ in sample(2:ncol(hcc5hmC_F_lcpm_mtx), size = 100)) {
 } # for(JJ
 legend("topright", legend = names(hcc5hmC_groupCol), 
   text.col = hcc5hmC_groupCol, bty = "n")
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-densityLcpm2-1.png" alt="Sample $log_2$ CPM densities after removing weak genes" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-densityLcpm2)Sample $log_2$ CPM densities after removing weak genes</p>
+</div>
 
 <!--
 Note that the $log_2(CMP)$ distribution is not quite symmetric.
@@ -900,8 +932,8 @@ Before producing the MDS plot we will normalize the distributions.
 We will store the data into s `DGEList` object as this is convenient
 when running many of the analyses implemented in the edgeR and limma packages.
 
-```{r hcc5hmC-preproc-getDGEL, cache=T, cache.var=c('hcc5hmC_F_dgel', 'hcc5hmC_F_lcpm_mtx')}
 
+```r
 #### CLEAR CACHE
 
 hcc5hmC_F_dgel <- edgeR::DGEList(
@@ -921,7 +953,8 @@ save(list = "hcc5hmC_F_dgel", file = "RData/hcc5hmC_F_dgel")
 Verify that the counts are properly normalized.
 
 
-```{r hcc5hmC-preproc-normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
+
+```r
 #### CLEAR CACHE
 
 par(mar = c(1, 3, 2, 1))
@@ -941,11 +974,16 @@ SampleMedian <- apply(hcc5hmC_F_lcpm_mtx, 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 1),
   las = 2, col = "grey", line = -1, tick = F)
-
 ```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-normedLcpmBxp-1.png" alt="Sample log2 count boxplots" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-normedLcpmBxp)Sample log2 count boxplots</p>
+</div>
 
-```{r hcc5hmC-preproc-plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of log-CPM values', echo=T}
+
+
+```r
 #### CLEAR CACHE
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
@@ -969,6 +1007,11 @@ MDS.out <- limma::plotMDS(hcc5hmC_F_lcpm_mtx[, samp_ndx],
 )
 ```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-plotMDS-1.png" alt="MDS plots of log-CPM values" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-plotMDS)MDS plots of log-CPM values</p>
+</div>
+
 The MDS plot, which is analogous to a PCA plot adapted to gene expression data,
 does not indicate strong clustering of samples.  The fanning pattern observed in the
 first two dimensions indicates that a few samples are drifting way from the
@@ -977,7 +1020,8 @@ core set, but in no particular direction.  There is some structure in the
 `glMDSPlot` from package `Glimma` provides an interactive MDS 
 plot that can extremely usful for exploration
 
-```{r hcc5hmC-preproc-GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of log-CPM values", echo=T}
+
+```r
 #### CLEAR CACHE
 
 Glimma::glMDSPlot(hcc5hmC_F_dgel[, samp_ndx],
@@ -992,7 +1036,7 @@ Glimma::glMDSPlot(hcc5hmC_F_dgel[, samp_ndx],
 ```
 
 Link to glMDSPlot: 
-[Here](`r file.path(figures_DIR, paste0("GlMDSplot.html"))`)  
+[Here](Static/figures//GlMDSplot.html)  
 
 No obvious factor links the samples in the 3 clusters observed on the
 4th MDS dimensions. The percent of variance explained by this dimension or 
@@ -1022,29 +1066,53 @@ Before proceeding with the statistical modeling used for the
 differential expression analysis, we need to set up a
 model design matrix.
 
-```{r hcc5hmC-preproc-DEADesign, cache=F, include=T, echo=T, include=T}
+
+```r
 #### CLEAR CACHE
 
 Design_mtx <- model.matrix( ~  -1 + group, data=hcc5hmC_F_dgel$samples)
 colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
 
 cat("colSums(Design_mtx):\n")
-colSums(Design_mtx)
+```
 
+```
+## colSums(Design_mtx):
+```
+
+```r
+colSums(Design_mtx)
+```
+
+```
+## Control     HCC 
+##     778     555
+```
+
+```r
 Contrasts_mtx <- limma::makeContrasts(
   HCCvsControl = HCC  - Control,
   levels=colnames(Design_mtx))
 
 cat("Contrasts:\n")
+```
+
+```
+## Contrasts:
+```
+
+```r
 Contrasts_mtx
-
 ```
 
-```{r hcc5hmC-preproc-printDesign, echo=T, include=F}
-#### CLEAR CACHE
- knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
-  kableExtra::kable_styling(full_width = F)
 ```
+##          Contrasts
+## Levels    HCCvsControl
+##   Control           -1
+##   HCC                1
+```
+
+
 
 
 ### Removing heteroscedasticity from the count data {-}
@@ -1057,13 +1125,18 @@ normally distributed and the mean-variance relationship is accommodated using pr
 weights calculated by the voom function.  We apply this transformation next.
 
 
-```{r hcc5hmC-preproc-Voom1, cache=T, cache.vars=c('hcc5hmC_F_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=T}
+
+```r
 #### CLEAR CACHE
 
 par(mfrow=c(1,1))
 hcc5hmC_F_voom <- limma::voom(hcc5hmC_F_dgel, Design_mtx, plot=T)
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-Voom1-1.png" alt="Removing heteroscedascity" width="1056" />
+<p class="caption">(\#fig:hcc5hmC-preproc-Voom1)Removing heteroscedascity</p>
+</div>
 
 Note that the voom-plot provides a visual check on the level of filtering performed upstream.
 If filtering of lowly-expressed genes is insufficient, a drop in variance levels can be 
@@ -1095,7 +1168,8 @@ of interest, in our case HCC vs Control.
 
 Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
 
-```{r hcc5hmC-preproc-lmFit, cache=T, echo=T, cache.vars=c('hcc5hmC_F_voom_efit','hcc5hmC_F_voom_efit_dt'),echo=T}
+
+```r
 #### CLEAR CACHE
 
 
@@ -1114,8 +1188,27 @@ Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
  knitr::kable(t(summary(hcc5hmC_F_voom_efit_dt)),
   caption="DE Results at FDR = 0.05") %>% 
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-lmFit)DE Results at FDR = 0.05</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Down </th>
+   <th style="text-align:right;"> NotSig </th>
+   <th style="text-align:right;"> Up </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> HCCvsControl </td>
+   <td style="text-align:right;"> 5214 </td>
+   <td style="text-align:right;"> 5280 </td>
+   <td style="text-align:right;"> 5258 </td>
+  </tr>
+</tbody>
+</table>
 
 ### Graphical representations of DE results: MD Plots {-}
 
@@ -1128,7 +1221,8 @@ We may also be interested in whether certain gene features are
 related to gene identification.  Gene GC content, for example, might be
 of interest.
 
-```{r hcc5hmC-preproc-mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Genes Identified at FDR = 0,05", echo=T}
+
+```r
 #### CLEAR CACHE
 
 
@@ -1192,11 +1286,19 @@ boxplot(split(
  ylab='gene-gc', cex.lab=1.5
 )
 axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
+```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-mdPlotEfit-1.png" alt="HCC vs Control - Genes Identified at FDR = 0,05" width="1056" />
+<p class="caption">(\#fig:hcc5hmC-preproc-mdPlotEfit)HCC vs Control - Genes Identified at FDR = 0,05</p>
+</div>
+
+```r
  #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
 ```
 
-```{r hcc5hmC-preproc-quantlogFC,echo=T}
+
+```r
 #### CLEAR CACHE
 
 hcc5hmC_featureCounts_F_logFC_sum <- sapply(
@@ -1216,8 +1318,39 @@ knitr::kable(hcc5hmC_featureCounts_F_logFC_sum,
   digits = 2,
   caption = "log FC quartiles by gene identification") %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-quantlogFC)log FC quartiles by gene identification</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> down </th>
+   <th style="text-align:right;"> notDE </th>
+   <th style="text-align:right;"> up </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> -0.07 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> -0.05 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.06 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+</tbody>
+</table>
 
 
 While many genes are identified, the effect sizes are quite small,
@@ -1236,10 +1369,7 @@ rest of the genes.  A statistical test would find that the difference
 between the mean of the down regulated gene population is significantly different
 than the mean of the other gene population even though the difference is
 quite small
-(`r round( 
-mean(GC_vec[hcc5hmC_F_voom_efit_dt[,'HCCvsControl']=='-1']) -
-mean(GC_vec[hcc5hmC_F_voom_efit_dt[,'HCCvsControl']!='-1']),
-3)`).
+(-0.028).
 
 These asymmetries are minor, but it would still be good to establish that
 they reflect biology rather than processing artifacts.  
@@ -1254,15 +1384,32 @@ from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 The number of differentially expressed genes are greatly reduced if we 
 impose a minimal fold-change requirement of 10%.
 
-```{r hcc5hmC-preproc-mdPlotTfit, cache=T, cache.vars='', fig.height=5, fig.width=11, fig.cap="HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
+
+```r
 #### CLEAR CACHE
 
 hcc5hmC_F_voom_tfit <- limma::treat(hcc5hmC_F_voom_fit, lfc=log2(1.10))
 hcc5hmC_F_voom_tfit_dt <- limma::decideTests(hcc5hmC_F_voom_tfit)
 
 cat("10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:\n")
-summary(hcc5hmC_F_voom_tfit_dt)
+```
 
+```
+## 10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:
+```
+
+```r
+summary(hcc5hmC_F_voom_tfit_dt)
+```
+
+```
+##        HCCvsControl
+## Down              3
+## NotSig        15550
+## Up              199
+```
+
+```r
 # log-fold-change vs ave-expr
 limma::plotMD(hcc5hmC_F_voom_efit,
  ylim = c(-0.5, 0.5),
@@ -1294,9 +1441,12 @@ rug(quantile(hcc5hmC_F_voom_efit$Amean, prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 1, lwd = 2
 )
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-mdPlotTfit-1.png" alt="HCC vs Control - Identified Genes at FDR = 0,05 and logFC &gt; 10%" width="1056" />
+<p class="caption">(\#fig:hcc5hmC-preproc-mdPlotTfit)HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%</p>
+</div>
 
 As noted above, the log-fold-change distribution for the up-represented genes
 is long-tailed in  comparison to log-fold-change distribution for the down-represented genes.
@@ -1316,7 +1466,8 @@ We can extract sigma and signal from the fit objects to get SNR values for each 
 to see in what SNR regime the 5hmC gene body data are.
 
  
-```{r hcc5hmC-preproc-altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation"}
+
+```r
 #### CLEAR CACHE
 lib.size <- colSums(hcc5hmC_F_dgel$counts)
 
@@ -1325,8 +1476,6 @@ sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
 sy <- sqrt(fit$sigma)
 
 CV <- sy/sx    
-
-
 ```
 
 <!-- DEBUG BCV from Section \@ref(analysis-of-coverage-variability) vs CV
@@ -1335,7 +1484,8 @@ boxplot(cbind(BCV_mtx, CV), outline=F)
 -->
 
 
-```{r hcc5hmC-preproc-plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
+
+```r
 #### CLEAR CACHE
 
 Effect <- abs(hcc5hmC_F_voom_efit$coefficients[,'HCCvsControl'])
@@ -1351,17 +1501,40 @@ SNR_quant <- quantile(SNR, prob=c((1:3)/4,.9))
 rug(SNR_quant,
     lwd = 2, ticksize = 0.05, col = 1
   )
+```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-preproc-plotSNR-1.png" alt="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile" width="960" />
+<p class="caption">(\#fig:hcc5hmC-preproc-plotSNR)Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile</p>
+</div>
 
+```r
 knitr::kable(t(SNR_quant),
   digits = 3,
   caption = paste(
     "SNR Quantiles") 
 ) %>% kableExtra::kable_styling(full_width = F)
-
-
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-preproc-plotSNR)SNR Quantiles</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> 25% </th>
+   <th style="text-align:right;"> 50% </th>
+   <th style="text-align:right;"> 75% </th>
+   <th style="text-align:right;"> 90% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.018 </td>
+   <td style="text-align:right;"> 0.036 </td>
+   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.082 </td>
+  </tr>
+</tbody>
+</table>
 
 These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
 best subset and forward selection fits (see  Hastie et al. (2017) [@Hastie:2017aa]).
@@ -1380,11 +1553,10 @@ for a quick reference guide.
 
 ## Cross-validation analysis setup 
 
-```{r hcc5hmC-glmnetFit-setParameters}
 
+```r
 K_FOLD <- 10
 trainP <- 0.8
-
 ```
 
 <!-- NOT CURRENTLY USED 
@@ -1392,9 +1564,10 @@ EPS <- 0.05    # Have no idea what "small" epsilon means
 -->
 
 
-First we divide the analysis dataset into `train` and `test` in a $`r trainP/(1-trainP)`$:1 ratio.  
+First we divide the analysis dataset into `train` and `test` in a $4$:1 ratio.  
 
-```{r hcc5hmC-glmnetFit-getTrainVal, cache=T, cache.vars=c('hcc5hmC_train_sampID_vec', 'hcc5hmC_test_sampID_vec','hcc5hmC_train_group_vec','hcc5hmC_test_group_vec','hcc5hmC_train_lcpm_mtx','hcc5hmC_test_lcpm_mtx')}
+
+```r
 ### CLEAR CACHE
 
 set.seed(1)
@@ -1415,14 +1588,57 @@ names(hcc5hmC_test_group_vec) <- hcc5hmC_F_dgel$samples[hcc5hmC_test_sampID_vec,
 knitr::kable(table(hcc5hmC_train_group_vec),
   caption="Train set") %>%
    kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-getTrainVal)Train set</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> hcc5hmC_train_group_vec </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 623 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 444 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 knitr::kable(table(hcc5hmC_test_group_vec),
   caption="Test set") %>%
    kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-getTrainVal)Test set</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> hcc5hmC_test_group_vec </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 155 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 111 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 hcc5hmC_train_lcpm_mtx <- t(hcc5hmC_lcpm_mtx[,hcc5hmC_train_sampID_vec])
 hcc5hmC_test_lcpm_mtx <- t(hcc5hmC_lcpm_mtx[,hcc5hmC_test_sampID_vec])
-
 ```
 
 We explore some glmnet fits and the "bet on sparsity".
@@ -1465,12 +1681,13 @@ stability of performance will be investigated in the next section.
 
 ***
 
-First we create folds for $`r K_FOLD`$-fold cross-validation of models fitted to
+First we create folds for $10$-fold cross-validation of models fitted to
 training data.  We'll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.
 
 
-```{r hcc5hmC-glmnetFit-getTrainFolds, cache=T, cache.vars='hcc5hmC_train_foldid_vec'}
+
+```r
 ### CLEAR CACHE
 
 # This is too variable, both in terms of fold size And composition
@@ -1497,8 +1714,80 @@ colnames(fold_in_tbl) <- as.character(sort(unique(hcc5hmC_train_foldid_vec)))
 knitr::kable(rbind(fold_in_tbl, fold_out_tbl[,colnames(fold_in_tbl)]),
   caption="training samples fold composition") %>%
    kableExtra::kable_styling(full_width = F)
- 
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-getTrainFolds)training samples fold composition</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1 </th>
+   <th style="text-align:right;"> 2 </th>
+   <th style="text-align:right;"> 3 </th>
+   <th style="text-align:right;"> 4 </th>
+   <th style="text-align:right;"> 5 </th>
+   <th style="text-align:right;"> 6 </th>
+   <th style="text-align:right;"> 7 </th>
+   <th style="text-align:right;"> 8 </th>
+   <th style="text-align:right;"> 9 </th>
+   <th style="text-align:right;"> 10 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control - In </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 560 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 560 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 560 </td>
+   <td style="text-align:right;"> 561 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC - In </td>
+   <td style="text-align:right;"> 399 </td>
+   <td style="text-align:right;"> 400 </td>
+   <td style="text-align:right;"> 400 </td>
+   <td style="text-align:right;"> 399 </td>
+   <td style="text-align:right;"> 400 </td>
+   <td style="text-align:right;"> 399 </td>
+   <td style="text-align:right;"> 400 </td>
+   <td style="text-align:right;"> 399 </td>
+   <td style="text-align:right;"> 400 </td>
+   <td style="text-align:right;"> 400 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Control - Out </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 62 </td>
+   <td style="text-align:right;"> 63 </td>
+   <td style="text-align:right;"> 62 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC - Out </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 45 </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 44 </td>
+  </tr>
+</tbody>
+</table>
 
 Note that the folds identify samples that are left-out of the training
 data for each fold fit.
@@ -1562,10 +1851,9 @@ This link function is called the *logit* function, and its inverse the *logistic
 function.
 
 
-```{r hcc5hmC-glmnetFit-logistic_f}
 
+```r
 logistic_f <- function(x) ifelse(is.nan(exp(x)/(1+exp(x))), 1, exp(x)/(1+exp(x)))
-
 ```
 
 We should also point out that the cv error rates quoted in various `glmnet` summaries 
@@ -1596,15 +1884,11 @@ performance in this data set.
 -->
 
 
-```{r hcc5hmC-glmnetFit-doMC, include=F}
-
-require(doMC)
-registerDoMC(cores=14)
-
-```
 
 
-```{r hcc5hmC-glmnetFit-fit-lasso, cache=T, cache.vars=c('hcc5hmC_cv_lasso')}
+
+
+```r
 ### CLEAR CACHE 
 
 start_time <-  proc.time()
@@ -1621,10 +1905,14 @@ hcc5hmC_cv_lasso <- glmnet::cv.glmnet(
 )
 
 message("lasso time: ", round((proc.time() - start_time)[3],2),"s")
-
 ```
 
-```{r hcc5hmC-glmnetFit-fit-ridge, cache=T, cache.vars=c('hcc5hmC_cv_ridge')}
+```
+## lasso time: 13.94s
+```
+
+
+```r
 start_time <-  proc.time()
 
 hcc5hmC_cv_ridge <- glmnet::cv.glmnet(
@@ -1639,11 +1927,15 @@ hcc5hmC_cv_ridge <- glmnet::cv.glmnet(
 )
 
 message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
+```
 
+```
+## ridge time: 131.08s
 ```
 
 
-```{r hcc5hmC-glmnetFit-fit-enet, cache=T, cache.vars=c('hcc5hmC_cv_enet')}
+
+```r
 ### CLEAR CACHE 
 start_time <-  proc.time()
 
@@ -1659,27 +1951,14 @@ hcc5hmC_cv_enet <- glmnet::cv.glmnet(
 )
 
 message("enet time: ", round((proc.time() - start_time)[3],2),"s")
+```
 
+```
+## enet time: 15.71s
 ```
 
 
-```{r hcc5hmC-glmnetFit-fit-lassoC, cache=T, cache.vars=c('hcc5hmC_cv_lassoC'), eval=F, echo=F}
-start_time <-  proc.time()
 
-hcc5hmC_cv_lassoC <-  glmnet::cv.glmnet(
- x=hcc5hmC_train_lcpm_mtx,
- y=hcc5hmC_train_group_vec,
- foldid=hcc5hmC_train_foldid_vec,
- alpha=1-EPS,
- family='binomial',
- type.measure = "class",
- keep=T,
- nlambda=30
-)
-
-message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
 
 <!--
 The ridge regression model takes over 10 times longer to compute.
@@ -1689,8 +1968,8 @@ The ridge regression model takes over 10 times longer to compute.
 Define plotting function.
 Maybe show in appendix??
 -->
-```{r hcc5hmC-glmnetFit-plot_cv_f,echo=T}
 
+```r
 plot_cv_f <- function(cv_fit, Nzero=T, ...) {
  
  suppressPackageStartupMessages(require(glmnet))
@@ -1774,16 +2053,22 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
   rownames(tmp) <- c('p', 'train', 'test')
   tmp 
 }
-
 ```
 
 Examine model performance.
 
-```{r hcc5hmC-glmnetFit-lookFits, cache=F, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=T, warnings=F,message=F}
 
+```r
  par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
 
  lasso_errors_mtx <- plot_cv_f(hcc5hmC_cv_lasso, ylim=c(0,.5))
+```
+
+```
+## Warning: package 'glmnet' was built under R version 4.0.2
+```
+
+```r
  title('lasso')
 
  rifge_errors_mtx <- plot_cv_f(hcc5hmC_cv_ridge, Nzero=F, ylim=c(0,.5))
@@ -1794,12 +2079,15 @@ Examine model performance.
 
  mtext(side=1, outer=T, cex=1.25, 'log(Lambda)')
  mtext(side=2, outer=T, cex=1.25, hcc5hmC_cv_lasso$name)
-
 ```
 
-```{r hcc5hmC-glmnetFit-printErrors, fig.cap='model errors'}
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-lookFits-1.png" alt="compare fits" width="1056" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-lookFits)compare fits</p>
+</div>
 
 
+```r
 errors_frm <- data.frame(
   lasso = lasso_errors_mtx, ridge = rifge_errors_mtx, enet = enet_errors_mtx
 )
@@ -1809,8 +2097,57 @@ knitr::kable(t(errors_frm),
  caption = 'Misclassifiaction error rates',
  digits=1) %>% 
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-printErrors)Misclassifiaction error rates</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> p </th>
+   <th style="text-align:right;"> train </th>
+   <th style="text-align:right;"> test </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> lasso_1se </td>
+   <td style="text-align:right;"> 68 </td>
+   <td style="text-align:right;"> 7.9 </td>
+   <td style="text-align:right;"> 10.9 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> lasso_min </td>
+   <td style="text-align:right;"> 226 </td>
+   <td style="text-align:right;"> 7.0 </td>
+   <td style="text-align:right;"> 10.2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ridge_1se </td>
+   <td style="text-align:right;"> 19100 </td>
+   <td style="text-align:right;"> 15.0 </td>
+   <td style="text-align:right;"> 18.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ridge_min </td>
+   <td style="text-align:right;"> 19100 </td>
+   <td style="text-align:right;"> 13.8 </td>
+   <td style="text-align:right;"> 17.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet_1se </td>
+   <td style="text-align:right;"> 160 </td>
+   <td style="text-align:right;"> 7.1 </td>
+   <td style="text-align:right;"> 11.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet_min </td>
+   <td style="text-align:right;"> 284 </td>
+   <td style="text-align:right;"> 6.6 </td>
+   <td style="text-align:right;"> 9.4 </td>
+  </tr>
+</tbody>
+</table>
 
 <br/>
 
@@ -1837,47 +2174,41 @@ between the relaxed lasso and the regular lasso.
 See \@ref(eq:blended) in Section \@ref(modeling-background).  
 
 
-```{r hcc5hmC-glmnetFit-fitLassoR, cache=T, cache.vars=c('hcc5hmC_cv_lassoR'), include=F}
 
-require(doMC)
-registerDoMC(cores=14)
-
-
-start_time <-  proc.time()
-
-hcc5hmC_cv_lassoR <-  glmnet::cv.glmnet(
- x=hcc5hmC_train_lcpm_mtx,
- y=hcc5hmC_train_group_vec,
- foldid=hcc5hmC_train_foldid_vec,
- # for stability
- alpha=1, ###-EPS,this didn't do anything
- relax=T,
- family='binomial',
- type.measure = "class",
- keep=T,
- nlambda=30
-)
-
-
-message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
 
 <!--
 The relaxed fit takes quite a bit longer.  
 -->
 
-```{r hcc5hmC-glmnetFit-lookLassoR, cache=T, dependson='fitLassoR', cache.vars='', fig.height=5, fig.width=6, fig.cap="Relaxed lasso fit", echo=T}
 
+```r
 library(glmnet)
 
 hcc5hmC_cv_lassoR_sum <- print(hcc5hmC_cv_lassoR)
-
-plot(hcc5hmC_cv_lassoR)
-
 ```
 
-```{r hcc5hmC-glmnetFit-lookLassoR2,cache=T, dependson='fitLassoR', cache.vars=''}
+```
+## 
+## Call:  glmnet::cv.glmnet(x = hcc5hmC_train_lcpm_mtx, y = hcc5hmC_train_group_vec,      type.measure = "class", foldid = hcc5hmC_train_foldid_vec,      keep = T, relax = T, alpha = 1, family = "binomial", nlambda = 30) 
+## 
+## Measure: Misclassification Error 
+## 
+##     Gamma  Lambda Measure       SE Nonzero
+## min   0.5 0.03790 0.06467 0.004819      38
+## 1se   0.5 0.04442 0.06560 0.005303      33
+```
+
+```r
+plot(hcc5hmC_cv_lassoR)
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-lookLassoR)Relaxed lasso fit</p>
+</div>
+
+
+```r
 # only report  1se
 ndx_1se <- match(hcc5hmC_cv_lassoR$lambda.1se, hcc5hmC_cv_lassoR$lambda)
 ndx_min <- match(hcc5hmC_cv_lassoR$lambda.min, hcc5hmC_cv_lassoR$lambda)
@@ -1941,8 +2272,29 @@ digits = 1,
 caption = "Relaxed lasso and blended mix error rates"
 ) %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-lookLassoR2)Relaxed lasso and blended mix error rates</caption>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> train_relaxed </td>
+   <td style="text-align:right;"> 7.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> train_blended </td>
+   <td style="text-align:right;"> 6.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> test_relaxed </td>
+   <td style="text-align:right;"> 10.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> test_blended </td>
+   <td style="text-align:right;"> 9.8 </td>
+  </tr>
+</tbody>
+</table>
 
 <br/>
 
@@ -1955,11 +2307,11 @@ by the test set.
 -->
 
 The *1se* lambda rule applied to the relaxed lasso fit selected a model with 
-$`r hcc5hmC_cv_lassoR$nzero[hcc5hmC_cv_lassoR$lambda==hcc5hmC_cv_lassoR$lambda.1se]`$ features,
+$68$ features,
 while for the blended mix model 
 (See \@ref(eq:blended) in Section \@ref(modeling-background))
 the *1se* lambda rule selected
-$`r hcc5hmC_cv_lassoR$relaxed$nzero.1se`$ features (vertical 
+$33$ features (vertical 
 dotted reference line in Figure \@ref(fig:lookLassoR)).
 This feature is pointed out in the 
 [glmnet 3.0 vignette](https://cran.r-project.org/web/packages/glmnet/vignettes/relax.pdf):
@@ -1977,8 +2329,8 @@ to get a sense of the trade-off.
 ### Training data out-of-fold ROC curves
 
 
-```{r hcc5hmC-glmnetFit-trainROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Train data out-of-sample ROCs"}
 
+```r
 # train
 # lasso
 ndx_1se <- match(hcc5hmC_cv_lasso$lambda.1se,hcc5hmC_cv_lasso$lambda)
@@ -1986,28 +2338,59 @@ train_lasso_oofProb_vec <- logistic_f(hcc5hmC_cv_lasso$fit.preval[,ndx_1se])
 train_lasso_roc <- pROC::roc(
  response = as.numeric(hcc5hmC_train_group_vec=='HCC'),
  predictor = train_lasso_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+```
+
+```
+## Setting direction: controls < cases
+```
+
+```r
 # enet
 ndx_1se <- match(hcc5hmC_cv_enet$lambda.1se,hcc5hmC_cv_enet$lambda)
 train_enet_oofProb_vec <- logistic_f(hcc5hmC_cv_enet$fit.preval[,ndx_1se])
 train_enet_roc <- pROC::roc(
  response = as.numeric(hcc5hmC_train_group_vec=='HCC'),
  predictor = train_enet_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 # lasso - relaxed
 ndx_1se <- match(hcc5hmC_cv_lassoR$lambda.1se,hcc5hmC_cv_lassoR$lambda)
 train_relaxed_oofProb_vec <- logistic_f(hcc5hmC_cv_lassoR$fit.preval[['g:0']][,ndx_1se])
 train_relaxed_roc <- pROC::roc(
  response = as.numeric(hcc5hmC_train_group_vec=='HCC'),
  predictor = train_relaxed_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 # blended mix (gamma=0.5)
 ndx_1se <- match(hcc5hmC_cv_lassoR$lambda.1se,hcc5hmC_cv_lassoR$lambda)
 train_blended_oofProb_vec <- logistic_f(hcc5hmC_cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
 train_blended_roc <- pROC::roc(
  response = as.numeric(hcc5hmC_train_group_vec=='HCC'),
  predictor = train_blended_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 plot(train_lasso_roc, col=col_vec[1])
 lines(train_enet_roc, col=col_vec[2])
 lines(train_relaxed_roc, col=col_vec[3])
@@ -2023,13 +2406,17 @@ legend('bottomright', title='AUC',
  text.col = col_vec[1:4],
  bty='n'
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-trainROC)Train data out-of-sample ROCs</p>
+</div>
 
 Compare thresholds for 90% Specificity:
 
-```{r hcc5hmC-glmnetFit-thresh90, cache=F, cache.vars='', fig.cap='90% Specificity Thresholds'}
 
+```r
  lasso_ndx <- with(as.data.frame(pROC::coords(train_lasso_roc, transpose=F)), 
    min(which(specificity >= 0.9)))
 
@@ -2055,14 +2442,51 @@ knitr::kable(spec90_frm,
   caption="Specificity = .90 Coordinates"
 ) %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-thresh90)Specificity = .90 Coordinates</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> threshold </th>
+   <th style="text-align:right;"> specificity </th>
+   <th style="text-align:right;"> sensitivity </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> lasso </td>
+   <td style="text-align:right;"> 0.358 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 0.932 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet </td>
+   <td style="text-align:right;"> 0.350 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 0.937 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> relaxed </td>
+   <td style="text-align:right;"> 0.356 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 0.860 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> blended </td>
+   <td style="text-align:right;"> 0.281 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 0.867 </td>
+  </tr>
+</tbody>
+</table>
 
 This is strange.
 
 
-```{r hcc5hmC-glmnetFit-trainOOFprops, cache=F, cache.vars='', fig.height=8, fig.width=10, fig.cap="Train data out-of-fold predicted probabilities"}
 
+```r
 par(mfrow = c(2, 2), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 2))
 
 # lasso
@@ -2104,8 +2528,12 @@ title("blended")
 
 mtext(side = 1, outer = T, "out-of-fold predicted probability", cex = 1.25)
 mtext(side = 2, outer = T, "density", cex = 1.25)
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-trainOOFprops)Train data out-of-fold predicted probabilities</p>
+</div>
 
 The relaxed lasso fit results in essentially dichotomized predicted probability
 distribution - predicted probabilities are very close to 0 or 1.
@@ -2113,68 +2541,10 @@ distribution - predicted probabilities are very close to 0 or 1.
  
 Look at test data ROC curves.
 
-```{r hcc5hmC-glmnetFit-testROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs", echo=T, include=F}
-### CLEAR CACHE 
-
-# train
-# lasso
-test_lasso_predProb_vec <- predict(
-  hcc5hmC_cv_lasso,
-  type = "resp",
-  lambda = "1se",
-  newx = hcc5hmC_test_lcpm_mtx
-)
-
-test_lasso_roc <- pROC::roc(
-  response = as.numeric(hcc5hmC_test_group_vec == "HCC"),
-  predictor = test_lasso_predProb_vec
-)
-
-# enet
-test_enet_predProb_vec <- predict(
-  hcc5hmC_cv_enet,
-  type = "resp",
-  lambda = "1se",
-  newx = hcc5hmC_test_lcpm_mtx
-)
-
-test_enet_roc <- pROC::roc(
-  response = as.numeric(hcc5hmC_test_group_vec == "HCC"),
-  predictor = test_enet_predProb_vec
-)
 
 
-# lassoR
-test_relaxed_predProb_vec <- predict(
-  hcc5hmC_cv_lassoR,
-  type = "resp",
-  lambda = "1se",
-  newx = hcc5hmC_test_lcpm_mtx,
-  gamma = 0,
-)
 
-test_relaxed_roc <- pROC::roc(
-  response = as.numeric(hcc5hmC_test_group_vec == "HCC"),
-  predictor = test_relaxed_predProb_vec
-)
-
-# blended mix (gamma=0.5)
-test_blended_predProb_vec <- predict(
-  hcc5hmC_cv_lassoR,
-  type = "resp",
-  lambda = "1se",
-  newx = hcc5hmC_test_lcpm_mtx,
-  gamma = 0.5,
-)
-
-test_blended_roc <- pROC::roc(
-  response = as.numeric(hcc5hmC_test_group_vec == "HCC"),
-  predictor = test_blended_predProb_vec
-)
-
-```
-
-```{r hcc5hmC-glmnetFit-testROC2, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs", echo=T, include=T}
+```r
 # plot all
 plot(test_lasso_roc, col = col_vec[1])
 lines(test_enet_roc, col = col_vec[2])
@@ -2192,13 +2562,17 @@ legend("bottomright",
   text.col = col_vec[1:4],
   bty='n'
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-testROC2)Test data out-of-sample ROCs</p>
+</div>
 
 Look at densities of predicted probabilities.
 
-```{r hcc5hmC-glmnetFit-testOOFprobs, cache=F, cache.vars='', fig.height=8, fig.width=10, fig.cap="Test data out-of-fold predicted probabilities", echo=T}
 
+```r
 par(mfrow = c(2, 2), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 2))
 
 # lasso
@@ -2243,11 +2617,15 @@ title("blended")
 
 mtext(side = 1, outer = T, "test set predicted probability", cex = 1.25)
 mtext(side = 2, outer = T, "density", cex = 1.25)
-
 ```
 
-```{r hcc5hmC-glmnetFit-fitPrevalByGroup, cache=F, cache.vars='', fig.height=8, fig.width=8,fig.cap="Predicted Probabilities - Train and Test",echo=T}
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-testOOFprobs)Test data out-of-fold predicted probabilities</p>
+</div>
 
+
+```r
 # Define plotting function
 bxpPredProb_f <- function(cv_fit, Gamma=NULL) {
   # Train - preval is out-of-fold linear predictor for training design points
@@ -2288,9 +2666,12 @@ title('relaxed')
 
 bxpPredProb_f(hcc5hmC_cv_lassoR, Gamma='g:0.5')
 title('blended')
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-fitPrevalByGroup)Predicted Probabilities - Train and Test</p>
+</div>
 
 <!--
 Another look - plot train and test set logistic curves with annotation.
@@ -2303,50 +2684,7 @@ Also shows that threshold is at 0.5
 SKIP
 -->
 
-```{r hcc5hmC-glmnetFit-trainLassoPred, cache=F, cache.vras='',fig.height=5, fig.width=11,fig.cap="train data lassofit", eval=F, echo=F}
 
-# Train - preval is out-of-fold linear predictor for training design points
-onese_ndx <- match(hcc5hmC_cv_lasso$lambda.1se,hcc5hmC_cv_lasso$lambda)
-train_1se_preval_vec <- hcc5hmC_cv_lasso$fit.preval[,onese_ndx]
-train_1se_predProb_vec <- logistic_f(train_1se_preval_vec)
-
-train_1se_class_vec <- predict(
- hcc5hmC_cv_lasso,
- newx=hcc5hmC_train_lcpm_mtx,
- s="lambda.1se",
- type='class'
-)
-#
-
-
-plot(
- x=train_1se_preval_vec, xlab='linear predictor (truncated)',
- y=train_1se_predProb_vec, ylab='predicted probability',
- col=ifelse(train_1se_class_vec == 'Control', 'green', 'red'),
- pch=ifelse(hcc5hmC_train_group_vec == 'Control', 1, 4),
- xlim=c(-5,5)
- )  
-
-# compare with fitted probabilities
-train_1se_link_vec <- predict(
- hcc5hmC_cv_lasso,
- newx=hcc5hmC_train_lcpm_mtx,
- s="lambda.1se",
- type='link'
-)
-
-train_1se_fittedProb_vec <- logistic_f(train_1se_link_vec)
-
-
-plot(
- x=train_1se_link_vec, xlab='linear predictor (truncated)',
- y=train_1se_fittedProb_vec, ylab='predicted probability',
- col=ifelse(train_1se_class_vec == 'Control', 'green', 'red'),
- pch=ifelse(hcc5hmC_train_group_vec == 'Control', 1, 4),
- xlim=c(-5,5)
- ) 
-
-```
   
 <!-- SKIP ALL THIS 
 We have seen above that assessments of model performance based on the out-of-fold 
@@ -2361,174 +2699,7 @@ glmnet predictions.
 
 -->
 
-```{r hcc5hmC-glmnetFit-confMtxTrainLasso, cache=F, cache.vars='', fig.cap="Train set confusion", echo=F, eval=F}
 
-### CANT USE THIS!!!
-# lasso 
-##########################
-# train - cv predicted
-SKIP_ALL_THIS <- function() {
-train_lasso_predClass_vec <- predict(
- hcc5hmC_cv_lasso,
- newx=hcc5hmC_train_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# COMPARE THIS
-mean(train_lasso_predClass_vec != hcc5hmC_train_group_vec)
-#[1] 0.03655108
-
-#WITH THIS
-hcc5hmC_cv_lasso
-     #Lambda Measure      SE Nonzero
-#min 0.01713 0.07029 0.00681      99
-#1se 0.01713 0.07029 0.00681      99
-
-# OR THIS
-hcc5hmC_cv_lasso$cvm[hcc5hmC_cv_lasso$lambda == hcc5hmC_cv_lasso$lambda.1se]
-#[1] 0.07029053
-
-### WE VERIFIED ABOVE THAT `cvn` id computed from out-of-fold predictions.
-### predict() returns train data predictions form the full fit
-}#SKIP_ALL_THIS
-
-# train - oof
-ndx_1se <- match(hcc5hmC_cv_lasso$lambda.1se,hcc5hmC_cv_lasso$lambda)
-train_lasso_oofProb_vec <- logistic_f(hcc5hmC_cv_lasso$fit.preval[,ndx_1se])
-train_lasso_oofClass_vec <- ifelse(
-   train_lasso_oofProb_vec > 0.5, 'HCC', 'Control')
-
-# test 
-test_lasso_predClass_vec <- predict(
- hcc5hmC_cv_lasso,
- newx=hcc5hmC_test_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# enet
-##########################
-# train - cv predicted ARE NOT cv!!!
-SKIP.THIS <- function() {
-train_enet_predClass_vec <- predict(
- hcc5hmC_cv_enet,
- newx=hcc5hmC_train_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-}#SKIP.THIS
-
-# train - oof
-ndx_1se <- match(hcc5hmC_cv_enet$lambda.1se,hcc5hmC_cv_enet$lambda)
-train_enet_oofProb_vec <- logistic_f(hcc5hmC_cv_enet$fit.preval[,ndx_1se])
-train_enet_oofClass_vec <- ifelse(
-   train_enet_oofProb_vec > 0.5, 'HCC', 'Control')
-
-# test
-test_enet_predClass_vec <- predict(
- hcc5hmC_cv_enet,
- newx=hcc5hmC_test_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-
-
-# relaxed lasso (gamma=0)
-##########################
-# train - cv predicted
-train_relaxed_predClass_vec <- predict(
- hcc5hmC_cv_lassoR,
- g=0,
- newx=hcc5hmC_train_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# RECALL: hcc5hmC_cv_lassoR$nzero[hcc5hmC_cv_lassoR$lambda==hcc5hmC_cv_lassoR$lambda.1se]
-# train - oof
-ndx_1se <- match(hcc5hmC_cv_lassoR$lambda.1se,hcc5hmC_cv_lassoR$lambda)
-train_relaxed_oofProb_vec <- logistic_f(hcc5hmC_cv_lassoR$fit.preval[['g:0']][,ndx_1se])
-train_relaxed_oofClass_vec <- ifelse(
-   train_relaxed_oofProb_vec > 0.5, 'HCC', 'Control')
-
-# test 
-test_relaxed_predClass_vec <- predict(
- hcc5hmC_cv_lassoR,
- g=0,
- newx=hcc5hmC_test_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-
-# blended mix (gamma=0.5)
-###############################
-# train - cv predicted - ARE NOT CV!!!
-train_blended_predClass_vec <- predict(
- hcc5hmC_cv_lassoR,
- g=0.5,
- newx=hcc5hmC_train_lcpm_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# RECALL $`r hcc5hmC_cv_lassoR$relaxed$nzero.1se`$ features (vertical 
-#  cv_blended_statlist <- hcc5hmC_cv_lassoR$relaxed$statlist[['g:0.5']]
-#  cv_blended_1se_error <- cv_blended_statlist$cvm[cv_blended_statlist$lambda==
-      #hcc5hmC_cv_lassoR$relaxed$lambda.1se]
-
-# train - oof
-cv_blended_statlist <- hcc5hmC_cv_lassoR$relaxed$statlist[['g:0.5']]
-ndx_1se <- match(hcc5hmC_cv_lassoR$relaxed$lambda.1se, cv_blended_statlist$lambda)
-train_blended_oofProb_vec <- logistic_f(hcc5hmC_cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
-train_blended_oofClass_vec <- ifelse(
-   train_blended_oofProb_vec > 0.5, 'HCC', 'Control')
-
-# test
-test_blended_predClass_vec <- predict(
- hcc5hmC_cv_lassoR,
- g=0.5,
- newx=hcc5hmC_test_lcpm_mtx,
- s='lambda.1se',
- type='class' 
-)
-
-# put it all together
-########################
-all_models_confustion_mtx <- rbind(
- train_lasso  = as.vector(table(train_lasso_predClass_vec, hcc5hmC_train_group_vec)),
- #train_lasso_oof = as.vector(table(train_lasso_oofClass_vec, hcc5hmC_train_group_vec)),
- test_lasso = as.vector(table(test_lasso_predClass_vec, hcc5hmC_test_group_vec)),
-
- train_enet  = as.vector(table(train_enet_predClass_vec, hcc5hmC_train_group_vec)),
- #train_enet_oof = as.vector(table(train_enet_oofClass_vec, hcc5hmC_train_group_vec)),
- test_enet = as.vector(table(test_enet_predClass_vec, hcc5hmC_test_group_vec)),
-
- train_relaxed  = as.vector(table(train_relaxed_predClass_vec, hcc5hmC_train_group_vec)),
- #train_relaxed_oof = as.vector(table(train_relaxed_oofClass_vec, hcc5hmC_train_group_vec)),
- test_relaxed = as.vector(table(test_relaxed_predClass_vec, hcc5hmC_test_group_vec)),
-
- train_blended  = as.vector(table(train_blended_predClass_vec, hcc5hmC_train_group_vec)),
- #train_blended_oof = as.vector(table(train_blended_oofClass_vec, hcc5hmC_train_group_vec)),
- test_blended = as.vector(table(test_blended_predClass_vec, hcc5hmC_test_group_vec))
-)
-colnames(all_models_confustion_mtx) <- c('C:C','C:H','H:C', 'H:H')
-
-
-all_models_confustionRates_mtx <- sweep(
- all_models_confustion_mtx, 1, rowSums(all_models_confustion_mtx), '/')
-
-all_models_confustionRates_mtx <- cbind(all_models_confustionRates_mtx,
-  error = rowSums(all_models_confustionRates_mtx[,2:3]))
-
-knitr::kable(100*all_models_confustionRates_mtx, 
-  caption="confusion: Columns are Truth:Predicted",
-  digits=1) %>%
-  kableExtra::kable_styling(full_width = F)
-
-```
 
 <!-- SKIPPED
 The out-of-fold error rates are larger for the relaxed lasso and blended fit models.
@@ -2543,8 +2714,8 @@ performance by combining model  predictions.  Note that the models
 considered here are not expected to compliment each other usefully
 as they are too similar in nature.
 
-```{r hcc5hmC-glmnetFit-misclassTrain, cache=F, cache.vars='', fig.height=5, fig.width=8, fig.cap="out-of-fold predicted probabilities at miscassified samples"}
 
+```r
 # NOTE: here we use computred oofClass rather than predClass 
 # as predClass extracted from predict() are fitted values.
 
@@ -2620,8 +2791,12 @@ legend('top', ncol=2, legend=colnames(missclass_oofProb_mtx),
  pch=1:4, bty='n')
 
 abline(h=0.5)
-    
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-misclassTrain)out-of-fold predicted probabilities at miscassified samples</p>
+</div>
 
 As we've seen above, predictions from lassoR  and the blended mix model 
 are basically dichotomous; 0 or 1.  Samples have been order by group, and
@@ -2632,8 +2807,8 @@ predicted probabilities greater than 0.5 are considered correct here.
 Now look at the same plot on the test data set.
 
 
-```{r hcc5hmC-glmnetFit-misclassTest, cache=F, cache.vars='', fig.height=5, fig.width=8, fig.cap="Test data predicted probabilities at miscassified samples"}
 
+```r
 test_lasso_predClass_vec <- predict(
  hcc5hmC_cv_lasso,
  newx=hcc5hmC_test_lcpm_mtx,
@@ -2702,8 +2877,12 @@ legend('top', ncol=2, legend=colnames(missclass_oofProb_mtx),
  pch=1:4, bty='n')
 
 abline(h=0.5)
-    
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-misclassTest)Test data predicted probabilities at miscassified samples</p>
+</div>
 
 The relaxed lasso fit results in essentially dichotomized predicted probability
 distribution - predicted probabilities are very close to 0 or 1.
@@ -2718,8 +2897,8 @@ This seems to indicate over-fitting in the relaxed lasso fit.
 
 ## Compare coefficient profiles
 
-```{r hcc5hmC-glmnetFit-compCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficient Profiles"}
 
+```r
 # lasso 
 ##########################
 # train - cv predicted
@@ -2805,22 +2984,44 @@ for(CC in 1:ncol(all_coef_frm)) {
   y=all_coef_frm[, CC], ylab=colnames(all_coef_frm)[CC],
   type='h', xaxt='n')
 }
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-compCoeffProf)Coefficient Profiles</p>
+</div>
 
 Note that there is little difference between the elastic net and the lasso
 in the selected features, and when the coefficient is zero in one set, it 
 is small in the other.  By contrast, the blended fit produces more shrinkage.
 
-```{r hcc5hmC-glmnetFit-zreros, fig.cap=''}
 
+```r
 knitr::kable(
 with(all_coef_frm, table(lassoZero=lasso==0, enetZero=enet==0)),
  caption='Zero Ceofficient: rows are lasso, columns enet') %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetFit-zreros)Zero Ceofficient: rows are lasso, columns enet</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> FALSE </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> FALSE </td>
+   <td style="text-align:right;"> 68 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TRUE </td>
+   <td style="text-align:right;"> 92 </td>
+  </tr>
+</tbody>
+</table>
 
 
 
@@ -2836,17 +3037,20 @@ lasso fit, or zero.
 
 We can also examine these with a scatter plot matrix.
 
-```{r hcc5hmC-glmnetFit-pairsCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficients from fits"}
 
-
+```r
 pairs(all_coef_frm,
   lower.panel = NULL,
   panel = function(x, y) {
     points(x, y, pch = 16, col = "blue")
   }
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-pairsCoeffProf)Coefficients from fits</p>
+</div>
 
 
 ## Examine feature selection
@@ -2877,7 +3081,8 @@ of the relationship between feature correlation and lasso vs enet
 feature selection.
 ```
 
-```{r hcc5hmC-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes"}
+
+```r
  suppressPackageStartupMessages(require(gplots))
 
 # train - cv predicted
@@ -2904,10 +3109,15 @@ lasso_coef_frm <- data.frame(
     ColSideColors=ifelse(hcc5hmC_train_group_vec=='Control', 'green','red'),
     dendrogram="both",
     main=paste('lasso genes - N =', nrow(lasso_coef_frm)-1))
-
 ```
 
-```{r hcc5hmC-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes"}
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-heatmapLasso)Lasso Model Genes</p>
+</div>
+
+
+```r
  suppressPackageStartupMessages(require(gplots))
 
 # train - cv predicted
@@ -2934,8 +3144,12 @@ enet_coef_frm <- data.frame(
     ColSideColors=ifelse(hcc5hmC_train_group_vec=='Control', 'green','red'),
     dendrogram="both",
     main=paste('enet genes - N =', nrow(enet_coef_frm)-1))
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetFit-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetFit-heatmapEnet)Enet Model Genes</p>
+</div>
 
 
 <!--chapter:end:04-glmnetFitsHCC5hmC.Rmd-->
@@ -3049,8 +3263,8 @@ sizes.
 First assemble the data set.  This entails simply re-combining the
 train and test data.
 
-```{r hcc5hmC-glmnetSuite-get-all-data, cache=T, cache.vars=c('hcc5hmC_all_lcpm_mtx', 'hcc5hmC_all_group_vec')}
 
+```r
 # combine train and test 
 hcc5hmC_all_lcpm_mtx <- rbind(hcc5hmC_train_lcpm_mtx, hcc5hmC_test_lcpm_mtx)
 
@@ -3070,8 +3284,27 @@ names(hcc5hmC_all_group_vec) <- c(
 knitr::kable(table(group = hcc5hmC_all_group_vec),
   caption = "samples by group") %>%
    kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuite-get-all-data)samples by group</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> group </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 778 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 555 </td>
+  </tr>
+</tbody>
+</table>
 
 Now fit the lasso model through cross-validation.
 Note that the results of a cv fit are random due to the
@@ -3081,8 +3314,8 @@ Here we will obtain sample consistency scores by averaging results
 over 30 cv runs.
 
 
-```{r hcc5hmC-glmnetSuite-lasso-fit-all, cache=T, cache.vars=c('hcc5hmC_cv_lassoAll_lst'), eval=F}
 
+```r
 set.seed(1)
 
 start_time <-  proc.time()
@@ -3101,22 +3334,18 @@ glmnet::cv.glmnet(
 )
 
 message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
-
 ```
 
 <!-- lasso-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r hcc5hmC-glmnetSuite-save-hcc5hmC_cv_lassoAll_lst, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars='', echo=F, eval=F}
- save(list='hcc5hmC_cv_lassoAll_lst', file=file.path("RData",'hcc5hmC_cv_lassoAll_lst'))
-```
-```{r hcc5hmC-glmnetSuite-load-hcc5hmC_cv_lassoAll_lst, cache=F, echo=F}
- load(file=file.path("RData",'hcc5hmC_cv_lassoAll_lst'))
-```
+
+
 
 
 Examine the fits.
 
-```{r hcc5hmC-glmnetSuite-plot-lassoAll, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
+
+```r
 ### CLEAR CACHE
 plot(
  log(hcc5hmC_cv_lassoAll_lst[[1]]$lambda),
@@ -3131,16 +3360,20 @@ for(JJ in 2:length(hcc5hmC_cv_lassoAll_lst))
   hcc5hmC_cv_lassoAll_lst[[JJ]]$cvm,
   lwd=2
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-plot-lassoAll-1.png" alt="Repeated cv lasso models fitted to all samples" width="576" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-plot-lassoAll)Repeated cv lasso models fitted to all samples</p>
+</div>
 
 These cv curves are remarkably consistent meaning that the determination of the size or sparsity
 of the model fitted through cross validation to the full data set is fairly precise:
 
 <!-- DONT CACHE THIS ??? -->
 
-```{r hcc5hmC-glmnetSuite-model-size-lassoAll, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
 
+```r
 library(magrittr)
 
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
@@ -3166,7 +3399,14 @@ boxplot(
  ylab=hcc5hmC_cv_lassoAll_lst[[1]]$name,
  ylim=c(0.06, .10)
 )
+```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-model-size-lassoAll-1.png" alt="Feature selection and estimated error by repeated cv lasso models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-model-size-lassoAll)Feature selection and estimated error by repeated cv lasso models</p>
+</div>
+
+```r
 # tabular format
 tmp <- data.frame(rbind(
  `features_1se` = summary(nzero_1se_vec),
@@ -3181,25 +3421,87 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
   caption = "Number of selected features",
   digits=1) %>%
    kableExtra::kable_styling(full_width = F)
-
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuite-model-size-lassoAll)Number of selected features</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Min. </th>
+   <th style="text-align:right;"> X1st.Qu. </th>
+   <th style="text-align:right;"> Median </th>
+   <th style="text-align:right;"> X3rd.Qu. </th>
+   <th style="text-align:right;"> Max. </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> features_1se </td>
+   <td style="text-align:right;"> 54.0 </td>
+   <td style="text-align:right;"> 102.0 </td>
+   <td style="text-align:right;"> 108.0 </td>
+   <td style="text-align:right;"> 132.5 </td>
+   <td style="text-align:right;"> 194.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features_min </td>
+   <td style="text-align:right;"> 118.0 </td>
+   <td style="text-align:right;"> 175.2 </td>
+   <td style="text-align:right;"> 200.0 </td>
+   <td style="text-align:right;"> 261.0 </td>
+   <td style="text-align:right;"> 365.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features:min-1se </td>
+   <td style="text-align:right;"> 10.0 </td>
+   <td style="text-align:right;"> 55.0 </td>
+   <td style="text-align:right;"> 86.0 </td>
+   <td style="text-align:right;"> 141.5 </td>
+   <td style="text-align:right;"> 247.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_1se </td>
+   <td style="text-align:right;"> 6.9 </td>
+   <td style="text-align:right;"> 7.6 </td>
+   <td style="text-align:right;"> 7.7 </td>
+   <td style="text-align:right;"> 8.1 </td>
+   <td style="text-align:right;"> 8.9 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_min </td>
+   <td style="text-align:right;"> 6.7 </td>
+   <td style="text-align:right;"> 7.1 </td>
+   <td style="text-align:right;"> 7.1 </td>
+   <td style="text-align:right;"> 7.3 </td>
+   <td style="text-align:right;"> 8.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error:1se-min </td>
+   <td style="text-align:right;"> 0.2 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 0.6 </td>
+   <td style="text-align:right;"> 0.7 </td>
+   <td style="text-align:right;"> 1.0 </td>
+  </tr>
+</tbody>
+</table>
 
 The number of features selected by the minimum lambda models are larger
 than the number selected by the "one standard error" rule models by a median
-of `r median(nzero_min_vec-nzero_1se_vec)`.
+of 86.
 The cv error rates obtained from the minimum lambda models are lower
 then  "one standard error" rule models error rates by a median of
-`r median(round(100*(error_1se_vec-error_min_vec), 1))`%.  
+0.6%.  
 
 The cv error rates observed in this set are comparable to the 
 rates observed in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-`r paste(round(table(group = hcc5hmC_all_group_vec)*.8), collapse=' vs ')` samples
+622 vs 444 samples
 to a data set with
-`r paste(round(table(group = hcc5hmC_all_group_vec)), collapse=' vs ')` samples.
+778 vs 555 samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -3209,8 +3511,8 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r hcc5hmC-glmnetSuite-get-sample-pred, cache=T, dependson='hcc5hmC-glmnetSuite-lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
+```r
 # predicted probs - 1se
 lassoAll_predResp_1se_mtx <- sapply(hcc5hmC_cv_lassoAll_lst, function(cv_fit) { 
   ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
@@ -3253,8 +3555,12 @@ plot(
 thres_1se <- quantile(lassoAll_predResp_1se_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
 thres_min <- quantile(lassoAll_predResp_min_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
 abline(v = thres_1se, h = thres_min, col='grey')
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-get-sample-pred-1.png" alt="Predicted probabilities - averaged over cv replicates" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-get-sample-pred)Predicted probabilities - averaged over cv replicates</p>
+</div>
 
 <!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
 We see that the minimum lambda models provide a better fit to the data,
@@ -3278,8 +3584,8 @@ for the two models, the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
-```{r hcc5hmC-glmnetSuite-get-sample-class, cache=T, dependson='hcc5hmC-glmnetSuite-get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
 
+```r
 lassoAll_predClass_1se_vec <- ifelse(
  lassoAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
 
@@ -3297,12 +3603,40 @@ knitr::kable(tmp,
   caption = "Classifications: rows are truth",
   digits=1) %>%
    kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuite-get-sample-class)Classifications: rows are truth</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1se-Control </th>
+   <th style="text-align:right;"> 1se-HCC </th>
+   <th style="text-align:right;"> min-Control </th>
+   <th style="text-align:right;"> min-HCC </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 700 </td>
+   <td style="text-align:right;"> 78 </td>
+   <td style="text-align:right;"> 700 </td>
+   <td style="text-align:right;"> 78 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 39 </td>
+   <td style="text-align:right;"> 516 </td>
+   <td style="text-align:right;"> 32 </td>
+   <td style="text-align:right;"> 523 </td>
+  </tr>
+</tbody>
+</table>
 
 When we fix the false positive rate at 10% (ie. the control samples error rates are fixed), 
 the `1se` model makes 39 false negative calls whereas the minimum lambda model makes 32.  A difference
-of `r round(100*(39-32)/555, 1)`%
+of 1.3%
 
 
 <!-- APPLIED TO THE FITTED PROBABILITIES
@@ -3316,7 +3650,8 @@ of computing sample consistency scores - what do these differences mean?
 
 To compute consistency scores, we will use the out-of-fold predicted probabilities.
 
-```{r hcc5hmC-glmnetSuite-get-sample-qual, cache=T, dependson='hcc5hmC-glmnetSuite-get-sample-pred', cache.vars=c('hcc5hmC_sample_1se_qual_vec','hcc5hmC_sample_min_qual_vec')}
+
+```r
 # get qual scores
 
 y <- as.numeric(hcc5hmC_all_group_vec == 'HCC')
@@ -3327,7 +3662,6 @@ hcc5hmC_sample_1se_qual_vec <- p^y*(1-p)^(1-y)
 # min
 p <- lassoAll_predResp_min_vec
 hcc5hmC_sample_min_qual_vec <- p^y*(1-p)^(1-y)
-
 ```
 
 
@@ -3336,8 +3670,8 @@ hcc5hmC_sample_min_qual_vec <- p^y*(1-p)^(1-y)
 We can examine consistency scores as a function of classification bin.
 
 
-```{r hcc5hmC-glmnetSuite-plot-qual-conf, cache=F, cache.vars='', dependson='hcc5hmC-glmnetSuite-get-sample-pred', fig.height=5, fig.width=8, fig.cap='quality scores by classification - Control=0, HCC=1'}
 
+```r
 y <- as.numeric(hcc5hmC_all_group_vec == 'HCC')
 
 # 1se
@@ -3377,9 +3711,12 @@ title('min lambda Model')
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
 mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Consistency vs Classification Outcome')
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-plot-qual-conf-1.png" alt="quality scores by classification - Control=0, HCC=1" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-plot-qual-conf)quality scores by classification - Control=0, HCC=1</p>
+</div>
 
 This figure shows that for false positive cases (0:1 or classifying a
 control as an affected case), the algorithm is *less certain* of its predicted
@@ -3392,11 +3729,9 @@ We will use the minimum lambda model to provide
 the fitted probabilities used to compute quality scores,
 but we could have used either one.
 
-```{r hcc5hmC-glmnetSuite-sample-qual}
 
+```r
 sample_qual_vec <- hcc5hmC_sample_min_qual_vec
-
-
 ```
 
 
@@ -3407,13 +3742,14 @@ full data set.  We have two sets of selected features - one for the
 one standard deviation rule model, and one for the minimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
-`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`,
+175.25-261,
 while the one standard error rule models had an IQR of
-`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`.
+102-132.5.
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r hcc5hmC-glmnetSuite-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+
+```r
 ### CLEAR CACHE
 
 
@@ -3440,19 +3776,23 @@ barplot(
  ylab='Number of features'
 
 )
-
-
 ```
 
-We see that `r genes_by_rep_1se_tbl['30']` features are included in every
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-feature-list-1se-1.png" alt="Feature list stability for one standard error rule models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-feature-list-1se)Feature list stability for one standard error rule models</p>
+</div>
+
+We see that 44 features are included in every
 cv replicate.  These make up between 
-`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`%
+33%
 and
-`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`%
+43%
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
-```{r hcc5hmC-glmnetSuite-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+
+```r
 ### CLEAR CACHE
 
 
@@ -3479,55 +3819,57 @@ barplot(
  ylab='Number of features'
 
 )
-
-
 ```
 
-We see that `r genes_by_rep_min_tbl['30']` features are included in every
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-feature-list-min-1.png" alt="Feature list stability for minimum lambda models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-feature-list-min)Feature list stability for minimum lambda models</p>
+</div>
+
+We see that 106 features are included in every
 cv replicate.  These make up between 
-`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`%
+41%
 and
-`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`%
+60%
 (Q1 and Q3) of the cv replicate min feature lists.
 We will consider the genes that are selected in all cv replicates as a 
 gene signature produced by each model.
 
 
-```{r hcc5hmC-glmnetSuite-minVs1seGenes}
 
+```r
 lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
 lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
-
 ```
 
-`r length(intersect(lasso_gene_sign_1se_vec, lasso_gene_sign_min_vec))` out of
-`r length(lasso_gene_sign_1se_vec)` of the genes in the 1se model gene signature
+44 out of
+44 of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.
 
 ## Simulation Design
 
 We are now ready to run the simulations.
 
-```{r hcc5hmC-glmnetSuite-simParms, cahce=F}
+
+```r
  SIM <- 30
  SIZE <- c(25, 50, 100, 200, 300)
  CV_REP <- 30
-
 ```
 
 Simluation parameters:  
 
-* Number of simulations : SIM = `r SIM`
+* Number of simulations : SIM = 30
 
-* Sample sizes: SIZE = `r SIZE`  
+* Sample sizes: SIZE = 25, 50, 100, 200, 300  
 
-* Number of CV Replicates:  CV_REP = `r CV_REP`
+* Number of CV Replicates:  CV_REP = 30
 
 
-We will repeat the simulation process SIM = `r SIM` times.
-For each simulation iteration, we will select `r max(SIZE)` Control and 
-`r max(SIZE)` HCC samples at random.  Models will be fitted and analyzed
-to balanced subsets of SIZE = `r SIZE`, in a `Matryoshka doll` manner to
+We will repeat the simulation process SIM = 30 times.
+For each simulation iteration, we will select 300 Control and 
+300 HCC samples at random.  Models will be fitted and analyzed
+to balanced subsets of SIZE = 25, 50, 100, 200, 300, in a `Matryoshka doll` manner to
 emulate a typical sample accrual process.  Note that in this accrual process
 there is no time effect - the accrual process is completely randomized.  In practice,
 there could be significant time effects.  For example, the first 25 HCC samples could come
@@ -3545,8 +3887,8 @@ Presented with results that look impressively good based on a small data set,
 one should definitely be skeptical of the promise of future equally good results.
 
 For a given simulation and a given sample size, we will obtain
-CV_REP = `r CV_REP` cross-validated lasso fits.  From these fits,
-we can obtain `r CV_REP` out-of-fold assessments of classification accuracy 
+CV_REP = 30 cross-validated lasso fits.  From these fits,
+we can obtain 30 out-of-fold assessments of classification accuracy 
 to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features.  We will want
 to examine how these stabilize as the sample size increases.
@@ -3554,8 +3896,8 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected HCC samples, the expected overlap between two randomly
-selected sets of HCC samples is `r round(100*(300/sum(hcc5hmC_all_group_vec=='HCC'))^2,1)`%.
-For Controls the expected overlap is `r round(100*(300/sum(hcc5hmC_all_group_vec=='Control'))^2,1)`%. 
+selected sets of HCC samples is 29.2%.
+For Controls the expected overlap is 14.9%. 
 
 **Reader Note**
 ```
@@ -3573,21 +3915,20 @@ To Do.
 To setup the simulation, we only need two master tables: one for the selection of Controls
 and one for the selection of HCC samples.
 
-```{r hcc5hmC-glmnetSuite-get-all-vec, cache=T, cache.vars=c('hcc5hmC_all_control_vec', 'hcc5hmC_all_affected_vec')}
 
+```r
 hcc5hmC_all_control_vec <- names(hcc5hmC_all_group_vec[hcc5hmC_all_group_vec=='Control']) 
 hcc5hmC_all_affected_vec <- names(hcc5hmC_all_group_vec[hcc5hmC_all_group_vec=='HCC'])  
-
 ```
 
-We have `r length(hcc5hmC_all_control_vec)` control sample IDs stored in `hcc5hmC_all_control_vec`
-and `r length(hcc5hmC_all_affected_vec)` affected sample IDs stored in `hcc5hmC_all_affected_vec`.
+We have 778 control sample IDs stored in `hcc5hmC_all_control_vec`
+and 555 affected sample IDs stored in `hcc5hmC_all_affected_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
   
-```{r hcc5hmC-glmnetSuite-getSimTable, cache=T, cache.vars=c('hcc5hmC_sim_control_mtx', 'hcc5hmC_sim_affected_mtx')}
 
+```r
 set.seed(12379)
 
 hcc5hmC_sim_control_mtx <- sapply(
@@ -3602,96 +3943,20 @@ hcc5hmC_sim_affected_mtx <- sapply(
  function(dummy) 
    sample(1:length(hcc5hmC_all_affected_vec), size =  max(SIZE))
 )
-
-
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`hcc5hmC_sim_control_mtx` and `hcc5hmC_sim_affected_mtx`, each with dimensions `r dim(hcc5hmC_sim_affected_mtx)`.
-Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
+`hcc5hmC_sim_control_mtx` and `hcc5hmC_sim_affected_mtx`, each with dimensions 300, 30.
+Within each simulation, we can run the analyses of size 25, 50, 100, 200, 300 by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the quality scores of the selected samples.
 Here we show results for the small sample sizes where variability will be the greatest.
 
-```{r hcc5hmC-glmnetSuite-look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
-### CLEAR CACHE
 
-all_control_qual_vec <- sample_qual_vec[hcc5hmC_all_control_vec]
-sim_control_qual_mtx <- sapply(
-  1:ncol(hcc5hmC_sim_control_mtx), 
-  function(CC) all_control_qual_vec[hcc5hmC_sim_control_mtx[,CC]]
- )
 
-all_affected_qual_vec <- sample_qual_vec[hcc5hmC_all_affected_vec]
-sim_affected_qual_mtx <- sapply(
-  1:ncol(hcc5hmC_sim_affected_mtx),  
-  function(CC) all_affected_qual_vec[hcc5hmC_sim_affected_mtx[,CC]]
- )
 
-# Get stage from SIZE 
-stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
-
-sim_control_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_control_qual_mtx), 
-  function(CC) c(split(sim_control_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-sim_affected_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_affected_qual_mtx), 
-  function(CC) c(split(sim_affected_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-# PLOT
-par(mfrow=c(2,1), mar = c(2,5,2,1))
-# control
-boxplot(
-  sim_control_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Consistency Score',
-  xaxt = 'n'
-)
-legend('bottomright', title = 'Stage', ncol = 2,
- legend = names(sim_control_qual_byStage_lst[1:5]), 
- text.col = 1:5,
- bty = 'n', horiz = F
-)
-sim_ndx <- which(names(sim_control_qual_byStage_lst) =='')
-abline(v = sim_ndx, col = 'grey')
-axis(
-  side = 1, 
-  at = sim_ndx-2, 
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("Control sample consistency by stage and simulation")
-
-# affected
-boxplot(
-  sim_affected_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Consistency Score',
-  xaxt = 'n'
-)
-sim_ndx <- which(names(sim_affected_qual_byStage_lst)=='')
-abline(v = which(names(sim_affected_qual_byStage_lst)==''), col = 'grey')
-axis(
-  side=1, 
-  at = sim_ndx-2,        
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("Affected sample consistency by stage and simulation")
-
-```
-
-```{r hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('sim_control_qual_mtx', 'sim_affected_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
+```r
 ### CLEAR CACHE
 
 all_control_qual_vec <- sample_qual_vec[hcc5hmC_all_control_vec]
@@ -3727,8 +3992,12 @@ boxplot(
   ylab = 'Consistency Score'
 )
 title("Affected sample consistency across simulations")
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY-1.png" alt="sample consistency by simulation run for size = 50 " width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY)sample consistency by simulation run for size = 50 </p>
+</div>
 
 In this figure, we are summarizing the quality measures of 50 samples per group across
 30 simulations, or random selections of control and affected samples.
@@ -3753,7 +4022,8 @@ per iteration, or 4 to 5 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r hcc5hmC-glmnetSuite-run-sim, cache=T, cache.vars='start_time', eval=F}
+
+```r
 start_time <- proc.time()
 
 # Get stage from SIZE
@@ -3860,40 +4130,31 @@ for (SIMno in 1:ncol(sim_control_qual_mtx)) {
   save(list = fName, file=file.path("RData", fName))
 
 }
-
 ```
 
 <!-- DEBUG - rename after the fact -->
 
-```{r hcc5hmC-glmnetSuite-RENAME-sim, echo=F, eval=F}
-sim_files_vec <- list.files('RData', '^sim_')
 
-for(FF in sim_files_vec){
-  load(file=file.path('RData', FF))
-  assign(paste0('hcc5hmC_',FF), get(FF))
-  save(list = paste0('hcc5hmC_',FF), file=file.path("RData", paste0('hcc5hmC_',FF)))
-  rm(list=c(FF, paste0('hcc5hmC_',FF)))
-}
-```
 
 
 ## Simulation results
 
-Recall the we have `r SIM` simulations, or randomly selected sets of HCC and Control samples,
-analyzed in increasing sizes of `r paste(SIZE, sep=', ')`, with
-`r CV_REP` repeated cross-validated lasso fits:
+Recall the we have 30 simulations, or randomly selected sets of HCC and Control samples,
+analyzed in increasing sizes of 25, 50, 100, 200, 300, with
+30 repeated cross-validated lasso fits:
 
 
-* Sample sizes: SIZE = `r SIZE`
+* Sample sizes: SIZE = 25, 50, 100, 200, 300
 
-* Number of CV Replicates:  CV_REP = `r CV_REP`
+* Number of CV Replicates:  CV_REP = 30
 
 
 
 First we extract simulation results and store into one big table
 (only showing the top of table here):
 
-```{r hcc5hmC-glmnetSuite-extract-sim-results, cache=T, cache.vars='hcc5hmC_lasso_sim_results_frm'}
+
+```r
 ### CLEAR CACHE
 sim_files_vec <- list.files('RData', '^hcc5hmC_sim_')
 
@@ -3934,26 +4195,176 @@ hcc5hmC_lasso_sim_results_frm <- do.call('rbind', lapply(1:length(sim_files_vec)
   data.frame(SimNo=paste0('Sim_',formatC(SIM_NO,width = 2,flag = 0)), cv_lst_to_frm(sim_cv_lst))
 } 
 )) 
-
 ```
 
 <!-- 
 Have a table of simulation results - `hcc5hmC_lasso_sim_results_frm`:
 -->
 
-```{r hcc5hmC-glmnetSuite-sum-table, cache=T, cache.vars='', fig.cap='Simution results table'}
+
+```r
 ### CLEAR CACHE
  
 knitr::kable(head(with(hcc5hmC_lasso_sim_results_frm, table(SimNo, Size))),
   caption = paste("Simulation Results - N Sim =", SIM)) %>%
    kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuite-sum-table)Simulation Results - N Sim = 30</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 25 </th>
+   <th style="text-align:right;"> 50 </th>
+   <th style="text-align:right;"> 100 </th>
+   <th style="text-align:right;"> 200 </th>
+   <th style="text-align:right;"> 300 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_02 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_03 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_04 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_05 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_06 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 knitr::kable(head(hcc5hmC_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
     caption = paste("Simulation Results - not showing genes column"),
     digits=2) %>%
    kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuite-sum-table)Simulation Results - not showing genes column</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> SimNo </th>
+   <th style="text-align:right;"> Size </th>
+   <th style="text-align:right;"> Rep </th>
+   <th style="text-align:right;"> p_1se </th>
+   <th style="text-align:right;"> p_min </th>
+   <th style="text-align:right;"> cv_1se </th>
+   <th style="text-align:right;"> cv_min </th>
+   <th style="text-align:right;"> test_1se </th>
+   <th style="text-align:right;"> test_min </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 40 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 0.26 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.31 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 26 </td>
+   <td style="text-align:right;"> 26 </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.29 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 32 </td>
+   <td style="text-align:right;"> 0.34 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;"> 0.31 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 0.29 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 27 </td>
+   <td style="text-align:right;"> 32 </td>
+   <td style="text-align:right;"> 0.26 </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.31 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Sim_01 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 27 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.30 </td>
+  </tr>
+</tbody>
+</table>
 
 
 ### Simulation Results - look at one simulation
@@ -3966,7 +4377,8 @@ fixed random selection of Control and Affected samples.  Recall that as
 we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
-```{r hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model cv error ref
@@ -4098,8 +4510,12 @@ axis(side=1, tick=F, line = LL,
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim-1.png" alt="lasso Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim)lasso Model Errors by Sample Size</p>
+</div>
 
 In this one simulation, we see:
 
@@ -4113,7 +4529,8 @@ latter may show lower propensity to produce optimistic cv error rates.
 
 #### Feature Selection 
 
-```{r hcc5hmC-glmnetSuite-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model nzero ref
@@ -4258,9 +4675,12 @@ axis(side=1, tick=F, line = LL,
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-features-bySim-1.png" alt="lasso Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-lasso-simRes-features-bySim)lasso Models Selected Features by Sample Size</p>
+</div>
 
 In this one simulation, we see:
 
@@ -4282,7 +4702,8 @@ summarizes the results of 30 simulations.  For a give sample size and a
 given simulation, each data point is the median across 30 repeated cv runs.
 
 
-```{r hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model cv error ref
@@ -4412,9 +4833,12 @@ title(paste('min lambda models'))
 
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across simulations'))
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim-1.png" alt="lasso Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim)lasso Model Errors by Sample Size</p>
+</div>
 
 <br/>
 
@@ -4433,7 +4857,8 @@ To appreciate how much variability can be encountered as samples are accrued ove
 we need to look at a typical path the assessed model accuracy estimates might take.
 
 
-```{r hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim, cache=T, cache.vrs='',fig.heigth=5, fig.width=10, fig.cap='lasso Model Error Paths'}
+
+```r
 ### CLEAR CACHE
 
 error_1se_Bysize_mtx <- do.call('cbind', lapply(error_1se_Bysize_lst, function(LL) LL))
@@ -4449,8 +4874,12 @@ for(JJ in 1:15)
 lines(x=1:ncol(cv_error_1se_Bysize_mtx), y=cv_error_1se_Bysize_mtx[JJ,],
  type='b', pch=JJ, col=JJ)
 title('Example Misclassification Error Paths')
-
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim-1.png" alt="lasso Model Error Paths" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim)lasso Model Error Paths</p>
+</div>
 
 
 We see how erratic the assessed model accuracy can be when sample sizes are small,
@@ -4465,28 +4894,14 @@ estimate of the achievable level of accuracy.
 <br/>
 
 
-```{r hcc5hmC-glmnetSuite-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
-### CLEAR CACHE
 
-error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(error_1se_Bysize_sum_frm) <- paste0('1se_', colnames(error_1se_Bysize_sum_frm))
-
-error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(error_min_Bysize_sum_frm) <- paste0('min_', colnames(error_min_Bysize_sum_frm))
-
-
-knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm),
-      caption = paste("lasso error rates by sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
 
 
 #### Feature Selection 
 
 
-```{r hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # Utility objects
@@ -4620,26 +5035,15 @@ legend('topleft',
 title(paste('min lambda models'))
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized across simulations'))
-
-
 ```
 
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim-1.png" alt="lasso Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim)lasso Models Selected Features by Sample Size</p>
+</div>
 
-```{r hcc5hmC-glmnetSuite-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
-### CLEAR CACHE
 
-p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(p_sing_1se_Bysize_sum_frm) <- paste0('1se_', colnames(p_sing_1se_Bysize_sum_frm))
- 
-p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(p_sing_min_Bysize_sum_frm) <- paste0('min_', colnames(p_sing_min_Bysize_sum_frm))
 
-knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
-    caption = paste("lasso feature selection by sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
 
 * The number of selected features increase with sample size.  
 
@@ -4663,8 +5067,8 @@ cv runs.
 
 * 1se_cv and 1se_test are the cross-validation and test set error rates, respectively.
 
-```{r hcc5hmC-glmnetSuite-small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance'}
 
+```r
 control_samp25_qual_vec <- apply(sim_control_qual_mtx[1:25, ], 2, median)
 affected_samp25_qual_vec <- apply(sim_affected_qual_mtx[1:25, ], 2, median)
 
@@ -4687,10 +5091,12 @@ panel.cor <- function(x, y){
 
 pairs(samp25_qual_error_mtx,
  lower.panel = panel.cor)
-   
-
-     
 ```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuite-small-sample-qual-1.png" alt="sample consistency vs classifier performance" width="672" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuite-small-sample-qual)sample consistency vs classifier performance</p>
+</div>
 
 We see that although the sample consistency effect is not strong, the consistency of the
 affected sample cohorts does have a measurable impact on the 1se cv and test set error
@@ -4743,35 +5149,16 @@ classifiaction problem.
 
 
 
-```{r brcaRNA-preproc-setup-preproc, include=F}
 
-
-### CLEAR CACHE
-   # file rmarkdown file management options: cache, figures
- figures_DIR <- file.path('Static', 'figures/')
- suppressMessages(dir.create(figures_DIR, recursive=T))
- knitr::opts_chunk$set(fig.path=paste0(figures_DIR))
-```
 
 ## Load the data
 
 <!-- THIS ENSURES NO EVALUATION TAKES PLACE BY DEFAULT -->
 <!-- TO TURN ON, SET eval=T                            -->
-```{r brcaRNA-preproc-chunk-options, include=FALSE, eval=F}
 
-
-library("knitr")
-opts_chunk$set(eval = FALSE)
-
-```
 
 <!-- Add base libraries -->
-```{r brcaRNA-preproc-libraries, include=FALSE, eval=T}
 
-### CLEAR CACHE
-library("magrittr")
-
-```
 
 
 The data that are available from NCBI GEO
@@ -4799,7 +5186,8 @@ unique object names.
 
 -->
 
-```{r brcaRNA-preproc-loadData, cache=F}
+
+```r
 ### CLEAR CACHE
 if (!("GSE96058" %in% rownames(installed.packages()))) {
   if (!requireNamespace("devtools", quietly = TRUE)) {
@@ -4819,7 +5207,6 @@ for(OBJ in data(package='GSE96058')$results[, 'Item'])
 assign(sub('GSE96058_','brcaRna_',OBJ), get(OBJ))
 
 detach(package:GSE96058, unload = T )
-
 ```
 
 For this analysis, we will consider ER+/HER2- samples only and
@@ -4830,9 +5217,8 @@ of sample size on classification performance.
 The outcome in this dataset will be aliased as `group`.
 
 
-```{r brcaRna-preproc-subsetSamples, cache=T, cache.vars=c('brcaRna_sampDesc','brcaRna_groupCol'), echo=T}
 
-
+```r
 ER_HER2_tbl <- with(brcaRna_sampDesc %>% 
  dplyr::filter(!grepl('repl$', title) & !isRepl & er_Status!='NA'   & her2_Status!='NA'),
  table(ER_HER2=paste(er_Status, her2_Status, sep='_'),
@@ -4842,7 +5228,37 @@ ER_HER2_tbl <- with(brcaRna_sampDesc %>%
  knitr::kable(ER_HER2_tbl,
   caption="ER, PR and HER2 Status")  %>%
   kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-preproc-subsetSamples)ER, PR and HER2 Status</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> ER_HER2 </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 0_0 </td>
+   <td style="text-align:right;"> 165 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 0_1 </td>
+   <td style="text-align:right;"> 63 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1_0 </td>
+   <td style="text-align:right;"> 2425 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1_1 </td>
+   <td style="text-align:right;"> 310 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 # Subset analysis samples
 brcaRna_sampDesc <-
   brcaRna_sampDesc %>%
@@ -4874,8 +5290,27 @@ with(brcaRna_sampDesc,
   caption="Samples used in this analysis") %>%
   kableExtra::kable_styling(full_width = F)
 )
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-preproc-subsetSamples)Samples used in this analysis</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> group </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> LumA </td>
+   <td style="text-align:right;"> 1492 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Other </td>
+   <td style="text-align:right;"> 933 </td>
+  </tr>
+</tbody>
+</table>
 
 
 The features in this dataset are gene expression indicators:
@@ -4900,9 +5335,8 @@ there are no apparent systematic effects in the data.
 
 Assemble feature matrix for `brcaRna_sampDesc` samples.
 
-```{r brcaRna-preproc-getfeatures, cache=T, cache.vars=c('brcaRna_genes_annot','brcaRna_geneExpression'), echo=T}
 
-
+```r
 # Start for geneExpression_repl1 data
 repl1_ndx <- which(is.element(colnames(brcaRna_geneExpression_repl1), brcaRna_sampDesc$sampID))
 brcaRna_geneExpression <- brcaRna_geneExpression_repl1[, repl1_ndx]
@@ -4920,7 +5354,6 @@ geneExpr_ndx <- match(brcaRna_sampDesc$sampID, colnames(brcaRna_geneExpression))
 if(any(is.na(geneExpr_ndx)))
 stop("brcaRna_sampDesc/brcaRna_geneExpression: sample mismatch") else
 brcaRna_geneExpression <- brcaRna_geneExpression[, rownames(brcaRna_sampDesc)]
-
 ```
 
 We first look at coverage - make sure there isn't too much disparity of coverage 
@@ -4928,9 +5361,8 @@ across samples. To detect shared variability, samples can be annotated and order
 according to sample features that may be linked to sample batch processing.  Here we 
 the samples have been ordered by group and sample id (an alias of geoAcc).
 
-```{r brcaRna-preproc-geneExprBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=T}
 
-
+```r
 par(mar = c(1, 3, 2, 3))
 boxplot(brcaRna_geneExpression,
   ylim = c(-4, 4), ylab='log2 Count',
@@ -4948,8 +5380,12 @@ SampleMedian <- apply(brcaRna_geneExpression, 2, median)
 abline(h = median(SampleMedian), col = "grey")
 axis(side = 4, at = round(median(SampleMedian), 2), 
   las = 2, col = "grey", line = 0, tick = F)
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-geneExprBxp-1.png" alt="Sample log2 count boxplots" width="960" />
+<p class="caption">(\#fig:brcaRna-preproc-geneExprBxp)Sample log2 count boxplots</p>
+</div>
 
 <!-- DNA - we're not looking at COVERAGE!!!! 
 Coverage/brcaRna_geneExpression level looks fairly comparable across samples.  It is sometimes helpful to
@@ -4957,26 +5393,7 @@ keep track of the actual coverage which can be adequetely tracked by distributio
 quantiles.
 -->
 
-```{r brcaRna-preproc-quantCountsA, echo=F, eval=F}
 
-
-brcaRna_geneExpression_quant <- apply(brcaRna_geneExpression, 2, function(CC) {
-  c(quantile(CC, prob = c(.15, (1:3) / 4)), totCovM = sum(CC) / 1e6)
-})
-
-brcaRna_geneExpression_quant2 <- apply(brcaRna_geneExpression_quant, 1, function(RR) {
-  quantile(RR, prob = (1:3) / 4)
-})
-
-knitr::kable(brcaRna_geneExpression_quant2,
-  digits = 1,
-  caption = paste(
-    "Coverage Summary - Columns are sample coverage quantiles and total coverage",
-    "\nRows are quartiles across samples"
-  )
-) %>% kableExtra::kable_styling(full_width = F)
-
-```
 
 <!-- SKIP
 From this table, we see that 25% of the samples have total coverage exceeding
@@ -4992,39 +5409,7 @@ two can be used interchangibly) -
 make sure the shapes of the distributions are not widely different.
 -->
 
-```{r brcaRna-preproc-rlr, cache=T, cache.vars='brcaRna_lcpm_mtx', fig.height=4, fig.width=10, fig.cap='Sample RLR', eval=T, echo=T,include=F,eval=F}
-### PLACE-HOLDER - THIS DOESNT APPLY TO FPKM ....
 
-#### CLEAR CACHE
-
-brcaRna_lcpm_mtx <- edgeR::cpm(brcaRna_featureCounts, log = T)
-median_vec <- apply(brcaRna_lcpm_mtx, 1, median)
-RLR_mtx <- sweep(brcaRna_lcpm_mtx, 1, median_vec, "-")
-
-par(mar = c(1, 3, 2, 1))
-boxplot(RLR_mtx,
-  xlab = "", ylab='Relative Log Representation', ylim = c(-.6, .6),
-  staplewex = 0, # remove horizontal whisker lines
-  staplecol = "white", # just to be totally sure :)
-  outline = F, # remove outlying points
-  whisklty = 0, # remove vertical whisker lines
-  las = 2, horizontal = F, xaxt = "n",
-  border = brcaRna_groupCol[brcaRna_sampDesc$group]
-)
-legend("top", legend = names(brcaRna_groupCol), 
-  text.col = brcaRna_groupCol, ncol = 2, bty = "n")
-# Add group Q1, Q3
-for (GRP in unique(brcaRna_sampDesc$group)) {
-  group_ndx <- which(brcaRna_sampDesc$group == GRP)
-  group_Q1Q3_mtx <- apply(RLR_mtx[, group_ndx], 2, 
-     quantile, prob = c(.25, .75))
-  abline(h = apply(group_Q1Q3_mtx, 1, median), 
-     col = brcaRna_groupCol[GRP], lwd = 2)
-}
-
-
-
-```
 
 <!-- SKIPPED
 We note that the HCC samples have slightly more variable coverage distribution.
@@ -5052,9 +5437,8 @@ skip the 2nd and 3rd steps in the above pipeline.
 
 To determine a sensible threshold we can begin by examining the shapes of the distributions.
 
-```{r brcaRna-preproc-densityGeneExpr, fig.height=4, fig.width=10, fig.cap='Sample gene expression densities', eval=T, echo=T}
 
-
+```r
 par(mar = c(4, 3, 2, 1))
 plot(density(brcaRna_geneExpression[, 1]), 
   col = brcaRna_groupCol[brcaRna_sampDesc$group[1]], lwd = 2, 
@@ -5069,16 +5453,20 @@ for (JJ in sample(2:ncol(brcaRna_geneExpression), size = 100)) {
 } # for(JJ
 legend("topright", legend = names(brcaRna_groupCol), 
   text.col = brcaRna_groupCol, bty = "n")
-
 ```
 
-`r EXPR_THR <- 0; SAMP_THR <- 25` 
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-densityGeneExpr-1.png" alt="Sample gene expression densities" width="960" />
+<p class="caption">(\#fig:brcaRna-preproc-densityGeneExpr)Sample gene expression densities</p>
+</div>
+
+ 
 
 In this analysis we will be using a nominal gene expression value of 
-`r EXPR_THR`, genes are deeemed to be `represented` if their expression is 
+0, genes are deeemed to be `represented` if their expression is 
 above this threshold, and not represented otherwise. 
 For this analysis we will require that genes be `represented` in at least 
-`r SAMP_THR` samples across the entire dataset to be retained for downstream analysis.
+25 samples across the entire dataset to be retained for downstream analysis.
 
 
 <!-- or at least 
@@ -5088,29 +5476,14 @@ greatest sequencing depth (library size TICKr round(LibSizeSum['Max.'],1)TICK mi
 
 Remove weakly represented genes and replot densities.
 
-`r weak_flg <- rowSums(brcaRna_geneExpression > EXPR_THR) < SAMP_THR `
-Removing `r round(100 * mean(weak_flg), 1)`%  of genes...
 
-```{r brcaRna-preproc-removeWeak, cache=T, cache.vars=c('brcaRna_geneExpression_F', 'brcaRna_genes_annotF', 'brcaRna_geneExpression'), echo=T, include=F}
-
-### CLEAR CACHE
-
-# Use suffix '_F' for Filtered genes
-brcaRna_geneExpression_F <- brcaRna_geneExpression[!weak_flg, ]
-
-genes.ndx <- match(rownames(brcaRna_geneExpression_F), brcaRna_genes_annot$geneSymbol)
-if(sum(is.na(genes.ndx))) stop("brcaRna_geneExpression/brcaRna_genes_annot mismatch")
-brcaRna_genes_annotF <- brcaRna_genes_annot[genes.ndx,]
-
-dim(brcaRna_geneExpression_F)
-
-rm(brcaRna_geneExpression)
-
-```
+Removing 37.1%  of genes...
 
 
-```{r brcaRna-preproc-densityGeneExpr2, fig.height=4, fig.width=10, fig.cap='Sample gene expression densities after removing weak genes', eval=T, echo=T}
 
+
+
+```r
 ### CLEAR CACHE
 
 par(mar = c(4, 3, 2, 1))
@@ -5127,8 +5500,12 @@ for (JJ in sample(2:ncol(brcaRna_geneExpression_F), size = 100)) {
 } # for(JJ
 legend("topright", legend = names(brcaRna_groupCol), 
   text.col = brcaRna_groupCol, bty = "n")
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-densityGeneExpr2-1.png" alt="Sample gene expression densities after removing weak genes" width="960" />
+<p class="caption">(\#fig:brcaRna-preproc-densityGeneExpr2)Sample gene expression densities after removing weak genes</p>
+</div>
 
 <!--
 Note that the $log_2(CMP)$ distribution is not quite symmetric.
@@ -5149,55 +5526,18 @@ Call the set 'AF', for set 'A', 'Filtered'.
 -->
 
 
-```{r brcaRna-preproc-getDGEL, cache=T, cache.var=c('brcaRna_F_dgel', 'brcaRna_F_lcpm_mtx'),eval=F,echo=F}
-#### CLEAR CACHE
-### DOES NOT APPLY TO FPKM DATA
-brcaRna_F_dgel <- edgeR::DGEList(
-  counts = brcaRna_featureCounts_F,
-  genes = brcaRna_genes_annot_F,
-  samples = brcaRna_sampDesc,
-  group = brcaRna_sampDesc$group
-)
-brcaRna_F_dgel <- edgeR::calcNormFactors(brcaRna_F_dgel)
-brcaRna_F_lcpm_mtx <- edgeR::cpm(brcaRna_F_dgel, log = T)
 
-# Save brcaRna_F_dgel to facilitate restarting
-# remove from final version
-save(list = "brcaRna_F_dgel", file = "RData/brcaRna_F_dgel")
-
-```
 
 <!-- SKIP
 Verify that the counts are properly normalized.
 -->
 
-```{r brcaRna-preproc-normedLcpmBxp, cache=T, fig.height=4, fig.width=10, fig.cap='Sample log2 count boxplots', echo=F, eval=F}
-#### CLEAR CACHE
-
-par(mar = c(1, 3, 2, 1))
-boxplot(bacaRna_F_lcpm_mtx,
-  ylim = c(1, 8), ylab='Normalized Log CPM',
-  staplewex = 0,       # remove horizontal whisker lines
-  staplecol = "white", # just to be totally sure :)
-  outline = F,         # remove outlying points
-  whisklty = 0,        # remove vertical whisker lines
-  las = 2, horizontal = F, xaxt = "n",
-  border = bacaRna_groupCol[bacaRna_sampDesc$group]
-)
-legend("top", legend = names(bacaRna_groupCol), text.col = bacaRna_groupCol,
-  ncol = 2, bty = "n")
-# Add reference lines
-SampleMedian <- apply(bacaRna_F_lcpm_mtx, 2, median)
-abline(h = median(SampleMedian), col = "grey")
-axis(side = 4, at = round(median(SampleMedian), 1),
-  las = 2, col = "grey", line = -1, tick = F)
-
-```
 
 
 
-```{r brcaRna-preproc-plotMDS, cache=T, fig.height=5, fig.width=10, fig.cap='MDS plots of gene expression values', echo=T}
 
+
+```r
 ### CLEAR CACHE
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
@@ -5219,9 +5559,12 @@ MDS.out <- limma::plotMDS(brcaRna_geneExpression_F[, samp_ndx],
   col = brcaRna_groupCol[brcaRna_sampDesc$group[samp_ndx]], pch = 1,
   dim.plot = 3:4
 )
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-plotMDS-1.png" alt="MDS plots of gene expression values" width="960" />
+<p class="caption">(\#fig:brcaRna-preproc-plotMDS)MDS plots of gene expression values</p>
+</div>
 
 The MDS plot, which is analogous to a PCA plot adapted to gene exression data,
 does not indicate strong clustering of samples.  
@@ -5230,20 +5573,7 @@ does not indicate strong clustering of samples.
 `glMDSPlot` from package `Glimma` provides an interactive MDS 
 plot that can extremely usful for exploration
 -->
-```{r brcaRna-preproc-GlMDSplot, echo=T,cache=T, cache.vars='', fig.height=6, fig.width=11,fig.cap="MDS plots of gene expression values", echo=F, eval=F}
 
-### CLEAR CACHE
-### CLEAR CACHE
-
-  groups = AF_dgel$samples[
-    samp_ndx,
-    c("group", "trainValGroup", "sampType", "tissue", "title", "stage")
-  ],
-  main = paste("MDS plot: filtered counts"), #### , Excluding outlier samples"),
-  path = ".", folder = figures_DIR,
-  html = paste0("GlMDSplot"), launch = F
-)
-```
 
 <!-- SKIP
 Link to glMDSPlot: 
@@ -5277,31 +5607,53 @@ Before proceeding with the statistical modeling used for the
 differential expression analysis, we need to set up a
 model design matrix.
 
-```{r brcaRna-preproc-DEADesign, cache=F, include=T, echo=T, include=T}
 
+```r
 ### CLEAR CACHE
 
 Design_mtx <- model.matrix( ~  -1 + group, data=brcaRna_sampDesc)
 colnames(Design_mtx) <- sub('group', '', colnames(Design_mtx))
 
 cat("colSums(Design_mtx):\n")
-colSums(Design_mtx)
+```
 
+```
+## colSums(Design_mtx):
+```
+
+```r
+colSums(Design_mtx)
+```
+
+```
+##  LumA Other 
+##  1492   933
+```
+
+```r
 Contrasts_mtx <- limma::makeContrasts(
   LumAvsOther = LumA  - Other,
   levels=colnames(Design_mtx))
 
 cat("Contrasts:\n")
+```
+
+```
+## Contrasts:
+```
+
+```r
 Contrasts_mtx
-
 ```
 
-```{r brcaRna-preproc-printDesign, echo=T, include=F}
-
-### CLEAR CACHE
- knitr::kable(head(Design_mtx), caption='Design Matrix') %>%
-  kableExtra::kable_styling(full_width = F)
 ```
+##        Contrasts
+## Levels  LumAvsOther
+##   LumA            1
+##   Other          -1
+```
+
+
 
 
 <!-- DOES NOT APPLY - NEED COUNTS!!!!
@@ -5316,14 +5668,7 @@ weights calculated by the voom function.  We apply this transformation next.
 
 -->
 
-```{r brcaRna-preproc-Voom1, cache=T, cache.vars=c('filteredCountsAF_voom'), fig.height=6, fig.width=11, fig.cap="Removing heteroscedascity", echo=F, eval=F}
 
-### CLEAR CACHE
-
-par(mfrow=c(1,1))
-brcaRna_geneExpression_F_voom <- limma::voom(brcaRna_geneExpression_F, Design_mtx, plot=T)
-
-```
 
 <!--
 
@@ -5360,10 +5705,8 @@ of interest, in our case LumA vs Other.
 
 Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
 
-```{r brcaRna-preproc-lmFit, cache=T, echo=T, cache.vars=c('brcaRna_geneExpression_F_efit','brcaRna_geneExpression_F_efit_dt', 'brcaRna_geneExpression_F_efit'),echo=T}
 
-
-
+```r
  brcaRna_geneExpression_F_fit <- limma::lmFit(brcaRna_geneExpression_F, Design_mtx)
  colnames(brcaRna_geneExpression_F_fit$coefficients) <- sub("\\(Intercept\\)", "Intercept",
  colnames(brcaRna_geneExpression_F_fit$coefficients) )
@@ -5379,8 +5722,27 @@ Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
  knitr::kable(t(summary(brcaRna_geneExpression_F_efit_dt)),
   caption="DE Results at FDR = 0.05") %>% 
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-preproc-lmFit)DE Results at FDR = 0.05</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Down </th>
+   <th style="text-align:right;"> NotSig </th>
+   <th style="text-align:right;"> Up </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> LumAvsOther </td>
+   <td style="text-align:right;"> 6301 </td>
+   <td style="text-align:right;"> 4498 </td>
+   <td style="text-align:right;"> 8607 </td>
+  </tr>
+</tbody>
+</table>
 
 ### Graphical representations of DE results: MD Plots {-}
 
@@ -5393,8 +5755,8 @@ We may also be interested in whether certain gene features are
 related to gene identification.  Gene GC content, for example, might be
 of interest.  We don't have GC content here - skip this for now.
 
-```{r brcaRna-preproc-mdPlotEfit, cache=T, cache.vars='GC_vec', fig.height=6, fig.width=11, fig.cap="LumA vs Other - Genes Identified at FDR = 0,05", echo=T}
 
+```r
 ###  CLEAR CACHE
 
 par(mfrow=c(1,2), mar=c(4.5,4.5,2,1),oma=c(1,1,2,0))
@@ -5442,7 +5804,14 @@ boxplot(split(
  cex.lab=1.5
 )
 axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
+```
 
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-mdPlotEfit-1.png" alt="LumA vs Other - Genes Identified at FDR = 0,05" width="1056" />
+<p class="caption">(\#fig:brcaRna-preproc-mdPlotEfit)LumA vs Other - Genes Identified at FDR = 0,05</p>
+</div>
+
+```r
 #SKIP - DONT HAVE ACGT 
 SKIP <- function() {
 # gc vs identification
@@ -5462,12 +5831,10 @@ axis(side=1, at=1:3, c('down', 'notDE', 'up'), cex.axis=1.5)
 
  #mtext(side=3, outer=T, cex=1.25, "Genes identified at adjusted p-value=0.05")
 }#SKIP
-
-
 ```
 
-```{r brcaRna-preproc-quantlogFC,echo=T}
 
+```r
 ###  CLEAR CACHE
 
 brcaRna_geneExpression_F_logFC_sum <- sapply(
@@ -5487,8 +5854,39 @@ knitr::kable(brcaRna_geneExpression_F_logFC_sum,
   digits = 2,
   caption = "log FC quartiles by gene identification") %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-preproc-quantlogFC)log FC quartiles by gene identification</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> down </th>
+   <th style="text-align:right;"> notDE </th>
+   <th style="text-align:right;"> up </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 25% </td>
+   <td style="text-align:right;"> -0.28 </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;"> 0.11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50% </td>
+   <td style="text-align:right;"> -0.17 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.20 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 75% </td>
+   <td style="text-align:right;"> -0.10 </td>
+   <td style="text-align:right;"> 0.03 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+</tbody>
+</table>
 
 
 Many genes are identified, and the effect sizes are substantial
@@ -5529,16 +5927,32 @@ from empirical Bayes moderated t-statistics with a minimum log-FC requirement.
 The number of differentially expressed genes are greatly reduced if we 
 impose a minimal fold-change requirement of 10%.
 
-```{r brcaRna-preproc-mdPlotTfit, cache=T, cache.vars='', fig.height=6, fig.width=11, fig.cap="LumA vs Other - Identified Genes at FDR = 0,05 and logFC > 10%",echo=T}
 
+```r
 ###  CLEAR CACHE
 
 brcaRna_geneExpression_F_tfit <- limma::treat(brcaRna_geneExpression_F_fit, lfc=log2(1.10))
 brcaRna_geneExpression_F_tfit_dt <- limma::decideTests(brcaRna_geneExpression_F_tfit)
 
 cat("10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:\n")
-summary(brcaRna_geneExpression_F_tfit_dt)
+```
 
+```
+## 10% FC Gene Identification Summary - voom, adjust.method = BH, p.value = 0.05:
+```
+
+```r
+summary(brcaRna_geneExpression_F_tfit_dt)
+```
+
+```
+##        LumAvsOther
+## Down          2569
+## NotSig       12519
+## Up            4318
+```
+
+```r
 # log-fold-change vs ave-expr
 limma::plotMD(brcaRna_geneExpression_F_efit,
  ylim = c(-0.6, 0.6),
@@ -5570,9 +5984,12 @@ rug(quantile(brcaRna_geneExpression_F_efit$Amean, prob = c(1, 2, 3) / 4),
   col = "purple",
   ticksize = .03, side = 1, lwd = 2
 )
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-mdPlotTfit-1.png" alt="LumA vs Other - Identified Genes at FDR = 0,05 and logFC &gt; 10%" width="1056" />
+<p class="caption">(\#fig:brcaRna-preproc-mdPlotTfit)LumA vs Other - Identified Genes at FDR = 0,05 and logFC > 10%</p>
+</div>
 
 <!-- 5hmc comment - does not apply to this RNA-Seq dataset
 As noted above, the log-fold-change distribution for the up-represented genes
@@ -5595,18 +6012,7 @@ to see in what SNR regime the 5hmC gene body data are.
 
 -->
  
-```{r brcaRna-preproc-altCV, cache=T, cache.vars='',fig.height=4, fig.width=6, fig.cap="Alternative CV Calculation", eval=F, echo=F}
 
-###  CLEAR CACHE
-
-fit <- brcaRna_geneExpression_F_efit
-sx <- fit$Amean + mean(log2(lib.size + 1)) - log2(1e+06)
-sy <- sqrt(fit$sigma)
-
-CV <- sy/sx    
-
-
-```
 
 <!-- DEBUG BCV from Section \@ref(analysis-of-coverage-variability) vs CV
 pairs(cbind(BCV_mtx, CV)) 
@@ -5614,8 +6020,8 @@ boxplot(cbind(BCV_mtx, CV), outline=F)
 -->
 
 
-```{r brcaRna-preproc-plotSNR,  fig.height=5, fig.width=10, fig.cap="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile",message=F, echo=T,include=T}
 
+```r
 ###  CLEAR CACHE
 
 Effect <- abs(brcaRna_geneExpression_F_efit$coefficients[,'LumAvsOther'])
@@ -5631,17 +6037,40 @@ SNR_quant <- quantile(SNR, prob=c((1:3)/4,.9))
 rug(SNR_quant,
     lwd = 2, ticksize = 0.05, col = 1
   )
+```
 
+<div class="figure">
+<img src="Static/figures/brcaRna-preproc-plotSNR-1.png" alt="Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile" width="960" />
+<p class="caption">(\#fig:brcaRna-preproc-plotSNR)Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile</p>
+</div>
 
+```r
 knitr::kable(t(SNR_quant),
   digits = 3,
   caption = paste(
     "SNR Quantiles") 
 ) %>% kableExtra::kable_styling(full_width = F)
-
-
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-preproc-plotSNR)SNR Quantiles</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> 25% </th>
+   <th style="text-align:right;"> 50% </th>
+   <th style="text-align:right;"> 75% </th>
+   <th style="text-align:right;"> 90% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.094 </td>
+   <td style="text-align:right;"> 0.217 </td>
+   <td style="text-align:right;"> 0.384 </td>
+   <td style="text-align:right;"> 0.56 </td>
+  </tr>
+</tbody>
+</table>
 
 <!--
 These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
@@ -5662,11 +6091,10 @@ We focus our analyses on lasso fits which tend to favor sparse models.
 We use the same CV set-up as was used with the HCC 5hmC-Seq data set
 (Section \@ref(hcc-5hmcseq-explore-sparsity)).
 
-```{r brcaRna-glmnetFit-setParameters}
 
+```r
 K_FOLD <- 10
 trainP <- 0.8
-
 ```
 
 <!-- NOT CURRENTLY USED 
@@ -5674,10 +6102,10 @@ EPS <- 0.05    # Have no idea what "small" epsilon means
 -->
 
 
-First we divide the analysis dataset into `train` and `test` in a $`r trainP/(1-trainP)`$:1 ratio.  
+First we divide the analysis dataset into `train` and `test` in a $4$:1 ratio.  
 
-```{r brcaRna-glmnetFit-getTrainVal, cache=T, cache.vars=c('brcaRna_train_sampID_vec', 'brcaRna_test_sampID_vec','brcaRna_train_group_vec','brcaRna_test_group_vec','brcaRna_train_geneExpr_mtx','brcaRna_test_geneExpr_mtx')}
 
+```r
 ### CLEAR CACHE
 
 set.seed(1)
@@ -5700,14 +6128,57 @@ names(brcaRna_test_group_vec) <- brcaRna_sampDesc[brcaRna_test_sampID_vec, 'samp
 knitr::kable(table(brcaRna_train_group_vec),
   caption="Train set") %>%
    kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-getTrainVal)Train set</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> brcaRna_train_group_vec </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Other </td>
+   <td style="text-align:right;"> 747 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LumA </td>
+   <td style="text-align:right;"> 1194 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 knitr::kable(table(brcaRna_test_group_vec),
   caption="Test set") %>%
    kableExtra::kable_styling(full_width = F)
+```
 
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-getTrainVal)Test set</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> brcaRna_test_group_vec </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Other </td>
+   <td style="text-align:right;"> 186 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LumA </td>
+   <td style="text-align:right;"> 298 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
 brcaRna_train_geneExpr_mtx <- t(brcaRna_geneExpression_F[,brcaRna_train_sampID_vec])
 brcaRna_test_geneExpr_mtx <- t(brcaRna_geneExpression_F[,brcaRna_test_sampID_vec])
-
 ```
 
 
@@ -5732,13 +6203,13 @@ stability of performance will be investigated in the next section.
 
 ***
 
-First we create folds for $`r K_FOLD`$-fold cross-validation of models fitted to
+First we create folds for $10$-fold cross-validation of models fitted to
 training data.  We'll use caret::createFolds to assign samples
 to folds while keeping the outcome ratios constant across folds.
 
 
-```{r brcaRna-glmnetFit-getTrainFolds, cache=T, cache.vars='brcaRna_train_foldid_vec'}
 
+```r
 # This is too variable, both in terms of fold size And composition
 #foldid_vec <- sample(1:10, size=length(brcaRna_train_group_vec), replace=T)
 ### CLEAR CACHE
@@ -5764,8 +6235,80 @@ colnames(fold_in_tbl) <- as.character(sort(unique(brcaRna_train_foldid_vec)))
 knitr::kable(rbind(fold_in_tbl, fold_out_tbl[,colnames(fold_in_tbl)]),
   caption="training samples fold composition") %>%
    kableExtra::kable_styling(full_width = F)
- 
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-getTrainFolds)training samples fold composition</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1 </th>
+   <th style="text-align:right;"> 2 </th>
+   <th style="text-align:right;"> 3 </th>
+   <th style="text-align:right;"> 4 </th>
+   <th style="text-align:right;"> 5 </th>
+   <th style="text-align:right;"> 6 </th>
+   <th style="text-align:right;"> 7 </th>
+   <th style="text-align:right;"> 8 </th>
+   <th style="text-align:right;"> 9 </th>
+   <th style="text-align:right;"> 10 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Other - In </td>
+   <td style="text-align:right;"> 673 </td>
+   <td style="text-align:right;"> 673 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 672 </td>
+   <td style="text-align:right;"> 673 </td>
+   <td style="text-align:right;"> 672 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LumA - In </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 1075 </td>
+   <td style="text-align:right;"> 1075 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 1075 </td>
+   <td style="text-align:right;"> 1075 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 1075 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 1075 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Other - Out </td>
+   <td style="text-align:right;"> 74 </td>
+   <td style="text-align:right;"> 74 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 75 </td>
+   <td style="text-align:right;"> 74 </td>
+   <td style="text-align:right;"> 75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LumA - Out </td>
+   <td style="text-align:right;"> 120 </td>
+   <td style="text-align:right;"> 119 </td>
+   <td style="text-align:right;"> 119 </td>
+   <td style="text-align:right;"> 120 </td>
+   <td style="text-align:right;"> 119 </td>
+   <td style="text-align:right;"> 119 </td>
+   <td style="text-align:right;"> 120 </td>
+   <td style="text-align:right;"> 119 </td>
+   <td style="text-align:right;"> 120 </td>
+   <td style="text-align:right;"> 119 </td>
+  </tr>
+</tbody>
+</table>
 
 Note that the folds identify samples that are left-out of the training
 data for each fold fit.
@@ -5773,21 +6316,13 @@ data for each fold fit.
 
 ## Fit and compare models 
 
-```{r brcaRna-glmnetFit-logistic_f, echo=F}
-
-logistic_f <- function(x) ifelse(is.nan(exp(x)/(1+exp(x))), 1, exp(x)/(1+exp(x)))
-
-```
-
-```{r brcaRna-glmnetFit-doMC, include=F}
-
-require(doMC)
-registerDoMC(cores=14)
-
-```
 
 
-```{r brcaRna-glmnetFit-fit-lasso, cache=T, cache.vars=c('brcaRna_cv_lasso')}
+
+
+
+
+```r
 ### CLEAR CACHE
 
 start_time <-  proc.time()
@@ -5804,10 +6339,14 @@ brcaRna_cv_lasso <- glmnet::cv.glmnet(
 )
 
 message("lasso time: ", round((proc.time() - start_time)[3],2),"s")
-
 ```
 
-```{r brcaRna-glmnetFit-fit-ridge, cache=T, cache.vars=c('brcaRna_cv_ridge')}
+```
+## lasso time: 31.48s
+```
+
+
+```r
 ### CLEAR CACHE
 
 start_time <-  proc.time()
@@ -5824,11 +6363,15 @@ brcaRna_cv_ridge <- glmnet::cv.glmnet(
 )
 
 message("ridge time: ", round((proc.time() - start_time)[3],2),"s")
+```
 
+```
+## ridge time: 258.93s
 ```
 
 
-```{r brcaRna-glmnetFit-fit-enet, cache=T, cache.vars=c('brcaRna_cv_enet')}
+
+```r
 ### CLEAR CACHE
 
 start_time <-  proc.time()
@@ -5845,28 +6388,14 @@ brcaRna_cv_enet <- glmnet::cv.glmnet(
 )
 
 message("enet time: ", round((proc.time() - start_time)[3],2),"s")
+```
 
+```
+## enet time: 32.59s
 ```
 
 
-```{r brcaRna-glmnetFit-fit-lassoC, cache=T, cache.vars=c('brcaRna_cv_lassoC'), eval=F, echo=F}
-### CLEAR CACHE
-start_time <-  proc.time()
 
-brcaRna_cv_lassoC <-  glmnet::cv.glmnet(
- x=brcaRna_train_geneExpr_mtx,
- y=brcaRna_train_group_vec,
- foldid=brcaRna_train_foldid_vec,
- alpha=1-EPS,
- family='binomial',
- type.measure = "class",
- keep=T,
- nlambda=30
-)
-
-message("lassoC time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
 
 <!--
 The ridge regression model takes over 10 times longer to compute.
@@ -5877,8 +6406,8 @@ Define plotting function.
 Maybe show in appendix??
 -->
 
-```{r brcaRna-glmnetFit-plot_cv_f,echo=T}
 
+```r
 ### CLEAR CACHE
 
 plot_cv_f <- function(cv_fit, Nzero=T, ...) {
@@ -5964,13 +6493,12 @@ plot_cv_f <- function(cv_fit, Nzero=T, ...) {
   rownames(tmp) <- c('p', 'train', 'test')
   tmp 
 }
-
 ```
 
 Examine model performance.
 
-```{r brcaRna-glmnetFit-lookFits, cache=F, cache.vars='', fig.height=5, fig.width=11, fig.cap="compare fits", echo=T, warnings=F,message=F}
 
+```r
 ### CLEAR CACHE
 
  par(mfrow=c(1,3), mar=c(5, 2, 3, 1), oma=c(3,2,0,0)) 
@@ -5986,11 +6514,15 @@ Examine model performance.
 
  mtext(side=1, outer=T, cex=1.25, 'log(Lambda)')
  mtext(side=2, outer=T, cex=1.25, brcaRna_cv_lasso$name)
-
 ```
 
-```{r brcaRna-glmnetFit-printErrors, fig.cap='model errors'}
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-lookFits-1.png" alt="compare fits" width="1056" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-lookFits)compare fits</p>
+</div>
 
+
+```r
 ### CLEAR CACHE
 
 
@@ -6003,8 +6535,57 @@ knitr::kable(t(errors_frm),
  caption = 'Misclassifiaction error rates',
  digits=1) %>% 
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-printErrors)Misclassifiaction error rates</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> p </th>
+   <th style="text-align:right;"> train </th>
+   <th style="text-align:right;"> test </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> lasso_1se </td>
+   <td style="text-align:right;"> 168 </td>
+   <td style="text-align:right;"> 11.9 </td>
+   <td style="text-align:right;"> 9.9 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> lasso_min </td>
+   <td style="text-align:right;"> 408 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 12.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ridge_1se </td>
+   <td style="text-align:right;"> 19406 </td>
+   <td style="text-align:right;"> 13.0 </td>
+   <td style="text-align:right;"> 13.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ridge_min </td>
+   <td style="text-align:right;"> 19406 </td>
+   <td style="text-align:right;"> 12.6 </td>
+   <td style="text-align:right;"> 12.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet_1se </td>
+   <td style="text-align:right;"> 315 </td>
+   <td style="text-align:right;"> 11.6 </td>
+   <td style="text-align:right;"> 11.2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet_min </td>
+   <td style="text-align:right;"> 671 </td>
+   <td style="text-align:right;"> 11.1 </td>
+   <td style="text-align:right;"> 13.4 </td>
+  </tr>
+</tbody>
+</table>
 
 <br/>
 
@@ -6026,49 +6607,43 @@ between the relaxed lasso and the regular lasso.
 See \@ref(eq:blended) in Section \@ref(modeling-background).  
 
 
-```{r brcaRna-glmnetFit-fitLassoR, cache=T, cache.vars=c('brcaRna_cv_lassoR'), include=F}
-### CLEAR CACHE
 
-require(doMC)
-registerDoMC(cores=14)
-
-
-start_time <-  proc.time()
-
-brcaRna_cv_lassoR <-  glmnet::cv.glmnet(
- x=brcaRna_train_geneExpr_mtx,
- y=brcaRna_train_group_vec,
- foldid=brcaRna_train_foldid_vec,
- # for stability
- alpha=1, ###-EPS,this didn't do anything
- relax=T,
- family='binomial',
- type.measure = "class",
- keep=T,
- nlambda=30
-)
-
-
-message("lassoR time: ", round((proc.time() - start_time)[3],2),"s")
-
-```
 
 <!--
 The relaxed fit takes quite a bit longer.  
 -->
 
-```{r brcaRna-glmnetFit-lookLassoR, cache=T, dependson='fitLassoR', cache.vars='', fig.height=5, fig.width=6, fig.cap="Relaxed lasso fit", echo=T}
+
+```r
 ### CLEAR CACHE
 
 library(glmnet)
 
 brcaRna_cv_lassoR_sum <- print(brcaRna_cv_lassoR)
-
-plot(brcaRna_cv_lassoR)
-
 ```
 
-```{r brcaRna-glmnetFit-lookLassoR2,cache=T, dependson='fitLassoR', cache.vars=''}
+```
+## 
+## Call:  glmnet::cv.glmnet(x = brcaRna_train_geneExpr_mtx, y = brcaRna_train_group_vec,      type.measure = "class", foldid = brcaRna_train_foldid_vec,      keep = T, relax = T, alpha = 1, family = "binomial", nlambda = 30) 
+## 
+## Measure: Misclassification Error 
+## 
+##     Gamma   Lambda Measure       SE Nonzero
+## min  1.00 0.005227  0.1139 0.006167     408
+## 1se  0.75 0.021823  0.1180 0.008812      91
+```
+
+```r
+plot(brcaRna_cv_lassoR)
+```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-lookLassoR-1.png" alt="Relaxed lasso fit" width="576" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-lookLassoR)Relaxed lasso fit</p>
+</div>
+
+
+```r
 ### CLEAR CACHE
 # only report  1se
 ndx_1se <- match(brcaRna_cv_lassoR$lambda.1se, brcaRna_cv_lassoR$lambda)
@@ -6133,8 +6708,29 @@ digits = 1,
 caption = "Relaxed lasso and blended mix error rates"
 ) %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-lookLassoR2)Relaxed lasso and blended mix error rates</caption>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> train_relaxed </td>
+   <td style="text-align:right;"> 11.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> train_blended </td>
+   <td style="text-align:right;"> 11.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> test_relaxed </td>
+   <td style="text-align:right;"> 11.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> test_blended </td>
+   <td style="text-align:right;"> 10.3 </td>
+  </tr>
+</tbody>
+</table>
 
 <br/>
 
@@ -6148,11 +6744,11 @@ by the test set.
 -->
 
 The *1se* lambda rule applied to the relaxed lasso fit selected a model with 
-$`r brcaRna_cv_lassoR$nzero[brcaRna_cv_lassoR$lambda==brcaRna_cv_lassoR$lambda.1se]`$ features,
+$168$ features,
 while for the blended mix model 
 (See \@ref(eq:blended) in Section \@ref(modeling-background))
 the *1se* lambda rule selected
-$`r brcaRna_cv_lassoR$relaxed$nzero.1se`$ features (vertical 
+$91$ features (vertical 
 dotted reference line in Figure \@ref(fig:lookLassoR)).
 This feature is pointed out in the 
 [glmnet 3.0 vignette](https://cran.r-project.org/web/packages/glmnet/vignettes/relax.pdf):
@@ -6170,7 +6766,8 @@ to get a sense of the trade-off.
 ### Training data out-of-fold ROC curves
 
 
-```{r brcaRna-glmnetFit-trainROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Train data out-of-sample ROCs"}
+
+```r
 ### CLEAR CACHE
 ### CLEAR CACHE
 
@@ -6181,28 +6778,59 @@ train_lasso_oofProb_vec <- logistic_f(brcaRna_cv_lasso$fit.preval[,ndx_1se])
 train_lasso_roc <- pROC::roc(
  response = as.numeric(brcaRna_train_group_vec=='LumA'),
  predictor = train_lasso_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+```
+
+```
+## Setting direction: controls < cases
+```
+
+```r
 # enet
 ndx_1se <- match(brcaRna_cv_enet$lambda.1se,brcaRna_cv_enet$lambda)
 train_enet_oofProb_vec <- logistic_f(brcaRna_cv_enet$fit.preval[,ndx_1se])
 train_enet_roc <- pROC::roc(
  response = as.numeric(brcaRna_train_group_vec=='LumA'),
  predictor = train_enet_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 # lasso - relaxed
 ndx_1se <- match(brcaRna_cv_lassoR$lambda.1se,brcaRna_cv_lassoR$lambda)
 train_relaxed_oofProb_vec <- logistic_f(brcaRna_cv_lassoR$fit.preval[['g:0']][,ndx_1se])
 train_relaxed_roc <- pROC::roc(
  response = as.numeric(brcaRna_train_group_vec=='LumA'),
  predictor = train_relaxed_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 # blended mix (gamma=0.5)
 ndx_1se <- match(brcaRna_cv_lassoR$lambda.1se,brcaRna_cv_lassoR$lambda)
 train_blended_oofProb_vec <- logistic_f(brcaRna_cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
 train_blended_roc <- pROC::roc(
  response = as.numeric(brcaRna_train_group_vec=='LumA'),
  predictor = train_blended_oofProb_vec)
+```
 
+```
+## Setting levels: control = 0, case = 1
+## Setting direction: controls < cases
+```
+
+```r
 plot(train_lasso_roc, col = col_vec[1])
 lines(train_enet_roc, col = col_vec[2])
 lines(train_relaxed_roc, col = col_vec[3])
@@ -6218,12 +6846,17 @@ legend('bottomright', title='AUC',
  text.col = col_vec[1:4],
  bty='n'
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-trainROC-1.png" alt="Train data out-of-sample ROCs" width="480" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-trainROC)Train data out-of-sample ROCs</p>
+</div>
 
 Compare thresholds for 90% Specificity:
 
-```{r brcaRna-glmnetFit-thresh90, cache=F, cache.vars='', fig.cap='90% Specificity Thresholds'}
+
+```r
 ### CLEAR CACHE
 
  lasso_ndx <- with(as.data.frame(pROC::coords(train_lasso_roc, transpose=F)), 
@@ -6251,13 +6884,51 @@ knitr::kable(spec90_frm,
   caption="Specificity = .90 Coordinates"
 ) %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-thresh90)Specificity = .90 Coordinates</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> threshold </th>
+   <th style="text-align:right;"> specificity </th>
+   <th style="text-align:right;"> sensitivity </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> lasso </td>
+   <td style="text-align:right;"> 0.672 </td>
+   <td style="text-align:right;"> 0.901 </td>
+   <td style="text-align:right;"> 0.850 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> enet </td>
+   <td style="text-align:right;"> 0.661 </td>
+   <td style="text-align:right;"> 0.901 </td>
+   <td style="text-align:right;"> 0.876 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> relaxed </td>
+   <td style="text-align:right;"> 1.000 </td>
+   <td style="text-align:right;"> 0.901 </td>
+   <td style="text-align:right;"> 0.625 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> blended </td>
+   <td style="text-align:right;"> 0.999 </td>
+   <td style="text-align:right;"> 0.901 </td>
+   <td style="text-align:right;"> 0.659 </td>
+  </tr>
+</tbody>
+</table>
 
 This is strange.
 
 
-```{r brcaRna-glmnetFit-trainOOFprops, cache=F, cache.vars='', fig.height=8, fig.width=10, fig.cap="Train data out-of-fold predicted probabilities"}
+
+```r
 ### CLEAR CACHE
 
 par(mfrow = c(2, 2), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 2))
@@ -6301,8 +6972,12 @@ title("blended")
 
 mtext(side = 1, outer = T, "out-of-fold predicted probability", cex = 1.25)
 mtext(side = 2, outer = T, "density", cex = 1.25)
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-trainOOFprops-1.png" alt="Train data out-of-fold predicted probabilities" width="960" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-trainOOFprops)Train data out-of-fold predicted probabilities</p>
+</div>
 
 The relaxed lasso fit results in essentially dichotomized predicted probability
 distribution - predicted probabilities are very close to 0 or 1.
@@ -6310,68 +6985,10 @@ distribution - predicted probabilities are very close to 0 or 1.
  
 Look at test data ROC curves.
 
-```{r brcaRna-glmnetFit-testROC, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs", echo=T, include=F}
-### CLEAR CACHE
-
-# train
-# lasso
-test_lasso_predProb_vec <- predict(
-  brcaRna_cv_lasso,
-  type = "resp",
-  lambda = "1se",
-  newx = brcaRna_test_geneExpr_mtx
-)
-
-test_lasso_roc <- pROC::roc(
-  response = as.numeric(brcaRna_test_group_vec == "LumA"),
-  predictor = test_lasso_predProb_vec
-)
-
-# enet
-test_enet_predProb_vec <- predict(
-  brcaRna_cv_enet,
-  type = "resp",
-  lambda = "1se",
-  newx = brcaRna_test_geneExpr_mtx
-)
-
-test_enet_roc <- pROC::roc(
-  response = as.numeric(brcaRna_test_group_vec == "LumA"),
-  predictor = test_enet_predProb_vec
-)
 
 
-# lassoR
-test_relaxed_predProb_vec <- predict(
-  brcaRna_cv_lassoR,
-  type = "resp",
-  lambda = "1se",
-  newx = brcaRna_test_geneExpr_mtx,
-  gamma = 0,
-)
 
-test_relaxed_roc <- pROC::roc(
-  response = as.numeric(brcaRna_test_group_vec == "LumA"),
-  predictor = test_relaxed_predProb_vec
-)
-
-# blended mix (gamma=0.5)
-test_blended_predProb_vec <- predict(
-  brcaRna_cv_lassoR,
-  type = "resp",
-  lambda = "1se",
-  newx = brcaRna_test_geneExpr_mtx,
-  gamma = 0.5,
-)
-
-test_blended_roc <- pROC::roc(
-  response = as.numeric(brcaRna_test_group_vec == "LumA"),
-  predictor = test_blended_predProb_vec
-)
-
-```
-
-```{r brcaRna-glmnetFit-testROC2, cache=F, cache.vars='', fig.height=5, fig.width=5, fig.cap="Test data out-of-sample ROCs", echo=T, include=T}
+```r
 ### CLEAR CACHE
 ### CLEAR CACHE
 # plot all
@@ -6391,12 +7008,17 @@ legend("bottomright",
   text.col = col_vec[1:4],
   bty='n'
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-testROC2-1.png" alt="Test data out-of-sample ROCs" width="480" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-testROC2)Test data out-of-sample ROCs</p>
+</div>
 
 Look at densities of predicted probabilities.
 
-```{r brcaRna-glmnetFit-testOOFprobs, cache=F, cache.vars='', fig.height=8, fig.width=10, fig.cap="Test data out-of-fold predicted probabilities", echo=T}
+
+```r
 ### CLEAR CACHE
 
 par(mfrow = c(2, 2), mar = c(3, 3, 2, 1), oma = c(2, 2, 2, 2))
@@ -6443,10 +7065,15 @@ title("blended")
 
 mtext(side = 1, outer = T, "test set predicted probability", cex = 1.25)
 mtext(side = 2, outer = T, "density", cex = 1.25)
-
 ```
 
-```{r brcaRna-glmnetFit-fitPrevalByGroup, cache=F, cache.vars='', fig.height=8, fig.width=8,fig.cap="Predicted Probabilities - Train and Test",echo=T}
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-testOOFprobs-1.png" alt="Test data out-of-fold predicted probabilities" width="960" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-testOOFprobs)Test data out-of-fold predicted probabilities</p>
+</div>
+
+
+```r
 ### CLEAR CACHE
 
 # Define plotting function
@@ -6489,9 +7116,12 @@ title('relaxed')
 
 bxpPredProb_f(brcaRna_cv_lassoR, Gamma='g:0.5')
 title('blended')
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-fitPrevalByGroup-1.png" alt="Predicted Probabilities - Train and Test" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-fitPrevalByGroup)Predicted Probabilities - Train and Test</p>
+</div>
 
 <!--
 Another look - plot train and test set logistic curves with annotation.
@@ -6504,51 +7134,7 @@ Also shows that threshold is at 0.5
 SKIP
 -->
 
-```{r brcaRna-glmnetFit-trainLassoPred, cache=F, cache.vras='',fig.height=5, fig.width=11,fig.cap="train data lassofit", eval=F, echo=F}
-### CLEAR CACHE
 
-# Train - preval is out-of-fold linear predictor for training design points
-onese_ndx <- match(brcaRna_cv_lasso$lambda.1se,brcaRna_cv_lasso$lambda)
-train_1se_preval_vec <- brcaRna_cv_lasso$fit.preval[,onese_ndx]
-train_1se_predProb_vec <- logistic_f(train_1se_preval_vec)
-
-train_1se_class_vec <- predict(
- brcaRna_cv_lasso,
- newx=brcaRna_train_geneExpr_mtx,
- s="lambda.1se",
- type='class'
-)
-#
-
-
-plot(
- x=train_1se_preval_vec, xlab='linear predictor (truncated)',
- y=train_1se_predProb_vec, ylab='predicted probability',
- col=ifelse(train_1se_class_vec == '_Other', 'green', 'red'),
- pch=ifelse(brcaRna_train_group_vec == '_Other', 1, 4),
- xlim=c(-5,5)
- )  
-
-# compare with fitted probabilities
-train_1se_link_vec <- predict(
- brcaRna_cv_lasso,
- newx=brcaRna_train_geneExpr_mtx,
- s="lambda.1se",
- type='link'
-)
-
-train_1se_fittedProb_vec <- logistic_f(train_1se_link_vec)
-
-
-plot(
- x=train_1se_link_vec, xlab='linear predictor (truncated)',
- y=train_1se_fittedProb_vec, ylab='predicted probability',
- col=ifelse(train_1se_class_vec == '_Other', 'green', 'red'),
- pch=ifelse(brcaRna_train_group_vec == '_Other', 1, 4),
- xlim=c(-5,5)
- ) 
-
-```
   
 <!-- SKIP ALL THIS 
 We have seen above that assessments of model performance based on the out-of-fold 
@@ -6563,175 +7149,7 @@ glmnet predictions.
 
 -->
 
-```{r brcaRna-glmnetFit-confMtxTrainLasso, cache=F, cache.vars='', fig.cap="Train set confusion", echo=F, eval=F}
-### CLEAR CACHE
 
-### CANT USE THIS!!!
-# lasso 
-##########################
-# train - cv predicted
-SKIP_ALL_THIS <- function() {
-train_lasso_predClass_vec <- predict(
- brcaRna_cv_lasso,
- newx=brcaRna_train_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# COMPARE THIS
-mean(train_lasso_predClass_vec != brcaRna_train_group_vec)
-#[1] 0.03655108
-
-#WITH THIS
-brcaRna_cv_lasso
-     #Lambda Measure      SE Nonzero
-#min 0.01713 0.07029 0.00681      99
-#1se 0.01713 0.07029 0.00681      99
-
-# OR THIS
-brcaRna_cv_lasso$cvm[brcaRna_cv_lasso$lambda == brcaRna_cv_lasso$lambda.1se]
-#[1] 0.07029053
-
-### WE VERIFIED ABOVE THAT `cvn` id computed from out-of-fold predictions.
-### predict() returns train data predictions form the full fit
-}#SKIP_ALL_THIS
-
-# train - oof
-ndx_1se <- match(brcaRna_cv_lasso$lambda.1se,brcaRna_cv_lasso$lambda)
-train_lasso_oofProb_vec <- logistic_f(brcaRna_cv_lasso$fit.preval[,ndx_1se])
-train_lasso_oofClass_vec <- ifelse(
-   train_lasso_oofProb_vec > 0.5, 'LumA', '_Other')
-
-# test 
-test_lasso_predClass_vec <- predict(
- brcaRna_cv_lasso,
- newx=brcaRna_test_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# enet
-##########################
-# train - cv predicted ARE NOT cv!!!
-SKIP.THIS <- function() {
-train_enet_predClass_vec <- predict(
- brcaRna_cv_enet,
- newx=brcaRna_train_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-}#SKIP.THIS
-
-# train - oof
-ndx_1se <- match(brcaRna_cv_enet$lambda.1se,brcaRna_cv_enet$lambda)
-train_enet_oofProb_vec <- logistic_f(brcaRna_cv_enet$fit.preval[,ndx_1se])
-train_enet_oofClass_vec <- ifelse(
-   train_enet_oofProb_vec > 0.5, 'LumA', '_Other')
-
-# test
-test_enet_predClass_vec <- predict(
- brcaRna_cv_enet,
- newx=brcaRna_test_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-
-
-# relaxed lasso (gamma=0)
-##########################
-# train - cv predicted
-train_relaxed_predClass_vec <- predict(
- brcaRna_cv_lassoR,
- g=0,
- newx=brcaRna_train_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# RECALL: brcaRna_cv_lassoR$nzero[brcaRna_cv_lassoR$lambda==brcaRna_cv_lassoR$lambda.1se]
-# train - oof
-ndx_1se <- match(brcaRna_cv_lassoR$lambda.1se,brcaRna_cv_lassoR$lambda)
-train_relaxed_oofProb_vec <- logistic_f(brcaRna_cv_lassoR$fit.preval[['g:0']][,ndx_1se])
-train_relaxed_oofClass_vec <- ifelse(
-   train_relaxed_oofProb_vec > 0.5, 'LumA', '_Other')
-
-# test 
-test_relaxed_predClass_vec <- predict(
- brcaRna_cv_lassoR,
- g=0,
- newx=brcaRna_test_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-
-# blended mix (gamma=0.5)
-###############################
-# train - cv predicted - ARE NOT CV!!!
-train_blended_predClass_vec <- predict(
- brcaRna_cv_lassoR,
- g=0.5,
- newx=brcaRna_train_geneExpr_mtx,
- s='lambda.1se',
- type='class'
-)
-
-# RECALL $`r brcaRna_cv_lassoR$relaxed$nzero.1se`$ features (vertical 
-#  cv_blended_statlist <- brcaRna_cv_lassoR$relaxed$statlist[['g:0.5']]
-#  cv_blended_1se_error <- cv_blended_statlist$cvm[cv_blended_statlist$lambda==
-      #brcaRna_cv_lassoR$relaxed$lambda.1se]
-
-# train - oof
-cv_blended_statlist <- brcaRna_cv_lassoR$relaxed$statlist[['g:0.5']]
-ndx_1se <- match(brcaRna_cv_lassoR$relaxed$lambda.1se, cv_blended_statlist$lambda)
-train_blended_oofProb_vec <- logistic_f(brcaRna_cv_lassoR$fit.preval[['g:0.5']][,ndx_1se])
-train_blended_oofClass_vec <- ifelse(
-   train_blended_oofProb_vec > 0.5, 'LumA', '_Other')
-
-# test
-test_blended_predClass_vec <- predict(
- brcaRna_cv_lassoR,
- g=0.5,
- newx=brcaRna_test_geneExpr_mtx,
- s='lambda.1se',
- type='class' 
-)
-
-# put it all together
-########################
-all_models_confustion_mtx <- rbind(
- train_lasso  = as.vector(table(train_lasso_predClass_vec, brcaRna_train_group_vec)),
- #train_lasso_oof = as.vector(table(train_lasso_oofClass_vec, brcaRna_train_group_vec)),
- test_lasso = as.vector(table(test_lasso_predClass_vec, brcaRna_test_group_vec)),
-
- train_enet  = as.vector(table(train_enet_predClass_vec, brcaRna_train_group_vec)),
- #train_enet_oof = as.vector(table(train_enet_oofClass_vec, brcaRna_train_group_vec)),
- test_enet = as.vector(table(test_enet_predClass_vec, brcaRna_test_group_vec)),
-
- train_relaxed  = as.vector(table(train_relaxed_predClass_vec, brcaRna_train_group_vec)),
- #train_relaxed_oof = as.vector(table(train_relaxed_oofClass_vec, brcaRna_train_group_vec)),
- test_relaxed = as.vector(table(test_relaxed_predClass_vec, brcaRna_test_group_vec)),
-
- train_blended  = as.vector(table(train_blended_predClass_vec, brcaRna_train_group_vec)),
- #train_blended_oof = as.vector(table(train_blended_oofClass_vec, brcaRna_train_group_vec)),
- test_blended = as.vector(table(test_blended_predClass_vec, brcaRna_test_group_vec))
-)
-colnames(all_models_confustion_mtx) <- c('C:C','C:H','H:C', 'H:H')
-
-
-all_models_confustionRates_mtx <- sweep(
- all_models_confustion_mtx, 1, rowSums(all_models_confustion_mtx), '/')
-
-all_models_confustionRates_mtx <- cbind(all_models_confustionRates_mtx,
-  error = rowSums(all_models_confustionRates_mtx[,2:3]))
-
-knitr::kable(100*all_models_confustionRates_mtx, 
-  caption="confusion: Columns are Truth:Predicted",
-  digits=1) %>%
-  kableExtra::kable_styling(full_width = F)
-
-```
 
 <!-- SKIPPED
 The out-of-fold error rates are larger for the relaxed lasso and blended fit models.
@@ -6746,7 +7164,8 @@ performance by combining model  predictions.  Note that the models
 considered here are not expected to compliment each other usefully
 as they are too similar in nature.
 
-```{r brcaRna-glmnetFit-misclassTrain, cache=F, cache.vars='', fig.height=5, fig.width=8, fig.cap="out-of-fold predicted probabilities at miscassified samples"}
+
+```r
 ### CLEAR CACHE
 
 # NOTE: here we use computred oofClass rather than predClass 
@@ -6821,8 +7240,12 @@ legend('top', ncol=2, legend=colnames(missclass_oofProb_mtx),
  pch=1:4, bty='n')
 
 abline(h=0.5)
-    
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-misclassTrain-1.png" alt="out-of-fold predicted probabilities at miscassified samples" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-misclassTrain)out-of-fold predicted probabilities at miscassified samples</p>
+</div>
 
 As we've seen above, predictions from lassoR  and the blended mix model 
 are basically dichotomous; 0 or 1.  Samples have been order by group, and
@@ -6833,7 +7256,8 @@ predicted probabilities greater than 0.5 are considered correct here.
 Now look at the same plot on the test data set.
 
 
-```{r brcaRna-glmnetFit-misclassTest, cache=F, cache.vars='', fig.height=5, fig.width=8, fig.cap="Test data predicted probabilities at miscassified samples"}
+
+```r
 ### CLEAR CACHE
 
 test_lasso_predClass_vec <- predict(
@@ -6904,8 +7328,12 @@ legend('top', ncol=2, legend=colnames(missclass_oofProb_mtx),
  pch=1:4, bty='n')
 
 abline(h=0.5)
-    
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-misclassTest-1.png" alt="Test data predicted probabilities at miscassified samples" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-misclassTest)Test data predicted probabilities at miscassified samples</p>
+</div>
 
 The relaxed lasso fit results in essentially dichotomized predicted probability
 distribution - predicted probabilities are very close to 0 or 1.
@@ -6920,7 +7348,8 @@ in the relaxed lasso fit.
 
 ## Compare coefficient profiles
 
-```{r brcaRna-glmnetFit-compCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficient Profiles"}
+
+```r
 ### CLEAR CACHE
 
 # lasso 
@@ -7008,23 +7437,49 @@ for(CC in 1:ncol(all_coef_frm)) {
   y=all_coef_frm[, CC], ylab=colnames(all_coef_frm)[CC],
   type='h', xaxt='n')
 }
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-compCoeffProf-1.png" alt="Coefficient Profiles" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-compCoeffProf)Coefficient Profiles</p>
+</div>
 
 Note that there is little difference between the elastic net and the lasso
 in the selected features, and when the coefficient is zero in one set, it 
 is smaell in the other.  By contrast, the blended fit produces more shrinkage.
 
-```{r brcaRna-glmnetFit-zreros, fig.cap=''}
+
+```r
 ### CLEAR CACHE
 
 knitr::kable(
 with(all_coef_frm, table(lassoZero=lasso==0, enetZero=enet==0)),
  caption='Zero Ceofficient: rows are lasso, columns enet') %>%
   kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brcaRna-glmnetFit-zreros)Zero Ceofficient: rows are lasso, columns enet</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> FALSE </th>
+   <th style="text-align:right;"> TRUE </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> FALSE </td>
+   <td style="text-align:right;"> 168 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TRUE </td>
+   <td style="text-align:right;"> 147 </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+</tbody>
+</table>
 
 
 
@@ -7040,7 +7495,8 @@ lasso fit, or zero.
 
 We can also examine these with a scatter plot matrix.
 
-```{r brcaRna-glmnetFit-pairsCoeffProf, cache=F, cache.vars='', fig.height=6, fig.width=8, fig.cap="Coefficients from fits"}
+
+```r
 ### CLEAR CACHE
 
 
@@ -7050,8 +7506,12 @@ pairs(all_coef_frm,
     points(x, y, pch = 16, col = "blue")
   }
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-pairsCoeffProf-1.png" alt="Coefficients from fits" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-pairsCoeffProf)Coefficients from fits</p>
+</div>
 
 
 ## Examine feature selection
@@ -7082,7 +7542,8 @@ of the relationship between feature correlation and lasso vs enet
 feature selection.
 ```
 
-```{r brcaRna-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes"}
+
+```r
 ### CLEAR CACHE
  suppressPackageStartupMessages(require(gplots))
 
@@ -7110,10 +7571,15 @@ lasso_coef_frm <- data.frame(
     ColSideColors=ifelse(brcaRna_train_group_vec=='_Other', 'green','red'),
     dendrogram="both",
     main=paste('lasso genes - N =', nrow(lasso_coef_frm)-1))
-
 ```
 
-```{r brcaRna-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes"}
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-heatmapLasso)Lasso Model Genes</p>
+</div>
+
+
+```r
 ### CLEAR CACHE
  suppressPackageStartupMessages(require(gplots))
 
@@ -7141,8 +7607,12 @@ enet_coef_frm <- data.frame(
     ColSideColors=ifelse(brcaRna_train_group_vec=='_Other', 'green','red'),
     dendrogram="both",
     main=paste('enet genes - N =', nrow(enet_coef_frm)-1))
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brcaRna-glmnetFit-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
+<p class="caption">(\#fig:brcaRna-glmnetFit-heatmapEnet)Enet Model Genes</p>
+</div>
 
 
 <!--chapter:end:07-glmnetFitsBrCaRNASeq.Rmd-->
@@ -7171,7 +7641,8 @@ sizes.
 First assemble the data set.  This entails simply re-combining the
 train and test data.
 
-```{r brca-rnaseq-get-all-data, cache=T, cache.vars=c('brcaRna_all_geneExpr_mtx', 'brcaRna_all_group_vec')}
+
+```r
 ### CLEAR CACHE
 
 # combine train and test 
@@ -7193,8 +7664,27 @@ names(brcaRna_all_group_vec) <- c(
 knitr::kable(table(group = brcaRna_all_group_vec),
   caption = "samples by group") %>%
    kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brca-rnaseq-get-all-data)samples by group</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> group </th>
+   <th style="text-align:right;"> Freq </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> LumA </td>
+   <td style="text-align:right;"> 1492 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Other </td>
+   <td style="text-align:right;"> 933 </td>
+  </tr>
+</tbody>
+</table>
 
 Now fit the losso model through cross-validation.
 Note that the results of a cv fit are random due to the
@@ -7204,8 +7694,8 @@ Here we will obtain sample consistency scores by averaging results
 over 30 cv runs.
 
 
-```{r brca-rnaseq-lasso-fit-all, cache=T, cache.vars=c('BrCa_cv_lassoAll_lst'), eval=F}
 
+```r
 set.seed(1)
 
 start_time <-  proc.time()
@@ -7224,22 +7714,21 @@ glmnet::cv.glmnet(
 )
 
 message("lassoAll time: ", round((proc.time() - start_time)[3],2),"s")
-
 ```
 
 <!-- lasso-fit-all takes a while - save results -->
 <!-- DO THIS ONCE -->
-```{r brca-rnaseq-save-brcaRna_cv_lassoAll_lst, cache=T, dependson='lasso-fit-all', cache.vars='', echo=F, eval=F}
- save(list='brcaRna_cv_lassoAll_lst', file=file.path("RData",'brcaRna_cv_lassoAll_lst'))
-```
-```{r brca-rnaseq-load-brcaRna_cv_lassoAll_lst, cache=F, echo=T}
+
+
+```r
  load(file=file.path("RData",'brcaRna_cv_lassoAll_lst'))
 ```
 
 
 Examine the fits.
 
-```{r brca-rnaseq-plot-lassoAll, cache=T, dependson='lasso-fit-all', cache.vars='', fig.height=5, fig.width=6, fig.cap='Repeated cv lasso models fitted to all samples'}
+
+```r
 ### CLEAR CACHE
 plot(
  log(brcaRna_cv_lassoAll_lst[[1]]$lambda),
@@ -7254,16 +7743,20 @@ for(JJ in 2:length(brcaRna_cv_lassoAll_lst))
   brcaRna_cv_lassoAll_lst[[JJ]]$cvm,
   lwd=2
 )
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-plot-lassoAll-1.png" alt="Repeated cv lasso models fitted to all samples" width="576" />
+<p class="caption">(\#fig:brca-rnaseq-plot-lassoAll)Repeated cv lasso models fitted to all samples</p>
+</div>
 
 These cv curves are remarkably consistent meaning that the determination of the size or sparsity
 of the model fitted through cross validation to the full data set is fairly precise:
 
 <!-- DONT CACHE THIS ??? -->
 
-```{r brca-rnaseq-model-size-lassoAll, cache=T, dependson='lasso-fit-all', fig.height=5, fig.width=8, fig.cap='Feature selection and estimated error by repeated cv lasso models'}
 
+```r
 library(magrittr)
 par(mfrow=c(1,2), mar=c(3,4, 2, 1))
 
@@ -7288,7 +7781,14 @@ boxplot(
  ylab=brcaRna_cv_lassoAll_lst[[1]]$name,
  ylim=c(0.10, .13)
 )
+```
 
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-model-size-lassoAll-1.png" alt="Feature selection and estimated error by repeated cv lasso models" width="768" />
+<p class="caption">(\#fig:brca-rnaseq-model-size-lassoAll)Feature selection and estimated error by repeated cv lasso models</p>
+</div>
+
+```r
 # tabular format
 tmp <- data.frame(rbind(
  `features_1se` = summary(nzero_1se_vec),
@@ -7303,27 +7803,89 @@ knitr::kable(tmp %>% dplyr::select(-Mean),
   caption = "Number of selected features",
   digits=1) %>%
    kableExtra::kable_styling(full_width = F)
-
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brca-rnaseq-model-size-lassoAll)Number of selected features</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Min. </th>
+   <th style="text-align:right;"> X1st.Qu. </th>
+   <th style="text-align:right;"> Median </th>
+   <th style="text-align:right;"> X3rd.Qu. </th>
+   <th style="text-align:right;"> Max. </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> features_1se </td>
+   <td style="text-align:right;"> 97.0 </td>
+   <td style="text-align:right;"> 118.5 </td>
+   <td style="text-align:right;"> 144.0 </td>
+   <td style="text-align:right;"> 162.0 </td>
+   <td style="text-align:right;"> 208.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features_min </td>
+   <td style="text-align:right;"> 144.0 </td>
+   <td style="text-align:right;"> 221.2 </td>
+   <td style="text-align:right;"> 258.0 </td>
+   <td style="text-align:right;"> 291.0 </td>
+   <td style="text-align:right;"> 451.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features:min-1se </td>
+   <td style="text-align:right;"> 27.0 </td>
+   <td style="text-align:right;"> 59.0 </td>
+   <td style="text-align:right;"> 94.5 </td>
+   <td style="text-align:right;"> 153.2 </td>
+   <td style="text-align:right;"> 344.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_1se </td>
+   <td style="text-align:right;"> 10.9 </td>
+   <td style="text-align:right;"> 11.3 </td>
+   <td style="text-align:right;"> 11.5 </td>
+   <td style="text-align:right;"> 11.7 </td>
+   <td style="text-align:right;"> 12.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_min </td>
+   <td style="text-align:right;"> 10.6 </td>
+   <td style="text-align:right;"> 10.8 </td>
+   <td style="text-align:right;"> 10.9 </td>
+   <td style="text-align:right;"> 11.1 </td>
+   <td style="text-align:right;"> 11.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error:1se-min </td>
+   <td style="text-align:right;"> 0.2 </td>
+   <td style="text-align:right;"> 0.4 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 0.7 </td>
+   <td style="text-align:right;"> 0.8 </td>
+  </tr>
+</tbody>
+</table>
 
 <br/>
 
 The number of features selected by the minimum lambda models are larger
 than the number selected by the "one standard error" rule models by a median
-of `r median(nzero_min_vec-nzero_1se_vec)`.
+of 94.5.
 The cv error rates obtained from the minimum lambda models are lower
 then  "one standard error" rule models error rates by a median of
-`r median(round(100*(error_1se_vec-error_min_vec), 1))`%.  
+0.5%.  
 
 The cv error rates observed in this set are comparable to the 
 rates oberved in the lasso models fitted to the training sample set
 which consisted of 80% of the samples in this set.  In other words,
 there is no obvious gain in performance in moving from 
 a data set with 
-`r paste(round(table(group = brcaRna_all_group_vec)*.8), collapse=' vs ')` samples
+1194 vs 746 samples
 to a data set with
-`r paste(round(table(group = brcaRna_all_group_vec)), collapse=' vs ')` samples.
+1492 vs 933 samples.
 See Table \@ref(tab:printErrors).  
 
 It's not clear at this point whether the minimum lambda model is truly better than
@@ -7333,8 +7895,8 @@ of out-of-fold predicted values, averaged across cv replicates, to see if
 there is a meaningful difference between the two.
 
 
-```{r brca-rnaseq-get-sample-pred, cache=F, dependson='lasso-fit-all', cache.vars=c('lassoAll_predResp_1se_vec','lassoAll_predResp_1se_vec','thres_1se','thres_min'), fig.height=5, fig.width=10, fig.cap="Predicted probabilities - averaged over cv replicates"}
 
+```r
 # predicted probs - 1se
 lassoAll_predResp_1se_mtx <- sapply(brcaRna_cv_lassoAll_lst, function(cv_fit) { 
   ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
@@ -7377,8 +7939,12 @@ plot(
 thres_1se <- quantile(lassoAll_predResp_1se_vec[brcaRna_all_group_vec == 'Other'], prob=.9)
 thres_min <- quantile(lassoAll_predResp_min_vec[brcaRna_all_group_vec == 'Other'], prob=.9)
 abline(v = thres_1se, h = thres_min, col='grey')
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-get-sample-pred-1.png" alt="Predicted probabilities - averaged over cv replicates" width="960" />
+<p class="caption">(\#fig:brca-rnaseq-get-sample-pred)Predicted probabilities - averaged over cv replicates</p>
+</div>
 
 <!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
 We see that the minimum lambda models provide a better fit to the data,
@@ -7402,8 +7968,8 @@ for the two models, the the class predictions at a 10% false discovery threshold
 are largely in agreement.
 -->
 
-```{r brca-rnaseq-get-sample-class, cache=T, dependson='get-sample-pred', cache.vars=c('lassoAll_predClass_1se_vec','lassoAll_predClass_min_vec'),fig.cap='Predicted classes and 10% false positive rate'}
 
+```r
 ### NOTE THAT HERE MODEL PRODUCES PROB(Other)
 lassoAll_predClass_1se_vec <- ifelse(
  lassoAll_predResp_1se_vec > thres_1se, 'LumA', 'Other')
@@ -7422,12 +7988,40 @@ knitr::kable(tmp,
   caption = "Classifications: rows are truth",
   digits=1) %>%
    kableExtra::kable_styling(full_width = F)
-
 ```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:brca-rnaseq-get-sample-class)Classifications: rows are truth</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1se-LumA </th>
+   <th style="text-align:right;"> 1se-Other </th>
+   <th style="text-align:right;"> min-LumA </th>
+   <th style="text-align:right;"> min-Other </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> LumA </td>
+   <td style="text-align:right;"> 1288 </td>
+   <td style="text-align:right;"> 204 </td>
+   <td style="text-align:right;"> 1304 </td>
+   <td style="text-align:right;"> 188 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Other </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 839 </td>
+   <td style="text-align:right;"> 94 </td>
+   <td style="text-align:right;"> 839 </td>
+  </tr>
+</tbody>
+</table>
 
 When we fix the false positive rate at 10% (ie. the other samples error rates are fixed), 
 the `1se` model makes 204 false negative calls whereas the 
-minimum lambda model makes 188.  A difference of `r round(100*(204-188)/(1288+204), 1)`%
+minimum lambda model makes 188.  A difference of 1.1%
 
 
 <!-- APPLIED TO THE FITTED PROBABILITIES
@@ -7441,7 +8035,8 @@ of computing sample consistency scores - what do these differences mean?
 
 To compute consistency scores, we will use the out-of-fold predicted probabilities.
 
-```{r brca-rnaseq-get-sample-qual, cache=T, dependson='get-sample-pred', cache.vars=c('brcaRna_sample_1se_qual_vec','brcaRna_sample_min_qual_vec')}
+
+```r
 # get qual scores
 
 y <- as.numeric(brcaRna_all_group_vec == 'LumA')
@@ -7452,7 +8047,6 @@ brcaRna_sample_1se_qual_vec <- p^y*(1-p)^(1-y)
 # min
 p <- lassoAll_predResp_min_vec
 brcaRna_sample_min_qual_vec <- p^y*(1-p)^(1-y)
-
 ```
 
 
@@ -7461,9 +8055,8 @@ brcaRna_sample_min_qual_vec <- p^y*(1-p)^(1-y)
 We can examine consistency scores as a function of classification bin.
 
 
-```{r brca-rnaseq-plot-qual-conf, cache=F, cache.vars='', dependson='get-sample-pred', fig.height=5, fig.width=8, fig.cap='consistency scores by classification - Other=0, LumA=1'}
 
-
+```r
 y <- as.numeric(brcaRna_all_group_vec == 'LumA')
 
 # 1se
@@ -7503,9 +8096,12 @@ title('min lambda Model')
 mtext(side=1, outer=T, cex=1.5, 'Classification - Truth:Predicted')
 mtext(side=2, outer=T, cex=1.5, 'Consistency Score')
 mtext(side=3, outer=T, cex=1.5, 'Sample Consistency vs Classification Outcome')
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-plot-qual-conf-1.png" alt="consistency scores by classification - Other=0, LumA=1" width="768" />
+<p class="caption">(\#fig:brca-rnaseq-plot-qual-conf)consistency scores by classification - Other=0, LumA=1</p>
+</div>
 
 This figure shows that for false positive cases (0:1 or classifying a
 other as an LumA case), the algorithm is *more certain* of its predicted
@@ -7518,11 +8114,9 @@ We will use the minimum lambda model to provide
 the fitted probabilities used to compute consistency scores,
 but we could have used either one.
 
-```{r brca-rnaseq-sample-qual}
 
+```r
 brcaRna_sample_qual_vec <- brcaRna_sample_min_qual_vec
-
-
 ```
 
 
@@ -7533,13 +8127,14 @@ full data set.  We have two sets of sellected features - one for the
 one standard deviation rule model, and one for the mimimum lambda model.
 We saw in Table \@ref(tab:model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
-`r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`,
+221.25-291,
 while the one standard error rule models had an IQR of
-`r paste(quantile(nzero_1se_vec,1/4), quantile(nzero_1se_vec,3/4), sep='-')`.
+118.5-162.
 
 Let's examine the stability of the gene lists across cv replicates.
 
-```{r brca-rnaseq-feature-list-1se, cache=T, cache.vars=c('genes_by_rep_1se_tbl','lassoAll_coef_1se_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for one standard error rule models"}
+
+```r
 ### CLEAR CACHE
 
 
@@ -7566,19 +8161,23 @@ barplot(
  ylab='Number of features'
 
 )
-
-
 ```
 
-We see that `r genes_by_rep_1se_tbl['30']` features are included in every
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-feature-list-1se-1.png" alt="Feature list stability for one standard error rule models" width="768" />
+<p class="caption">(\#fig:brca-rnaseq-feature-list-1se)Feature list stability for one standard error rule models</p>
+</div>
+
+We see that 83 features are included in every
 cv replicate.  These make up between 
-`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 1/4)*100,0)`%
+51%
 and
-`r round(quantile(genes_by_rep_1se_tbl['30']/colSums(lassoAll_coef_1se_mtx), 3/4)*100,0)`%
+70%
 (Q1 and Q3) of the cv replicate one standard error rule models feature lists.
 
 
-```{r brca-rnaseq-feature-list-min, cache=T, cache.vars=c('genes_by_rep_min_tbl','lassoAll_coef_min_mtx'), fig.height=5, fig.width=8, fig.cap="Feature list stability for minimum lambda models"}
+
+```r
 ### CLEAR CACHE
 
 
@@ -7605,60 +8204,63 @@ barplot(
  ylab='Number of features'
 
 )
-
 ```
 
-We see that `r genes_by_rep_min_tbl['30']` features are included in every
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-feature-list-min-1.png" alt="Feature list stability for minimum lambda models" width="768" />
+<p class="caption">(\#fig:brca-rnaseq-feature-list-min)Feature list stability for minimum lambda models</p>
+</div>
+
+We see that 110 features are included in every
 cv replicate.  These make up between 
-`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 1/4)*100,0)`%
+38%
 and
-`r round(quantile(genes_by_rep_min_tbl['30']/colSums(lassoAll_coef_min_mtx), 3/4)*100,0)`%
+50%
 (Q1 and Q3) of the cv replicate min feature lists.
 We will consider the genes that are selected in all cv replicates as a 
 gene signature produced by each model.
 
 
-```{r brca-rnaseq-minVs1seGenes}
 
+```r
 lasso_gene_sign_1se_vec <- rownames(lassoAll_coef_1se_mtx)[rowSums(lassoAll_coef_1se_mtx)==30]
 lasso_gene_sign_min_vec <- rownames(lassoAll_coef_min_mtx)[rowSums(lassoAll_coef_min_mtx)==30]
-
 ```
 
-`r length(intersect(lasso_gene_sign_1se_vec, lasso_gene_sign_min_vec))` out of
-`r length(lasso_gene_sign_1se_vec)` of the genes in the 1se model gene signature
+68 out of
+83 of the genes in the 1se model gene signature
 are contained in the min lambda model gene signature.
 
 ## Simulation Design
 
 We are now ready to run the simulations.
 
-```{r brca-rnaseq-simParms, cahce=F}
+
+```r
  SIM <- 30
  SIZE <- c(25, 50, 100, 200, 300)
  CV_REP <- 30
-
 ```
 
 Simluation parameters:  
 
-* Number of simulations : SIM = `r SIM`
+* Number of simulations : SIM = 30
 
-* Sample sizes: SIZE = `r SIZE`  
+* Sample sizes: SIZE = 25, 50, 100, 200, 300  
 
-* Number of CV Replicates:  CV_REP = `r CV_REP`
+* Number of CV Replicates:  CV_REP = 30
 
 
-We will repeat the simulation process SIM = `r SIM` times.
-For each simulation iteration, we will select `r max(SIZE)` Other and 
-`r max(SIZE)` LumA samples at random.  Models will be fitted and analyzed
-to balanced subsets of SIZE = `r SIZE`, in a `Matryoshka doll` manner to
+We will repeat the simulation process SIM = 30 times.
+For each simulation iteration, we will select 300 Other and 
+300 LumA samples at random.  Models will be fitted and analyzed
+to balanced subsets of SIZE = 25, 50, 100, 200, 300, in a `Matryoshka doll` manner to
 emulate a typical sample accrual process.
 
 
 For a given simulation and a given sample size, we will obtain
-CV_REP = `r CV_REP` cross-validated lasso fits.  From these fits,
-we can obtain `r CV_REP` out-of-fold assessments of classification accuracy 
+CV_REP = 30 cross-validated lasso fits.  From these fits,
+we can obtain 30 out-of-fold assessments of classification accuracy 
 to get a sense if its variability. From each cv replicate, we also obtain
 an estimated model size and a set of selected features.  We will want
 to examine how these stabilize as the sample size increases.
@@ -7666,8 +8268,8 @@ to examine how these stabilize as the sample size increases.
 Note that we limit the simulations to a maximum of sample size of 300 in 
 order to to have simulations with low overlap.  With 300
 randomly selected LumA samples, the expected overlap between two randomly
-selected sets of LumA samples is `r round(100*(300/sum(brcaRna_all_group_vec=='LumA'))^2,1)`%.
-For Others the expected overlap is `r round(100*(300/sum(brcaRna_all_group_vec=='Other'))^2,1)`%. 
+selected sets of LumA samples is 4%.
+For Others the expected overlap is 10.3%. 
 
 
 ## Setup simulation 
@@ -7675,20 +8277,20 @@ For Others the expected overlap is `r round(100*(300/sum(brcaRna_all_group_vec==
 To setup the simulation, we only need two master tables: one for the selection of Others
 and one for the selection of LumA samples.
 
-```{r brca-rnaseq-get-all-vec, cache=T, cache.vars=c('brcaRna_all_other_vec', 'brcaRna_all_LumA_vec')}
 
+```r
 brcaRna_all_other_vec <- names(brcaRna_all_group_vec[brcaRna_all_group_vec=='Other']) 
 brcaRna_all_LumA_vec <- names(brcaRna_all_group_vec[brcaRna_all_group_vec=='LumA'])  
-
 ```
 
-We have `r length(brcaRna_all_other_vec)` other sample IDs stored in `brcaRna_all_other_vec`
-and `r length(brcaRna_all_LumA_vec)` LumA sample IDs stored in `brcaRna_all_LumA_vec`.
+We have 933 other sample IDs stored in `brcaRna_all_other_vec`
+and 1492 LumA sample IDs stored in `brcaRna_all_LumA_vec`.
 To create a suite of random samples from these, we only need to randomly select indices from
 each vector.
 
   
-```{r brca-rnaseq-getSimTable, cache=T, cache.vars=c('brcaRna_sim_other_mtx', 'brcaRna_sim_LumA_mtx')}
+
+```r
 ### CLEAR CACHE
 
 set.seed(12379)
@@ -7705,98 +8307,20 @@ brcaRna_sim_LumA_mtx <- sapply(
  function(dummy) 
    sample(1:length(brcaRna_all_LumA_vec), size =  max(SIZE))
 )
-
-
 ```
 
 Each simulation is specified by a given column of the simulation design matrices:
-`brcaRna_sim_other_mtx` and `brcaRna_sim_LumA_mtx`, each with domensions `r dim(brcaRna_sim_LumA_mtx)`.
-Within each simulation, we can run the analyses of size `r SIZE` by simply selecting
+`brcaRna_sim_other_mtx` and `brcaRna_sim_LumA_mtx`, each with domensions 300, 30.
+Within each simulation, we can run the analyses of size 25, 50, 100, 200, 300 by simply selecting
 samples specified in the appropriate rows of each design matrix.
 
 We can examine how much variability we have in the consistency scores of the selected samples.
 Here we show results for the smalle sample sizes where variability will be the greatest.
 
-```{r brca-rnaseq-look-sim-qual_ARCHIVED, cache=T, cache.vars=c('sim_other_qual_mtx', 'sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run', eval=F, echo=F}
 
 
-all_other_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_other_vec]
-sim_other_qual_mtx <- sapply(
-  1:ncol(brcaRna_sim_other_mtx), 
-  function(CC) all_other_qual_vec[brcaRna_sim_other_mtx[,CC]]
- )
 
-all_LumA_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_LumA_vec]
-sim_LumA_qual_mtx <- sapply(
-  1:ncol(brcaRna_sim_LumA_mtx),  
-  function(CC) all_LumA_qual_vec[brcaRna_sim_LumA_mtx[,CC]]
- )
-
-# Get stage from SIZE 
-stage_vec <- cut(1:nrow(sim_other_qual_mtx), c(0,SIZE), include.lowest = T)
-
-sim_other_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_other_qual_mtx), 
-  function(CC) c(split(sim_other_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-sim_LumA_qual_byStage_lst <- do.call('c', 
- lapply(1:ncol(sim_LumA_qual_mtx), 
-  function(CC) c(split(sim_LumA_qual_mtx[,CC], stage_vec),NA)
- )
-)
-
-# PLOT
-par(mfrow=c(2,1), mar = c(2,5,2,1))
-# other
-boxplot(
-  sim_other_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Consistency Score',
-  xaxt = 'n'
-)
-legend('bottomright', title = 'Stage', ncol = 2,
- legend = names(sim_other_qual_byStage_lst[1:5]), 
- text.col = 1:5,
- bty = 'n', horiz = F
-)
-sim_ndx <- which(names(sim_other_qual_byStage_lst) =='')
-abline(v = sim_ndx, col = 'grey')
-axis(
-  side = 1, 
-  at = sim_ndx-2, 
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("Other sample consistency by stage and simulation")
-
-# LumA
-boxplot(
-  sim_LumA_qual_byStage_lst, 
-  outline = F, 
-  border = 1:6,
-  ylab = 'Consistency Score',
-  xaxt = 'n'
-)
-sim_ndx <- which(names(sim_LumA_qual_byStage_lst)=='')
-abline(v = which(names(sim_LumA_qual_byStage_lst)==''), col = 'grey')
-axis(
-  side=1, 
-  at = sim_ndx-2,        
-  label = 1:length(sim_ndx),
-  tick = F, 
-  line = -1, las = 2,
-  cex.axis = 0.8)
-title("LumA sample consistency by stage and simulation")
-
-```
-
-```{r brca-rnaseq-look-sim-qual-0-50ONLY, cache=T, cache.vars=c('brcaRna_sim_other_qual_mtx', 'brcaRna_sim_LumA_qual_mtx'), fig.height=8, fig.width=10, fig.cap='sample consistency by simulation run for size = 50 '}
-
-
+```r
 brcaRna_all_other_qual_vec <- brcaRna_sample_qual_vec[brcaRna_all_other_vec]
 brcaRna_sim_other_qual_mtx <- sapply(
   1:ncol(brcaRna_sim_other_mtx), 
@@ -7830,8 +8354,12 @@ boxplot(
   ylab = 'Consistency Score'
 )
 title("LumA sample consistency across simulations")
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-look-sim-qual-0-50ONLY-1.png" alt="sample consistency by simulation run for size = 50 " width="960" />
+<p class="caption">(\#fig:brca-rnaseq-look-sim-qual-0-50ONLY)sample consistency by simulation run for size = 50 </p>
+</div>
 
 In this figure, we are summarizing the consistency measures of 50 samples per group acress
 30 simulations, or random selections of other and LumA samples.
@@ -7856,7 +8384,8 @@ per iteration, or $\approx$ 7 hours of run time on a laptop.
 Running under: macOS Mojave 10.14.6)
 
 <!-- RUN ONCE - THEN GET FROM MEMORY -->
-```{r brca-rnaseq-run-sim, cache=T, cache.vars='start_time', eval=F}
+
+```r
 start_time <- proc.time()
 
 # Get stage from SIZE
@@ -7963,42 +8492,31 @@ for (SIMno in 1:ncol(brcaRna_sim_other_qual_mtx)) {
   save(list = fName, file=file.path("RData", fName))
 
 }
-
 ```
 
 
 <!-- DEBUG - rename after the fact -->
 
-```{r brcaRna-glmnetSuite-RENAME-sim, echo=F, eval=F}
-sim_files_vec <- list.files('RData', '^brca_sim_')
 
-for(FF in sim_files_vec){
-  load(file=file.path('RData', FF))
-  assign(sub('brca','brcaRna',FF), get(FF))
-  save(list = sub('brca','brcaRna',FF), file=file.path("RData", sub('brca','brcaRna',FF)))
-  rm(list=c(FF, sub('brca','brcaRna',FF)))
-}
-
-```
 
 
 
 ## Simulation results
 
-Recall the we have `r SIM` simulations, or randomly selected sets of LumA and Other samples,
-analyzed in inreasing sizes of `r paste(SIZE, sep=', ')`, with
-`r CV_REP` repeated cross-validated lasso fits:
+Recall the we have 30 simulations, or randomly selected sets of LumA and Other samples,
+analyzed in inreasing sizes of 25, 50, 100, 200, 300, with
+30 repeated cross-validated lasso fits:
 
 
-* Sample sizes: SIZE = `r SIZE`
+* Sample sizes: SIZE = 25, 50, 100, 200, 300
 
-* Number of CV Replicates:  CV_REP = `r CV_REP`
+* Number of CV Replicates:  CV_REP = 30
 
 
 First we extract simluation results and store into one big table (only showing the top of table shere):
 
-```{r brca-rnaseq-extract-sim-results, cache=T, cache.vars='brcaRna_lasso_sim_results_frm'}
 
+```r
 brcaRna_sim_files_vec <- list.files('RData', '^brcaRna_sim_')
 
 
@@ -8038,26 +8556,13 @@ brcaRna_lasso_sim_results_frm <- do.call('rbind', lapply(1:length(brcaRna_sim_fi
   data.frame(SimNo=paste0('Sim_',formatC(SIM_NO,width = 2,flag = 0)), cv_lst_to_frm(brcaRna_sim_cv_lst))
 } 
 )) 
-
 ```
 
 <!-- 
 Have a table of simulation results - `brcaRna_lasso_sim_results_frm`:
 -->
 
-```{r brca-rnaseq-sum-table, cache=T, cache.vars='', fig.cap='Simution results table', include=F}
-### CLEAR CACHE
- 
-knitr::kable(head(with(brcaRna_lasso_sim_results_frm, table(SimNo, Size))),
-  caption = paste("Simulation Results - N Sim =", SIM)) %>%
-   kableExtra::kable_styling(full_width = F)
 
-knitr::kable(head(brcaRna_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se, genes_min)),
-    caption = paste("Simulation Results - not showing genes column"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
 
 
 ### Simulation Results - look at one simulation
@@ -8070,7 +8575,8 @@ fixed random selection of Other and Affeced samples.  Recall that as
 we move from 25 to 50, etc., the sample sets are growing to emulate an
 accrual of samples over time.
 
-```{r brca-rnaseq-lasso-simRes-errors-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model cv error ref
@@ -8202,8 +8708,12 @@ axis(side=1, tick=F, line = LL,
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-lasso-simRes-errors-bySim-1.png" alt="lasso Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:brca-rnaseq-lasso-simRes-errors-bySim)lasso Model Errors by Sample Size</p>
+</div>
 
 In this one simulation, we see:
 
@@ -8218,7 +8728,8 @@ and more so for the 1se models.
 #### Feature Selection
 
 
-```{r brca-rnaseq-lasso-simRes-features-bySim, cache=T, cache.vars='', fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model nzero ref
@@ -8362,8 +8873,12 @@ axis(side=1, tick=F, line = LL,
 mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
 
 } # for(SIM
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-lasso-simRes-features-bySim-1.png" alt="lasso Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:brca-rnaseq-lasso-simRes-features-bySim)lasso Models Selected Features by Sample Size</p>
+</div>
 
 Compare with Figures
 \@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim)
@@ -8402,7 +8917,8 @@ summarizes the results of 30 simulations.  For a give sample size and a
 given simulation, each data point is the median across 30 repeated cv runs.
 
 
-```{r brca-rnaseq-lasso-simRes-errors-overSim, cache=T, cache.vars=c('error_1se_Bysize_lst','error_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Model Errors by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # get full model cv error ref
@@ -8532,8 +9048,12 @@ title(paste('min lambda models'))
 
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit error rates summarized across simulations'))
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-lasso-simRes-errors-overSim-1.png" alt="lasso Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:brca-rnaseq-lasso-simRes-errors-overSim)lasso Model Errors by Sample Size</p>
+</div>
 
 <br/>
 
@@ -8550,7 +9070,8 @@ To appreciate how much variability can be encountered as samples are accrued ove
 we need to look at a typical path the assessed model accuracy estimates might take.
 
 
-```{r brca-glmnetSuite-lasso-simRes-errorsPath-overSim, cache=T, cache.vrs='',fig.heigth=5, fig.width=10, fig.cap='lasso Model Error Paths'}
+
+```r
 ### CLEAR CACHE
 
 error_1se_Bysize_mtx <- do.call('cbind', lapply(error_1se_Bysize_lst, function(LL) LL))
@@ -8566,8 +9087,12 @@ for(JJ in 1:15)
 lines(x=1:ncol(cv_error_1se_Bysize_mtx), y=cv_error_1se_Bysize_mtx[JJ,],
  type='b', pch=JJ, col=JJ)
 title('Example Misclassification Error Paths')
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-glmnetSuite-lasso-simRes-errorsPath-overSim-1.png" alt="lasso Model Error Paths" width="960" />
+<p class="caption">(\#fig:brca-glmnetSuite-lasso-simRes-errorsPath-overSim)lasso Model Error Paths</p>
+</div>
 
 We see how erratic the assessed model accuracy can be when sample sizes are small,
 and that it would be hard to guess the ultimate level of accuracy the
@@ -8579,22 +9104,7 @@ estimate of the achievable level of accuracy.
 
 
 
-```{r brca-rnaseq-print-lasso-simRes-errors-overSim, cache=T, cache.vars='', fig.cap='lasso Model Errors by Sample Size', include=F}
-### CLEAR CACHE
 
-error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(error_1se_Bysize_sum_frm) <- paste0('1se_', colnames(error_1se_Bysize_sum_frm))
-
-error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(error_min_Bysize_sum_frm) <- paste0('min_', colnames(error_min_Bysize_sum_frm))
-
-
-knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm),
-      caption = paste("lasso error rates by sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
 
 <!--
 * For the smaller samples sizes, cv error rates for the minimum lambda models tend to be
@@ -8607,7 +9117,8 @@ optimistic.
 #### Feature Selection
 
 
-```{r brca-rnaseq-lasso-simRes-features-OverSim, cache=T, cache.vars=c('p_singP_1se_Bysize_lst','p_singP_min_Bysize_lst'), fig.heigth=5, fig.width=10, fig.cap='lasso Models Selected Features by Sample Size'}
+
+```r
 ### CLEAR CACHE
 
 # Utility objects
@@ -8741,9 +9252,12 @@ legend('topleft',
 title(paste('min lambda models'))
 
 mtext(side=3, outer=T, cex=1.25, paste('lasso fit feature selection summarized across simulations'))
-
-
 ```
+
+<div class="figure">
+<img src="Static/figures/brca-rnaseq-lasso-simRes-features-OverSim-1.png" alt="lasso Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:brca-rnaseq-lasso-simRes-features-OverSim)lasso Models Selected Features by Sample Size</p>
+</div>
 
 Compare with Figures
 \@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim)
@@ -8751,21 +9265,7 @@ and
 \@ref(fig:hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim)
 for the HCC 5hmC data.
 
-```{r brca-rnaseq-print-lasso-simRes-features-OverSim, cache=T, cache.vars='', fig.cap='lasso Models Selected Features by Sample Size', include=F}
-### CLEAR CACHE
 
-p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(p_sing_1se_Bysize_sum_frm) <- paste0('1se_', colnames(p_sing_1se_Bysize_sum_frm))
- 
-p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
-colnames(p_sing_min_Bysize_sum_frm) <- paste0('min_', colnames(p_sing_min_Bysize_sum_frm))
-
-knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
-    caption = paste("lasso feature selection by sample size across simulations"),
-    digits=2) %>%
-   kableExtra::kable_styling(full_width = F)
-
-```
 
 <!--
 
@@ -8788,8 +9288,8 @@ focus on the performance of the small sample fits where variability is the
 greatest, and the context where investigators should be most aware of the
 effect of sample selection over and beyond sample size concerns.
 -->
-```{r brca-rnaseq-small-sample-qual, cache=T, cache.vars=c(''), fig.cap='sample consistency vs classifier performance', eval=F}
 
+```r
 ### CLEAR CACHE
 
 
@@ -8815,8 +9315,6 @@ panel.cor <- function(x, y){
 
 pairs(samp25_qual_error_mtx,
  lower.panel = panel.cor)
-   
-     
 ```
 
 <!-- for the HCC data we had:
@@ -8836,14 +9334,1441 @@ Other questions ...
 
 <!--chapter:end:A1-summary.Rmd-->
 
-`r if (knitr::is_html_output()) '
+
 # References {-}
 <div id="refs"></div>
-'`
 
-```{r appendix1, cache=F, child='05B-glmnetSuiteBHCC5hmC.Rmd'}
-### CLEAR CACHE
+
+
+#  Appendix 1 - Sample size in elastic net fits to HCC 5hmC-Seq Data {.unnumbered #appendix-1}
+
+Repeat the analyses from Section \@ref(model-suite), but using
+the elastic net as classfication model.  
+
+
+<!-- RUN ONCE -->
+
+```r
+set.seed(1)
+
+start_time <-  proc.time()
+
+hcc5hmC_cv_enetAll_lst <- lapply(1:30, function(REP) {
+glmnet::cv.glmnet(
+ x = all_lcpm_mtx,
+ y = factor(hcc5hmC_hcc5hmC,levels = c('Control', 'HCC')),
+ alpha = 0.5,
+ family = 'binomial',
+ type.measure  =  "class",
+ keep = T,
+ nlambda = 100
+)
+}
+)
+
+message("enetAll time: ", round((proc.time() - start_time)[3],2),"s")
 ```
+
+<!-- enet-fit-all takes a while - save results -->
+<!-- DO THIS ONCE -->
+
+
+
+Examine the fits.
+
+
+```r
+### CLEAR CACHE
+plot(
+ log(hcc5hmC_cv_enetAll_lst[[1]]$lambda),
+ hcc5hmC_cv_enetAll_lst[[1]]$cvm,
+ lwd=2,
+ xlab='log(Lambda)', ylab='CV Misclassification Error', type='l', ylim=c(0, .5)
+)
+
+for(JJ in 2:length(hcc5hmC_cv_enetAll_lst))
+ lines(
+  log(hcc5hmC_cv_enetAll_lst[[JJ]]$lambda),
+  hcc5hmC_cv_enetAll_lst[[JJ]]$cvm,
+  lwd=2
+)
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-plot-enetAll-1.png" alt="Repeated cv enet models fitted to all samples" width="576" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-plot-enetAll)Repeated cv enet models fitted to all samples</p>
+</div>
+
+These cv curves are again remarkably consistent meaning that the determination of the size or sparsity
+of the model through cross validation is fairly precise:
+
+<!-- DONT CACHE THIS ??? -->
+
+
+```r
+library(magrittr)
+
+par(mfrow=c(1,2), mar=c(3,4, 2, 1))
+
+# nzero
+nzero_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
+
+nzero_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
+
+boxplot(list(`1se`=nzero_1se_vec, min = nzero_min_vec), ylab="Full Model cv Summary")
+
+# error
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
+
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
+
+boxplot(
+ list(`1se`=error_1se_vec, min = error_min_vec), 
+ ylab=hcc5hmC_cv_enetAll_lst[[1]]$name,
+ ylim=c(0.06, .10)
+)
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-model-size-enetAll-1.png" alt="Feature selection and estimated error by repeated cv enet models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-model-size-enetAll)Feature selection and estimated error by repeated cv enet models</p>
+</div>
+
+```r
+# tabular format
+tmp <- data.frame(rbind(
+ `features_1se` = summary(nzero_1se_vec),
+ features_min = summary(nzero_min_vec),
+ `features:min-1se` = summary(nzero_min_vec - nzero_1se_vec),
+ `cv_error_1se` = summary(100*error_1se_vec),
+ cv_error_min = summary(100*error_min_vec),
+ `cv_error:1se-min` = summary(100*(error_1se_vec-error_min_vec))
+))
+
+knitr::kable(tmp %>% dplyr::select(-Mean),
+  caption = "Number of selected features",
+  digits=1) %>%
+   kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuiteB-model-size-enetAll)Number of selected features</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Min. </th>
+   <th style="text-align:right;"> X1st.Qu. </th>
+   <th style="text-align:right;"> Median </th>
+   <th style="text-align:right;"> X3rd.Qu. </th>
+   <th style="text-align:right;"> Max. </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> features_1se </td>
+   <td style="text-align:right;"> 94.0 </td>
+   <td style="text-align:right;"> 174.0 </td>
+   <td style="text-align:right;"> 183.0 </td>
+   <td style="text-align:right;"> 215.0 </td>
+   <td style="text-align:right;"> 406.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features_min </td>
+   <td style="text-align:right;"> 183.0 </td>
+   <td style="text-align:right;"> 271.5 </td>
+   <td style="text-align:right;"> 357.5 </td>
+   <td style="text-align:right;"> 457.2 </td>
+   <td style="text-align:right;"> 501.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> features:min-1se </td>
+   <td style="text-align:right;"> 23.0 </td>
+   <td style="text-align:right;"> 81.5 </td>
+   <td style="text-align:right;"> 168.5 </td>
+   <td style="text-align:right;"> 237.5 </td>
+   <td style="text-align:right;"> 331.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_1se </td>
+   <td style="text-align:right;"> 7.1 </td>
+   <td style="text-align:right;"> 7.4 </td>
+   <td style="text-align:right;"> 7.6 </td>
+   <td style="text-align:right;"> 7.7 </td>
+   <td style="text-align:right;"> 8.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error_min </td>
+   <td style="text-align:right;"> 6.5 </td>
+   <td style="text-align:right;"> 6.8 </td>
+   <td style="text-align:right;"> 7.0 </td>
+   <td style="text-align:right;"> 7.2 </td>
+   <td style="text-align:right;"> 7.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cv_error:1se-min </td>
+   <td style="text-align:right;"> 0.2 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 0.6 </td>
+   <td style="text-align:right;"> 0.7 </td>
+   <td style="text-align:right;"> 0.9 </td>
+  </tr>
+</tbody>
+</table>
+
+The number of features selected by the minimum lambda model is larger
+than the number selected by the "one standard error" rule by a median
+of $168.5$ and results on
+a median reduction in cv error rates of 
+$0.6$%.  
+
+The cv error rates observed in this set are comparable to the 
+rates oberved in the enet models fitted to the training sample set
+which consisted of 80% of the samples in this set.  See Table \@ref(tab:printErrors).
+It's not clear at this point whether the minimum lambda model is better than
+the  "one standard error" rule  model.  We would need and external validation
+set to make this determination.  We can compare the two sets
+of out-of-fold predicted values, averaged across cv replicates, to see if
+there is a meaningful difference between the two.
+
+
+
+```r
+# predicted probs - 1se
+enetAll_predResp_1se_mtx <- sapply(hcc5hmC_cv_enetAll_lst, function(cv_fit) { 
+  ndx_1se <- match(cv_fit$lambda.1se,cv_fit$lambda)
+  logistic_f(cv_fit$fit.preval[,ndx_1se])
+ })
+enetAll_predResp_1se_vec <- rowMeans(enetAll_predResp_1se_mtx)
+
+# predicted probs - min
+enetAll_predResp_min_mtx <- sapply(hcc5hmC_cv_enetAll_lst, function(cv_fit) { 
+  ndx_min <- match(cv_fit$lambda.min,cv_fit$lambda)
+  logistic_f(cv_fit$fit.preval[,ndx_min])
+ })
+enetAll_predResp_min_vec <- rowMeans(enetAll_predResp_min_mtx)
+
+# plot
+par(mfrow=c(1,2), mar=c(5,5,2,1))
+tmp <- c(
+ `1se` = split(enetAll_predResp_1se_vec, hcc5hmC_all_group_vec),
+ min = split(enetAll_predResp_min_vec, hcc5hmC_all_group_vec)
+)
+names(tmp) <- sub('\\.', '\n', names(tmp))
+
+boxplot(
+ tmp,
+ ylab='Predicted oof probability',
+ border=c('green', 'red'),
+ xaxt='n'
+)
+axis(side=1, at=1:length(tmp), tick=F, names(tmp))
+
+
+# compare the two
+plot(
+ x = enetAll_predResp_1se_vec, xlab='1se model oof Prob',
+ y = enetAll_predResp_min_vec, ylab='min lambda model oof Prob',
+ col = ifelse(hcc5hmC_all_group_vec == 'HCC', 'red', 'green')
+)
+ 
+# Add referecne lines at 10% false positive
+thres_1se <- quantile(enetAll_predResp_1se_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
+thres_min <- quantile(enetAll_predResp_min_vec[hcc5hmC_all_group_vec == 'Control'], prob=.9)
+abline(v = thres_1se, h = thres_min, col='grey')
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-get-sample-pred-1.png" alt="Predicted probabilities - averaged over cv replicates" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-get-sample-pred)Predicted probabilities - averaged over cv replicates</p>
+</div>
+
+<!-- THIS PARAGRAPH REFERRED TO THE FITTED PROBS; NOT THE OOF PRED PROBS
+We see that the minimum lambda models provide a better fit to the data,
+which is to be expected as the minimum lambda models have more estimated
+parameters than the one standard error rule models.  
+-->
+
+We see that there isn't a big difference in out-of-fold predicted
+probabilities between the one-standard-error rule ans minimum lamda models.
+One way to quantify
+the difference in classification errors is to classify samples
+according to each vector of predicted probabilities, setting
+the thresholds to achieve a fixed false positive rate, 10% say.
+These thresholds are indicated by the grey lines in the scatter plot
+on the right side of Figure \@ref(fig:get-sample-pred).  
+
+<!-- APPLIED TO THE FITTED VALUES
+We note
+that althouth predicted probability distributions are quite different
+for the two models, the the class predictions at a 10% false discovery threshold
+are largely in agreement.
+-->
+
+
+```r
+enetAll_predClass_1se_vec <- ifelse(
+ enetAll_predResp_1se_vec > thres_1se, 'HCC', 'Control')
+
+enetAll_predClass_min_vec <- ifelse(
+ enetAll_predResp_min_vec > thres_min, 'HCC', 'Control')
+
+tmp <- cbind(
+ table(truth=hcc5hmC_all_group_vec, `1se-pred`=enetAll_predClass_1se_vec),
+ table(truth=hcc5hmC_all_group_vec, `min-pred`=enetAll_predClass_min_vec)
+) 
+# Hack for printing
+colnames(tmp) <- c('1se-Control', '1se-HCC', 'min-Control', 'min-HCC')
+
+knitr::kable(tmp,
+  caption = "Classifications: rows are truth",
+  digits=1) %>%
+   kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuiteB-enet-get-sample-class)Classifications: rows are truth</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1se-Control </th>
+   <th style="text-align:right;"> 1se-HCC </th>
+   <th style="text-align:right;"> min-Control </th>
+   <th style="text-align:right;"> min-HCC </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Control </td>
+   <td style="text-align:right;"> 700 </td>
+   <td style="text-align:right;"> 78 </td>
+   <td style="text-align:right;"> 700 </td>
+   <td style="text-align:right;"> 78 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HCC </td>
+   <td style="text-align:right;"> 34 </td>
+   <td style="text-align:right;"> 521 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 530 </td>
+  </tr>
+</tbody>
+</table>
+
+When we fix the false positive rate at 10%, the `1se` model makes 39 false
+negative calls whereas the minimum lambda model makes 32.  A difference
+of $1.3$%
+
+
+<!-- APPLIED TO THE FITTED PROBABILITIES
+We see that the min lambda model, makes no false negative calls at a 90% sensitivity
+setting, and the sensitivity could be increased substantially at no false negative
+cost.  This is definitely over-fitting the data set.  For the purpose
+of computing sample quality scores - what do these differences mean? 
+-->
+
+<!-- SKIP THIS - can use lasso scores 
+### Get quality scores {.unnumbered}  
+
+To compute quality scores, we will use the out-of-fold predicted probabilities.
+-->
+
+<!-- HAVING TROUBLE TURNING NUMBERING OFF - add '###'  
+-->
+
+## Selected feature list stability  {.unnumbered}
+
+Before moving on to the simulation, let's examine gene selection stability on the
+full data set.  We have two sets of sellected features - one for the 
+one standard deviation rile model, and one for the mimimum lambda model.
+We saw in Table \@ref(tab:model-size-enetAll) that the number of features
+selected by the minimum lambda models had an IQR of
+$271.5-457.25$,
+while the one standard error rule models had an IQR of
+$174-215$.
+
+Let's examine the stability of the gene lists across cv replicates.
+
+
+```r
+### CLEAR CACHE
+
+
+# 1se
+enetAll_coef_1se_lst <- lapply(hcc5hmC_cv_enetAll_lst, function(cv_fit){
+ cv_fit_coef <- coef(
+ cv_fit,
+ s = "lambda.1se"
+ )
+ cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
+ })
+
+# put into matrix
+enetAll_coef_1se_all <- Reduce(union, enetAll_coef_1se_lst)
+enetAll_coef_1se_mtx <- sapply(enetAll_coef_1se_lst, 
+  function(LL) is.element(enetAll_coef_1se_all, LL)
+)
+rownames(enetAll_coef_1se_mtx) <- enetAll_coef_1se_all
+
+genes_by_rep_1se_tbl <- table(rowSums(enetAll_coef_1se_mtx))
+barplot(
+ genes_by_rep_1se_tbl,
+ xlab='Number of Replicates',
+ ylab='Number of features'
+
+)
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-feature-list-1se-1.png" alt="Feature list stability for one standard error rule models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-feature-list-1se)Feature list stability for one standard error rule models</p>
+</div>
+
+We see that $76$ features are included in every
+cv replicate.  These make up between 
+$35$%
+and
+$44$%
+(Q1 and Q3) of the cv replicate one standard error rule models feature lists.
+
+
+
+```r
+### CLEAR CACHE
+
+
+# min
+enetAll_coef_min_lst <- lapply(hcc5hmC_cv_enetAll_lst, function(cv_fit){
+ cv_fit_coef <- coef(
+ cv_fit,
+ s = "lambda.min"
+ )
+ cv_fit_coef@Dimnames[[1]][cv_fit_coef@i[-1]]
+ })
+
+# put into matrix
+enetAll_coef_min_all <- Reduce(union, enetAll_coef_min_lst)
+enetAll_coef_min_mtx <- sapply(enetAll_coef_min_lst, 
+  function(LL) is.element(enetAll_coef_min_all, LL)
+)
+rownames(enetAll_coef_min_mtx) <- enetAll_coef_min_all
+
+genes_by_rep_min_tbl <- table(rowSums(enetAll_coef_min_mtx))
+barplot(
+ genes_by_rep_min_tbl,
+ xlab='Number of Replicates',
+ ylab='Number of features'
+
+)
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-feature-list-min-1.png" alt="Feature list stability for minimum lambda models" width="768" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-feature-list-min)Feature list stability for minimum lambda models</p>
+</div>
+
+We see that $168$ features are included in every
+cv replicate.  These make up between 
+$37$%
+and
+$62$%
+(Q1 and Q3) of the cv replicate min feature lists.
+We will consider the genes that are selected in all cv replicates as a 
+gene signature produced by each model.
+
+
+
+```r
+enet_gene_sign_1se_vec <- rownames(enetAll_coef_1se_mtx)[rowSums(enetAll_coef_1se_mtx)==30]
+enet_gene_sign_min_vec <- rownames(enetAll_coef_min_mtx)[rowSums(enetAll_coef_min_mtx)==30]
+```
+
+76 out of
+76 of the genes in the 1se model gene signature
+are contained in the min lambda model gene signature.
+
+<!-- USE SAME DESIGN AS lasso
+## Simulation Design
+
+We are now ready to run the simulations.
+
+-->
+
+## Run simulations - enet {.unnumbered}
+
+
+As these make take a while to run, 
+we will save the results of each similation to a different
+object and store to disk.  These can be easily read from disk
+when needed for analysis.
+
+
+The simulation saves results to the file system and
+only needs to be run once.  The simulation takes $\approx$ 8 minutes
+per iteration, or 4 hours of run time on a laptop.
+(Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Mojave 10.14.6)
+
+<!-- RUN ONCE - THEN GET FROM MEMORY -->
+
+```r
+### CLEAR CACHE
+start_time <- proc.time()
+
+# Get stage from SIZE
+stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0, SIZE), include.lowest = T)
+
+# ran in two runs 1:7, 8:ncol
+for (SIMno in 8:ncol(sim_control_qual_mtx)) {
+
+  #cat("Running simulation ", SIMno, "\n")
+
+  sim_cv_lst <- lapply(1:length(levels(stage_vec)), function(STGno) {
+    Stage_rows_vec <- which(stage_vec %in% levels(stage_vec)[1:STGno])
+    #cat("Stage ", STGno, "- analyzing", length(Stage_rows_vec), "paired samples.\n")
+
+    sim_stage_samples_vec <- c(
+      all_control_vec[sim_control_mtx[Stage_rows_vec, SIMno]],
+      all_affected_vec[sim_affected_mtx[Stage_rows_vec, SIMno]]
+    )
+    sim_stage_lcpm_mtx <- all_lcpm_mtx[sim_stage_samples_vec, ]
+    sim_stage_group_vec <- hcc5hmC_all_group_vec[sim_stage_samples_vec]
+    #print(table(sim_stage_group_vec))
+
+    sim_stage_cv_lst <- lapply(1:CV_REP, function(CV) {
+      cv_fit <- glmnet::cv.glmnet(
+        x = sim_stage_lcpm_mtx,
+        y = sim_stage_group_vec,
+        alpha = 1,
+        family = "binomial",
+        type.measure = "class",
+        keep = T,
+        nlambda = 30
+      )
+
+      # Extract 1se metrics from cv_fit
+      #######################
+      ndx_1se <- which(cv_fit$lambda == cv_fit$lambda.1se)
+
+      nzero_1se <- cv_fit$nzero[ndx_1se]
+      cvm_1se <- cv_fit$cvm[ndx_1se]
+
+      # test error
+      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
+      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
+      sim_stage_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
+
+      test_pred_1se_vec <- predict(
+       cv_fit,
+       newx=sim_stage_test_lcpm_mtx,
+       s="lambda.1se",
+       type="class"
+      )
+      test_1se_error <- mean(test_pred_1se_vec != sim_stage_test_group_vec)
+
+      # genes
+      coef_1se <- coef(
+        cv_fit,
+        s = "lambda.1se"
+      )
+      genes_1se <- coef_1se@Dimnames[[1]][coef_1se@i[-1]]
+
+      # Extract min metrics from cv_fit
+      #######################
+      ndx_min <- which(cv_fit$lambda == cv_fit$lambda.min)
+
+      nzero_min <- cv_fit$nzero[ndx_min]
+      cvm_min <- cv_fit$cvm[ndx_min]
+
+      # test error
+      sim_stage_test_samples_vec <- setdiff(rownames(all_lcpm_mtx), sim_stage_samples_vec)
+      sim_stage_test_lcpm_mtx <- all_lcpm_mtx[sim_stage_test_samples_vec,]
+      sim_stage_test_group_vec <- hcc5hmC_all_group_vec[sim_stage_test_samples_vec]
+
+      test_pred_min_vec <- predict(
+       cv_fit,
+       newx=sim_stage_test_lcpm_mtx,
+       s="lambda.min",
+       type="class"
+      )
+      test_min_error <- mean(test_pred_min_vec != sim_stage_test_group_vec)
+
+      # genes
+      coef_min <- coef(
+        cv_fit,
+        s = "lambda.min"
+      )
+      genes_min <- coef_min@Dimnames[[1]][coef_min@i[-1]]
+
+      # return cv_fit summary metrics
+      list(
+       p_1se = nzero_1se, 
+       p_min = nzero_min, 
+       cv_1se = cvm_1se, 
+       cv_min = cvm_min, 
+       test_1se=test_1se_error, 
+       test_min=test_min_error, 
+       genes_1se = genes_1se,
+       genes_min = genes_min)
+    })
+    sim_stage_cv_lst
+  })
+
+  # save  sim_cv_lst
+  fName <- paste0("enet_sim_", SIMno, "_cv_lst")
+  assign(fName, sim_cv_lst)
+  save(list = fName, file=file.path("RData", fName))
+
+}
+  message("simulation time: ", round((proc.time() - start_time)[3], 2), "s")
+```
+
+
+## enet Simulation results {.unnumbered}
+
+<!--
+First we extract simluation results and store into one big table:
+-->
+
+
+<!-- 
+Have a table of simulation results - `enet_sim_results_frm`:
+-->
+
+
+
+
+
+### Simulation Results - look at one simulation {.unnumbered}
+
+
+
+First examine results for one simulation run.
+
+
+```r
+### CLEAR CACHE
+
+# get full model cv error ref
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
+error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
+
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
+error_min_q2 <- quantile(error_min_vec, prob=1/2)        
+
+# Utility objects
+SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
+stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
+
+
+#SIM <- "Sim_01"
+
+for(SIM in unique(enet_sim_results_frm$SimNo)[1]){
+
+SimNum <- as.numeric(sub('Sim_','',SIM))
+
+simNo_results_frm <- enet_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+
+
+# errors
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+###################
+# 1se
+####################
+cv_1se_lst <- with(simNo_results_frm,
+ split(cv_1se, Size))
+names(cv_1se_lst) <- paste0(stringr::str_pad(names(cv_1se_lst), width=3, pad='0'),'_cv')
+
+test_1se_lst <- with(simNo_results_frm,
+ split(test_1se, Size))
+names(test_1se_lst) <- paste0(stringr::str_pad(names(test_1se_lst), width=3, pad='0'),'_cv')
+
+error_1se_lst <- c(cv_1se_lst, test_1se_lst)
+error_1se_lst <- error_1se_lst[order(names(error_1se_lst))]
+
+boxplot(error_1se_lst, 
+  border=c('blue','green'), 
+  ylim=c(0.05, .4),
+  xaxt='n'
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)), 
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_cv'),names(error_1se_lst))[-1] - 0.5, col='grey')
+abline(h= error_1se_q2, col = 'red')
+legend('topright', 
+   #title='1se errors', title.col = 'black',
+   text.col = c('blue','green'),
+   legend = c('cv error', 'test set'),
+   bty='n'
+ )
+title(paste('one se lambda - error rates'))
+
+SKIP  <- function() {
+# Add qual annotation
+control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
+affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
+  round(control_qual_vec, 2)
+ )
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_1se_lst)),
+  round(affected_qual_vec, 2)
+ )
+}#SKIP
+
+# min
+####################
+cv_min_lst <- with(simNo_results_frm,
+ split(cv_min, Size))
+names(cv_min_lst) <- paste0(stringr::str_pad(names(cv_min_lst), width=3, pad='0'),'_cv')
+
+test_min_lst <- with(simNo_results_frm,
+ split(test_min, Size))
+names(test_min_lst) <- paste0(stringr::str_pad(names(test_min_lst), width=3, pad='0'),'_cv')
+
+error_min_lst <- c(cv_min_lst, test_min_lst)
+error_min_lst <- error_min_lst[order(names(error_min_lst))]
+
+boxplot(error_min_lst, 
+  border=c('blue','green'), 
+  ylim=c(0.05, .4),
+  xaxt='n'
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)), 
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_cv'),names(error_min_lst))[-1] - 0.5, col='grey')
+abline(h= error_min_q2, col = 'red')
+legend('topright', 
+   #title='min errors', title.col = 'black',
+   text.col = c('blue','green'),
+   legend = c('cv error', 'test set'),
+   bty='n'
+ )
+title(paste('min lambda - error rates'))
+
+SKIP  <- function() {
+# Add qual annotation
+control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
+affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
+  round(control_qual_vec, 2)
+ )
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_min_lst)),
+  round(affected_qual_vec, 2)
+ )
+}#SKIP
+mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
+
+} # for(SIM
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-simRes-errors-bySim-1.png" alt="enet Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-simRes-errors-bySim)enet Model Errors by Sample Size</p>
+</div>
+
+
+
+```r
+### CLEAR CACHE
+
+# get full model nzero ref
+nzero_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.1se])
+nzero_1se_q2 <- quantile(nzero_1se_vec, prob=c(2)/4)
+
+nzero_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$nzero[cv_fit$lambda == cv_fit$lambda.min])
+nzero_min_q2 <- quantile(nzero_min_vec, prob=c(2)/4)
+
+# Utility objects
+SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
+stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
+
+
+#SIM <- "Sim_01"
+
+for(SIM in unique(enet_sim_results_frm$SimNo)[1]){
+
+SimNum <- as.numeric(sub('Sim_','',SIM))
+
+simNo_results_frm <- enet_sim_results_frm %>% dplyr::filter(SimNo==SIM)
+
+
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+###################
+# 1se
+####################
+# selected feature counts
+p_1se_lst <- with(simNo_results_frm,
+ split(p_1se, Size))
+names(p_1se_lst) <- paste0(stringr::str_pad(names(p_1se_lst), width=3, pad='0'),'_p')
+
+# get selected features that are part of enet_gene_sign_1se_vec
+# - the signature selected genes
+sign_genes_1se_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
+    intersect(unlist(simNo_results_frm[RR, 'genes_1se']), enet_gene_sign_1se_vec))
+
+sign_p_1se_lst <- split(sapply(sign_genes_1se_lst, length), simNo_results_frm$Size)
+names(sign_p_1se_lst) <- paste0(stringr::str_pad(names(sign_p_1se_lst), width=3, pad='0'),'_signP')
+
+
+p_singP_1se_lst <- c(p_1se_lst, sign_p_1se_lst)
+p_singP_1se_lst <- p_singP_1se_lst[order(names(p_singP_1se_lst))]
+
+boxplot(p_singP_1se_lst,
+  border=c('blue','green'),
+  #ylim=c(0, 300),
+  xaxt='n'
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_1se_q2, col = 'red')
+legend('topleft',
+   #title='1se errors', title.col = 'black',
+   text.col = c('blue', 'green'),
+   legend= c('selected genes','signature genes'),
+   bty='n'
+ )
+title(paste('one se lamdba - selected gene counts'))
+
+SKIP  <- function() {
+# Add qual annotation
+control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
+affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
+  round(control_qual_vec, 2)
+ )
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at =  match(paste0(SIZE0,'_p'),names(p_singP_1se_lst)),
+  round(affected_qual_vec, 2)
+ )
+}#SKIP
+
+###################
+# min
+####################
+# selected feature counts
+p_min_lst <- with(simNo_results_frm,
+ split(p_min, Size))
+names(p_min_lst) <- paste0(stringr::str_pad(names(p_min_lst), width=3, pad='0'),'_p')
+
+# get selected features that are part of enet_gene_sign_min_vec
+# - the signature selected genes
+sign_genes_min_lst <- lapply(1:nrow(simNo_results_frm), function(RR)
+    intersect(unlist(simNo_results_frm[RR, 'genes_min']), enet_gene_sign_min_vec))
+
+sign_p_min_lst <- split(sapply(sign_genes_min_lst, length), simNo_results_frm$Size)
+names(sign_p_min_lst) <- paste0(stringr::str_pad(names(sign_p_min_lst), width=3, pad='0'),'_signP')
+
+
+p_singP_min_lst <- c(p_min_lst, sign_p_min_lst)
+p_singP_min_lst <- p_singP_min_lst[order(names(p_singP_min_lst))]
+
+boxplot(p_singP_min_lst,
+  border=c('blue','green'),
+  #ylim=c(0, 300),
+  xaxt='n'
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_min_q2, col = 'red')
+legend('topleft',
+   #title='min errors', title.col = 'black',
+   text.col = c('blue', 'green'),
+   legend= c('selected genes','signature genes'),
+   bty='n'
+ )
+title(paste('min lambda - selected gene counts'))
+
+SKIP  <- function() {
+# Add qual annotation
+control_qual_vec <- sapply(split(sim_control_qual_mtx[,SimNum], stage_vec), median)
+affected_qual_vec <- sapply(split(sim_affected_qual_mtx[,SimNum], stage_vec), median)
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
+  round(control_qual_vec, 2)
+ )
+LL <- LL + 1
+axis(side=1, tick=F, line = LL,
+  at =  match(paste0(SIZE0,'_p'),names(p_singP_min_lst)),
+  round(affected_qual_vec, 2)
+ )
+}#SKIP
+
+mtext(side=3, outer=T, cex=1.25, paste('Sim =',  SIM))
+
+} # for(SIM
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-simRes-features-bySim-1.png" alt="enet Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-simRes-features-bySim)enet Models Selected Features by Sample Size</p>
+</div>
+
+
+### Summarize results across simulation runs  {.unnumbered}
+
+
+```r
+### CLEAR CACHE
+
+# get full model cv error ref
+error_1se_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.1se])
+error_1se_q2 <- quantile(error_1se_vec, prob=1/2)        
+
+error_min_vec <- sapply(hcc5hmC_cv_enetAll_lst,
+ function(cv_fit) cv_fit$cvm[cv_fit$lambda == cv_fit$lambda.min])
+error_min_q2 <- quantile(error_min_vec, prob=1/2)        
+
+# Utility objects
+SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
+stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
+
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+# 1se
+#########################################
+## cv
+cv_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_cv_1se_lst <- with(sizeVal_results_frm, split(cv_1se, SimNo))
+ sapply(sizeVal_cv_1se_lst, median)
+})
+names(cv_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_cv')
+
+## test
+test_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_test_1se_lst <- with(sizeVal_results_frm, split(test_1se, SimNo))
+ sapply(sizeVal_test_1se_lst, median)
+})
+names(test_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_test')
+
+
+error_1se_Bysize_lst <- c(cv_1se_Bysize_lst, test_1se_Bysize_lst)
+error_1se_Bysize_lst <- error_1se_Bysize_lst[order(names(error_1se_Bysize_lst))]
+
+boxplot(error_1se_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  ylim=c(0.05, .5),
+  outline=F,
+  xaxt='n'
+)
+for(JJ in 1:length(error_1se_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(error_1se_Bysize_lst[[JJ]])), amount=0.25), 
+   y=error_1se_Bysize_lst[[JJ]], cex=0.5,
+   col=ifelse(grepl('cv', names(error_1se_Bysize_lst)[JJ]),'blue', 'green')
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_1se_Bysize_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_cv'),names(error_1se_Bysize_lst))[-1] - 0.5, col='grey')
+abline(h= error_min_q2, col = 'red')
+legend('topright',
+   #title='min errors', title.col = 'black',
+   text.col = c('blue','green'),
+   legend = c('cv error', 'test set'),
+   bty='n'
+ )
+title(paste('one se lambda - error rates'))
+
+
+# min
+#########################################
+## cv
+cv_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_cv_min_lst <- with(sizeVal_results_frm, split(cv_min, SimNo))
+ sapply(sizeVal_cv_min_lst, median)
+})
+names(cv_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_cv')
+
+## test
+test_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_test_min_lst <- with(sizeVal_results_frm, split(test_min, SimNo))
+ sapply(sizeVal_test_min_lst, median)
+})
+names(test_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_test')
+
+
+error_min_Bysize_lst <- c(cv_min_Bysize_lst, test_min_Bysize_lst)
+error_min_Bysize_lst <- error_min_Bysize_lst[order(names(error_min_Bysize_lst))]
+
+boxplot(error_min_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  ylim=c(0.05, .5),
+  outline=F,
+  xaxt='n'
+)
+for(JJ in 1:length(error_min_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(error_min_Bysize_lst[[JJ]])), amount=0.25), 
+   y=error_min_Bysize_lst[[JJ]], cex=0.5,
+   col=ifelse(grepl('cv', names(error_min_Bysize_lst)[JJ]),'blue', 'green')
+)
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_cv'),names(error_min_Bysize_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_cv'),names(error_min_Bysize_lst))[-1] - 0.5, col='grey')
+abline(h= error_min_q2, col = 'red')
+legend('topright',
+   #title='min errors', title.col = 'black',
+   text.col = c('blue','green'),
+   legend = c('cv error', 'test set'),
+   bty='n'
+ )
+title(paste('min lambda - error rates'))
+
+
+mtext(side=3, outer=T, cex=1.25, paste('enet fit error rates summarized across simulations'))
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-simRes-errors-overSim-1.png" alt="enet Model Errors by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-simRes-errors-overSim)enet Model Errors by Sample Size</p>
+</div>
+
+
+```r
+### CLEAR CACHE
+
+error_1se_Bysize_sum_frm <- t(sapply(error_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(error_1se_Bysize_sum_frm) <- paste0('1se_', colnames(error_1se_Bysize_sum_frm))
+
+
+error_min_Bysize_sum_frm <- t(sapply(error_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(error_min_Bysize_sum_frm) <- paste0('min_', colnames(error_min_Bysize_sum_frm))
+
+
+knitr::kable(cbind(`1se`=error_1se_Bysize_sum_frm, min=error_min_Bysize_sum_frm),
+      caption = paste("elastic net error rates by sample size across simulations"),
+    digits=2) %>%
+   kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuiteB-print-enet-simRes-errors-overSim)elastic net error rates by sample size across simulations</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1se_25% </th>
+   <th style="text-align:right;"> 1se_50% </th>
+   <th style="text-align:right;"> 1se_75% </th>
+   <th style="text-align:right;"> min_25% </th>
+   <th style="text-align:right;"> min_50% </th>
+   <th style="text-align:right;"> min_75% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 025_cv </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 0.40 </td>
+   <td style="text-align:right;"> 0.26 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 025_test </td>
+   <td style="text-align:right;"> 0.27 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.28 </td>
+   <td style="text-align:right;"> 0.32 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 050_cv </td>
+   <td style="text-align:right;"> 0.20 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.28 </td>
+   <td style="text-align:right;"> 0.18 </td>
+   <td style="text-align:right;"> 0.21 </td>
+   <td style="text-align:right;"> 0.25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 050_test </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.26 </td>
+   <td style="text-align:right;"> 0.21 </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.26 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 100_cv </td>
+   <td style="text-align:right;"> 0.16 </td>
+   <td style="text-align:right;"> 0.18 </td>
+   <td style="text-align:right;"> 0.20 </td>
+   <td style="text-align:right;"> 0.15 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 100_test </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.18 </td>
+   <td style="text-align:right;"> 0.19 </td>
+   <td style="text-align:right;"> 0.16 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.18 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 200_cv </td>
+   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.13 </td>
+   <td style="text-align:right;"> 0.13 </td>
+   <td style="text-align:right;"> 0.11 </td>
+   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 200_test </td>
+   <td style="text-align:right;"> 0.11 </td>
+   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.13 </td>
+   <td style="text-align:right;"> 0.11 </td>
+   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 300_cv </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.11 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 300_test </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;"> 0.10 </td>
+  </tr>
+</tbody>
+</table>
+
+
+Now look at feature selection.
+
+
+```r
+### CLEAR CACHE
+
+# Utility objects
+SIZE0 <- stringr::str_pad(SIZE, width=3, pad='0')
+stage_vec <- cut(1:nrow(sim_control_qual_mtx), c(0,SIZE), include.lowest = T)
+
+par(mfrow=c(1,2), mar=c(4, 2, 2, 1), oma=c(0,0,2,0))
+# 1se
+#########################################
+# selected features
+p_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_p_1se_lst <- with(sizeVal_results_frm, split(p_1se, SimNo))
+ sapply(sizeVal_p_1se_lst, median)
+})
+names(p_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_p')
+
+# selected signatue features
+sign_p_1se_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ 
+  
+ sizeVal_sign_genes_1se_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_1se']), enet_gene_sign_1se_vec))
+
+ sizeVal_sign_p_1se_lst <- split(sapply(sizeVal_sign_genes_1se_lst, length),
+    sizeVal_results_frm$SimNo)
+ 
+ sapply(sizeVal_sign_p_1se_lst, median)
+})
+names(sign_p_1se_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_signP')
+
+
+p_singP_1se_Bysize_lst <- c(p_1se_Bysize_lst, sign_p_1se_Bysize_lst)
+p_singP_1se_Bysize_lst <- p_singP_1se_Bysize_lst[order(names(p_singP_1se_Bysize_lst))]
+
+boxplot(p_singP_1se_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  #ylim=c(0, 300),
+  xaxt='n'
+)
+for(JJ in 1:length(p_singP_1se_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(p_singP_1se_Bysize_lst[[JJ]])), amount=0.25),
+   y=p_singP_1se_Bysize_lst[[JJ]], cex=0.5,
+   col=ifelse(grepl('_p', names(p_singP_1se_Bysize_lst)[JJ]),'blue', 'green')
+)
+
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_p'),names(p_singP_1se_Bysize_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_1se_Bysize_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_1se_q2, col = 'red')
+legend('topleft',
+   #title='1se errors', title.col = 'black',
+   text.col = c('blue', 'green'),
+   legend= c('selected genes','signature genes'),
+   bty='n'
+ )
+title(paste('one se lamdba - selected gene counts'))
+
+
+# min
+#########################################
+# selected features
+p_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ sizeVal_p_min_lst <- with(sizeVal_results_frm, split(p_min, SimNo))
+ sapply(sizeVal_p_min_lst, median)
+})
+names(p_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_p')
+
+# selected signatue features
+sign_p_min_Bysize_lst <- lapply(unique(enet_sim_results_frm$Size),
+function(SizeVal) {
+ sizeVal_results_frm <- enet_sim_results_frm %>% dplyr::filter(Size==SizeVal)
+ 
+  
+ sizeVal_sign_genes_min_lst <- lapply(1:nrow(sizeVal_results_frm), function(RR)
+    intersect(unlist(sizeVal_results_frm[RR, 'genes_min']), enet_gene_sign_min_vec))
+
+ sizeVal_sign_p_min_lst <- split(sapply(sizeVal_sign_genes_min_lst, length),
+    sizeVal_results_frm$SimNo)
+ 
+ sapply(sizeVal_sign_p_min_lst, median)
+})
+names(sign_p_min_Bysize_lst) <- paste0(
+ stringr::str_pad(unique(enet_sim_results_frm$Size), width=3, pad='0'), '_signP')
+
+
+p_singP_min_Bysize_lst <- c(p_min_Bysize_lst, sign_p_min_Bysize_lst)
+p_singP_min_Bysize_lst <- p_singP_min_Bysize_lst[order(names(p_singP_min_Bysize_lst))]
+
+boxplot(p_singP_min_Bysize_lst,
+  col=0,
+  border=c('blue','green'),
+  #ylim=c(0, 300),
+  xaxt='n'
+)
+for(JJ in 1:length(p_singP_min_Bysize_lst))
+points(
+   x=jitter(rep(JJ, length(p_singP_min_Bysize_lst[[JJ]])), amount=0.25),
+   y=p_singP_min_Bysize_lst[[JJ]], cex=0.5,
+   col=ifelse(grepl('_p', names(p_singP_min_Bysize_lst)[JJ]),'blue', 'green')
+)
+
+LL <- -1
+axis(side=1, tick=F, line = LL,
+  at = match(paste0(SIZE0,'_p'),names(p_singP_min_Bysize_lst)),
+  SIZE0
+ )
+abline(v= match(paste0(SIZE0,'_p'),names(p_singP_min_Bysize_lst))[-1] - 0.5, col='grey')
+#abline(h= nzero_min_q2, col = 'red')
+legend('topleft',
+   #title='min errors', title.col = 'black',
+   text.col = c('blue', 'green'),
+   legend= c('selected genes','signature genes'),
+   bty='n'
+ )
+title(paste('min lambda - selected gene counts'))
+
+mtext(side=3, outer=T, cex=1.25, paste('enet fit feature selection summarized across simulations'))
+```
+
+<div class="figure">
+<img src="Static/figures/hcc5hmC-glmnetSuiteB-enet-simRes-features-OverSim-1.png" alt="enet Models Selected Features by Sample Size" width="960" />
+<p class="caption">(\#fig:hcc5hmC-glmnetSuiteB-enet-simRes-features-OverSim)enet Models Selected Features by Sample Size</p>
+</div>
+
+
+
+```r
+### CLEAR CACHE
+
+p_sing_1se_Bysize_sum_frm <- t(sapply(p_singP_1se_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(p_sing_1se_Bysize_sum_frm) <- paste0('1se_', colnames(p_sing_1se_Bysize_sum_frm))
+
+p_sing_min_Bysize_sum_frm <- t(sapply(p_singP_min_Bysize_lst, function(LL) quantile(LL, prob=(1:3)/4)))
+colnames(p_sing_min_Bysize_sum_frm) <- paste0('min_', colnames(p_sing_min_Bysize_sum_frm))
+
+knitr::kable(cbind(p_sing_1se_Bysize_sum_frm, p_sing_min_Bysize_sum_frm),
+    caption = paste("elastic net feature selection by sample size across simulations"),
+    digits=2) %>%
+   kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>(\#tab:hcc5hmC-glmnetSuiteB-print-enet-simRes-features-OverSim)elastic net feature selection by sample size across simulations</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> 1se_25% </th>
+   <th style="text-align:right;"> 1se_50% </th>
+   <th style="text-align:right;"> 1se_75% </th>
+   <th style="text-align:right;"> min_25% </th>
+   <th style="text-align:right;"> min_50% </th>
+   <th style="text-align:right;"> min_75% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 025_p </td>
+   <td style="text-align:right;"> 3.00 </td>
+   <td style="text-align:right;"> 8.50 </td>
+   <td style="text-align:right;"> 14.75 </td>
+   <td style="text-align:right;"> 6.25 </td>
+   <td style="text-align:right;"> 15.0 </td>
+   <td style="text-align:right;"> 27.75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 025_signP </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 1.25 </td>
+   <td style="text-align:right;"> 2.75 </td>
+   <td style="text-align:right;"> 2.00 </td>
+   <td style="text-align:right;"> 3.0 </td>
+   <td style="text-align:right;"> 3.75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 050_p </td>
+   <td style="text-align:right;"> 5.00 </td>
+   <td style="text-align:right;"> 8.50 </td>
+   <td style="text-align:right;"> 16.00 </td>
+   <td style="text-align:right;"> 18.25 </td>
+   <td style="text-align:right;"> 31.0 </td>
+   <td style="text-align:right;"> 44.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 050_signP </td>
+   <td style="text-align:right;"> 3.00 </td>
+   <td style="text-align:right;"> 4.00 </td>
+   <td style="text-align:right;"> 5.75 </td>
+   <td style="text-align:right;"> 5.00 </td>
+   <td style="text-align:right;"> 7.5 </td>
+   <td style="text-align:right;"> 9.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 100_p </td>
+   <td style="text-align:right;"> 17.25 </td>
+   <td style="text-align:right;"> 22.50 </td>
+   <td style="text-align:right;"> 36.00 </td>
+   <td style="text-align:right;"> 42.25 </td>
+   <td style="text-align:right;"> 55.0 </td>
+   <td style="text-align:right;"> 65.88 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 100_signP </td>
+   <td style="text-align:right;"> 8.12 </td>
+   <td style="text-align:right;"> 10.50 </td>
+   <td style="text-align:right;"> 14.00 </td>
+   <td style="text-align:right;"> 15.25 </td>
+   <td style="text-align:right;"> 16.0 </td>
+   <td style="text-align:right;"> 19.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 200_p </td>
+   <td style="text-align:right;"> 38.00 </td>
+   <td style="text-align:right;"> 54.50 </td>
+   <td style="text-align:right;"> 63.25 </td>
+   <td style="text-align:right;"> 95.00 </td>
+   <td style="text-align:right;"> 105.0 </td>
+   <td style="text-align:right;"> 128.75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 200_signP </td>
+   <td style="text-align:right;"> 20.00 </td>
+   <td style="text-align:right;"> 22.50 </td>
+   <td style="text-align:right;"> 24.88 </td>
+   <td style="text-align:right;"> 34.00 </td>
+   <td style="text-align:right;"> 37.0 </td>
+   <td style="text-align:right;"> 41.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 300_p </td>
+   <td style="text-align:right;"> 50.00 </td>
+   <td style="text-align:right;"> 67.75 </td>
+   <td style="text-align:right;"> 71.88 </td>
+   <td style="text-align:right;"> 95.88 </td>
+   <td style="text-align:right;"> 111.5 </td>
+   <td style="text-align:right;"> 152.75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 300_signP </td>
+   <td style="text-align:right;"> 30.00 </td>
+   <td style="text-align:right;"> 32.50 </td>
+   <td style="text-align:right;"> 36.75 </td>
+   <td style="text-align:right;"> 48.12 </td>
+   <td style="text-align:right;"> 55.0 </td>
+   <td style="text-align:right;"> 61.50 </td>
+  </tr>
+</tbody>
+</table>
+
+
+
 
 
 <!--chapter:end:A2-references.Rmd-->

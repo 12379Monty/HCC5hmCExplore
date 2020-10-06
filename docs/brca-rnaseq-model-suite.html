@@ -837,7 +837,7 @@ of computing sample consistency scores - what do these differences mean?
 <span id="cb188-36"><a href="brca-rnaseq-model-suite.html#cb188-36"></a></span>
 <span id="cb188-37"><a href="brca-rnaseq-model-suite.html#cb188-37"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">1</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Classification - Truth:Predicted&#39;</span>)</span>
 <span id="cb188-38"><a href="brca-rnaseq-model-suite.html#cb188-38"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">2</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Consistency Score&#39;</span>)</span>
-<span id="cb188-39"><a href="brca-rnaseq-model-suite.html#cb188-39"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Quality vs Classification Outcome&#39;</span>)</span></code></pre></div>
+<span id="cb188-39"><a href="brca-rnaseq-model-suite.html#cb188-39"></a><span class="kw">mtext</span>(<span class="dt">side=</span><span class="dv">3</span>, <span class="dt">outer=</span>T, <span class="dt">cex=</span><span class="fl">1.5</span>, <span class="st">&#39;Sample Consistency vs Classification Outcome&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:brca-rnaseq-plot-qual-conf"></span>
 <img src="Static/figures/brca-rnaseq-plot-qual-conf-1.png" alt="consistency scores by classification - Other=0, LumA=1" width="768" />
 <p class="caption">
@@ -1032,7 +1032,7 @@ Here we show results for the smalle sample sizes where variability will be the g
 <span id="cb196-19"><a href="brca-rnaseq-model-suite.html#cb196-19"></a><span class="kw">boxplot</span>(</span>
 <span id="cb196-20"><a href="brca-rnaseq-model-suite.html#cb196-20"></a>  brcaRna_sim_other_qual_mtx[<span class="dv">1</span><span class="op">:</span>NN,],</span>
 <span id="cb196-21"><a href="brca-rnaseq-model-suite.html#cb196-21"></a>  <span class="dt">outline =</span> T, </span>
-<span id="cb196-22"><a href="brca-rnaseq-model-suite.html#cb196-22"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span>,</span>
+<span id="cb196-22"><a href="brca-rnaseq-model-suite.html#cb196-22"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Consistency Score&#39;</span>,</span>
 <span id="cb196-23"><a href="brca-rnaseq-model-suite.html#cb196-23"></a>  <span class="dt">xaxt =</span> <span class="st">&#39;n&#39;</span></span>
 <span id="cb196-24"><a href="brca-rnaseq-model-suite.html#cb196-24"></a>)</span>
 <span id="cb196-25"><a href="brca-rnaseq-model-suite.html#cb196-25"></a><span class="kw">title</span>(<span class="st">&quot;Other sample consistency across simulations&quot;</span>)</span>
@@ -1041,7 +1041,7 @@ Here we show results for the smalle sample sizes where variability will be the g
 <span id="cb196-28"><a href="brca-rnaseq-model-suite.html#cb196-28"></a><span class="kw">boxplot</span>(</span>
 <span id="cb196-29"><a href="brca-rnaseq-model-suite.html#cb196-29"></a>  brcaRna_sim_LumA_qual_mtx[<span class="dv">1</span><span class="op">:</span>NN,],</span>
 <span id="cb196-30"><a href="brca-rnaseq-model-suite.html#cb196-30"></a>  <span class="dt">outline =</span> T, </span>
-<span id="cb196-31"><a href="brca-rnaseq-model-suite.html#cb196-31"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Quality Score&#39;</span></span>
+<span id="cb196-31"><a href="brca-rnaseq-model-suite.html#cb196-31"></a>  <span class="dt">ylab =</span> <span class="st">&#39;Consistency Score&#39;</span></span>
 <span id="cb196-32"><a href="brca-rnaseq-model-suite.html#cb196-32"></a>)</span>
 <span id="cb196-33"><a href="brca-rnaseq-model-suite.html#cb196-33"></a><span class="kw">title</span>(<span class="st">&quot;LumA sample consistency across simulations&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:brca-rnaseq-look-sim-qual-0-50ONLY"></span>
@@ -1534,9 +1534,9 @@ Figure 8.9: lasso Models Selected Features by Sample Size
 </p>
 </div>
 <p>Compare with Figures
-<a href="#fig:lasso-simRes-errors-bySim"><strong>??</strong></a>
+<a href="hcc-5hmcseq-model-suite.html#fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim">5.8</a>
 and
-<a href="#fig:lasso-simRes-features-bySim"><strong>??</strong></a>
+<a href="hcc-5hmcseq-model-suite.html#fig:hcc5hmC-glmnetSuite-lasso-simRes-features-bySim">5.9</a>
 for the HCC 5hmC data.</p>
 <p><strong>Reader Note</strong></p>
 <pre><code>IN the case of discriminating between LumA and other breast cancer subtypes,
@@ -1883,9 +1883,9 @@ Figure 8.12: lasso Models Selected Features by Sample Size
 </p>
 </div>
 <p>Compare with Figures
-<a href="#fig:lasso-simRes-errors-overSim"><strong>??</strong></a>
+<a href="hcc-5hmcseq-model-suite.html#fig:hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim">5.10</a>
 and
-<a href="#fig:lasso-simRes-features-OverSim"><strong>??</strong></a>
+<a href="hcc-5hmcseq-model-suite.html#fig:hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim">5.12</a>
 for the HCC 5hmC data.</p>
 <!--
 
