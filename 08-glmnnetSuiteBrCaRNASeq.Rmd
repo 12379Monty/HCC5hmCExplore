@@ -911,7 +911,7 @@ knitr::kable(head(brcaRna_lasso_sim_results_frm) %>% dplyr::select(-c(genes_1se,
 ```
 
 
-### Simulation Results - look at one simulation
+### Results for one simulation
 
 #### Model Accuracy Assessment
 
@@ -1244,7 +1244,7 @@ lambda model remains variable, but the number of core signature features
 selected in the samples of sizes 200 and 300 is stable and between 40 and 50.  
 -->
 
-### Summarize results across simulation runs.
+### Results across simulation runs.
 
 #### Model Accuracy Assessment
 
