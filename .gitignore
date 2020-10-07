@@ -1,0 +1,47 @@
+wget*
+wget*.*
+t.txt
+t
+tr
+ty
+tmp.*
+r
+## DO NOT IGNORE RData - contains simulations that take a long time to run
+# DO ignore large objects
+#RData
+RData/filteredCountsAF_dgel
+###- renamed
+#RData/AF_dgel 
+#RData/cv_lassoAll_lst
+#Data/cv_enetAll_lst
+# TO
+RData/hcc5hmC_F_dgel
+RData/hcc5hmC_cv_lassoAll_lst
+Data/hcc5hmC_cv_enetAll_lst
+ 
+###
+
+RData/brcaRna_cv_lassoAll_lst
+RData/*lassoMinus*
+RData/shuffled*
+HCC5hmCExplore_cache
+tmp.R
+tmp.html
+tmp.log
+Data
+cache
+.Rproj.user
+.Rhistory
+#.RData
+_publish.R
+_book
+_bookdown_files
+rsconnect
+R.cmds
+git.cmds
+##ignore this if the boodown workflow is used
+###docs  - don't ingnore this if the boo
+.DS_Store
+###/Static - we need these
+Refs
+.netlify

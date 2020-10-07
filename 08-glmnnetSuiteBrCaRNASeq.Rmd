@@ -1502,7 +1502,7 @@ p_singP_1se_Bysize_lst <- p_singP_1se_Bysize_lst[order(names(p_singP_1se_Bysize_
 boxplot(p_singP_1se_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  ylim=c(0, 200),
   xaxt='n'
 )
 mtext(side=2, outer=T,  'number of selected features')
@@ -1566,7 +1566,7 @@ p_singP_min_Bysize_lst <- p_singP_min_Bysize_lst[order(names(p_singP_min_Bysize_
 boxplot(p_singP_min_Bysize_lst,
   col=0,
   border=c('blue','green'),
-  ylim=c(0, 300),
+  ylim=c(0, 200),
   xaxt='n'
 )
 for(JJ in 1:length(p_singP_min_Bysize_lst))
