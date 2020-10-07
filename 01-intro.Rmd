@@ -75,6 +75,14 @@ if (!requireNamespace("devtools", quietly = TRUE))
 devtools::install_github("12379Monty/GSE112679")
 ```
 
+**Actually  also need BC data**
+```
+if (!requireNamespace("devtools", quietly = TRUE))
+    install.packages("devtools")
+devtools::install_github("12379Monty/GSE96058")
+```
+
+
 An important question in the early development of classifiers of the sorts
 that are the basis of any liquid biopsy diagnostic tool is how many samples
 should be collected to make properly informed decisions.  In this
