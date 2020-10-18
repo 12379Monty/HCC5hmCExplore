@@ -1,5 +1,5 @@
 --- 
-title: "DNA Hydroxymethylation in Hepatocellular Carcinoma"
+title: "Genomic Scale Classification"
 author: "Francois Collin"
 #date: "`r Sys.Date()`"
 date: 2020

@@ -1,11 +1,14 @@
 # Preamble {.unnumbered #index} 
 
 
-This vignette offers some exploratory data analyses of 
-DNA Hydroxymethylation data available from 
-NCBI GEO [Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679).
-These data can be conveniently accessed through an R data package.
-See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/).
+Using DNA Hydroxymethylation data available from 
+NCBI GEO [Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112679) 
+and  breast cancer gene expression data available from NCBI GEO
+[Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058),
+this vignette offers some analyses that support Genomic Scale Predictive Analytics.
+These data can alaos be conveniently accessed through an R data packages.
+See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/)
+and [GSE96058 R Data Package page](https://12379monty.github.io/GSE96058/).
 
 ## License {-}
 
