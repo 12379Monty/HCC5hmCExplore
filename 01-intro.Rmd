@@ -6,8 +6,8 @@ NCBI GEO [Series GSE112679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=G
 and  breast cancer gene expression data available from NCBI GEO
 [Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058),
 this vignette offers some analyses that support Genomic Scale Predictive Analytics.
-These data can alaos be conveniently accessed through an R data packages.
-See [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/)
+These data can also be conveniently accessed through R data packages
+at the [GSE112679 R Data Package page](https://12379monty.github.io/GSE112679/)
 and [GSE96058 R Data Package page](https://12379monty.github.io/GSE96058/).
 
 ## License {-}
