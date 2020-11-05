@@ -33,8 +33,6 @@ fig:hcc5hmC-glmnetFit-misclassTest
 fig:hcc5hmC-glmnetFit-compCoeffProf
 tab:hcc5hmC-glmnetFit-zreros
 fig:hcc5hmC-glmnetFit-pairsCoeffProf
-fig:hcc5hmC-glmnetFit-heatmapLasso
-fig:hcc5hmC-glmnetFit-heatmapEnet
 tab:hcc5hmC-glmnetSuite-get-all-data
 fig:hcc5hmC-glmnetSuite-plot-lassoAll
 fig:hcc5hmC-glmnetSuite-model-size-lassoAll
@@ -80,8 +78,6 @@ fig:brcaRna-glmnetFit-misclassTest
 fig:brcaRna-glmnetFit-compCoeffProf
 tab:brcaRna-glmnetFit-zreros
 fig:brcaRna-glmnetFit-pairsCoeffProf
-fig:brcaRna-glmnetFit-heatmapLasso
-fig:brcaRna-glmnetFit-heatmapEnet
 tab:brca-rnaseq-get-all-data
 fig:brca-rnaseq-plot-lassoAll
 fig:brca-rnaseq-model-size-lassoAll
@@ -129,7 +125,6 @@ examination-of-sensitivity-vs-specificity
 training-data-out-of-fold-roc-curves
 compare-predictions-at-misclassified-samples
 compare-coefficient-profiles
-examine-feature-selection
 hcc-5hmcseq-model-suite
 full-data-set-fit
 selected-feature-list-stability
@@ -156,7 +151,6 @@ examination-of-sensitivity-vs-specificity-1
 training-data-out-of-fold-roc-curves-1
 compare-predictions-at-misclassified-samples-1
 compare-coefficient-profiles-1
-examine-feature-selection-1
 brca-rnaseq-model-suite
 full-data-set-fit-1
 selected-feature-list-stability-1

@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Data from Cai et al. (2019) paper are explored" />
   
 
-<meta name="author" content="Francois Collin" />
+<meta name="author" content="Francois Collin (CV)" />
 
 
 <meta name="date" content="2020-01-01" />
@@ -202,7 +202,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="hcc-5hmcseq-explore-sparsity.html"><a href="hcc-5hmcseq-explore-sparsity.html#compare-predictions-at-misclassified-samples"><i class="fa fa-check"></i><b>4.5</b> Compare predictions at misclassified samples</a></li>
 <li class="chapter" data-level="4.6" data-path="hcc-5hmcseq-explore-sparsity.html"><a href="hcc-5hmcseq-explore-sparsity.html#compare-coefficient-profiles"><i class="fa fa-check"></i><b>4.6</b> Compare coefficient profiles</a></li>
-<li class="chapter" data-level="4.7" data-path="hcc-5hmcseq-explore-sparsity.html"><a href="hcc-5hmcseq-explore-sparsity.html#examine-feature-selection"><i class="fa fa-check"></i><b>4.7</b> Examine feature selection</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hcc-5hmcseq-model-suite.html"><a href="hcc-5hmcseq-model-suite.html"><i class="fa fa-check"></i><b>5</b> HCC 5hmC-Seq: Sample size investigation</a>
 <ul>
@@ -245,7 +244,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="brca-rnaseseq-explore-sparsity.html"><a href="brca-rnaseseq-explore-sparsity.html#compare-predictions-at-misclassified-samples-1"><i class="fa fa-check"></i><b>7.5</b> Compare predictions at misclassified samples</a></li>
 <li class="chapter" data-level="7.6" data-path="brca-rnaseseq-explore-sparsity.html"><a href="brca-rnaseseq-explore-sparsity.html#compare-coefficient-profiles-1"><i class="fa fa-check"></i><b>7.6</b> Compare coefficient profiles</a></li>
-<li class="chapter" data-level="7.7" data-path="brca-rnaseseq-explore-sparsity.html"><a href="brca-rnaseseq-explore-sparsity.html#examine-feature-selection-1"><i class="fa fa-check"></i><b>7.7</b> Examine feature selection</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="brca-rnaseq-model-suite.html"><a href="brca-rnaseq-model-suite.html"><i class="fa fa-check"></i><b>8</b> BrCa RNA-Seq: Sample size investigation</a>
 <ul>
@@ -1850,90 +1848,35 @@ lasso fit, or zero.</p>
 Figure 4.11: Coefficients from fits
 </p>
 </div>
-</div>
-<div id="examine-feature-selection" class="section level2" number="4.7">
-<h2><span class="header-section-number">4.7</span> Examine feature selection</h2>
-<p>Recall from <code>glmnet</code> vignette:</p>
-<pre><code>It is known that the ridge penalty shrinks the coefficients of correlated predictors
+<!-- SKIP
+## Examine feature selection
+
+Recall from `glmnet` vignette:
+
+```
+It is known that the ridge penalty shrinks the coefficients of correlated predictors
 towards each other while the lasso tends to pick one of them and discard the others.
 The elastic-net penalty mixes these two; if predictors are correlated in groups,
 an $\alpha$=0.5 tends to select the groups in or out together.
 This is a higher level parameter, and users might pick a value upfront,
 else experiment with a few different values. One use of $\alpha$ is for numerical stability;
-for example, the *elastic net with $\alpha = 1 - \epsilon$ for some small $\epsilon$&gt;0
+for example, the *elastic net with $\alpha = 1 - \epsilon$ for some small $\epsilon$>0
 performs much like the lasso, but removes any degeneracies and wild behavior caused
-by extreme correlations*.</code></pre>
-<p>To see how this plays out in this dataset, we can look at feature expression
-heat maps.</p>
-<p>Reader notes:</p>
-<pre><code>Heat maps are rarely useful other than to display the obvious.
+by extreme correlations*.
+```
+
+To see how this plays out in this dataset, we can look at feature expression
+heat maps.  
+
+Reader notes:  
+
+```
+Heat maps are rarely useful other than to display the obvious.
 Here too heat maps fail to yield any insights, or confirmation
 of the relationship between feature correlation and lasso vs enet
-feature selection.</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-1" aria-hidden="true"></a> <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">require</span>(gplots))</span>
-<span id="cb76-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-2" aria-hidden="true"></a></span>
-<span id="cb76-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-3" aria-hidden="true"></a><span class="co"># train - cv predicted</span></span>
-<span id="cb76-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-4" aria-hidden="true"></a>lasso_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb76-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-5" aria-hidden="true"></a> hcc5hmC_cv_lasso,</span>
-<span id="cb76-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-6" aria-hidden="true"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
-<span id="cb76-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-7" aria-hidden="true"></a>)</span>
-<span id="cb76-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-8" aria-hidden="true"></a>lasso_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb76-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-9" aria-hidden="true"></a> <span class="dt">gene=</span>lasso_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][<span class="kw">c</span>(<span class="dv">1</span>, lasso_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>])],</span>
-<span id="cb76-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-10" aria-hidden="true"></a> <span class="dt">lasso=</span>lasso_coef<span class="op">@</span>x)</span>
-<span id="cb76-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-11" aria-hidden="true"></a></span>
-<span id="cb76-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-12" aria-hidden="true"></a> </span>
-<span id="cb76-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-13" aria-hidden="true"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb76-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-14" aria-hidden="true"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb76-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-15" aria-hidden="true"></a>    <span class="dt">x=</span><span class="kw">t</span>(hcc5hmC_train_lcpm_mtx[,lasso_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
-<span id="cb76-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-16" aria-hidden="true"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
-<span id="cb76-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-17" aria-hidden="true"></a>    <span class="dt">labRow=</span>lasso_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb76-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-18" aria-hidden="true"></a>    <span class="dt">labCol=</span>hcc5hmC_train_group_vec,</span>
-<span id="cb76-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-19" aria-hidden="true"></a>    <span class="dt">col=</span>Mycol, </span>
-<span id="cb76-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-20" aria-hidden="true"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
-<span id="cb76-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-21" aria-hidden="true"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
-<span id="cb76-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-22" aria-hidden="true"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
-<span id="cb76-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-23" aria-hidden="true"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb76-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-24" aria-hidden="true"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
-<span id="cb76-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-25" aria-hidden="true"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
-<span id="cb76-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb76-26" aria-hidden="true"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;lasso genes - N =&#39;</span>, <span class="kw">nrow</span>(lasso_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:hcc5hmC-glmnetFit-heatmapLasso"></span>
-<img src="Static/figures/hcc5hmC-glmnetFit-heatmapLasso-1.png" alt="Lasso Model Genes" width="768" />
-<p class="caption">
-Figure 4.12: Lasso Model Genes
-</p>
-</div>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-1" aria-hidden="true"></a> <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">require</span>(gplots))</span>
-<span id="cb77-2"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-2" aria-hidden="true"></a></span>
-<span id="cb77-3"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-3" aria-hidden="true"></a><span class="co"># train - cv predicted</span></span>
-<span id="cb77-4"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-4" aria-hidden="true"></a>enet_coef &lt;-<span class="st"> </span><span class="kw">coef</span>(</span>
-<span id="cb77-5"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-5" aria-hidden="true"></a> hcc5hmC_cv_enet,</span>
-<span id="cb77-6"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-6" aria-hidden="true"></a> <span class="dt">s=</span><span class="st">&#39;lambda.1se&#39;</span></span>
-<span id="cb77-7"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-7" aria-hidden="true"></a>)</span>
-<span id="cb77-8"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-8" aria-hidden="true"></a>enet_coef_frm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb77-9"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-9" aria-hidden="true"></a> <span class="dt">gene=</span>enet_coef<span class="op">@</span>Dimnames[[<span class="dv">1</span>]][<span class="kw">c</span>(<span class="dv">1</span>, enet_coef<span class="op">@</span>i[<span class="op">-</span><span class="dv">1</span>])],</span>
-<span id="cb77-10"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-10" aria-hidden="true"></a> <span class="dt">enet=</span>enet_coef<span class="op">@</span>x)</span>
-<span id="cb77-11"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-11" aria-hidden="true"></a></span>
-<span id="cb77-12"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-12" aria-hidden="true"></a> </span>
-<span id="cb77-13"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-13" aria-hidden="true"></a>  Mycol &lt;-<span class="st"> </span><span class="kw">colorpanel</span>(<span class="dv">1000</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb77-14"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-14" aria-hidden="true"></a>  <span class="kw">heatmap.2</span>(</span>
-<span id="cb77-15"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-15" aria-hidden="true"></a>    <span class="dt">x=</span><span class="kw">t</span>(hcc5hmC_train_lcpm_mtx[,enet_coef_frm<span class="op">$</span>gene[<span class="op">-</span><span class="dv">1</span>]]),</span>
-<span id="cb77-16"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-16" aria-hidden="true"></a>    <span class="dt">scale=</span><span class="st">&quot;row&quot;</span>,</span>
-<span id="cb77-17"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-17" aria-hidden="true"></a>    <span class="dt">labRow=</span>enet_coef_frm<span class="op">$</span>gene,</span>
-<span id="cb77-18"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-18" aria-hidden="true"></a>    <span class="dt">labCol=</span>hcc5hmC_train_group_vec,</span>
-<span id="cb77-19"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-19" aria-hidden="true"></a>    <span class="dt">col=</span>Mycol, </span>
-<span id="cb77-20"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-20" aria-hidden="true"></a>    <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>, <span class="dt">density.info=</span><span class="st">&quot;none&quot;</span>, </span>
-<span id="cb77-21"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-21" aria-hidden="true"></a>    <span class="co">#margin=c(8,6), lhei=c(2,10), </span></span>
-<span id="cb77-22"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-22" aria-hidden="true"></a>    <span class="co">#lwid=c(0.1,4), #lhei=c(0.1,4)</span></span>
-<span id="cb77-23"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-23" aria-hidden="true"></a>    <span class="dt">key=</span>F,</span>
-<span id="cb77-24"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-24" aria-hidden="true"></a>    <span class="dt">ColSideColors=</span><span class="kw">ifelse</span>(hcc5hmC_train_group_vec<span class="op">==</span><span class="st">&#39;Control&#39;</span>, <span class="st">&#39;green&#39;</span>,<span class="st">&#39;red&#39;</span>),</span>
-<span id="cb77-25"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-25" aria-hidden="true"></a>    <span class="dt">dendrogram=</span><span class="st">&quot;both&quot;</span>,</span>
-<span id="cb77-26"><a href="hcc-5hmcseq-explore-sparsity.html#cb77-26" aria-hidden="true"></a>    <span class="dt">main=</span><span class="kw">paste</span>(<span class="st">&#39;enet genes - N =&#39;</span>, <span class="kw">nrow</span>(enet_coef_frm)<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
-<div class="figure"><span id="fig:hcc5hmC-glmnetFit-heatmapEnet"></span>
-<img src="Static/figures/hcc5hmC-glmnetFit-heatmapEnet-1.png" alt="Enet Model Genes" width="768" />
-<p class="caption">
-Figure 4.13: Enet Model Genes
-</p>
-</div>
+feature selection.
+```
+-->
 
 </div>
 </div>

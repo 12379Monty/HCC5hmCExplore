@@ -1402,6 +1402,7 @@ pairs(all_coef_frm,
 ```
 
 
+<!-- SKIP
 ## Examine feature selection
 
 Recall from `glmnet` vignette:
@@ -1430,7 +1431,9 @@ of the relationship between feature correlation and lasso vs enet
 feature selection.
 ```
 
-```{r brcaRna-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes"}
+-->
+
+```{r brcaRna-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes", echo=F, eval=F}
 ### CLEAR CACHE
  suppressPackageStartupMessages(require(gplots))
 
@@ -1461,7 +1464,7 @@ lasso_coef_frm <- data.frame(
 
 ```
 
-```{r brcaRna-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes"}
+```{r brcaRna-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes", echo=F, eval=F}
 ### CLEAR CACHE
  suppressPackageStartupMessages(require(gplots))
 

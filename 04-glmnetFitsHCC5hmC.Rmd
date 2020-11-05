@@ -1478,6 +1478,7 @@ pairs(all_coef_frm,
 ```
 
 
+<!-- SKIP
 ## Examine feature selection
 
 Recall from `glmnet` vignette:
@@ -1505,8 +1506,9 @@ Here too heat maps fail to yield any insights, or confirmation
 of the relationship between feature correlation and lasso vs enet
 feature selection.
 ```
+-->
 
-```{r hcc5hmC-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes"}
+```{r hcc5hmC-glmnetFit-heatmapLasso, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Lasso Model Genes", eval=F, echo=F}
  suppressPackageStartupMessages(require(gplots))
 
 # train - cv predicted
@@ -1536,7 +1538,7 @@ lasso_coef_frm <- data.frame(
 
 ```
 
-```{r hcc5hmC-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes"}
+```{r hcc5hmC-glmnetFit-heatmapEnet, cache=T, cache.vars='', fig.height=6, fig.width=8, fig.cap="Enet Model Genes", eval=F, echo=F}
  suppressPackageStartupMessages(require(gplots))
 
 # train - cv predicted

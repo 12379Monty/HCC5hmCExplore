@@ -791,8 +791,8 @@ knitr::kable(brcaRna_geneExpression_F_logFC_sum,
 
 Many genes are identified, and the effect sizes are substantial
 in comparison to the 5hmc data - compare tables
-\@ref(tab:preprocBrCa-quantlogFC) and 
-\@ref(tab:quantlogFC).
+\@ref(tab:brcaRna-preproc-quantlogFC) and 
+\@ref(tab:hcc5hmC-preproc-quantlogFC).
 This will result in a higher signal-to-noise ratio context.   See 
 Section \@ref(breast-rnaseq-snr-regime).
 
