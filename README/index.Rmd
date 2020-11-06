@@ -35,7 +35,7 @@ An R package providing tools to reproduce the analyses
 reported here is also available: [omicScaleR](https://github.com/12379Monty/omicScaleR.git)
 
 The analysis report page can be found 
-[here](https://hcc-5hmc-explore.netlify.app/)
+[here](https://genomic-scale-classification.netlify.app/)
 
 <!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
 

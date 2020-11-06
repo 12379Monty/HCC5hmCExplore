@@ -1,6 +1,6 @@
 --- 
 title: "Genomic Scale Classification"
-author: "Francois Collin [(CV)](https://francoiscollin-cv.netlify.app/)"
+author: "Francois Collin and Jeremy Ku"
 #date: "`r Sys.Date()`"
 date: 2020
 site: bookdown::bookdown_site
@@ -17,6 +17,9 @@ description: "Data from Cai et al. (2019) paper are explored"
 
 <!-- ONLY THIS FILE SHOULD HAVE YAML -->
 
+<!--
+author: "Francois Collin [(CV)](https://francoiscollin-cv.netlify.app/)"
+-->
 <!-- THIS FILE DOESN'T HAVE TO HAVE ANY CONTENT ... -->
  
 
