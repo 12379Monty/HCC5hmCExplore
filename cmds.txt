@@ -43,3 +43,11 @@ nohup Rscript -e "bookdown::render_book(input='index.Rmd', preview=T)" > render_
 Rscript -e "bookdown::serve_book()" 
   ###> serve_book.log  &
 
+## history
+vi _bookdown.yml 
+vi _output.yml 
+vi 01-intro.Rmd 
+nohup Rscript -e "bookdown::render_book('index.Rmd')"  > render_book.log &
+git add .
+git commit -m 'change title intro'
+git push

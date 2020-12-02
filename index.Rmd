@@ -1,6 +1,6 @@
 --- 
 title: "Genomic Scale Classification"
-author: "Francois Collin [CV](https://francoiscollin-cv.netlify.app/)"
+#author: "Francois Collin [CV](https://francoiscollin-cv.netlify.app/)"
 #date: "`r Sys.Date()`"
 date: 2020
 site: bookdown::bookdown_site
