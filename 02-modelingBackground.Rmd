@@ -197,7 +197,7 @@ is also much lower in 5hmC data, as we will see in the next section.
 Note that the SNR is a different characterization of noise level than the
 coefficient of variation:
 
-$$c_v = \frac{\sigma}{\mu}=\frac{Var(y)}{\mathbb{E}(y)}$$
+$$c_v = \frac{\sigma}{\mu}=\frac{\sqrt{Var(y)}}{\mathbb{E}(y)}$$
 
 Note that for small SNR, SNR $\approx$ PVE.
 

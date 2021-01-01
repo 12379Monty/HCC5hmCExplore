@@ -1,12 +1,40 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% https://bibdesk.sourceforge.io/
 
-%% Created for Francois Collin at 2020-08-11 19:06:04 -0700 
+%% Created for Fcollin at 2020-12-12 12:10:54 -0800 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@article{Lozoya:2018aa,
+	Abstract = {To life scientists, one important feature offered by RNAseq, a next-generation sequencing tool used to estimate changes in gene expression levels, lies in its unprecedented resolution. It can score countable differences in transcript numbers among thousands of genes and between experimental groups, all at once. However, its high cost limits experimental designs to very small sample sizes, usually N = 3, which often results in statistically underpowered analysis and poor reproducibility. All these issues are compounded by the presence of experimental noise, which is harder to distinguish from instrumental error when sample sizes are limiting (e.g., small-budget pilot tests), experimental populations exhibit biologically heterogeneous or diffuse expression phenotypes (e.g., patient samples), or when discriminating among transcriptional signatures of closely related experimental conditions (e.g., toxicological modes of action, or MOAs). Here, we present a leveraged signal-to-noise ratio (LSTNR) thresholding method, founded on generalized linear modeling (GLM) of aligned read detection limits to extract differentially expressed genes (DEGs) from noisy low-replication RNAseq data. The LSTNR method uses an agnostic independent filtering strategy to define the dynamic range of detected aggregate read counts per gene, and assigns statistical weights that prioritize genes with better sequencing resolution in differential expression analyses. To assess its performance, we implemented the LSTNR method to analyze three separate datasets: first, using a systematically noisy in silico dataset, we demonstrated that LSTNR can extract pre-designed patterns of expression and discriminate between "noise" and "true" differentially expressed pseudogenes at a 100{\%} success rate; then, we illustrated how the LSTNR method can assign patient-derived breast cancer specimens correctly to one out of their four reported molecular subtypes (luminal A, luminal B, Her2-enriched and basal-like); and last, we showed the ability to retrieve five different modes of action (MOA) elicited in livers of rats exposed to three toxicants under three nutritional routes by using the LSTNR method. By combining differential measurements with resolving power to detect DEGs, the LSTNR method offers an alternative approach to interrogate noisy and low-replication RNAseq datasets, which handles multiple biological conditions at once, and defines benchmarks to validate RNAseq experiments with standard benchtop assays.},
+	An = {29868123},
+	Author = {Lozoya, Oswaldo A and Santos, Janine H and Woychik, Richard P},
+	Date = {2018/05/16},
+	Date-Added = {2020-12-12 12:10:47 -0800},
+	Date-Modified = {2020-12-12 12:10:47 -0800},
+	Db = {PubMed},
+	Doi = {10.3389/fgene.2018.00176},
+	Isbn = {1664-8021; 1664-8021},
+	J2 = {Front Genet},
+	Journal = {Frontiers in genetics},
+	Keywords = {DEG; LSTNR; RNAseq; biomarker discovery; expression patterns; noise},
+	L2 = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5964166/},
+	La = {eng},
+	Month = {05},
+	Pages = {176--176},
+	Publisher = {Frontiers Media S.A.},
+	Title = {A Leveraged Signal-to-Noise Ratio (LSTNR) Method to Extract Differentially Expressed Genes and Multivariate Patterns of Expression From Noisy and Low-Replication RNAseq Data},
+	Ty = {JOUR},
+	U1 = {29868123{$[$}pmid{$]$}},
+	U2 = {PMC5964166{$[$}pmcid{$]$}},
+	Url = {https://pubmed.ncbi.nlm.nih.gov/29868123},
+	Volume = {9},
+	Year = {2018},
+	Bdsk-Url-1 = {https://pubmed.ncbi.nlm.nih.gov/29868123},
+	Bdsk-Url-2 = {https://doi.org/10.3389/fgene.2018.00176}}
 
 @article{Silver:2009aa,
 	Abstract = {Background correction is an important preprocessing step for microarray data that attempts to adjust the data for the ambient intensity surrounding each feature. The "normexp" method models the observed pixel intensities as the sum of 2 random variables, one normally distributed and the other exponentially distributed, representing background noise and signal, respectively. Using a saddle-point approximation, Ritchie and others (2007) found normexp to be the best background correction method for 2-color microarray data. This article develops the normexp method further by improving the estimation of the parameters. A complete mathematical development is given of the normexp model and the associated saddle-point approximation. Some subtle numerical programming issues are solved which caused the original normexp method to fail occasionally when applied to unusual data sets. A practical and reliable algorithm is developed for exact maximum likelihood estimation (MLE) using high-quality optimization software and using the saddle-point estimates as starting values. "MLE" is shown to outperform heuristic estimators proposed by other authors, both in terms of estimation accuracy and in terms of performance on real data. The saddle-point approximation is an adequate replacement in most practical situations. The performance of normexp for assessing differential expression is improved by adding a small offset to the corrected intensities.},
@@ -1039,7 +1067,7 @@
 	Url = {https://www.ncbi.nlm.nih.gov/pubmed/22962361},
 	Volume = {40},
 	Year = {2012},
-	Bdsk-File-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxAwLi4vUmVmcy9STkFTZXFTaW1Db3VudC9HcmFudF8yMDExL0dyYW50XzIwMTEucGRmTxEBmgAAAAABmgACAAAMTWFjaW50b3NoIEhEAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////DkdyYW50XzIwMTEucGRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAAAQAEAAAKIGN1AAAAAAAAAAAAAAAAAApHcmFudF8yMDExAAIAUC86VXNlcnM6ZmNvbGxpbjpEb2N1bWVudHM6UHJvamVjdHM6UmVmczpSTkFTZXFTaW1Db3VudDpHcmFudF8yMDExOkdyYW50XzIwMTEucGRmAA4AHgAOAEcAcgBhAG4AdABfADIAMAAxADEALgBwAGQAZgAPABoADABNAGEAYwBpAG4AdABvAHMAaAAgAEgARAASAE5Vc2Vycy9mY29sbGluL0RvY3VtZW50cy9Qcm9qZWN0cy9SZWZzL1JOQVNlcVNpbUNvdW50L0dyYW50XzIwMTEvR3JhbnRfMjAxMS5wZGYAEwABLwAAFQACAA7//wAAAAgADQAaACQAVwAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAH1},
+	Bdsk-File-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxA2Li4vLi4vLi4vUmVmcy9STkFTZXFTaW1Db3VudC9HcmFudF8yMDExL0dyYW50XzIwMTEucGRmTxEBjgAAAAABjgACAAAGTWFjIEhEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////DkdyYW50XzIwMTEucGRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAAAwAEAAAKIGN1AAAAAAAAAAAAAAAAAApHcmFudF8yMDExAAIAUC86VXNlcnM6ZmNvbGxpbjpEb2N1bWVudHM6UHJvamVjdHM6UmVmczpSTkFTZXFTaW1Db3VudDpHcmFudF8yMDExOkdyYW50XzIwMTEucGRmAA4AHgAOAEcAcgBhAG4AdABfADIAMAAxADEALgBwAGQAZgAPAA4ABgBNAGEAYwAgAEgARAASAE5Vc2Vycy9mY29sbGluL0RvY3VtZW50cy9Qcm9qZWN0cy9SZWZzL1JOQVNlcVNpbUNvdW50L0dyYW50XzIwMTEvR3JhbnRfMjAxMS5wZGYAEwABLwAAFQACAA7//wAAAAgADQAaACQAXQAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAHv},
 	Bdsk-Url-1 = {https://www.ncbi.nlm.nih.gov/pubmed/22962361},
 	Bdsk-Url-2 = {https://doi.org/10.1093/nar/gks666}}
 
