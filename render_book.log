@@ -2115,8 +2115,8 @@ List of 3
 
 output file: HCC5hmCExplore.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/nt/fdw5s4y937s4pkgsdn9m7j840000gp/T//RtmpJHs51t/rmarkdown-stre8d3757de530.html --mathjax --include-in-header header.html --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/nt/fdw5s4y937s4pkgsdn9m7j840000gp/T//Rtmp8PcNJa/rmarkdown-str108c47fe5548c.html --mathjax --include-in-header header.html --filter /usr/local/bin/pandoc-citeproc 
 
 Output created: docs/index.html
 [1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"
-There were 15 warnings (use warnings() to see them)
+There were 13 warnings (use warnings() to see them)

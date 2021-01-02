@@ -1,6 +1,6 @@
 #  Appendix 1 - Sample size in elastic net fits to HCC 5hmC-Seq Data {.unnumbered #appendix-1}
 
-Repeat the analyses from Section \@ref(model-suite), but using
+Repeat the analyses from Section \@ref(hcc-5hmcseq-model-suite), but using
 the elastic net as classfication model.  
 
 

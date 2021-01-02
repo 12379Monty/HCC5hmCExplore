@@ -15,6 +15,9 @@ sample sizes are too small to provide reliable estimates
 of performance or stable selected feature profiles.  
 
 **Reader Note**
+
+<!-- Keep this stuff on consistency for now.-->
+
 ```
 It's not clear how to display the effect of sample set composition
 on model performance, or that it merits special attention as it
@@ -24,7 +27,6 @@ number of mislabeled or otherwise hard to classify samples
 can throw off estimates of the separability of subgroups
 when sample sizes are small.  
 
-Keep this stuff on consistency for now.
 ```
 
 In examining the relationship between sample size and

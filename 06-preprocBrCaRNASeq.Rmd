@@ -14,7 +14,7 @@ those that were run on the HCC 5hmC data.
 <!--
 Reader note:  
 
-* The most interesting part of this section is Subsection \@ref(snr-regime)
+* The most interesting part of this section is Subsection \@ref(breast-rnaseq-snr-regime)
 which tells us where on the SNR spectrum the 5hmC data lies.
 In view of the work by  Hastie et al. (2017) [@Hastie:2017aa]
 summarized in Subsection \@ref(lasso-vs-best-sub), we would expect to
@@ -656,7 +656,7 @@ the linear models can be fitted to each gene and the results
 examined to assess differential expression between the two groups
 of interest, in our case LumA vs Other.
 
-Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
+Table \@ref(tab:brcaRna-preproc-lmFit) displays the counts of genes in each DE category:
 
 ```{r brcaRna-preproc-lmFit, cache=T, echo=T, cache.vars=c('brcaRna_geneExpression_F_efit','brcaRna_geneExpression_F_efit_dt', 'brcaRna_geneExpression_F_efit'),echo=T}
 
@@ -945,3 +945,4 @@ knitr::kable(t(SNR_quant),
 These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
 best subset and forward selection fits (see  Hastie et al. (2017) [@Hastie:2017aa]).
 -->
+

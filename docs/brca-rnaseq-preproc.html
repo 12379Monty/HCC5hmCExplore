@@ -307,7 +307,7 @@ those that were run on the HCC 5hmC data.</p>
 <!--
 Reader note:  
 
-* The most interesting part of this section is Subsection \@ref(snr-regime)
+* The most interesting part of this section is Subsection \@ref(breast-rnaseq-snr-regime)
 which tells us where on the SNR spectrum the 5hmC data lies.
 In view of the work by  Hastie et al. (2017) [@Hastie:2017aa]
 summarized in Subsection \@ref(lasso-vs-best-sub), we would expect to
@@ -794,7 +794,7 @@ a better idea.
 the linear models can be fitted to each gene and the results
 examined to assess differential expression between the two groups
 of interest, in our case LumA vs Other.</p>
-<p>Table <a href="#tab:lmFit"><strong>??</strong></a> displays the counts of genes in each DE category:</p>
+<p>Table <a href="brca-rnaseq-preproc.html#tab:brcaRna-preproc-lmFit">6.2</a> displays the counts of genes in each DE category:</p>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="brca-rnaseq-preproc.html#cb121-1" aria-hidden="true"></a> brcaRna_geneExpression_F_fit &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">lmFit</span>(brcaRna_geneExpression_F, Design_mtx)</span>
 <span id="cb121-2"><a href="brca-rnaseq-preproc.html#cb121-2" aria-hidden="true"></a> <span class="kw">colnames</span>(brcaRna_geneExpression_F_fit<span class="op">$</span>coefficients) &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">(Intercept</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="st">&quot;Intercept&quot;</span>,</span>
 <span id="cb121-3"><a href="brca-rnaseq-preproc.html#cb121-3" aria-hidden="true"></a> <span class="kw">colnames</span>(brcaRna_geneExpression_F_fit<span class="op">$</span>coefficients) )</span>
