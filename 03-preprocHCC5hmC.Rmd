@@ -605,7 +605,7 @@ the linear models can be fitted to each gene and the results
 examined to assess differential expression between the two groups
 of interest, in our case HCC vs Control.
 
-Table \@ref(tab:lmFit) displays the counts of genes in each DE category:
+Table \@ref(tab:hcc5hmC-preproc-lmFit) displays the counts of genes in each DE category:
 
 ```{r hcc5hmC-preproc-lmFit, cache=T, echo=T, cache.vars=c('hcc5hmC_F_voom_efit','hcc5hmC_F_voom_efit_dt'),echo=T}
 #### CLEAR CACHE

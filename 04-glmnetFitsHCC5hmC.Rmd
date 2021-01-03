@@ -589,7 +589,7 @@ while for the blended mix model
 (See \@ref(eq:blended) in Section \@ref(modeling-background))
 the *1se* lambda rule selected
 $`r hcc5hmC_cv_lassoR$relaxed$nzero.1se`$ features (vertical 
-dotted reference line in Figure \@ref(fig:lookLassoR)).
+dotted reference line in Figure \@ref(fig:hcc5hmC-glmnetFit-lookLassoR)).
 This feature is pointed out in the 
 [glmnet 3.0 vignette](https://cran.r-project.org/web/packages/glmnet/vignettes/relax.pdf):
 *The debiasing will potentially improve prediction performance,

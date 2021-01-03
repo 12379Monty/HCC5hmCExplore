@@ -542,7 +542,7 @@ a median reduction in cv error rates of
 <span class="math inline">\(0.6\)</span>%.</p>
 <p>The cv error rates observed in this set are comparable to the
 rates oberved in the enet models fitted to the training sample set
-which consisted of 80% of the samples in this set. See Table <a href="#tab:printErrors"><strong>??</strong></a>.
+which consisted of 80% of the samples in this set. See Table <a href="hcc-5hmcseq-explore-sparsity.html#tab:hcc5hmC-glmnetFit-printErrors">4.3</a>.
 It’s not clear at this point whether the minimum lambda model is better than
 the “one standard error” rule model. We would need and external validation
 set to make this determination. We can compare the two sets
@@ -608,7 +608,7 @@ the difference in classification errors is to classify samples
 according to each vector of predicted probabilities, setting
 the thresholds to achieve a fixed false positive rate, 10% say.
 These thresholds are indicated by the grey lines in the scatter plot
-on the right side of Figure <a href="#fig:get-sample-pred"><strong>??</strong></a>.</p>
+on the right side of Figure <a href="appendix-1.html#fig:hcc5hmC-glmnetSuiteB-enet-get-sample-pred">9.3</a>.</p>
 <!-- APPLIED TO THE FITTED VALUES
 We note
 that althouth predicted probability distributions are quite different
@@ -712,7 +712,7 @@ To compute quality scores, we will use the out-of-fold predicted probabilities.
 <p>Before moving on to the simulation, let’s examine gene selection stability on the
 full data set. We have two sets of sellected features - one for the
 one standard deviation rile model, and one for the mimimum lambda model.
-We saw in Table <a href="#tab:model-size-enetAll"><strong>??</strong></a> that the number of features
+We saw in Table <a href="appendix-1.html#tab:hcc5hmC-glmnetSuiteB-model-size-enetAll">9.1</a> that the number of features
 selected by the minimum lambda models had an IQR of
 <span class="math inline">\(271.5-457.25\)</span>,
 while the one standard error rule models had an IQR of
