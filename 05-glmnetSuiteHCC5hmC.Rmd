@@ -329,7 +329,8 @@ the difference in classification errors is to classify samples
 according to each vector of predicted probabilities, setting
 the thresholds to achieve a fixed false positive rate, 10% say.
 These thresholds are indicated by the grey lines in the scatter plot
-on the right side of Figure \@ref(fig:hcc5hmC-glmnetFit-get-sample-pred).  
+on the right side of Figure \@ref(fig:hcc5hmC-glmnetSuite-get-sample-pred).  
+
 
 <!-- APPLIED TO THE FITTED VALUES
 We note
@@ -465,7 +466,7 @@ sample_qual_vec <- hcc5hmC_sample_min_qual_vec
 Before moving on to the simulation, let's examine gene selection stability on the
 full data set.  We have two sets of selected features - one for the 
 one standard deviation rule model, and one for the minimum lambda model.
-We saw in Table \@ref(tab:hcc5hmC-glmnetFit-model-size-lassoAll) that the number of features
+We saw in Table \@ref(tab:hcc5hmC-glmnetSuite-model-size-lassoAll) that the number of features
 selected by the minimum lambda models had an IQR of
 `r paste(quantile(nzero_min_vec,1/4), quantile(nzero_min_vec,3/4), sep='-')`,
 while the one standard error rule models had an IQR of
