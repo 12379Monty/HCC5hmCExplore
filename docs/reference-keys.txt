@@ -16,6 +16,10 @@ tab:hcc5hmC-preproc-quantlogFC
 fig:hcc5hmC-preproc-mdPlotTfit
 fig:hcc5hmC-preproc-plotSNR
 tab:hcc5hmC-preproc-plotSNR
+eq:cv-eq1
+eq:cv-eq2
+eq:cv-eq3
+eq:sample-size
 tab:hcc5hmC-glmnetFit-getTrainVal
 tab:hcc5hmC-glmnetFit-getTrainFolds
 fig:hcc5hmC-glmnetFit-lookFits

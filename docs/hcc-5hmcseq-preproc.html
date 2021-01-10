@@ -187,6 +187,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
+<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#rna-seq-limits-of-detection-of-ratios-read-depth-cv-power"><i class="fa fa-check"></i>RNA-Seq limits of detection of Ratios: read depth, CV, Power</a>
+<ul>
+<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#modeling-of-coverage-variability"><i class="fa fa-check"></i>Modeling of coverage variability</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#limit-of-detection-of-ratios---summary"><i class="fa fa-check"></i>Limit of Detection of Ratios - Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="hcc-5hmcseq-explore-sparsity.html"><a href="hcc-5hmcseq-explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> HCC 5hmC-Seq: Exploring Sparsity</a>
 <ul>
@@ -1389,8 +1394,117 @@ Figure 3.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentil
 </table>
 <p>These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
 best subset and forward selection fits (see Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>).</p>
+</div>
+<div id="rna-seq-limits-of-detection-of-ratios-read-depth-cv-power" class="section level2 unnumbered">
+<h2>RNA-Seq limits of detection of Ratios: read depth, CV, Power</h2>
+<p>In this section, we take a segue to investigate the relationship between read depth, CV and power
+in the context of RNA-Seq data.
+Of interest is to know <strong>how the power to detect changes</strong> in expression across groups
+<strong>varies with sequencing depth</strong> of coverage. This information will be useful in experimental
+design: how many samples per group are needed and what depth of coverage is required.
+The latter part of this question will inform users on the number of samples that can be
+sequenced in a single run.</p>
+<div id="modeling-of-coverage-variability" class="section level3 unnumbered">
+<h3>Modeling of coverage variability</h3>
+<p>Following the derivation on McCarthy et al. (2012) <span class="citation">[<a href="references.html#ref-McCarthy:2012aa" role="doc-biblioref">24</a>]</span>,
+gene expression profiles are formed from <span class="math inline">\(n\)</span> RNA samples.
+Let <span class="math inline">\(\pi_{gi}\)</span> be the fraction of all cDNA fragments in the i-th samples
+that originate from gene <span class="math inline">\(g\)</span>. Let <span class="math inline">\(G\)</span> denote the total number of genes,
+so <span class="math inline">\(\sum_{g=1}^G\pi_{gi} = 1\)</span> for each sample. Let <span class="math inline">\(\sqrt{\phi_g}\)</span> denote the coefficient
+of variation of <span class="math inline">\(\pi_{gi}\)</span> between the replicates <span class="math inline">\(i\)</span>. This captures biological
+variability between samples. Denote the total number of mapped reads in library <span class="math inline">\(i\)</span>
+by <span class="math inline">\(N_i\)</span> and the number that map to gene <span class="math inline">\(g\)</span> by <span class="math inline">\(y_{gi}\)</span>. Then</p>
+<p><span class="math display" id="eq:cv-eq1">\[\begin{equation}
+E(y_{gi}) = \mu_{gi} = N_i\pi_{gi}
+\tag{3.1}
+\end{equation}\]</span></p>
+<p>Assuming that the count <span class="math inline">\(y_{gi}\)</span> follows a Poisson distribution for repeated
+sequencing runs of the same RNA sample (a reasonable assumption - see
+Lee et al. 2008 <span class="citation">[<a href="references.html#ref-Lee:2008aa" role="doc-biblioref">25</a>]</span> and Marioni et al. (2008) <span class="citation">[<a href="references.html#ref-Marioni:2008aa" role="doc-biblioref">26</a>]</span>),
+a well known formula for the variance of a mixture distribution
+implies:</p>
+<p><span class="math display" id="eq:cv-eq2">\[\begin{equation}
+var(y_{gi}) = E_\pi [var(y|\pi)] + var_\pi [E(y|\pi)] = \mu_{gi} + \phi_g\mu^2_{gi}
+\tag{3.2}
+\end{equation}\]</span></p>
+<p>Dividing both sides by <span class="math inline">\(\mu^2_{gi}\)</span> gives</p>
+<p><span class="math display" id="eq:cv-eq3">\[\begin{equation}
+CV^2(y_{gi}) = 1/\mu_{gi} + \phi_g
+\tag{3.3}
+\end{equation}\]</span></p>
+<!--
+\begin{equation}
+CV(y_{gi}) = \sqrt{1/\mu_{gi} + \phi_g}
+(\#eq:CV)
+\end{equation}
+-->
+<p>Note that there are two components to the CV:
+coverage level and biological variability. Both need to be considered when
+assessing sample size and depth of sequencing. Next we examine
+how this variability affects sample size requirements to achieve a target
+power.</p>
+<p>Following the derivation in Hart et al. (2013) <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">27</a>]</span>,
+in the context of differential gene expression analysis
+for two groups comparisons, the basic formula for the required number of samples per group is
+(omitting the gene index)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:
+<span class="math display" id="eq:sample-size">\[\begin{equation}
+n = 2(z_{1-\alpha/2} + z_{\beta})^2 \frac{(1/\mu + \phi)}{ln(\Delta^2)} 
+\tag{3.4}
+\end{equation}\]</span></p>
+<ul>
+<li>The parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are size and power of the test.<br />
+</li>
+<li>z the corresponding cut points.<br />
+</li>
+<li><span class="math inline">\(\Delta\)</span> is the testing target or effect size.</li>
+</ul>
+<p>These three parameters will be fixed across genes or a given study, and are often dictated by
+external requirements. <em>Typical values</em> might be <span class="math inline">\(\Delta = 1.5\)</span> (a.k.a fold change),
+corresponding to detection of a 50% change in gene expression between the two groups.
+<span class="math inline">\(z_{1 - .05/2} = 1.96\)</span>, corresponding to a two sided test at <span class="math inline">\(\alpha = 0.05\)</span>;
+and <span class="math inline">\(z_{.90}= 1.28\)</span> corresponding to 90% power.</p>
+<p>The other two variables that are part of Equation <a href="hcc-5hmcseq-preproc.html#eq:sample-size">(3.4)</a>
+will be gene and experiment dependent: the depth of coverage <span class="math inline">\(\mu\)</span> of the gene,
+and the coefficient of variation <span class="math inline">\(\sqrt{\phi}\)</span> in this gene between biological replicates.
+The technical variation of the comparison is inversely proportional to the number of sequenced reads
+for the gene and therefore decreases with sequencing depth.
+The biological variation is a property of the particular gene/model system/condition under study.
+One would expect it to be smaller for uniform systems such as cell culture and/or products that
+are under tight regulatory control, and larger for less uniform replicates such as human subject samples.</p>
+<p>A key point to highlight is that once coverage reaches a certain level, say
+<span class="math inline">\(\mu &gt; 10 \cdot \phi\)</span>, coverage is no longer a significant factor in
+Equation <a href="hcc-5hmcseq-preproc.html#eq:sample-size">(3.4)</a>. This greatly simplifies the analysis
+of coverage depth in sequencing experiments; in the end the key
+parameter is the fraction of genes that satisfy a given coverage threshold
+and that threshold is dictated by the biological variability in the experiment,
+which is fixed.</p>
+<p><br/></p>
+</div>
+</div>
+<div id="limit-of-detection-of-ratios---summary" class="section level2 unnumbered">
+<h2>Limit of Detection of Ratios - Summary</h2>
+<p>The relationship between depth of coverage and statistical power
+to detect changes in expression between biological groups
+is driven by the gene specific CV - the <span class="math inline">\(1/\mu + \phi\)</span> factor
+in Equation <a href="hcc-5hmcseq-preproc.html#eq:sample-size">(3.4)</a>. Given that for humans the
+square of the biological coefficient of variation, <span class="math inline">\(\phi\)</span>, will be
+in excess of 0.50 <span class="citation">[<a href="references.html#ref-Hart:2013aa" role="doc-biblioref">27</a>]</span>, the gene coverage component is
+quickly dominated by the biological variability.
+This greatly simplifies the problem of determining the required
+sequencing depth to achieve acceptable power. In most scenarios
+the question comes down to - what is an acceptable number of genes
+whose coverage below a given threshold, and a threshold of 10 seems
+appropriate.</p>
+<p><br/></p>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Note that we use <span class="math inline">\(\phi\)</span> where Hart et al. used <span class="math inline">\(\sigma^2\)</span> in order
+to conform to the McCarthy et al. nomenclature<a href="hcc-5hmcseq-preproc.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
