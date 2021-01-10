@@ -878,7 +878,7 @@ knitr::kable(t(SNR_quant),
 These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
 best subset and forward selection fits (see  Hastie et al. (2017) [@Hastie:2017aa]).
 
-## RNA-Seq limits of detection of Ratios: read depth, CV, Power {-}
+## RNA-Seq limits of detection of Ratios: read depth, CV, Power 
 
 In this section, we take a segue to investigate the relationship between read depth, CV and power
 in the context of RNA-Seq data.
@@ -889,7 +889,11 @@ The latter part of this question will inform users on the number of samples that
 sequenced in a single run.
 
 
+<!--
 ### Modeling of coverage variability {-}
+-->
+
+---
 
 Following the derivation on McCarthy et al. (2012) [@McCarthy:2012aa],
 gene expression profiles are formed from $n$ RNA samples.
@@ -980,7 +984,6 @@ which is fixed.
 <br/>
 
 
-## Limit of Detection of Ratios - Summary {-}
 
 The relationship between depth of coverage and statistical power
 to detect changes in expression between biological groups

@@ -187,11 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#de-genes-at-10-fold-change"><i class="fa fa-check"></i>DE genes at 10% fold change</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#snr-regime"><i class="fa fa-check"></i><b>3.3</b> Signal-to-noise ratio regime</a></li>
-<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#rna-seq-limits-of-detection-of-ratios-read-depth-cv-power"><i class="fa fa-check"></i>RNA-Seq limits of detection of Ratios: read depth, CV, Power</a>
-<ul>
-<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#modeling-of-coverage-variability"><i class="fa fa-check"></i>Modeling of coverage variability</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#limit-of-detection-of-ratios---summary"><i class="fa fa-check"></i>Limit of Detection of Ratios - Summary</a></li>
+<li class="chapter" data-level="3.4" data-path="hcc-5hmcseq-preproc.html"><a href="hcc-5hmcseq-preproc.html#rna-seq-limits-of-detection-of-ratios-read-depth-cv-power"><i class="fa fa-check"></i><b>3.4</b> RNA-Seq limits of detection of Ratios: read depth, CV, Power</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="hcc-5hmcseq-explore-sparsity.html"><a href="hcc-5hmcseq-explore-sparsity.html"><i class="fa fa-check"></i><b>4</b> HCC 5hmC-Seq: Exploring Sparsity</a>
 <ul>
@@ -1395,8 +1391,8 @@ Figure 3.9: Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentil
 <p>These SNR values are in the range where the lasso and relaxed lasso gain some advantage over
 best subset and forward selection fits (see Hastie et al. (2017) <span class="citation">[<a href="references.html#ref-Hastie:2017aa" role="doc-biblioref">7</a>]</span>).</p>
 </div>
-<div id="rna-seq-limits-of-detection-of-ratios-read-depth-cv-power" class="section level2 unnumbered">
-<h2>RNA-Seq limits of detection of Ratios: read depth, CV, Power</h2>
+<div id="rna-seq-limits-of-detection-of-ratios-read-depth-cv-power" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> RNA-Seq limits of detection of Ratios: read depth, CV, Power</h2>
 <p>In this section, we take a segue to investigate the relationship between read depth, CV and power
 in the context of RNA-Seq data.
 Of interest is to know <strong>how the power to detect changes</strong> in expression across groups
@@ -1404,8 +1400,10 @@ Of interest is to know <strong>how the power to detect changes</strong> in expre
 design: how many samples per group are needed and what depth of coverage is required.
 The latter part of this question will inform users on the number of samples that can be
 sequenced in a single run.</p>
-<div id="modeling-of-coverage-variability" class="section level3 unnumbered">
-<h3>Modeling of coverage variability</h3>
+<!--
+### Modeling of coverage variability {-}
+-->
+<hr />
 <p>Following the derivation on McCarthy et al. (2012) <span class="citation">[<a href="references.html#ref-McCarthy:2012aa" role="doc-biblioref">24</a>]</span>,
 gene expression profiles are formed from <span class="math inline">\(n\)</span> RNA samples.
 Let <span class="math inline">\(\pi_{gi}\)</span> be the fraction of all cDNA fragments in the i-th samples
@@ -1479,10 +1477,6 @@ parameter is the fraction of genes that satisfy a given coverage threshold
 and that threshold is dictated by the biological variability in the experiment,
 which is fixed.</p>
 <p><br/></p>
-</div>
-</div>
-<div id="limit-of-detection-of-ratios---summary" class="section level2 unnumbered">
-<h2>Limit of Detection of Ratios - Summary</h2>
 <p>The relationship between depth of coverage and statistical power
 to detect changes in expression between biological groups
 is driven by the gene specific CV - the <span class="math inline">\(1/\mu + \phi\)</span> factor
