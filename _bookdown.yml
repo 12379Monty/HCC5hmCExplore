@@ -8,7 +8,8 @@ rmd_files: ["index.Rmd","01-intro.Rmd", "02-modelingBackground.Rmd",
    "03-preprocHCC5hmC.Rmd", "04-glmnetFitsHCC5hmC.Rmd", "05-glmnetSuiteHCC5hmC.Rmd",
    # insert breast data analysis here
    "06-preprocBrCaRNASeq.Rmd",  "07-glmnetFitsBrCaRNASeq.Rmd", "08-glmnnetSuiteBrCaRNASeq.Rmd",
-    "A1-summary.Rmd", "A2-references.Rmd" ]
+    "A2-references.Rmd" ]
+###"A1-summary.Rmd", "A2-references.Rmd" ]
 ### see https://community.rstudio.com/t/bookdown-pdf-generation/12359
 repo: https://github.com/12379Monty/HCC5hmCExplore
 

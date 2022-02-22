@@ -7,7 +7,7 @@ processing file: HCC5hmCExplore.Rmd
   |                                                                              |                                                                      |   1%
 label: setup (with options) 
 List of 1
- $ include: symbol F
+ $ include: logi FALSE
 
   |                                                                              |.                                                                     |   1%
    inline R code fragments
@@ -15,7 +15,7 @@ List of 1
 
 label: hcc5hmC-preproc-setup-preproc (with options) 
 List of 1
- $ include: symbol F
+ $ include: logi FALSE
 
 
   ordinary text without R code
@@ -24,7 +24,7 @@ List of 1
 label: hcc5hmC-preproc-chunk-options (with options) 
 List of 2
  $ include: logi FALSE
- $ eval   : symbol F
+ $ eval   : logi FALSE
 
 
   ordinary text without R code
@@ -33,7 +33,7 @@ List of 2
 label: hcc5hmC-preproc-libraries (with options) 
 List of 2
  $ include: logi FALSE
- $ eval   : symbol T
+ $ eval   : logi TRUE
 
   |                                                                              |..                                                                    |   3%
   ordinary text without R code
@@ -41,7 +41,7 @@ List of 2
 
 label: hcc5hmC-preproc-loadData (with options) 
 List of 1
- $ cache: symbol F
+ $ cache: logi FALSE
 
 
   ordinary text without R code
@@ -49,9 +49,9 @@ List of 1
 
 label: hcc5hmC-preproc-subsetSamples (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_sampDesc", "hcc5hmC_groupCol")
- $ echo      : symbol T
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "hcc5hmC_sampDesc" "hcc5hmC_groupCol"
+ $ echo      : logi TRUE
 
   |                                                                              |...                                                                   |   4%
   ordinary text without R code
@@ -59,9 +59,9 @@ List of 3
 
 label: hcc5hmC-preproc-getfeatures (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_featureCounts")
- $ echo      : symbol T
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_featureCounts"
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -69,11 +69,11 @@ List of 3
   |                                                                              |...                                                                   |   5%
 label: hcc5hmC-preproc-lcpmBxp (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -81,7 +81,7 @@ List of 5
   |                                                                              |....                                                                  |   5%
 label: hcc5hmC-preproc-hcc5hmC-quantCounts (with options) 
 List of 1
- $ echo: symbol T
+ $ echo: logi TRUE
 
 
    inline R code fragments
@@ -89,14 +89,14 @@ List of 1
   |                                                                              |....                                                                  |   6%
 label: hcc5hmC-preproc-rlr (with options) 
 List of 8
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "hcc5hmC_lcpm_mtx"
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample RLR"
- $ eval      : symbol T
- $ echo      : symbol T
- $ include   : symbol F
+ $ eval      : logi TRUE
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -107,8 +107,8 @@ List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample $log_2$ CPM densities"
- $ eval      : symbol T
- $ echo      : symbol T
+ $ eval      : logi TRUE
+ $ echo      : logi TRUE
 
   |                                                                              |.....                                                                 |   7%
    inline R code fragments
@@ -116,10 +116,10 @@ List of 5
 
 label: hcc5hmC-preproc-removeWeak (with options) 
 List of 4
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_featureCountsF", "hcc5hmC_genes_annotF", "hcc5hmC_F_lcpm_mtx")
- $ echo      : symbol T
- $ include   : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:3] "hcc5hmC_featureCountsF" "hcc5hmC_genes_annotF" "hcc5hmC_F_lcpm_mtx"
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -130,8 +130,8 @@ List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample $log_2$ CPM densities after removing weak genes"
- $ eval      : symbol T
- $ echo      : symbol T
+ $ eval      : logi TRUE
+ $ echo      : logi TRUE
 
   |                                                                              |.....                                                                 |   8%
   ordinary text without R code
@@ -139,8 +139,8 @@ List of 5
   |                                                                              |......                                                                |   8%
 label: hcc5hmC-preproc-getDGEL (with options) 
 List of 2
- $ cache    : symbol T
- $ cache.var: language c("hcc5hmC_F_dgel", "hcc5hmC_F_lcpm_mtx")
+ $ cache    : logi TRUE
+ $ cache.var: chr [1:2] "hcc5hmC_F_dgel" "hcc5hmC_F_lcpm_mtx"
 
 
   ordinary text without R code
@@ -148,11 +148,11 @@ List of 2
   |                                                                              |......                                                                |   9%
 label: hcc5hmC-preproc-normedLcpmBxp (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -160,11 +160,11 @@ List of 5
 
 label: hcc5hmC-preproc-plotMDS (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "MDS plots of log-CPM values"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
   |                                                                              |.......                                                               |   9%
   ordinary text without R code
@@ -172,8 +172,8 @@ List of 5
   |                                                                              |.......                                                               |  10%
 label: hcc5hmC-preproc-GlMDSplot (with options) 
 List of 6
- $ echo      : symbol T
- $ cache     : symbol T
+ $ echo      : logi TRUE
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 11
@@ -185,9 +185,9 @@ List of 6
 
 label: hcc5hmC-preproc-DEADesign (with options) 
 List of 3
- $ cache  : symbol F
- $ include: symbol T
- $ echo   : symbol T
+ $ cache  : logi FALSE
+ $ include: logi TRUE
+ $ echo   : logi TRUE
 
   |                                                                              |.......                                                               |  11%
   ordinary text without R code
@@ -195,8 +195,8 @@ List of 3
   |                                                                              |........                                                              |  11%
 label: hcc5hmC-preproc-printDesign (with options) 
 List of 2
- $ echo   : symbol T
- $ include: symbol F
+ $ echo   : logi TRUE
+ $ include: logi FALSE
 
 
   ordinary text without R code
@@ -204,12 +204,12 @@ List of 2
 
 label: hcc5hmC-preproc-Voom1 (with options) 
 List of 6
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_F_voom")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_F_voom"
  $ fig.height: num 6
  $ fig.width : num 11
  $ fig.cap   : chr "Removing heteroscedascity"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
   |                                                                              |........                                                              |  12%
   ordinary text without R code
@@ -217,9 +217,9 @@ List of 6
 
 label: hcc5hmC-preproc-lmFit (with options) 
 List of 3
- $ cache     : symbol T
- $ echo      : symbol T
- $ cache.vars: language c("hcc5hmC_F_voom_efit", "hcc5hmC_F_voom_efit_dt")
+ $ cache     : logi TRUE
+ $ echo      : logi TRUE
+ $ cache.vars: chr [1:2] "hcc5hmC_F_voom_efit" "hcc5hmC_F_voom_efit_dt"
 
   |                                                                              |.........                                                             |  12%
   ordinary text without R code
@@ -227,12 +227,12 @@ List of 3
   |                                                                              |.........                                                             |  13%
 label: hcc5hmC-preproc-mdPlotEfit (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "GC_vec"
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "HCC vs Control - Genes Identified at FDR = 0,05"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -240,7 +240,7 @@ List of 6
 
 label: hcc5hmC-preproc-quantlogFC (with options) 
 List of 1
- $ echo: symbol T
+ $ echo: logi TRUE
 
 
    inline R code fragments
@@ -248,12 +248,12 @@ List of 1
   |                                                                              |..........                                                            |  14%
 label: hcc5hmC-preproc-mdPlotTfit (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "HCC vs Control - Identified Genes at FDR = 0,05 and logFC > 10%"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -261,7 +261,7 @@ List of 6
 
 label: hcc5hmC-preproc-altCV (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 4
  $ fig.width : num 6
@@ -276,9 +276,9 @@ List of 6
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile"
- $ message   : symbol F
- $ echo      : symbol T
- $ include   : symbol T
+ $ message   : logi FALSE
+ $ echo      : logi TRUE
+ $ include   : logi TRUE
 
   |                                                                              |...........                                                           |  15%
   ordinary text without R code
@@ -291,8 +291,8 @@ label: hcc5hmC-glmnetFit-setParameters
 
 label: hcc5hmC-glmnetFit-getTrainVal (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_train_sampID_vec", "hcc5hmC_test_sampID_vec", "hcc5hmC_train_group_vec",      "hcc5hmC_test_group_vec"| __truncated__
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:6] "hcc5hmC_train_sampID_vec" "hcc5hmC_test_sampID_vec" "hcc5hmC_train_group_vec" "hcc5hmC_test_group_vec" ...
 
 
    inline R code fragments
@@ -300,7 +300,7 @@ List of 2
   |                                                                              |............                                                          |  17%
 label: hcc5hmC-glmnetFit-getTrainFolds (with options) 
 List of 2
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "hcc5hmC_train_foldid_vec"
 
 
@@ -314,7 +314,7 @@ label: hcc5hmC-glmnetFit-logistic_f
   |                                                                              |............                                                          |  18%
 label: hcc5hmC-glmnetFit-doMC (with options) 
 List of 1
- $ include: symbol F
+ $ include: logi FALSE
 
   |                                                                              |.............                                                         |  18%
   ordinary text without R code
@@ -322,8 +322,8 @@ List of 1
 
 label: hcc5hmC-glmnetFit-fit-lasso (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_lasso")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_lasso"
 
   |                                                                              |.............                                                         |  19%
   ordinary text without R code
@@ -331,8 +331,8 @@ List of 2
 
 label: hcc5hmC-glmnetFit-fit-ridge (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_ridge")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_ridge"
 
 
   ordinary text without R code
@@ -340,8 +340,8 @@ List of 2
   |                                                                              |..............                                                        |  19%
 label: hcc5hmC-glmnetFit-fit-enet (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_enet")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_enet"
 
   |                                                                              |..............                                                        |  20%
   ordinary text without R code
@@ -349,10 +349,10 @@ List of 2
 
 label: hcc5hmC-glmnetFit-fit-lassoC (with options) 
 List of 4
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_lassoC")
- $ eval      : symbol F
- $ echo      : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_lassoC"
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
 
   ordinary text without R code
@@ -360,7 +360,7 @@ List of 4
   |                                                                              |..............                                                        |  21%
 label: hcc5hmC-glmnetFit-plot_cv_f (with options) 
 List of 1
- $ echo: symbol T
+ $ echo: logi TRUE
 
   |                                                                              |...............                                                       |  21%
   ordinary text without R code
@@ -368,14 +368,14 @@ List of 1
 
 label: hcc5hmC-glmnetFit-lookFits (with options) 
 List of 8
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "compare fits"
- $ echo      : symbol T
- $ warnings  : symbol F
- $ message   : symbol F
+ $ echo      : logi TRUE
+ $ warnings  : logi FALSE
+ $ message   : logi FALSE
 
 
   ordinary text without R code
@@ -391,9 +391,9 @@ List of 1
   |                                                                              |................                                                      |  22%
 label: hcc5hmC-glmnetFit-fitLassoR (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_lassoR")
- $ include   : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_lassoR"
+ $ include   : logi FALSE
 
   |                                                                              |................                                                      |  23%
   ordinary text without R code
@@ -401,13 +401,13 @@ List of 3
 
 label: hcc5hmC-glmnetFit-lookLassoR (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "fitLassoR"
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 6
  $ fig.cap   : chr "Relaxed lasso fit"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -415,7 +415,7 @@ List of 7
 
 label: hcc5hmC-glmnetFit-lookLassoR2 (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "fitLassoR"
  $ cache.vars: chr ""
 
@@ -425,7 +425,7 @@ List of 3
 
 label: hcc5hmC-glmnetFit-trainROC (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
@@ -437,7 +437,7 @@ List of 5
   |                                                                              |.................                                                     |  25%
 label: hcc5hmC-glmnetFit-thresh90 (with options) 
 List of 3
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.cap   : chr "90% Specificity Thresholds"
 
@@ -447,7 +447,7 @@ List of 3
   |                                                                              |..................                                                    |  25%
 label: hcc5hmC-glmnetFit-trainOOFprops (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 10
@@ -459,13 +459,13 @@ List of 5
   |                                                                              |..................                                                    |  26%
 label: hcc5hmC-glmnetFit-testROC (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
  $ fig.cap   : chr "Test data out-of-sample ROCs"
- $ echo      : symbol T
- $ include   : symbol F
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -473,13 +473,13 @@ List of 7
 
 label: hcc5hmC-glmnetFit-testROC2 (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
  $ fig.cap   : chr "Test data out-of-sample ROCs"
- $ echo      : symbol T
- $ include   : symbol T
+ $ echo      : logi TRUE
+ $ include   : logi TRUE
 
   |                                                                              |...................                                                   |  26%
   ordinary text without R code
@@ -487,12 +487,12 @@ List of 7
   |                                                                              |...................                                                   |  27%
 label: hcc5hmC-glmnetFit-testOOFprobs (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "Test data out-of-fold predicted probabilities"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -500,12 +500,12 @@ List of 6
 
 label: hcc5hmC-glmnetFit-fitPrevalByGroup (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 8
  $ fig.cap   : chr "Predicted Probabilities - Train and Test"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
   |                                                                              |...................                                                   |  28%
   ordinary text without R code
@@ -513,13 +513,13 @@ List of 6
   |                                                                              |....................                                                  |  28%
 label: hcc5hmC-glmnetFit-trainLassoPred (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vras: chr ""
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "train data lassofit"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
 
   ordinary text without R code
@@ -527,11 +527,11 @@ List of 7
 
 label: hcc5hmC-glmnetFit-confMtxTrainLasso (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.cap   : chr "Train set confusion"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |....................                                                  |  29%
   ordinary text without R code
@@ -539,7 +539,7 @@ List of 5
 
 label: hcc5hmC-glmnetFit-misclassTrain (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 8
@@ -551,7 +551,7 @@ List of 5
   |                                                                              |.....................                                                 |  30%
 label: hcc5hmC-glmnetFit-misclassTest (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 8
@@ -563,7 +563,7 @@ List of 5
 
 label: hcc5hmC-glmnetFit-compCoeffProf (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
@@ -583,7 +583,7 @@ List of 1
 
 label: hcc5hmC-glmnetFit-pairsCoeffProf (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
@@ -595,13 +595,13 @@ List of 5
 
 label: hcc5hmC-glmnetFit-heatmapLasso (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
  $ fig.cap   : chr "Lasso Model Genes"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
   |                                                                              |.......................                                               |  32%
   ordinary text without R code
@@ -609,13 +609,13 @@ List of 7
 
 label: hcc5hmC-glmnetFit-heatmapEnet (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
  $ fig.cap   : chr "Enet Model Genes"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
   |                                                                              |.......................                                               |  33%
   ordinary text without R code
@@ -623,8 +623,8 @@ List of 7
 
 label: hcc5hmC-glmnetSuite-get-all-data (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_all_lcpm_mtx", "hcc5hmC_all_group_vec")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "hcc5hmC_all_lcpm_mtx" "hcc5hmC_all_group_vec"
 
 
   ordinary text without R code
@@ -632,9 +632,9 @@ List of 2
   |                                                                              |........................                                              |  34%
 label: hcc5hmC-glmnetSuite-lasso-fit-all (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_lassoAll_lst")
- $ eval      : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_lassoAll_lst"
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -642,17 +642,17 @@ List of 3
 
 label: hcc5hmC-glmnetSuite-save-hcc5hmC_cv_lassoAll_lst (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-lasso-fit-all"
  $ cache.vars: chr ""
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
 
 label: hcc5hmC-glmnetSuite-load-hcc5hmC_cv_lassoAll_lst (with options) 
 List of 2
- $ cache: symbol F
- $ echo : symbol F
+ $ cache: logi FALSE
+ $ echo : logi FALSE
 
   |                                                                              |........................                                              |  35%
   ordinary text without R code
@@ -660,7 +660,7 @@ List of 2
   |                                                                              |.........................                                             |  35%
 label: hcc5hmC-glmnetSuite-plot-lassoAll (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-lasso-fit-all"
  $ cache.vars: chr ""
  $ fig.height: num 5
@@ -673,7 +673,7 @@ List of 6
   |                                                                              |.........................                                             |  36%
 label: hcc5hmC-glmnetSuite-model-size-lassoAll (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-lasso-fit-all"
  $ fig.height: num 5
  $ fig.width : num 8
@@ -685,9 +685,9 @@ List of 5
 
 label: hcc5hmC-glmnetSuite-get-sample-pred (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-lasso-fit-all"
- $ cache.vars: language c("lassoAll_predResp_1se_vec", "lassoAll_predResp_1se_vec", "thres_1se",      "thres_min")
+ $ cache.vars: chr [1:4] "lassoAll_predResp_1se_vec" "lassoAll_predResp_1se_vec" "thres_1se" "thres_min"
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "Predicted probabilities - averaged over cv replicates"
@@ -698,9 +698,9 @@ List of 6
   |                                                                              |..........................                                            |  37%
 label: hcc5hmC-glmnetSuite-get-sample-class (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-get-sample-pred"
- $ cache.vars: language c("lassoAll_predClass_1se_vec", "lassoAll_predClass_min_vec")
+ $ cache.vars: chr [1:2] "lassoAll_predClass_1se_vec" "lassoAll_predClass_min_vec"
  $ fig.cap   : chr "Predicted classes and 10% false positive rate"
 
 
@@ -709,9 +709,9 @@ List of 4
 
 label: hcc5hmC-glmnetSuite-get-sample-qual (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "hcc5hmC-glmnetSuite-get-sample-pred"
- $ cache.vars: language c("hcc5hmC_sample_1se_qual_vec", "hcc5hmC_sample_min_qual_vec")
+ $ cache.vars: chr [1:2] "hcc5hmC_sample_1se_qual_vec" "hcc5hmC_sample_min_qual_vec"
 
   |                                                                              |..........................                                            |  38%
   ordinary text without R code
@@ -719,7 +719,7 @@ List of 3
   |                                                                              |...........................                                           |  38%
 label: hcc5hmC-glmnetSuite-plot-qual-conf (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ dependson : chr "hcc5hmC-glmnetSuite-get-sample-pred"
  $ fig.height: num 5
@@ -737,8 +737,8 @@ label: hcc5hmC-glmnetSuite-sample-qual
 
 label: hcc5hmC-glmnetSuite-feature-list-1se (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_1se_tbl", "lassoAll_coef_1se_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_1se_tbl" "lassoAll_coef_1se_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for one standard error rule models"
@@ -749,8 +749,8 @@ List of 5
   |                                                                              |............................                                          |  40%
 label: hcc5hmC-glmnetSuite-feature-list-min (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_min_tbl", "lassoAll_coef_min_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_min_tbl" "lassoAll_coef_min_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for minimum lambda models"
@@ -766,7 +766,7 @@ label: hcc5hmC-glmnetSuite-minVs1seGenes
   |                                                                              |.............................                                         |  41%
 label: hcc5hmC-glmnetSuite-simParms (with options) 
 List of 1
- $ cahce: symbol F
+ $ cahce: logi FALSE
 
 
    inline R code fragments
@@ -774,8 +774,8 @@ List of 1
 
 label: hcc5hmC-glmnetSuite-get-all-vec (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_all_control_vec", "hcc5hmC_all_affected_vec")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "hcc5hmC_all_control_vec" "hcc5hmC_all_affected_vec"
 
   |                                                                              |.............................                                         |  42%
    inline R code fragments
@@ -783,8 +783,8 @@ List of 2
 
 label: hcc5hmC-glmnetSuite-getSimTable (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_sim_control_mtx", "hcc5hmC_sim_affected_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "hcc5hmC_sim_control_mtx" "hcc5hmC_sim_affected_mtx"
 
   |                                                                              |..............................                                        |  42%
    inline R code fragments
@@ -792,13 +792,13 @@ List of 2
 
 label: hcc5hmC-glmnetSuite-look-sim-qual_ARCHIVED (with options) 
 List of 7
- $ cache     : symbol T
- $ cache.vars: language c("sim_control_qual_mtx", "sim_affected_qual_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "sim_control_qual_mtx" "sim_affected_qual_mtx"
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "sample consistency by simulation run"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
   |                                                                              |..............................                                        |  43%
   ordinary text without R code
@@ -806,8 +806,8 @@ List of 7
 
 label: hcc5hmC-glmnetSuite-look-sim-qual-0-50ONLY (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("sim_control_qual_mtx", "sim_affected_qual_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "sim_control_qual_mtx" "sim_affected_qual_mtx"
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "sample consistency by simulation run for size = 50 "
@@ -818,9 +818,9 @@ List of 5
   |                                                                              |...............................                                       |  44%
 label: hcc5hmC-glmnetSuite-run-sim (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "start_time"
- $ eval      : symbol F
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -828,8 +828,8 @@ List of 3
 
 label: hcc5hmC-glmnetSuite-RENAME-sim (with options) 
 List of 2
- $ echo: symbol F
- $ eval: symbol F
+ $ echo: logi FALSE
+ $ eval: logi FALSE
 
 
    inline R code fragments
@@ -837,7 +837,7 @@ List of 2
   |                                                                              |...............................                                       |  45%
 label: hcc5hmC-glmnetSuite-extract-sim-results (with options) 
 List of 2
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "hcc5hmC_lasso_sim_results_frm"
 
   |                                                                              |................................                                      |  45%
@@ -846,7 +846,7 @@ List of 2
 
 label: hcc5hmC-glmnetSuite-sum-table (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "Simution results table"
 
@@ -856,7 +856,7 @@ List of 3
 
 label: hcc5hmC-glmnetSuite-lasso-simRes-errors-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -868,7 +868,7 @@ List of 5
   |                                                                              |.................................                                     |  46%
 label: hcc5hmC-glmnetSuite-lasso-simRes-features-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -880,8 +880,8 @@ List of 5
 
 label: hcc5hmC-glmnetSuite-lasso-simRes-errors-overSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("error_1se_Bysize_lst", "error_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "error_1se_Bysize_lst" "error_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "lasso Model Errors by Sample Size"
@@ -892,7 +892,7 @@ List of 5
   |                                                                              |.................................                                     |  48%
 label: hcc5hmC-glmnetSuite-lasso-simRes-errorsPath-overSim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vrs : chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -904,10 +904,10 @@ List of 5
 
 label: hcc5hmC-glmnetSuite-print-lasso-simRes-errors-overSim (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "lasso Model Errors by Sample Size"
- $ include   : symbol F
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -915,8 +915,8 @@ List of 4
   |                                                                              |..................................                                    |  49%
 label: hcc5hmC-glmnetSuite-lasso-simRes-features-OverSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("p_singP_1se_Bysize_lst", "p_singP_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "p_singP_1se_Bysize_lst" "p_singP_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "lasso Models Selected Features by Sample Size"
@@ -927,10 +927,10 @@ List of 5
   |                                                                              |...................................                                   |  49%
 label: hcc5hmC-glmnetSuite-print-lasso-simRes-features-OverSim (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "lasso Models Selected Features by Sample Size"
- $ include   : symbol F
+ $ include   : logi FALSE
 
   |                                                                              |...................................                                   |  50%
   ordinary text without R code
@@ -938,8 +938,8 @@ List of 4
 
 label: hcc5hmC-glmnetSuite-small-sample-qual (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("")
+ $ cache     : logi TRUE
+ $ cache.vars: chr ""
  $ fig.cap   : chr "sample consistency vs classifier performance"
 
 
@@ -948,7 +948,7 @@ List of 3
 
 label: brcaRNA-preproc-setup-preproc (with options) 
 List of 1
- $ include: symbol F
+ $ include: logi FALSE
 
   |                                                                              |...................................                                   |  51%
   ordinary text without R code
@@ -957,7 +957,7 @@ List of 1
 label: brcaRNA-preproc-chunk-options (with options) 
 List of 2
  $ include: logi FALSE
- $ eval   : symbol F
+ $ eval   : logi FALSE
 
 
   ordinary text without R code
@@ -966,7 +966,7 @@ List of 2
 label: brcaRNA-preproc-libraries (with options) 
 List of 2
  $ include: logi FALSE
- $ eval   : symbol T
+ $ eval   : logi TRUE
 
 
   ordinary text without R code
@@ -974,7 +974,7 @@ List of 2
 
 label: brcaRNA-preproc-loadData (with options) 
 List of 1
- $ cache: symbol F
+ $ cache: logi FALSE
 
   |                                                                              |.....................................                                 |  52%
   ordinary text without R code
@@ -982,9 +982,9 @@ List of 1
   |                                                                              |.....................................                                 |  53%
 label: brcaRna-preproc-subsetSamples (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_sampDesc", "brcaRna_groupCol")
- $ echo      : symbol T
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_sampDesc" "brcaRna_groupCol"
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -992,9 +992,9 @@ List of 3
 
 label: brcaRna-preproc-getfeatures (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_genes_annot", "brcaRna_geneExpression")
- $ echo      : symbol T
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_genes_annot" "brcaRna_geneExpression"
+ $ echo      : logi TRUE
 
   |                                                                              |.....................................                                 |  54%
   ordinary text without R code
@@ -1002,11 +1002,11 @@ List of 3
   |                                                                              |......................................                                |  54%
 label: brcaRna-preproc-geneExprBxp (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1014,8 +1014,8 @@ List of 5
 
 label: brcaRna-preproc-quantCountsA (with options) 
 List of 2
- $ echo: symbol F
- $ eval: symbol F
+ $ echo: logi FALSE
+ $ eval: logi FALSE
 
   |                                                                              |......................................                                |  55%
   ordinary text without R code
@@ -1023,14 +1023,14 @@ List of 2
 
 label: brcaRna-preproc-rlr (with options) 
 List of 8
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "brcaRna_lcpm_mtx"
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample RLR"
- $ eval      : symbol T
- $ echo      : symbol T
- $ include   : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
   |                                                                              |.......................................                               |  55%
   ordinary text without R code
@@ -1041,8 +1041,8 @@ List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample gene expression densities"
- $ eval      : symbol T
- $ echo      : symbol T
+ $ eval      : logi TRUE
+ $ echo      : logi TRUE
 
 
    inline R code fragments
@@ -1050,10 +1050,10 @@ List of 5
 
 label: brcaRna-preproc-removeWeak (with options) 
 List of 4
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_geneExpression_F", "brcaRna_genes_annotF", "brcaRna_geneExpression")
- $ echo      : symbol T
- $ include   : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:3] "brcaRna_geneExpression_F" "brcaRna_genes_annotF" "brcaRna_geneExpression"
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -1064,8 +1064,8 @@ List of 5
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample gene expression densities after removing weak genes"
- $ eval      : symbol T
- $ echo      : symbol T
+ $ eval      : logi TRUE
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1073,10 +1073,10 @@ List of 5
 
 label: brcaRna-preproc-getDGEL (with options) 
 List of 4
- $ cache    : symbol T
- $ cache.var: language c("brcaRna_F_dgel", "brcaRna_F_lcpm_mtx")
- $ eval     : symbol F
- $ echo     : symbol F
+ $ cache    : logi TRUE
+ $ cache.var: chr [1:2] "brcaRna_F_dgel" "brcaRna_F_lcpm_mtx"
+ $ eval     : logi FALSE
+ $ echo     : logi FALSE
 
   |                                                                              |........................................                              |  58%
   ordinary text without R code
@@ -1084,12 +1084,12 @@ List of 4
 
 label: brcaRna-preproc-normedLcpmBxp (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 4
  $ fig.width : num 10
  $ fig.cap   : chr "Sample log2 count boxplots"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |.........................................                             |  58%
   ordinary text without R code
@@ -1097,11 +1097,11 @@ List of 6
 
 label: brcaRna-preproc-plotMDS (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "MDS plots of gene expression values"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
   |                                                                              |.........................................                             |  59%
   ordinary text without R code
@@ -1109,13 +1109,13 @@ List of 5
 
 label: brcaRna-preproc-GlMDSplot (with options) 
 List of 7
- $ echo      : symbol T
- $ cache     : symbol T
+ $ echo      : logi FALSE
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 11
  $ fig.cap   : chr "MDS plots of gene expression values"
- $ eval      : symbol F
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -1123,9 +1123,9 @@ List of 7
   |                                                                              |..........................................                            |  60%
 label: brcaRna-preproc-DEADesign (with options) 
 List of 3
- $ cache  : symbol F
- $ include: symbol T
- $ echo   : symbol T
+ $ cache  : logi FALSE
+ $ include: logi TRUE
+ $ echo   : logi TRUE
 
 
   ordinary text without R code
@@ -1133,8 +1133,8 @@ List of 3
 
 label: brcaRna-preproc-printDesign (with options) 
 List of 2
- $ echo   : symbol T
- $ include: symbol F
+ $ echo   : logi TRUE
+ $ include: logi FALSE
 
 
   ordinary text without R code
@@ -1142,13 +1142,13 @@ List of 2
   |                                                                              |..........................................                            |  61%
 label: brcaRna-preproc-Voom1 (with options) 
 List of 7
- $ cache     : symbol T
- $ cache.vars: language c("filteredCountsAF_voom")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "filteredCountsAF_voom"
  $ fig.height: num 6
  $ fig.width : num 11
  $ fig.cap   : chr "Removing heteroscedascity"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |...........................................                           |  61%
   ordinary text without R code
@@ -1156,9 +1156,9 @@ List of 7
 
 label: brcaRna-preproc-lmFit (with options) 
 List of 3
- $ cache     : symbol T
- $ echo      : symbol T
- $ cache.vars: language c("brcaRna_geneExpression_F_efit", "brcaRna_geneExpression_F_efit_dt",      "brcaRna_geneExpression_F_efit")
+ $ cache     : logi TRUE
+ $ echo      : logi TRUE
+ $ cache.vars: chr [1:3] "brcaRna_geneExpression_F_efit" "brcaRna_geneExpression_F_efit_dt" "brcaRna_geneExpression_F_efit"
 
   |                                                                              |...........................................                           |  62%
   ordinary text without R code
@@ -1166,12 +1166,12 @@ List of 3
 
 label: brcaRna-preproc-mdPlotEfit (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "GC_vec"
  $ fig.height: num 6
  $ fig.width : num 11
  $ fig.cap   : chr "LumA vs Other - Genes Identified at FDR = 0,05"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1179,7 +1179,7 @@ List of 6
   |                                                                              |............................................                          |  62%
 label: brcaRna-preproc-quantlogFC (with options) 
 List of 1
- $ echo: symbol T
+ $ echo: logi TRUE
 
   |                                                                              |............................................                          |  63%
   ordinary text without R code
@@ -1187,12 +1187,12 @@ List of 1
 
 label: brcaRna-preproc-mdPlotTfit (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 11
  $ fig.cap   : chr "LumA vs Other - Identified Genes at FDR = 0,05 and logFC > 10%"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1200,13 +1200,13 @@ List of 6
   |                                                                              |............................................                          |  64%
 label: brcaRna-preproc-altCV (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 4
  $ fig.width : num 6
  $ fig.cap   : chr "Alternative CV Calculation"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
   |                                                                              |.............................................                         |  64%
   ordinary text without R code
@@ -1217,9 +1217,9 @@ List of 6
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "Cumulative Distribution of SNR - rug = 25, 50, 75 and 90th percentile"
- $ message   : symbol F
- $ echo      : symbol T
- $ include   : symbol T
+ $ message   : logi FALSE
+ $ echo      : logi TRUE
+ $ include   : logi TRUE
 
 
   ordinary text without R code
@@ -1232,8 +1232,8 @@ label: brcaRna-glmnetFit-setParameters
   |                                                                              |..............................................                        |  65%
 label: brcaRna-glmnetFit-getTrainVal (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_train_sampID_vec", "brcaRna_test_sampID_vec", "brcaRna_train_group_vec",      "brcaRna_test_group_vec"| __truncated__
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:6] "brcaRna_train_sampID_vec" "brcaRna_test_sampID_vec" "brcaRna_train_group_vec" "brcaRna_test_group_vec" ...
 
   |                                                                              |..............................................                        |  66%
    inline R code fragments
@@ -1241,7 +1241,7 @@ List of 2
 
 label: brcaRna-glmnetFit-getTrainFolds (with options) 
 List of 2
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "brcaRna_train_foldid_vec"
 
 
@@ -1250,7 +1250,7 @@ List of 2
 
 label: brcaRna-glmnetFit-logistic_f (with options) 
 List of 1
- $ echo: symbol F
+ $ echo: logi FALSE
 
   |                                                                              |...............................................                       |  67%
   ordinary text without R code
@@ -1258,7 +1258,7 @@ List of 1
 
 label: brcaRna-glmnetFit-doMC (with options) 
 List of 1
- $ include: symbol F
+ $ include: logi FALSE
 
 
   ordinary text without R code
@@ -1266,8 +1266,8 @@ List of 1
   |                                                                              |...............................................                       |  68%
 label: brcaRna-glmnetFit-fit-lasso (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_cv_lasso")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "brcaRna_cv_lasso"
 
 
   ordinary text without R code
@@ -1275,8 +1275,8 @@ List of 2
   |                                                                              |................................................                      |  68%
 label: brcaRna-glmnetFit-fit-ridge (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_cv_ridge")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "brcaRna_cv_ridge"
 
 
   ordinary text without R code
@@ -1284,8 +1284,8 @@ List of 2
   |                                                                              |................................................                      |  69%
 label: brcaRna-glmnetFit-fit-enet (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_cv_enet")
+ $ cache     : logi TRUE
+ $ cache.vars: chr "brcaRna_cv_enet"
 
 
   ordinary text without R code
@@ -1293,10 +1293,10 @@ List of 2
 
 label: brcaRna-glmnetFit-fit-lassoC (with options) 
 List of 4
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_cv_lassoC")
- $ eval      : symbol F
- $ echo      : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "brcaRna_cv_lassoC"
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
   |                                                                              |.................................................                     |  70%
   ordinary text without R code
@@ -1304,7 +1304,7 @@ List of 4
 
 label: brcaRna-glmnetFit-plot_cv_f (with options) 
 List of 1
- $ echo: symbol T
+ $ echo: logi TRUE
 
 
   ordinary text without R code
@@ -1312,14 +1312,14 @@ List of 1
 
 label: brcaRna-glmnetFit-lookFits (with options) 
 List of 8
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "compare fits"
- $ echo      : symbol T
- $ warnings  : symbol F
- $ message   : symbol F
+ $ echo      : logi TRUE
+ $ warnings  : logi FALSE
+ $ message   : logi FALSE
 
   |                                                                              |.................................................                     |  71%
   ordinary text without R code
@@ -1335,9 +1335,9 @@ List of 1
   |                                                                              |..................................................                    |  72%
 label: brcaRna-glmnetFit-fitLassoR (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_cv_lassoR")
- $ include   : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "brcaRna_cv_lassoR"
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -1345,13 +1345,13 @@ List of 3
 
 label: brcaRna-glmnetFit-lookLassoR (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "fitLassoR"
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 6
  $ fig.cap   : chr "Relaxed lasso fit"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
   |                                                                              |...................................................                   |  72%
   ordinary text without R code
@@ -1359,7 +1359,7 @@ List of 7
   |                                                                              |...................................................                   |  73%
 label: brcaRna-glmnetFit-lookLassoR2 (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "fitLassoR"
  $ cache.vars: chr ""
 
@@ -1369,7 +1369,7 @@ List of 3
 
 label: brcaRna-glmnetFit-trainROC (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
@@ -1381,7 +1381,7 @@ List of 5
   |                                                                              |....................................................                  |  74%
 label: brcaRna-glmnetFit-thresh90 (with options) 
 List of 3
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.cap   : chr "90% Specificity Thresholds"
 
@@ -1391,7 +1391,7 @@ List of 3
 
 label: brcaRna-glmnetFit-trainOOFprops (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 10
@@ -1403,13 +1403,13 @@ List of 5
 
 label: brcaRna-glmnetFit-testROC (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
  $ fig.cap   : chr "Test data out-of-sample ROCs"
- $ echo      : symbol T
- $ include   : symbol F
+ $ echo      : logi TRUE
+ $ include   : logi FALSE
 
   |                                                                              |.....................................................                 |  75%
   ordinary text without R code
@@ -1417,13 +1417,13 @@ List of 7
 
 label: brcaRna-glmnetFit-testROC2 (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 5
  $ fig.cap   : chr "Test data out-of-sample ROCs"
- $ echo      : symbol T
- $ include   : symbol T
+ $ echo      : logi TRUE
+ $ include   : logi TRUE
 
   |                                                                              |.....................................................                 |  76%
   ordinary text without R code
@@ -1431,12 +1431,12 @@ List of 7
 
 label: brcaRna-glmnetFit-testOOFprobs (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "Test data out-of-fold predicted probabilities"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1444,12 +1444,12 @@ List of 6
   |                                                                              |......................................................                |  77%
 label: brcaRna-glmnetFit-fitPrevalByGroup (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 8
  $ fig.width : num 8
  $ fig.cap   : chr "Predicted Probabilities - Train and Test"
- $ echo      : symbol T
+ $ echo      : logi TRUE
 
 
   ordinary text without R code
@@ -1457,13 +1457,13 @@ List of 6
 
 label: brcaRna-glmnetFit-trainLassoPred (with options) 
 List of 7
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vras: chr ""
  $ fig.height: num 5
  $ fig.width : num 11
  $ fig.cap   : chr "train data lassofit"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
 
   ordinary text without R code
@@ -1471,11 +1471,11 @@ List of 7
   |                                                                              |......................................................                |  78%
 label: brcaRna-glmnetFit-confMtxTrainLasso (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.cap   : chr "Train set confusion"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |.......................................................               |  78%
   ordinary text without R code
@@ -1483,7 +1483,7 @@ List of 5
 
 label: brcaRna-glmnetFit-misclassTrain (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 8
@@ -1495,7 +1495,7 @@ List of 5
 
 label: brcaRna-glmnetFit-misclassTest (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 5
  $ fig.width : num 8
@@ -1507,7 +1507,7 @@ List of 5
   |                                                                              |........................................................              |  79%
 label: brcaRna-glmnetFit-compCoeffProf (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
@@ -1527,7 +1527,7 @@ List of 1
   |                                                                              |........................................................              |  81%
 label: brcaRna-glmnetFit-pairsCoeffProf (with options) 
 List of 5
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
@@ -1539,13 +1539,13 @@ List of 5
 
 label: brcaRna-glmnetFit-heatmapLasso (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
  $ fig.cap   : chr "Lasso Model Genes"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -1553,13 +1553,13 @@ List of 7
   |                                                                              |.........................................................             |  82%
 label: brcaRna-glmnetFit-heatmapEnet (with options) 
 List of 7
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.height: num 6
  $ fig.width : num 8
  $ fig.cap   : chr "Enet Model Genes"
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -1567,8 +1567,8 @@ List of 7
   |                                                                              |..........................................................            |  82%
 label: brca-rnaseq-get-all-data (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_all_geneExpr_mtx", "brcaRna_all_group_vec")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_all_geneExpr_mtx" "brcaRna_all_group_vec"
 
   |                                                                              |..........................................................            |  83%
   ordinary text without R code
@@ -1576,9 +1576,9 @@ List of 2
 
 label: brca-rnaseq-lasso-fit-all (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("BrCa_cv_lassoAll_lst")
- $ eval      : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "BrCa_cv_lassoAll_lst"
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -1586,17 +1586,17 @@ List of 3
 
 label: brca-rnaseq-save-brcaRna_cv_lassoAll_lst (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "lasso-fit-all"
  $ cache.vars: chr ""
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |...........................................................           |  84%
 label: brca-rnaseq-load-brcaRna_cv_lassoAll_lst (with options) 
 List of 2
- $ cache: symbol F
- $ echo : symbol T
+ $ cache: logi FALSE
+ $ echo : logi TRUE
 
 
   ordinary text without R code
@@ -1604,7 +1604,7 @@ List of 2
 
 label: brca-rnaseq-plot-lassoAll (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "lasso-fit-all"
  $ cache.vars: chr ""
  $ fig.height: num 5
@@ -1617,7 +1617,7 @@ List of 6
 
 label: brca-rnaseq-model-size-lassoAll (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "lasso-fit-all"
  $ fig.height: num 5
  $ fig.width : num 8
@@ -1629,9 +1629,9 @@ List of 5
 
 label: brca-rnaseq-get-sample-pred (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ dependson : chr "lasso-fit-all"
- $ cache.vars: language c("lassoAll_predResp_1se_vec", "lassoAll_predResp_1se_vec", "thres_1se",      "thres_min")
+ $ cache.vars: chr [1:4] "lassoAll_predResp_1se_vec" "lassoAll_predResp_1se_vec" "thres_1se" "thres_min"
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "Predicted probabilities - averaged over cv replicates"
@@ -1642,9 +1642,9 @@ List of 6
 
 label: brca-rnaseq-get-sample-class (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "get-sample-pred"
- $ cache.vars: language c("lassoAll_predClass_1se_vec", "lassoAll_predClass_min_vec")
+ $ cache.vars: chr [1:2] "lassoAll_predClass_1se_vec" "lassoAll_predClass_min_vec"
  $ fig.cap   : chr "Predicted classes and 10% false positive rate"
 
 
@@ -1653,9 +1653,9 @@ List of 4
   |                                                                              |.............................................................         |  87%
 label: brca-rnaseq-get-sample-qual (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "get-sample-pred"
- $ cache.vars: language c("brcaRna_sample_1se_qual_vec", "brcaRna_sample_min_qual_vec")
+ $ cache.vars: chr [1:2] "brcaRna_sample_1se_qual_vec" "brcaRna_sample_min_qual_vec"
 
 
   ordinary text without R code
@@ -1663,7 +1663,7 @@ List of 3
 
 label: brca-rnaseq-plot-qual-conf (with options) 
 List of 6
- $ cache     : symbol F
+ $ cache     : logi FALSE
  $ cache.vars: chr ""
  $ dependson : chr "get-sample-pred"
  $ fig.height: num 5
@@ -1681,8 +1681,8 @@ label: brca-rnaseq-sample-qual
 
 label: brca-rnaseq-feature-list-1se (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_1se_tbl", "lassoAll_coef_1se_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_1se_tbl" "lassoAll_coef_1se_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for one standard error rule models"
@@ -1693,8 +1693,8 @@ List of 5
 
 label: brca-rnaseq-feature-list-min (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_min_tbl", "lassoAll_coef_min_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_min_tbl" "lassoAll_coef_min_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for minimum lambda models"
@@ -1710,7 +1710,7 @@ label: brca-rnaseq-minVs1seGenes
 
 label: brca-rnaseq-simParms (with options) 
 List of 1
- $ cahce: symbol F
+ $ cahce: logi FALSE
 
 
    inline R code fragments
@@ -1718,8 +1718,8 @@ List of 1
   |                                                                              |...............................................................       |  91%
 label: brca-rnaseq-get-all-vec (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_all_other_vec", "brcaRna_all_LumA_vec")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_all_other_vec" "brcaRna_all_LumA_vec"
 
   |                                                                              |................................................................      |  91%
    inline R code fragments
@@ -1727,8 +1727,8 @@ List of 2
 
 label: brca-rnaseq-getSimTable (with options) 
 List of 2
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_sim_other_mtx", "brcaRna_sim_LumA_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_sim_other_mtx" "brcaRna_sim_LumA_mtx"
 
 
    inline R code fragments
@@ -1736,13 +1736,13 @@ List of 2
   |                                                                              |................................................................      |  92%
 label: brca-rnaseq-look-sim-qual_ARCHIVED (with options) 
 List of 7
- $ cache     : symbol T
- $ cache.vars: language c("sim_other_qual_mtx", "sim_LumA_qual_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "sim_other_qual_mtx" "sim_LumA_qual_mtx"
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "sample consistency by simulation run"
- $ eval      : symbol F
- $ echo      : symbol F
+ $ eval      : logi FALSE
+ $ echo      : logi FALSE
 
 
   ordinary text without R code
@@ -1750,8 +1750,8 @@ List of 7
   |                                                                              |.................................................................     |  92%
 label: brca-rnaseq-look-sim-qual-0-50ONLY (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("brcaRna_sim_other_qual_mtx", "brcaRna_sim_LumA_qual_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "brcaRna_sim_other_qual_mtx" "brcaRna_sim_LumA_qual_mtx"
  $ fig.height: num 8
  $ fig.width : num 10
  $ fig.cap   : chr "sample consistency by simulation run for size = 50 "
@@ -1762,9 +1762,9 @@ List of 5
 
 label: brca-rnaseq-run-sim (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "start_time"
- $ eval      : symbol F
+ $ eval      : logi FALSE
 
 
   ordinary text without R code
@@ -1772,8 +1772,8 @@ List of 3
 
 label: brcaRna-glmnetSuite-RENAME-sim (with options) 
 List of 2
- $ echo: symbol F
- $ eval: symbol F
+ $ echo: logi FALSE
+ $ eval: logi FALSE
 
   |                                                                              |..................................................................    |  94%
    inline R code fragments
@@ -1781,7 +1781,7 @@ List of 2
 
 label: brca-rnaseq-extract-sim-results (with options) 
 List of 2
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "brcaRna_lasso_sim_results_frm"
 
 
@@ -1790,10 +1790,10 @@ List of 2
   |                                                                              |..................................................................    |  95%
 label: brca-rnaseq-sum-table (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "Simution results table"
- $ include   : symbol F
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -1801,7 +1801,7 @@ List of 4
   |                                                                              |...................................................................   |  95%
 label: brca-rnaseq-lasso-simRes-errors-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -1813,7 +1813,7 @@ List of 5
   |                                                                              |...................................................................   |  96%
 label: brca-rnaseq-lasso-simRes-features-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -1825,8 +1825,8 @@ List of 5
 
 label: brca-rnaseq-lasso-simRes-errors-overSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("error_1se_Bysize_lst", "error_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "error_1se_Bysize_lst" "error_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "lasso Model Errors by Sample Size"
@@ -1837,7 +1837,7 @@ List of 5
 
 label: brca-glmnetSuite-lasso-simRes-errorsPath-overSim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vrs : chr ""
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -1849,10 +1849,10 @@ List of 5
 
 label: brca-rnaseq-print-lasso-simRes-errors-overSim (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "lasso Model Errors by Sample Size"
- $ include   : symbol F
+ $ include   : logi FALSE
 
   |                                                                              |....................................................................  |  98%
   ordinary text without R code
@@ -1860,8 +1860,8 @@ List of 4
   |                                                                              |..................................................................... |  98%
 label: brca-rnaseq-lasso-simRes-features-OverSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("p_singP_1se_Bysize_lst", "p_singP_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "p_singP_1se_Bysize_lst" "p_singP_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "lasso Models Selected Features by Sample Size"
@@ -1872,10 +1872,10 @@ List of 5
   |                                                                              |..................................................................... |  99%
 label: brca-rnaseq-print-lasso-simRes-features-OverSim (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "lasso Models Selected Features by Sample Size"
- $ include   : symbol F
+ $ include   : logi FALSE
 
 
   ordinary text without R code
@@ -1883,10 +1883,10 @@ List of 4
 
 label: brca-rnaseq-small-sample-qual (with options) 
 List of 4
- $ cache     : symbol T
- $ cache.vars: language c("")
+ $ cache     : logi TRUE
+ $ cache.vars: chr ""
  $ fig.cap   : chr "sample consistency vs classifier performance"
- $ eval      : symbol F
+ $ eval      : logi FALSE
 
   |                                                                              |......................................................................|  99%
    inline R code fragments
@@ -1894,7 +1894,7 @@ List of 4
   |                                                                              |......................................................................| 100%
 label: appendix1 (with options) 
 List of 2
- $ cache: symbol F
+ $ cache: logi FALSE
  $ child: chr "05B-glmnetSuiteBHCC5hmC.Rmd"
 
 
@@ -1906,9 +1906,9 @@ processing file: ./05B-glmnetSuiteBHCC5hmC.Rmd
   |                                                                              |....                                                                  |   5%
 label: hcc5hmC-glmnetSuiteB-enet-fit-all (with options) 
 List of 3
- $ cache     : symbol T
- $ cache.vars: language c("hcc5hmC_cv_enetAll_lst")
- $ eval      : symbol F
+ $ cache     : logi TRUE
+ $ cache.vars: chr "hcc5hmC_cv_enetAll_lst"
+ $ eval      : logi FALSE
 
   |                                                                              |......                                                                |   8%
   ordinary text without R code
@@ -1916,17 +1916,17 @@ List of 3
   |                                                                              |.......                                                               |  11%
 label: hcc5hmC-glmnetSuiteB-save-hcc5hmC_cv_enetAll_lst (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "enet-fit-all"
  $ cache.vars: chr ""
- $ echo      : symbol F
- $ eval      : symbol F
+ $ echo      : logi FALSE
+ $ eval      : logi FALSE
 
   |                                                                              |.........                                                             |  13%
 label: hcc5hmC-glmnetSuiteB-load-hcc5hmC_cv_enetAll_lst (with options) 
 List of 2
- $ cache: symbol F
- $ echo : symbol F
+ $ cache: logi FALSE
+ $ echo : logi FALSE
 
   |                                                                              |...........                                                           |  16%
   ordinary text without R code
@@ -1934,7 +1934,7 @@ List of 2
   |                                                                              |.............                                                         |  18%
 label: hcc5hmC-glmnetSuiteB-enet-plot-enetAll (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "enet-fit-all"
  $ cache.vars: chr ""
  $ fig.height: num 5
@@ -1947,7 +1947,7 @@ List of 6
   |                                                                              |.................                                                     |  24%
 label: hcc5hmC-glmnetSuiteB-model-size-enetAll (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "enet-fit-all"
  $ fig.height: num 5
  $ fig.width : num 8
@@ -1959,9 +1959,9 @@ List of 5
   |                                                                              |....................                                                  |  29%
 label: hcc5hmC-glmnetSuiteB-enet-get-sample-pred (with options) 
 List of 6
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "enet-fit-all"
- $ cache.vars: language c("enetAll_predResp_1se_vec", "enetAll_predResp_1se_vec", "thres_1se",      "thres_min")
+ $ cache.vars: chr [1:4] "enetAll_predResp_1se_vec" "enetAll_predResp_1se_vec" "thres_1se" "thres_min"
  $ fig.height: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "Predicted probabilities - averaged over cv replicates"
@@ -1972,9 +1972,9 @@ List of 6
   |                                                                              |........................                                              |  34%
 label: hcc5hmC-glmnetSuiteB-enet-get-sample-class (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ dependson : chr "get-sample-pred"
- $ cache.vars: language c("enetAll_predClass_1se_vec", "enetAll_predClass_min_vec")
+ $ cache.vars: chr [1:2] "enetAll_predClass_1se_vec" "enetAll_predClass_min_vec"
  $ fig.cap   : chr "Predicted classes and 10% false positive rate"
 
   |                                                                              |..........................                                            |  37%
@@ -1983,8 +1983,8 @@ List of 4
   |                                                                              |............................                                          |  39%
 label: hcc5hmC-glmnetSuiteB-enet-feature-list-1se (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_1se_tbl", "enetAll_coef_1se_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_1se_tbl" "enetAll_coef_1se_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for one standard error rule models"
@@ -1995,8 +1995,8 @@ List of 5
   |                                                                              |...............................                                       |  45%
 label: hcc5hmC-glmnetSuiteB-enet-feature-list-min (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("genes_by_rep_min_tbl", "enetAll_coef_min_mtx")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "genes_by_rep_min_tbl" "enetAll_coef_min_mtx"
  $ fig.height: num 5
  $ fig.width : num 8
  $ fig.cap   : chr "Feature list stability for minimum lambda models"
@@ -2012,9 +2012,9 @@ label: hcc5hmC-glmnetSuiteB-enet-minVs1seGenes
   |                                                                              |.......................................                               |  55%
 label: hcc5hmC-glmnetSuiteB-enet-run-sim (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "start_time"
- $ eval      : symbol F
+ $ eval      : logi FALSE
 
   |                                                                              |.........................................                             |  58%
   ordinary text without R code
@@ -2022,9 +2022,9 @@ List of 3
   |                                                                              |..........................................                            |  61%
 label: hcc5hmC-glmnetSuiteB-enet-extract-sim-results (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "enet_sim_results_frm"
- $ include   : symbol F
+ $ include   : logi FALSE
 
   |                                                                              |............................................                          |  63%
   ordinary text without R code
@@ -2032,10 +2032,10 @@ List of 3
   |                                                                              |..............................................                        |  66%
 label: hcc5hmC-glmnetSuiteB-enet-sum-table (with options) 
 List of 4
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "Simution results table"
- $ include   : symbol F
+ $ include   : logi FALSE
 
   |                                                                              |................................................                      |  68%
   ordinary text without R code
@@ -2043,7 +2043,7 @@ List of 4
   |                                                                              |..................................................                    |  71%
 label: hcc5hmC-glmnetSuiteB-enet-simRes-errors-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "what-to-keep"
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -2055,7 +2055,7 @@ List of 5
   |                                                                              |.....................................................                 |  76%
 label: hcc5hmC-glmnetSuiteB-enet-simRes-features-bySim (with options) 
 List of 5
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr "what-to-keep"
  $ fig.heigth: num 5
  $ fig.width : num 10
@@ -2067,8 +2067,8 @@ List of 5
   |                                                                              |.........................................................             |  82%
 label: hcc5hmC-glmnetSuiteB-enet-simRes-errors-overSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("error_1se_Bysize_lst", "error_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "error_1se_Bysize_lst" "error_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "enet Model Errors by Sample Size"
@@ -2079,7 +2079,7 @@ List of 5
   |                                                                              |.............................................................         |  87%
 label: hcc5hmC-glmnetSuiteB-print-enet-simRes-errors-overSim (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "enet Model Errors by Sample Size"
 
@@ -2089,8 +2089,8 @@ List of 3
   |                                                                              |................................................................      |  92%
 label: hcc5hmC-glmnetSuiteB-enet-simRes-features-OverSim (with options) 
 List of 5
- $ cache     : symbol T
- $ cache.vars: language c("p_singP_1se_Bysize_lst", "p_singP_min_Bysize_lst")
+ $ cache     : logi TRUE
+ $ cache.vars: chr [1:2] "p_singP_1se_Bysize_lst" "p_singP_min_Bysize_lst"
  $ fig.heigth: num 5
  $ fig.width : num 10
  $ fig.cap   : chr "enet Models Selected Features by Sample Size"
@@ -2101,7 +2101,7 @@ List of 5
   |                                                                              |....................................................................  |  97%
 label: hcc5hmC-glmnetSuiteB-print-enet-simRes-features-OverSim (with options) 
 List of 3
- $ cache     : symbol T
+ $ cache     : logi TRUE
  $ cache.vars: chr ""
  $ fig.cap   : chr "enet Models Selected Features by Sample Size"
 
@@ -2115,10 +2115,11 @@ List of 3
 
 output file: HCC5hmCExplore.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.utf8.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --email-obfuscation none --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/nt/fdw5s4y937s4pkgsdn9m7j840000gp/T//RtmpBMRfDC/rmarkdown-strec3e745da519.html --mathjax --include-in-header header.html --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS HCC5hmCExplore.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output HCC5hmCExplore.html --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 3 --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --number-sections --css css/style.css --include-in-header /var/folders/jk/d24lm6n944q5y650lph85m7w0000gp/T//RtmpTrF7mJ/rmarkdown-stref81533d142c.html --mathjax --include-in-header header.html --citeproc 
 
 Output created: docs/index.html
 [1] "/Users/fcollin/Documents/Projects/Rstuff/HCC5hmCExplore/docs/index.html"
-Warning message:
-In call_block(x) :
+Warning messages:
+1: In call_block(x) :
   The chunk 'appendix1' has the 'child' option, and this code chunk must be empty. Its code will be ignored.
+2: The label(s) conclusions not found 
